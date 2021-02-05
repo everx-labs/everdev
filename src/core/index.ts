@@ -3,6 +3,7 @@ import os from "os";
 
 export interface Terminal {
     write(text: string): void,
+    writeError(text: string): void,
     log(...args: any[]): void,
 }
 
@@ -39,6 +40,9 @@ export interface Command {
 }
 
 export interface ToolController {
+    name: string,
+    title?: string,
+    description?: string,
     commands: Command[],
 }
 

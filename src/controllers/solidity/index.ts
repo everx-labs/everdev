@@ -3,8 +3,10 @@ import {compileSolidity} from "./compiler";
 import {ToolController} from "../../core";
 
 export const Solidity: ToolController = {
+    name: "sol",
+    title: "Solidity Compiler",
     commands: [{
-        name: "create-sol",
+        name: "create",
         title: "Create Solidity contract",
         args: [{
             isArg: true,
@@ -18,7 +20,7 @@ export const Solidity: ToolController = {
         }],
         run: createSolidityContract,
     }, {
-        name: "compile-sol",
+        name: "compile",
         title: "Compile Solidity contract",
         args: [{
             isArg: true,

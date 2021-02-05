@@ -44,17 +44,18 @@ function parseCommandLine(programArgs: string[]): CommandLine {
     };
 }
 
-function getAllCommands(): Command[] {
-    return controllers.flatMap(x => x.commands);
-}
-
 export function printUsage() {
     console.log("Use: tondev command args...\n");
     console.log("Commands:");
-    const commands = getAllCommands();
-    let colWidth = commands.reduce((w, x) => Math.max(w, x.name.length), 0);
-    commands.forEach(command => {
-        console.log(`    ${command.name.padEnd(colWidth)}  ${command.title}`);
+    const commands: [string, Command][] = [];
+    for (const controller of controllers) {
+        for (const command of controller.commands) {
+            commands.push([`${controller.name} ${command.name}`, command])
+        }
+    }
+    let colWidth = commands.reduce((w, x) => Math.max(w, x[0].length), 0);
+    commands.forEach(x => {
+        console.log(`    ${x[0].padEnd(colWidth)}  ${x[1].title}`);
     });
 }
 
@@ -83,14 +84,23 @@ function getArgValue(arg: CommandArg, commandLine: CommandLine): string | undefi
     throw missingArgError(arg);
 }
 
+function extractNextArg(commandLine: CommandLine): string {
+    return (commandLine.args.splice(0, 1)[0] ?? "").toLowerCase();
+}
+
 async function run() {
     const commandLine = parseCommandLine(process.argv.slice(2));
     if (commandLine.args.length === 0) {
         printUsage();
         return;
     }
-    const commandName = commandLine.args.splice(0, 1)[0];
-    const command = getAllCommands().find(x => x.name === commandName);
+    const controllerName = extractNextArg(commandLine);
+    const controller = controllers.find(x => x.name === controllerName);
+    if (!controller) {
+        throw new Error(`Unknown tool: ${controllerName}.`);
+    }
+    const commandName = extractNextArg(commandLine);
+    const command = controller.commands.find(x => x.name === commandName);
     if (!command) {
         throw new Error(`Unknown command: ${commandName}`);
     }

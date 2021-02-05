@@ -18,8 +18,7 @@ export async function compileSolidity(terminal: Terminal, args: { file: string }
     const codeName = changeExt(fileName, ".code");
 
     const runSol = async (toolPath: string, args: string[]) => {
-        const out = await run(toolPath, args, {cwd: fileDir}, (_message) => {
-        });
+        const out = await run(toolPath, args, {cwd: fileDir}, terminal);
         return out.replace(/\r?\n/g, "\r\n");
     };
 

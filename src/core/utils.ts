@@ -76,6 +76,7 @@ export async function downloadFromBinaries(
     src: string,
     options?: { executable?: boolean },
 ) {
+    src = src.replace("{p}", os.platform());
     const srcUrl = `http://sdkbinaries.tonlabs.io/${src}.gz`;
     terminal.write(`Downloading from ${srcUrl} to ${dstPath} ...`);
     const dstDir = path.dirname(dstPath);
@@ -89,7 +90,7 @@ export async function downloadFromBinaries(
     terminal.write("\n");
 }
 
-export function run(name: string, args: string[], options: SpawnOptionsWithoutStdio, log: (message: any) => void): Promise<string> {
+export function run(name: string, args: string[], options: SpawnOptionsWithoutStdio, terminal: Terminal): Promise<string> {
     return new Promise((resolve, reject) => {
         try {
             const isWindows = os.platform() === "win32";
@@ -108,12 +109,13 @@ export function run(name: string, args: string[], options: SpawnOptionsWithoutSt
             spawned.stdout.on("data", function (data) {
                 const text = data.toString();
                 output.push(text);
-                log(text);
+                terminal.log(text);
             });
 
             spawned.stderr.on("data", (data) => {
-                errors.push(data);
-                process.stderr.write(data.toString());
+                const text = data.toString();
+                errors.push(text);
+                terminal.writeError(text);
             });
 
             spawned.on("error", (err) => {
@@ -146,6 +148,9 @@ export function uniqueFilePath(folderPath: string, namePattern: string): string 
 export const consoleTerminal: Terminal = {
     write(text: string) {
         process.stdout.write(text);
+    },
+    writeError(text: string) {
+        process.stderr.write(text);
     },
     log(...args) {
         console.log(...args);

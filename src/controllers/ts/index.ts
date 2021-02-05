@@ -1,20 +1,22 @@
-import {createTS4Test} from "./codeFactory";
-import {runTS4Test} from "./runner";
-import {runTS4Inspector} from "./inspector";
+import {createTSTest} from "./codeFactory";
+import {runTSTest} from "./runner";
+import {runTSInspector} from "./inspector";
 import {ToolController} from "../../core";
 
-export const TS4: ToolController = {
+export const TestSuite: ToolController = {
+    name: "ts",
+    title: "Smart Contract Test Suite",
     commands: [{
-        name: "create-ts4-test",
-        title: "Create TS4 Test",
+        name: "create",
+        title: "Create Test",
         args: [{
             name: "folder",
             type: "folder",
         }],
-        run: createTS4Test,
+        run: createTSTest,
     }, {
-        name: "run-ts4-test",
-        title: "Run TS4 Test",
+        name: "run",
+        title: "Run Test",
         args: [{
             isArg: true,
             name: "file",
@@ -22,10 +24,10 @@ export const TS4: ToolController = {
             nameRegExp: /\.test\.py$/,
         },
         ],
-        run: runTS4Test,
+        run: runTSTest,
     }, {
-        name: "run-ts4-inspector",
-        title: "Run TS4 Inspector",
+        name: "inspect",
+        title: "Inspect Test Result",
         args: [{
             isArg: true,
             name: "file",
@@ -33,6 +35,6 @@ export const TS4: ToolController = {
             nameRegExp: /\.test\.py$/,
 
         }],
-        run: runTS4Inspector,
+        run: runTSInspector,
     }],
 };
