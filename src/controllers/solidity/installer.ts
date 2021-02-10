@@ -28,7 +28,7 @@ export function stdLibPath() {
 }
 
 
-export async function ensureSolidityCompiler(terminal: Terminal) {
+export async function solidityEnsureInstalled(terminal: Terminal) {
     if (fs.existsSync(compilerPath())) {
         return;
     }

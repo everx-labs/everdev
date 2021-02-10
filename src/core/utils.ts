@@ -1,10 +1,10 @@
 import * as path from "path";
 import * as os from "os";
 import * as fs from "fs";
-import {spawn, SpawnOptionsWithoutStdio} from "child_process";
+import { spawn, SpawnOptionsWithoutStdio } from "child_process";
 import * as http from "http";
 import * as zlib from "zlib";
-import {Terminal} from "./index";
+import { Terminal } from "./index";
 
 export function executableName(name: string): string {
     return `${name}${os.platform() === "win32" ? ".exe" : ""}`;
@@ -23,7 +23,7 @@ function downloadAndGunzip(dest: string, url: string): Promise<void> {
                 });
                 return;
             }
-            let file: fs.WriteStream | null = fs.createWriteStream(dest, {flags: "w"});
+            let file: fs.WriteStream | null = fs.createWriteStream(dest, { flags: "w" });
             let opened = false;
             const failed = (err: Error) => {
                 if (file) {
@@ -81,7 +81,7 @@ export async function downloadFromBinaries(
     terminal.write(`Downloading from ${srcUrl} to ${dstPath} ...`);
     const dstDir = path.dirname(dstPath);
     if (!fs.existsSync(dstDir)) {
-        fs.mkdirSync(dstDir, {recursive: true});
+        fs.mkdirSync(dstDir, { recursive: true });
     }
     await downloadAndGunzip(dstPath, srcUrl);
     if (options?.executable && os.platform() !== "win32") {
@@ -136,12 +136,13 @@ export function run(name: string, args: string[], options: SpawnOptionsWithoutSt
 }
 
 export function uniqueFilePath(folderPath: string, namePattern: string): string {
-    let index = 1;
+    let index = 0;
     while (true) {
-        const filePath = path.resolve(folderPath, namePattern.replace("{}", index.toString()));
+        const filePath = path.resolve(folderPath, namePattern.replace("{}", index === 0 ? "" : index.toString()));
         if (!fs.existsSync(filePath)) {
             return filePath;
         }
+        index += 1;
     }
 }
 
