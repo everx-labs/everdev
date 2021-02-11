@@ -12,7 +12,7 @@ export const solidityCompileCommand: Command = {
         name: "file",
         type: "file",
         title: "Source file",
-        nameRegExp: /\\.sol$/,
+        nameRegExp: /\.sol$/i,
     },
     ],
     async run(terminal: Terminal, args: { file: string }): Promise<void> {
