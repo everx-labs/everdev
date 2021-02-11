@@ -9,6 +9,7 @@
 		"url": "https://github.com/tonlabs/tondev.git"
 	},
 	"scripts": {
+		"postinstall": "tsc",
 		"prepublishOnly": "npm i && tsc",
 		"tondev": "node ./dist/cli/index.js"
 	},
