@@ -5,13 +5,6 @@ Easily prepare your local Free TON Developer Environment - download and install 
 Join our telegram channel and find answers to your questions.  
 [![Channel on Telegram](https://img.shields.io/badge/chat-on%20telegram-9cf.svg)](https://t.me/freeton_sdk)
 
-TON Dev Environment is an integration point for development tools related to TON Blockchain.
-
-There are two kind of software connected to TONDev:
-
-- Development tools such as a compilers, networks, debuggers and so on.
-- User Interaction services such as an IDE plugins, CLI, GUI applications etc.
-
 ## Toolkit components
 
 Each component is downloaded automatically for the target platform upon the first request.
@@ -49,7 +42,7 @@ tondev <tool> <command> ...args
 Solidity:
 
 ```shell
-$ tondev sol demo
+tondev sol demo
 ```
 
 ## Compile
@@ -57,7 +50,7 @@ $ tondev sol demo
 Solidity:
 
 ```shell
-$ tondev sol compile hello.sol
+tondev sol compile hello.sol
 ```
 
 ## Debug
@@ -65,19 +58,19 @@ $ tondev sol compile hello.sol
 ### Create TS Rest
 
 ```shell
-$ tondev ts create
+tondev ts create
 ```
 
 ### Run TS Test
 
 ```shell
-$ tondev ts run
+tondev ts run
 ```
 
 ### Inspect TS Results
 
 ```shell
-$ tondev ts inspect
+tondev ts inspect
 ```
 
 ## Run Local Node TONOS SE
@@ -85,11 +78,20 @@ $ tondev ts inspect
 Attention! Docker daemon must be running.
 
 ```shell
-$ tondev se start
+tondev se start
 ```
 
 Go to the GraphQL playground to check that it launched successfully [http://localhost/graphql]
 
-## Implementing Controller
+## TONDEV Extensibility
 
-## Implementing User Interaction
+TON Dev Environment is an integration point for development tools related to TON Blockchain.
+
+There are two kind of software connected to TONDev:
+
+- Development tools such as a compilers, networks, debuggers and so on.
+- User Interaction services such as an IDE plugins, CLI, GUI applications etc.
+
+### Implementing Controller
+
+### Implementing User Interaction
