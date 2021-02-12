@@ -157,3 +157,28 @@ export const consoleTerminal: Terminal = {
         console.log(...args);
     },
 };
+
+export const nullTerminal: Terminal = {
+    write(_text: string) {
+    },
+    writeError(_text: string) {
+    },
+    log(..._args) {
+    },
+};
+
+export function stringTerminal(): Terminal & { output: string, error: string } {
+    return {
+        output: "",
+        error: "",
+        write(text: string) {
+            this.output += text;
+        },
+        writeError(text: string) {
+            this.error += text;
+        },
+        log(...args: any[]) {
+            this.write(`${args.map(x => `${x}`).join(" ")}\n`);
+        },
+    };
+}

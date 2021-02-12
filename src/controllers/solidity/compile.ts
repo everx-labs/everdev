@@ -1,19 +1,20 @@
 import path from "path";
 import * as fs from "fs";
-import { compilerPath, solidityEnsureInstalled, linkerPath, stdLibPath } from "./installer";
+import { solidityEnsureInstalled, stdLibPath, solc, tvmLinker } from "./installer";
 import { Command, Terminal } from "../../core";
-import { changeExt, run } from "../../core/utils";
+import { changeExt } from "../../core/utils";
 
 export const solidityCompileCommand: Command = {
     name: "compile",
     title: "Compile Solidity Contract",
-    args: [{
-        isArg: true,
-        name: "file",
-        type: "file",
-        title: "Source file",
-        nameRegExp: /\.sol$/i,
-    },
+    args: [
+        {
+            isArg: true,
+            name: "file",
+            type: "file",
+            title: "Source file",
+            nameRegExp: /\.sol$/i,
+        },
     ],
     async run(terminal: Terminal, args: { file: string }): Promise<void> {
         terminal.log("Starting build...");
@@ -28,13 +29,9 @@ export const solidityCompileCommand: Command = {
         const tvcName = changeExt(fileName, ".tvc");
         const codeName = changeExt(fileName, ".code");
 
-        const runSol = async (toolPath: string, args: string[]) => {
-            const out = await run(toolPath, args, { cwd: fileDir }, terminal);
-            return out.replace(/\r?\n/g, "\r\n");
-        };
+        const compilerOut = await solc(terminal, fileDir, [fileName]);
+        const linkerOut = await tvmLinker(terminal, fileDir, ["compile", codeName, "--lib", stdLibPath()]);
 
-        const compilerOut = await runSol(compilerPath(), [fileName]);
-        const linkerOut = await runSol(linkerPath(), ["compile", codeName, "--lib", stdLibPath()]);
         const generatedTvcName = `${/Saved contract to file (.*)$/mg.exec(linkerOut)?.[1]}`;
         fs.renameSync(path.resolve(fileDir, generatedTvcName), path.resolve(fileDir, tvcName));
         fs.unlinkSync(path.resolve(fileDir, codeName));

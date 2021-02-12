@@ -1,6 +1,8 @@
 import {Command, CommandArg} from "../core";
 import {controllers} from "../controllers";
 import {consoleTerminal} from "../core/utils";
+import * as fs from "fs";
+import * as path from "path";
 
 enum ParseState {
     OptionOrArg,
@@ -44,7 +46,9 @@ function parseCommandLine(programArgs: string[]): CommandLine {
 }
 
 export function printUsage() {
-    console.log("Use: tondev command args...\n");
+    const pkg = JSON.parse(fs.readFileSync(path.resolve(__dirname, "..", "..", "package.json"), "utf8"));
+    console.log("Use: tondev command args...");
+    console.log(`Version: ${pkg.version}`);
     console.log("Commands:");
     const commands: [string, Command][] = [];
     for (const controller of controllers) {
