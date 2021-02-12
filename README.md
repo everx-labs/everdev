@@ -43,7 +43,7 @@ tondev <tool> <command> ...args
 Solidity:
 
 ```shell
-tondev sol demo
+tondev sol create Contract
 ```
 
 ## Compile
@@ -51,48 +51,24 @@ tondev sol demo
 Solidity:
 
 ```shell
-tondev sol compile hello.sol
+tondev sol compile Contract.sol
 ```
 
-## Debug
+# Roadmap:
 
-### Create TS Rest
+## Solidity
+- support other compilation and linking options
 
-```shell
-tondev ts create
-```
+## C/C++
+- Compile C/C++ contracts
 
-### Run TS Test
+## TS4
+- debug contracts with TS framework and tools
 
-```shell
-tondev ts run
-```
+## Network support
+- connection to main.ton.dev, net.ton.dev and custom network configurations
+- local network
+- deploying to networks
+- operating with TON blockchains including real blockchain networks, TONOS SE
 
-### Inspect TS Results
 
-```shell
-tondev ts inspect
-```
-
-## Run Local Node TONOS SE
-
-Attention! Docker daemon must be running.
-
-```shell
-tondev se start
-```
-
-Go to the GraphQL playground to check that it launched successfully [http://localhost/graphql]
-
-## TONDEV Extensibility
-
-TON Dev Environment is an integration point for development tools related to TON Blockchain.
-
-There are two kind of software connected to TONDev:
-
-- Development tools such as a compilers, networks, debuggers and so on.
-- User Interaction services such as an IDE plugins, CLI, GUI applications etc.
-
-### Implementing Controller
-
-### Implementing User Interaction
