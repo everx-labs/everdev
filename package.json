@@ -11,10 +11,10 @@
 	"scripts": {
 		"prepublish": "tsc",
 		"prepublishOnly": "npm i && tsc",
-		"tondev": "node ./dist/cli/index.js"
+		"tondev": "node ./cli.js"
 	},
 	"bin": {
-		"tondev": "./dist/cli/index.js"
+		"tondev": "./cli.js"
 	},
 	"keywords": [
 		"TON",

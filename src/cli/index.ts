@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import {Command, CommandArg} from "../core";
 import {controllers} from "../controllers";
 import {consoleTerminal} from "../core/utils";
@@ -88,7 +87,7 @@ function extractNextArg(commandLine: CommandLine): string {
     return (commandLine.args.splice(0, 1)[0] ?? "").toLowerCase();
 }
 
-async function run() {
+export async function run() {
     const commandLine = parseCommandLine(process.argv.slice(2));
     if (commandLine.args.length === 0) {
         printUsage();
@@ -110,14 +109,3 @@ async function run() {
     }
     await command.run(consoleTerminal, args);
 }
-
-
-(async () => {
-    try {
-        await run();
-    } catch (err) {
-        console.error(err);
-        process.exit(1);
-    }
-})();
-
