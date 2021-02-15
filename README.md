@@ -93,6 +93,4 @@ There are two kind of software connected to TONDev:
 - Development tools such as a compilers, networks, debuggers and so on.
 - User Interaction services such as an IDE plugins, CLI, GUI applications etc.
 
-### Implementing Controller
-
-### Implementing User Interaction
+Learn more about creating your own controller: [Creating Controller](docs/creating_controller.md)
