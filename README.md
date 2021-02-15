@@ -43,7 +43,7 @@ tondev <tool> <command> ...args
 Solidity:
 
 ```shell
-tondev sol demo
+tondev sol create Contract
 ```
 
 ## Compile
@@ -51,38 +51,29 @@ tondev sol demo
 Solidity:
 
 ```shell
-tondev sol compile hello.sol
+tondev sol compile Contract.sol
 ```
 
-## Debug
+## Roadmap
 
-### Create TS Rest
+### Solidity
 
-```shell
-tondev ts create
-```
+- support other compilation and linking options
 
-### Run TS Test
+### C/C++
 
-```shell
-tondev ts run
-```
+- Compile C/C++ contracts
 
-### Inspect TS Results
+### TS4
 
-```shell
-tondev ts inspect
-```
+- debug contracts with TS framework and tools
 
-## Run Local Node TONOS SE
+### Network support
 
-Attention! Docker daemon must be running.
-
-```shell
-tondev se start
-```
-
-Go to the GraphQL playground to check that it launched successfully [http://localhost/graphql]
+- connection to main.ton.dev, net.ton.dev and custom network configurations
+- local network
+- deploying to networks
+- operating with TON blockchains including real blockchain networks, TONOS SE
 
 ## TONDEV Extensibility
 
