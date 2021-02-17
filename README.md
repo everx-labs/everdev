@@ -28,19 +28,20 @@
 TONDEV an Node.js package with CLI interface that allows to easily download and install all the core TON.DEV components in background and use them from a single interface.
 Also, this project serves as a backend for [TONDEV VS Code plugin](https://github.com/tonlabs/tondev-vscode). 
 
-It can be extended with other tools following the [instructions of integration](#tondev-extensibility).
 
 ## What components does it support?
 
 These components are supported or will be supported soon.  
 Each component is downloaded and installed automatically for the target platform upon the first request.
 
-- Solidity Compiler
-- TON-SDK
-- C/C++ Compiler - SOON
-- TON OS Startup Edition – SOON
-- TS – SOON
-- tonos-cli (installation only) – SOON
+- [Solidity Compiler](https://github.com/tonlabs/TON-Solidity-Compiler)
+- [TON-SDK](https://github.com/tonlabs/TON-SDK)
+- [C/C++ Compiler](https://github.com/tonlabs/TON-Compiler) - SOON
+- [TON OS Startup Edition](https://github.com/tonlabs/tonos-se) – SOON
+- [TestSuite4](https://github.com/tonlabs/TestSuite4) – SOON
+- [tonos-cli](https://github.com/tonlabs/tonos-cli) (installation only) – SOON
+
+It can be extended with other tools following the [instructions of integration](#tondev-extensibility). 
 
 # Installation
 
