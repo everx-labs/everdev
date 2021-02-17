@@ -54,21 +54,34 @@ Solidity:
 tondev sol compile Contract.sol
 ```
 
-# Roadmap:
+## Roadmap
 
-## Solidity
+### Solidity
+
 - support other compilation and linking options
 
-## C/C++
+### C/C++
+
 - Compile C/C++ contracts
 
-## TS4
+### TS4
+
 - debug contracts with TS framework and tools
 
-## Network support
+### Network support
+
 - connection to main.ton.dev, net.ton.dev and custom network configurations
 - local network
 - deploying to networks
 - operating with TON blockchains including real blockchain networks, TONOS SE
 
+## TONDEV Extensibility
 
+TON Dev Environment is an integration point for development tools related to TON Blockchain.
+
+There are two kind of software connected to TONDev:
+
+- Development tools such as a compilers, networks, debuggers and so on.
+- User Interaction services such as an IDE plugins, CLI, GUI applications etc.
+
+Learn more about creating your own controller: [Creating Controller](docs/creating_controller.md)
