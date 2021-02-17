@@ -52,12 +52,12 @@ It can be extended with other tools following the [instructions of integration](
 - Solidity compiler requires VC++ Runtime on Windows. You can install it from [the latest supported Visual C++ downloads](https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0).
 
 
-**Run this command to install:**
+**Install**
 
 ```shell
 $ npm i -g tondev
 ```
-**Run this commands to update**
+**Update**
 
 ```shell
 $ npm r -g tondev  
