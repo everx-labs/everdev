@@ -1,34 +1,34 @@
 # Creating Controller
 
-Currently all controllers must be implemented inside of the `tondev` package.
+Currently all the controllers must be implemented inside of the `tondev` package.
 
-To create new controller:
+To create a new controller:
 
 - Clone `git@github.com:tonlabs/tondev.git`.
-- Create and checkout branch for new controller.
-- Create folder under `src/controllers`.
-- Implement controller code.
-- Include new controller in file `src/controllers/index.js`.
+- Create and checkout branch for the new controller.
+- Create a folder under `src/controllers`.
+- Implement the controller code.
+- Include the new controller in file `src/controllers/index.js`.
 - Create pool request.
 
-## What controller should and what shouldn't to do
+## What a controller should and what it shouldn't to do
 
 Controller should:
 
-- Exposes functionality to the user as a list of commands.
-- Installs the required tool components on demand (on first usage).
-- Starts and stops the tool components that acts like a demons.
-- Defines three commands to control the tool version:
+- Expose functionality to the user as a list of commands.
+- Install the required tool components on demand (on first usage).
+- Start and stop the tool components that acts like a demons.
+- Define three commands to control the tool version:
   - `version` to show the currently installed tool version;
-  - `update` to update tool to the latest available version;
+  - `update` to update the tool to the latest available version;
   - `use` to select the specified tool version as the current version.
 
 Controller shouldn't:
 
-- Implements tool functionality itself. Controller is a connector between the user and the existing development tool.
-- Implements user interaction itself. All user interaction must be implemented exactly in the terms of tondev extensibility.
+- Implement tool functionality itself. Controller is a connector between the user and the existing development tool.
+- Implement user interaction itself. All user interaction must be implemented exactly in the terms of tondev extensibility.
 
-## Implementing Controller
+## How to implement a Controller
 
 Create folder for new controller:
 
