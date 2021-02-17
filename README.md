@@ -8,7 +8,7 @@
 - [What is TONDEV](#what-is-tondev)
     - [What components does it support?](#what-components-does-it-support)
 - [Installation](#installation)
-- [Supported commands](#supported-operations)
+- [Supported commands](#supported-commands)
   - [Solidity](#solidity)
     - [Create your first contract](#create-your-first-contract)
     - [Compile](#compile)
@@ -21,13 +21,14 @@
   - [Solidity](#solidity)
   - [C/C++](#cc)
   - [TS4](#ts4)
+  - [SDK](#sdk)
   - [Network Support](#network-support)
 
 # What is TONDEV?
-TONDEV allows to easily download and install all the core TON.DEV components in background and use them from a single interface.
-
-TONDEV functionality is accesible via CLI interface, it also can be included in Javascript projects as a package.
+TONDEV an Node.js package with CLI interface that allows to easily download and install all the core TON.DEV components in background and use them from a single interface.
 Also, this project serves as a backend for [TONDEV VS Code plugin](https://github.com/tonlabs/tondev-vscode). 
+
+It can be extended with other tools following the [instructions of integration](#tondev-extensibility).
 
 ## What components does it support?
 
@@ -41,7 +42,7 @@ Each component is downloaded and installed automatically for the target platform
 - TS – SOON
 - tonos-cli (installation only) – SOON
 
-# CLI Installation
+# Installation
 
 ## Dependencies
 
@@ -53,14 +54,19 @@ Each component is downloaded and installed automatically for the target platform
 **Run this command to install:**
 
 ```shell
-npm i -g tondev
+$ npm i -g tondev
 ```
+**Run this commands to update**
 
+```shell
+$ npm r -g tondev  
+$ npm i -g tondev
+```
 
 # Supported commands
 
 ```shell
-% tondev
+$ tondev
 Use: tondev command args...
 Version: 0.1.4
 Commands:
@@ -75,44 +81,54 @@ Commands:
 **General command syntax**
 
 ```shell
-tondev <tool> <command> ...args
+$ tondev <tool> <command> ...args
 ```
 
 # Solidity
 ## Create your first contract
-This command creates a hello-world contract with comments that you get observe
+This command creates a hello-world contract with comments that you can observe
 and compile.
 
 ```shell
-tondev sol create Contract
+$ tondev sol create Contract
 ```
 
 ## Compile
 
 This command compiles a selected contract. 
-After successful compilation you get .abi.json and .tvc files that you can later use in your DApps to deploy and call contract methods.
+After successful compilation you get .abi.json and .tvc files that you can later [use in your DApps to deploy and call contract methods](https://docs.ton.dev/86757ecb2/p/07f1a5-add-contract-to-your-app-/b/462f33).
 
 ```shell
-tondev sol compile Contract.sol
+$ tondev sol compile Contract.sol
 ```
 
 ## Version
 This command shows the currently installed Solidity compiler version.
 
 ```shell
-tondev sol version
+$ tondev sol version
 ```
 
 ## Update
-This command updates the compiler - downloads the latest released binaries. 
+This command updates the compiler to the latest version. 
 
 ```shell
-tondev sol update
+$ tondev sol update
+```
+
+# SDK
+
+## Create Demo Project
+
+This command creates a Node.js project with SDK latest dependencies and jndex.js file with main Client object creation.
+
+```shell
+$ tondev js create
 ```
 
 # TONDEV Extensibility
 
-TON Dev Environment is an integration point for development tools related to TON Blockchain.
+TON Dev Environment is an integration point for development tools related to Free TON Blockchain.
 
 There are two kind of software connected to TONDev:
 
@@ -126,7 +142,8 @@ Learn more about creating your own controller: [Creating Controller](docs/creati
 
 ## Solidity
 
-- support other compilation and linking options
+- syntax highligting - Q1 2021 
+- support other compilation and linking options 
 
 ## C/C++
 
@@ -137,12 +154,13 @@ Learn more about creating your own controller: [Creating Controller](docs/creati
 - debug contracts with TS framework and tools
 
 ## SDK
-- Create and run Web Demo DApp with one command
+- Create and run Web Demo DApp with one command 
 
 ## Network support
+Q1 2021:
+- Connect to networks: main.ton.dev, net.ton.dev, local network
+- Add a custom network
+- Setup network giver
+- Deploy to network
 
-- connect to networks: main.ton.dev, net.ton.dev
-- connect to local network
-- connect to a custom network
-- setup network giver
-- deploy to network
+## etc....
