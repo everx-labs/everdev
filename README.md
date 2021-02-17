@@ -87,8 +87,7 @@ $ tondev <tool> <command> ...args
 
 # Solidity
 ## Create your first contract
-This command creates a hello-world contract with comments that you can observe
-and compile.
+This command creates a hello-world Solidity contract with comments that you can observe and compile.
 
 ```shell
 $ tondev sol create Contract
@@ -96,7 +95,7 @@ $ tondev sol create Contract
 
 ## Compile
 
-This command compiles a selected contract. 
+This command compiles and links a selected Solidity contract. 
 After successful compilation you get .abi.json and .tvc files that you can later [use in your DApps to deploy and call contract methods](https://docs.ton.dev/86757ecb2/p/07f1a5-add-contract-to-your-app-/b/462f33).
 
 ```shell
@@ -121,7 +120,7 @@ $ tondev sol update
 
 ## Create Demo Project
 
-This command creates a Node.js project with SDK latest dependencies and jndex.js file with main Client object creation.
+This command creates a Node.js project with SDK latest dependencies and index.js file with main Client object creation.
 
 ```shell
 $ tondev js create
