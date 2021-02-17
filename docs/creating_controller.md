@@ -30,14 +30,14 @@ Controller shouldn't:
 
 ## How to implement a Controller
 
-Create folder for new controller:
+Create a folder for a new controller:
 
 ```shell
 mkdir src/controllers/foo
 cd src/controllers/foo
 ```
 
-Create `index.ts` with controller definition:
+Create `index.ts` with the controller's definition:
 
 ```ts
 import { ToolController } from "../../core";
@@ -56,7 +56,7 @@ export const Foo: ToolController = {
 };
 ```
 
-Create `installer.ts` to implement all code related to the tool installation:
+Create `installer.ts` to implement all the code related to the tool installation:
 
 ```ts
 import path from "path";
