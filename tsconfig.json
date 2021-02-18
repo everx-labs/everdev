@@ -1,0 +1,45 @@
+{
+	"compilerOptions": {
+		"lib": [
+			"es2019",
+			"es2020.promise",
+			"es2020.bigint",
+			"es2020.string"
+		],
+		"module": "commonjs",
+		"target": "es2019",
+		"strict": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"composite": true,
+		"moduleResolution": "node",
+		"sourceMap": true,
+		"declaration": true,
+		"declarationMap": true,
+		"removeComments": false,
+		"noImplicitAny": true,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
+		"noUnusedParameters": true,
+		"noUnusedLocals": true,
+		"types": [
+			"node"
+		],
+		"baseUrl": ".",
+		"paths": {
+			"*": [
+				"types/*"
+			]
+		},
+		"rootDir": "./src",
+		"outDir": "./dist"
+	},
+	"include": [
+		"src/**/*"
+	],
+	"exclude": [
+		"**/__tests__",
+		"**/__mocks__"
+	]
+}
