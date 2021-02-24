@@ -17,10 +17,11 @@
 		"tondev": "./cli.js"
 	},
 	"keywords": [
+		"Free",
 		"TON",
+		"Freeton",
 		"Dev",
 		"Development",
-		"FreeTON",
 		"TONOS"
 	],
 	"author": "TON DEV SOLUTIONS LTD.",
