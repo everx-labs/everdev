@@ -1,13 +1,12 @@
-import {Command, CommandArg} from "../core";
-import {controllers} from "../controllers";
-import {consoleTerminal} from "../core/utils";
+import { Command, CommandArg, ToolController } from "../core";
+import { controllers } from "../controllers";
+import { consoleTerminal } from "../core/utils";
 import * as fs from "fs";
 import * as path from "path";
 
 enum ParseState {
     OptionOrArg,
     OptionValue,
-    Arg,
 }
 
 type CommandLine = {
@@ -22,22 +21,30 @@ function parseCommandLine(programArgs: string[]): CommandLine {
     const options: { [name: string]: any } = {};
 
     for (const arg of programArgs) {
-        const argOption: string | null = arg.startsWith("-")
-            ? arg.substr(1)
-            : (arg.startsWith("--") ? arg.substr(2) : null);
-
-        if (state === ParseState.OptionOrArg && argOption) {
-            option = argOption;
-            state = ParseState.OptionValue;
-        } else if (state === ParseState.OptionOrArg) {
-            args.push(arg);
-            state = ParseState.Arg;
-        } else if (state === ParseState.OptionValue) {
-            options[option] = arg;
-            state = ParseState.OptionOrArg;
-        } else if (state === ParseState.Arg) {
-            args.push(arg);
+        const argOption: string | null =
+            arg.startsWith("--") ? arg.substr(2) : (arg.startsWith("-") ? arg : null);
+        switch (state) {
+            case ParseState.OptionOrArg:
+                if (option !== "") {
+                    options[option] = "";
+                }
+                if (argOption) {
+                    option = argOption;
+                    state = ParseState.OptionValue;
+                } else {
+                    option = "";
+                    args.push(arg);
+                }
+                break;
+            case ParseState.OptionValue:
+                options[option] = arg;
+                option = "";
+                state = ParseState.OptionOrArg;
+                break;
         }
+    }
+    if (option !== "") {
+        options[option] = "";
     }
     return {
         args,
@@ -45,21 +52,63 @@ function parseCommandLine(programArgs: string[]): CommandLine {
     };
 }
 
-export function printUsage() {
+export function printCommandUsage(controller: ToolController, command: Command) {
+    let usageArgs = "";
+    const options: CommandArg[] = [];
+    const args: CommandArg[] = [];
+    for (const arg of command.args ?? []) {
+        if (arg.isArg) {
+            usageArgs += ` ${arg.name}`;
+            args.push(arg);
+        } else {
+            options.push(arg);
+        }
+    }
+    if (options.length > 0) {
+        usageArgs += ` [options]`;
+    }
+    console.log(`Use: tondev ${controller.name} ${command.name}${usageArgs}`);
+    if (args.length > 0) {
+        console.log("Args:");
+        let colWidth = options.reduce((w, x) => Math.max(w, x.name.length), 0);
+        args.forEach(x => {
+            console.log(`    ${x.name.padEnd(colWidth)}  ${x.title ?? ""}`);
+        });
+    }
+    console.log("Options:");
+    console.log(`    --help, -h  Show command usage`);
+    let colWidth = options.reduce((w, x) => Math.max(w, x.name.length), 0);
+    options.forEach(x => {
+        console.log(`    --${x.name.padEnd(colWidth)}  ${x.title ?? ""}`);
+    });
+    return;
+}
+
+export function printUsage(useController?: ToolController, useCommand?: Command) {
     const pkg = JSON.parse(fs.readFileSync(path.resolve(__dirname, "..", "..", "package.json"), "utf8"));
-    console.log("Use: tondev command args...");
-    console.log(`Version: ${pkg.version}`);
+    console.log(`TONDev Version: ${pkg.version}`);
+    if (useController && useCommand) {
+        printCommandUsage(useController, useCommand);
+        return;
+    }
+    console.log(`Use: tondev ${useController?.name ?? "tool"} ${useCommand?.name ?? "command"} args [options]`);
+    console.log(`Options:`);
+    console.log(`    --help, -h  Show command usage`);
     console.log("Commands:");
     const commands: [string, Command][] = [];
     for (const controller of controllers) {
         for (const command of controller.commands) {
-            commands.push([`${controller.name} ${command.name}`, command])
+            if ((useController === undefined || useController === controller)
+                && (useCommand === undefined || useCommand === command)) {
+                commands.push([`${controller.name} ${command.name}`, command])
+            }
         }
     }
     let colWidth = commands.reduce((w, x) => Math.max(w, x[0].length), 0);
     commands.forEach(x => {
-        console.log(`    ${x[0].padEnd(colWidth)}  ${x[1].title}`);
+        console.log(`    ${x[0].padEnd(colWidth)}  ${x[1].title ?? ""}`);
     });
+    return;
 }
 
 function missingArgError(arg: CommandArg): Error {
@@ -91,6 +140,13 @@ function extractNextArg(commandLine: CommandLine): string {
     return (commandLine.args.splice(0, 1)[0] ?? "").toLowerCase();
 }
 
+function getOption(commandLine: CommandLine, name: string, alias: string): string | undefined {
+    if (commandLine.options[name] !== undefined) {
+        return commandLine.options[name];
+    }
+    return commandLine.options[alias];
+}
+
 export async function run() {
     const commandLine = parseCommandLine(process.argv.slice(2));
     if (commandLine.args.length === 0) {
@@ -105,7 +161,15 @@ export async function run() {
     const commandName = extractNextArg(commandLine);
     const command = controller.commands.find(x => x.name === commandName);
     if (!command) {
-        throw new Error(`Unknown command: ${commandName}`);
+        if (commandName) {
+            throw new Error(`Unknown command: ${commandName}`);
+        }
+        printUsage(controller, command);
+        return;
+    }
+    if (getOption(commandLine, "help", "-h") !== undefined) {
+        printUsage(controller, command);
+        return;
     }
     const args: { [name: string]: any } = {};
     for (const arg of command.args ?? []) {
