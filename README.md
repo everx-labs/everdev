@@ -1,4 +1,4 @@
-<p align="center"><a href="https://www.npmjs.com/package/tondev"><img src="assets/tondev-blue.png" height="160"/></a></p> 
+<p align="center"><a href="https://www.npmjs.com/package/tondev"><img src="assets/tondev-ZT.png" height="90"/></a></p> 
 <h1 align="center">TONDEV</h1>
 <p align="center">Free TON Developer Environment</p>
 
