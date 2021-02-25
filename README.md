@@ -15,15 +15,15 @@
     - [Install](#install)
     - [Update](#update)
   - [Use in JS applications](#use-in-js-applications)
-  - [Supported commands](#supported-commands)
+  - [Command Line Interface](#command-line-interface)
     - [General command syntax](#general-command-syntax)
-  - [Solidity](#solidity)
-    - [Create your first contract](#create-your-first-contract)
-    - [Compile](#compile)
-    - [Version](#version)
-    - [Update](#update-1)
-  - [SDK](#sdk)
-    - [Create Demo Project](#create-demo-project)
+    - [Solidity](#solidity)
+      - [Create your first contract](#create-your-first-contract)
+      - [Compile](#compile)
+      - [Version](#version)
+      - [Update](#update-1)
+    - [SDK](#sdk)
+      - [Create Demo Project](#create-demo-project)
   - [TONDEV Extensibility](#tondev-extensibility)
   - [Backlog](#backlog)
     - [Solidity](#solidity-1)
@@ -98,30 +98,16 @@ async function main() {
 main();
 ```
 
-## Supported commands
-
-```shell
-$ tondev
-Use: tondev command args...
-Version: 0.1.4
-Commands:
-    sol create   Create Solidity Contract
-    sol compile  Compile Solidity Contract
-    sol version  Show Solidity Version
-    sol update   Update Solidity Compiler
-    js create    Create TON JS App
-
-```
-
+## Command Line Interface
 ### General command syntax
 
 ```shell
 tondev <tool> <command> ...args
 ```
 
-## Solidity
+### Solidity
 
-### Create your first contract
+#### Create your first contract
 
 This command creates a hello-world Solidity contract with comments that you can observe and compile.
 
@@ -129,7 +115,7 @@ This command creates a hello-world Solidity contract with comments that you can 
 tondev sol create Contract
 ```
 
-### Compile
+#### Compile
 
 This command compiles and links a selected Solidity contract. 
 After successful compilation you get .abi.json and .tvc files that you can later [use in your DApps to deploy and call contract methods](https://docs.ton.dev/86757ecb2/p/07f1a5-add-contract-to-your-app-/b/462f33).
@@ -138,7 +124,7 @@ After successful compilation you get .abi.json and .tvc files that you can later
 tondev sol compile Contract.sol
 ```
 
-### Version
+#### Version
 
 This command shows the currently installed Solidity compiler version.
 
@@ -146,7 +132,7 @@ This command shows the currently installed Solidity compiler version.
 tondev sol version
 ```
 
-### Update
+#### Update
 
 This command updates the compiler to the latest version.
 
@@ -154,9 +140,9 @@ This command updates the compiler to the latest version.
 tondev sol update
 ```
 
-## SDK
+### SDK
 
-### Create Demo Project
+#### Create Demo Project
 
 This command creates a Node.js project with SDK latest dependencies and index.js file with main Client object creation.
 
