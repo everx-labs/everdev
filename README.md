@@ -1,35 +1,44 @@
 # TONDEV - Free TON Developer Environment
 
-**Have a question? Get quick help in our channel:** 
+**Have a question? Get quick help in our channel:**
 
 [![Channel on Telegram](https://img.shields.io/badge/chat-on%20telegram-9cf.svg)](https://t.me/ton_sdk)
 
-# Content Table
-- [What is TONDEV](#what-is-tondev)
+## Content Table
+
+- [TONDEV - Free TON Developer Environment](#tondev---free-ton-developer-environment)
+  - [Content Table](#content-table)
+  - [What is TONDEV?](#what-is-tondev)
     - [What components does it support?](#what-components-does-it-support)
-- [Installation](#installation)
-- [Supported commands](#supported-commands)
+  - [Installation](#installation)
+    - [Dependencies](#dependencies)
+      - [Install](#install)
+      - [Update](#update)
+  - [Use in JS applications](#use-in-js-applications)
+  - [Supported commands](#supported-commands)
+    - [General command syntax](#general-command-syntax)
   - [Solidity](#solidity)
     - [Create your first contract](#create-your-first-contract)
     - [Compile](#compile)
     - [Version](#version)
-    - [Update](#update)
+    - [Update](#update-1)
   - [SDK](#sdk)
     - [Create Demo Project](#create-demo-project)
-- [TONDEV Extensibility](#tondev-extensibility)
-- [Backlog](#backlog)
-  - [Solidity](#solidity)
-  - [C/C++](#cc)
-  - [TS4](#ts4)
-  - [SDK](#sdk)
-  - [Network Support](#network-support)
+  - [TONDEV Extensibility](#tondev-extensibility)
+  - [Backlog](#backlog)
+    - [Solidity](#solidity-1)
+    - [C/C++](#cc)
+    - [TS4](#ts4)
+    - [SDK](#sdk-1)
+    - [Network support](#network-support)
+    - [etc](#etc)
 
-# What is TONDEV?
+## What is TONDEV?
+
 TONDEV an Node.js package with CLI interface that allows to easily download and install all the core TON.DEV components in background and use them from a single interface.
-Also, this project serves as a backend for [TONDEV VS Code plugin](https://github.com/tonlabs/tondev-vscode). 
+Also, this project serves as a backend for [TONDEV VS Code plugin](https://github.com/tonlabs/tondev-vscode).
 
-
-## What components does it support?
+### What components does it support?
 
 These components are supported or will be supported soon.  
 Each component is downloaded and installed automatically for the target platform upon the first request.
@@ -41,30 +50,55 @@ Each component is downloaded and installed automatically for the target platform
 - [TestSuite4](https://github.com/tonlabs/TestSuite4) – SOON
 - [tonos-cli](https://github.com/tonlabs/tonos-cli) (installation only) – SOON
 
-It can be extended with other tools following the [instructions of integration](#tondev-extensibility). 
+It can be extended with other tools following the [instructions of integration](#tondev-extensibility).
 
-# Installation
+## Installation
 
-## Dependencies
+### Dependencies
 
 - [`Node.js`](https://nodejs.org/) >= 10.x installed
 - (optional) [`Docker`](https://www.docker.com/)  >= 19.x installed
 - Solidity compiler requires VC++ Runtime on Windows. You can install it from [the latest supported Visual C++ downloads](https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0).
 
-
-**Install**
-
-```shell
-$ npm i -g tondev
-```
-**Update**
+#### Install
 
 ```shell
-$ npm r -g tondev  
-$ npm i -g tondev
+npm i -g tondev
 ```
 
-# Supported commands
+#### Update
+
+```shell
+npm r -g tondev  
+npm i -g tondev
+```
+
+## Use in JS applications
+
+You can easily use tondev as a regular npm package in your JS applications.
+
+Just add dependency into you `package.json`:
+
+```shell
+npm i -s tondev
+```
+
+And then run any command from tondev:
+
+```js
+const { consoleTerminal, runCommand } = require("tondev");
+const path = require("path");
+
+async function main() {
+    await runCommand(consoleTerminal, "sol compile", {
+        file: path.resolve(__dirname, "Hello.sol")
+    });
+}
+
+main();
+```
+
+## Supported commands
 
 ```shell
 $ tondev
@@ -79,54 +113,58 @@ Commands:
 
 ```
 
-**General command syntax**
+### General command syntax
 
 ```shell
-$ tondev <tool> <command> ...args
+tondev <tool> <command> ...args
 ```
 
-# Solidity
-## Create your first contract
+## Solidity
+
+### Create your first contract
+
 This command creates a hello-world Solidity contract with comments that you can observe and compile.
 
 ```shell
-$ tondev sol create Contract
+tondev sol create Contract
 ```
 
-## Compile
+### Compile
 
 This command compiles and links a selected Solidity contract. 
 After successful compilation you get .abi.json and .tvc files that you can later [use in your DApps to deploy and call contract methods](https://docs.ton.dev/86757ecb2/p/07f1a5-add-contract-to-your-app-/b/462f33).
 
 ```shell
-$ tondev sol compile Contract.sol
+tondev sol compile Contract.sol
 ```
 
-## Version
+### Version
+
 This command shows the currently installed Solidity compiler version.
 
 ```shell
-$ tondev sol version
+tondev sol version
 ```
 
-## Update
-This command updates the compiler to the latest version. 
+### Update
+
+This command updates the compiler to the latest version.
 
 ```shell
-$ tondev sol update
+tondev sol update
 ```
 
-# SDK
+## SDK
 
-## Create Demo Project
+### Create Demo Project
 
 This command creates a Node.js project with SDK latest dependencies and index.js file with main Client object creation.
 
 ```shell
-$ tondev js create
+tondev js create
 ```
 
-# TONDEV Extensibility
+## TONDEV Extensibility
 
 TON Dev Environment is an integration point for development tools related to Free TON Blockchain.
 
@@ -137,30 +175,32 @@ There are two kind of software connected to TONDev:
 
 Learn more about creating your own controller: [Creating Controller](docs/creating_controller.md)
 
+## Backlog
 
-# Backlog
+### Solidity
 
-## Solidity
+- syntax highlighting - Q1 2021
+- support other compilation and linking options
 
-- syntax highligting - Q1 2021 
-- support other compilation and linking options 
-
-## C/C++
+### C/C++
 
 - Integrate C/C++ compiler - easily install and compile C/C++ contracts
 
-## TS4
+### TS4
 
 - debug contracts with TS framework and tools
 
-## SDK
-- Create and run Web Demo DApp with one command 
+### SDK
 
-## Network support
+- Create and run Web Demo DApp with one command
+
+### Network support
+
 Q1 2021:
+
 - Connect to networks: main.ton.dev, net.ton.dev, local network
 - Add a custom network
 - Setup network giver
 - Deploy to network
 
-## etc....
+### etc

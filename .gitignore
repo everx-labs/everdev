@@ -105,3 +105,6 @@ dist
 /.idea/
 /package-lock.json
 .vscode/launch.json
+examples/sol/package-lock.json
+examples/sol/Hello.abi.json
+examples/sol/Hello.tvc
