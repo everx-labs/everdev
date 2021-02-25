@@ -40,22 +40,28 @@
 
 ## What is TONDEV?
 
-TONDEV an Node.js package with CLI interface that allows to easily download and install all the core TON.DEV components in background and use them from a single interface.
-Also, this project serves as a backend for [TONDEV VS Code plugin](https://github.com/tonlabs/tondev-vscode).
+TONDEV is a Node.js package with CLI interface that allows to easily download and install all the core TON.DEV components in background and use them from a single interface.
+Also, this project serves as a backend for [TONDEV VS Code extension](https://github.com/tonlabs/tondev-vscode).
 
 ### What components does it support?
 
 These components are supported or will be supported soon.  
 Each component is downloaded and installed automatically for the target platform upon the first request.
 
+- [Debot](https://docs.ton.dev/86757ecb2/p/72f1b7-debot-specifications) - SOON
+  Support of debot test chat(browser for debot testing), debot publishing, etc.
 - [Solidity Compiler](https://github.com/tonlabs/TON-Solidity-Compiler)
-- [TON-SDK](https://github.com/tonlabs/TON-SDK)
 - [C/C++ Compiler](https://github.com/tonlabs/TON-Compiler) - SOON
-- [TON OS Startup Edition](https://github.com/tonlabs/tonos-se) – SOON
-- [TestSuite4](https://github.com/tonlabs/TestSuite4) – SOON
+- [TON OS Startup Edition](https://github.com/tonlabs/tonos-se) – 
+  Local blockchain for development and testing
+- [TestSuite4](https://github.com/tonlabs/TestSuite4) – 
+Python lightweight framework for Solidity testing 
 - [tonos-cli](https://github.com/tonlabs/tonos-cli) (installation only) – SOON
+  TONOS Client Application with CLI interface
+- [TON-SDK](https://github.com/tonlabs/TON-SDK)
+  Core SDK Library. We plan to add some useful functionality like keys generation, address conversion, support of deploy, get methods, etc. from CLI and IDE
 
-It can be extended with other tools following the [instructions of integration](#tondev-extensibility).
+TONDEV can be extended with other tools following the [instructions of integration](#tondev-extensibility). 
 
 ## Installation
 
