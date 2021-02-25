@@ -1,8 +1,13 @@
+<p align="center"><a href="https://www.npmjs.com/package/tondev"><img src="assets/tondev-blue.png" height="60"/></a></p> 
+<h1 align="center">TONDEV</h1>
+<p align="center">Free TON Developer Environment</p>
+
+
+**Get quick help in our telegram channel:**
+
+[![Channel on Telegram](https://img.shields.io/badge/chat-on%20telegram-9cf.svg)](https://t.me/ton_sdk) 
+
 # TONDEV - Free TON Developer Environment
-
-**Have a question? Get quick help in our channel:**
-
-[![Channel on Telegram](https://img.shields.io/badge/chat-on%20telegram-9cf.svg)](https://t.me/ton_sdk)
 
 ## Content Table
 
