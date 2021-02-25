@@ -1,17 +1,18 @@
 <p align="center"><a href="https://www.npmjs.com/package/tondev"><img src="assets/tondev.png" height="60"/></a></p> 
 <h1 align="center">TONDEV</h1>
-<p align="center">Free TON Developer Environment</p>
+<p align="center">Free TON Development Environment</p>
 
 
 **Get quick help in our telegram channel:**
 
 [![Channel on Telegram](https://img.shields.io/badge/chat-on%20telegram-9cf.svg)](https://t.me/ton_sdk) 
 
-# TONDEV - Free TON Developer Environment
+# TONDEV - Free TON Development Environment
+Download and install all the core TON.DEV components in one click and access them from a single interface.
 
 ## Content Table
 
-- [TONDEV - Free TON Developer Environment](#tondev---free-ton-developer-environment)
+- [TONDEV - Free TON Development Environment](#tondev---free-ton-development-environment)
   - [Content Table](#content-table)
   - [What is TONDEV?](#what-is-tondev)
     - [What components does it support?](#what-components-does-it-support)
