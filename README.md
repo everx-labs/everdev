@@ -11,9 +11,9 @@
   - [What is TONDEV?](#what-is-tondev)
     - [What components does it support?](#what-components-does-it-support)
   - [Installation](#installation)
-    - [Dependencies](#dependencies)
-      - [Install](#install)
-      - [Update](#update)
+    - [Prerequisites](#prerequisites)
+    - [Install](#install)
+    - [Update](#update)
   - [Use in JS applications](#use-in-js-applications)
   - [Supported commands](#supported-commands)
     - [General command syntax](#general-command-syntax)
@@ -54,19 +54,19 @@ It can be extended with other tools following the [instructions of integration](
 
 ## Installation
 
-### Dependencies
+### Prerequisites
 
 - [`Node.js`](https://nodejs.org/) >= 10.x installed
 - (optional) [`Docker`](https://www.docker.com/)  >= 19.x installed
 - Solidity compiler requires VC++ Runtime on Windows. You can install it from [the latest supported Visual C++ downloads](https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0).
 
-#### Install
+### Install
 
 ```shell
 npm i -g tondev
 ```
 
-#### Update
+### Update
 
 ```shell
 npm r -g tondev  
