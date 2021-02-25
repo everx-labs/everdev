@@ -1,6 +1,7 @@
 <p align="center"><a href="https://www.npmjs.com/package/tondev"><img src="assets/tondev.png" height="60"/></a></p> 
 <h1 align="center">TONDEV</h1>
 <p align="center">Free TON Development Environment</p>
+</p>
 
 
 **Get quick help in our telegram channel:**
@@ -8,7 +9,7 @@
 [![Channel on Telegram](https://img.shields.io/badge/chat-on%20telegram-9cf.svg)](https://t.me/ton_sdk) 
 
 # TONDEV - Free TON Development Environment
-Download and install all the core TON.DEV components in one click and access them from a single interface.
+Download and install all the core [TON.DEV](https://docs.ton.dev/86757ecb2/p/04a4ba-) components in one click and access them from a single interface.
 
 ## Content Table
 
@@ -32,6 +33,7 @@ Download and install all the core TON.DEV components in one click and access the
       - [Create Demo Project](#create-demo-project)
   - [TONDEV Extensibility](#tondev-extensibility)
   - [Backlog](#backlog)
+    - [Debot](#debot)
     - [Solidity](#solidity-1)
     - [C/C++](#cc)
     - [TS4](#ts4)
@@ -49,18 +51,17 @@ Also, this project serves as a backend for [TONDEV VS Code extension](https://gi
 These components are supported or will be supported soon.  
 Each component is downloaded and installed automatically for the target platform upon the first request.
 
-- [Debot](https://docs.ton.dev/86757ecb2/p/72f1b7-debot-specifications) - SOON
-  Support of debot test chat(browser for debot testing), debot publishing, etc.
+- [Debot](https://docs.ton.dev/86757ecb2/p/72f1b7-debot-specifications) - **SOON**  
 - [Solidity Compiler](https://github.com/tonlabs/TON-Solidity-Compiler)
-- [C/C++ Compiler](https://github.com/tonlabs/TON-Compiler) - SOON
+- [C/C++ Compiler](https://github.com/tonlabs/TON-Compiler) - **SOON**  
 - [TON OS Startup Edition](https://github.com/tonlabs/tonos-se) – 
   Local blockchain for development and testing
-- [TestSuite4](https://github.com/tonlabs/TestSuite4) – 
-Python lightweight framework for Solidity testing 
-- [tonos-cli](https://github.com/tonlabs/tonos-cli) (installation only) – SOON
-  TONOS Client Application with CLI interface
-- [TON-SDK](https://github.com/tonlabs/TON-SDK)
-  Core SDK Library. We plan to add some useful functionality like keys generation, address conversion, support of deploy, get methods, etc. from CLI and IDE
+- [TestSuite4](https://github.com/tonlabs/TestSuite4) – **SOON**  
+  Python lightweight framework for Solidity testing 
+- [tonos-cli](https://github.com/tonlabs/tonos-cli) – **SOON** (installation only)     
+  Command line tool for TON OS
+- [TON-SDK](https://github.com/tonlabs/TON-SDK) -  **SOON**   
+  Core SDK Library features. 
 
 TONDEV can be extended with other tools following the [instructions of integration](#tondev-extensibility). 
 
@@ -175,10 +176,13 @@ Learn more about creating your own controller: [Creating Controller](docs/creati
 
 ## Backlog
 
+### Debot
+- Support of debot test chat(browser for debot testing), 
+- Debot publishing, etc.
+
 ### Solidity
 
-- syntax highlighting - Q1 2021
-- support other compilation and linking options
+- Support other compilation and linking options
 
 ### C/C++
 
@@ -186,11 +190,18 @@ Learn more about creating your own controller: [Creating Controller](docs/creati
 
 ### TS4
 
-- debug contracts with TS framework and tools
+- Debug contracts with TS framework and tools
 
 ### SDK
 
 - Create and run Web Demo DApp with one command
+- Generate keys
+- Calculate addresses
+- Estimate deploy fees
+- Deploy contracts,
+- Run on-chain methods 
+- Run get-methods
+- Convert addresses, etc.
 
 ### Network support
 
@@ -199,6 +210,3 @@ Q1 2021:
 - Connect to networks: main.ton.dev, net.ton.dev, local network
 - Add a custom network
 - Setup network giver
-- Deploy to network
-
-### etc
