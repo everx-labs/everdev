@@ -2,12 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.2.0] - 2021-02-24
+## [0.2.0] - 2021-02-26
 
 ### Added
-
-- TONOS-SE Controller.
-
+- [TON OS Startup Edition(SE) functionality](https://github.com/tonlabs/tondev#ton-os-startup-editionse):
+  - Start
+  - Version
+  - Set
+  - Reset
+  - Update
+  - Stop
+  - Info
 ## [0.1.7] – 2021-02-18
 
 ### New
