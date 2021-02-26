@@ -181,10 +181,11 @@ Available Versions: 0, 0.24, 0.24.5, 0.24.6, 0.24.8, 0.24.9, 0.24.10, 0.24.11, 0
 ```
 
 #### Set
-This command switches tonon se to the specified version and downloads it, it is missing. 
+This command switches tonon se to the specified version and port and downloads it, it is missing. 
+Attention! This command does not start TON OS SE, you need to run `start` command separately.
 
 ```shell
-tondev se set 0.24.11
+tondev se set --version 0.24.11 --port 2020
 ```
 
 #### Reset
