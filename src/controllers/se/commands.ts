@@ -1,12 +1,13 @@
 import {
     filterConfigInstances,
-    filterInstances,
     getConfig,
     getInstanceInfo,
     getLatestVersion,
     getVersions,
     instanceContainerDef,
-    setConfig
+    PORT_NONE,
+    SEInstanceConfig,
+    updateConfig
 } from "./installer";
 import { Command, CommandArg, Terminal } from "../../core";
 import { ContainerDef, ContainerStatus, DevDocker } from "./docker";
@@ -109,16 +110,9 @@ export const seUpdateCommand: Command = {
     title: "Update SE Instance Version",
     args: [instanceArg],
     async run(terminal: Terminal, args: { instance: string }): Promise<void> {
-        const config = await getConfig();
-        const latestVersion = await getLatestVersion();
-        const docker = new DevDocker();
-        for (const instance of filterInstances(config.instances, args.instance)) {
-            instance.version = latestVersion;
-            const def = instanceContainerDef(instance);
-            await docker.shutdownContainer(terminal, def, ContainerStatus.missing);
-            await docker.startupContainer(terminal, def, ContainerStatus.created);
-        }
-        setConfig(config);
+        await updateConfig(terminal, args.instance, {
+            version: await getLatestVersion(),
+        });
     },
 };
 
@@ -153,63 +147,35 @@ export const seSetCommand: Command = {
         "db-port": string,
         instance: string
     }): Promise<void> {
-        const config = await getConfig();
-        const docker = new DevDocker();
-
-        let version: string | undefined = undefined;
+        const updates: Partial<SEInstanceConfig> = {};
         if (args.version !== "") {
             if (args.version.toLowerCase() === "latest") {
-                version = await getLatestVersion();
+                updates.version = await getLatestVersion();
             } else {
                 if (!(await getVersions()).includes(args.version)) {
                     throw new Error(`Invalid version: ${args.version}`);
                 }
-                version = args.version;
+                updates.version = args.version;
             }
         }
 
-        let port: number | undefined = undefined;
         if (args.port !== "") {
-            port = Number.parseInt(args.port);
-            if (port === undefined) {
+            updates.port = Number.parseInt(args.port);
+            if (updates.port === undefined) {
                 throw new Error(`Invalid port: ${args.port}`);
             }
         }
 
-        let dbPort: number | "none" | undefined = undefined;
         if (args["db-port"] !== "") {
             if (args["db-port"].toLowerCase() === "none") {
-                dbPort = "none";
+                updates.dbPort = PORT_NONE;
             } else {
-                dbPort = Number.parseInt(args["db-port"]);
-                if (port === undefined) {
+                updates.dbPort = Number.parseInt(args["db-port"]);
+                if (updates.port === undefined) {
                     throw new Error(`Invalid db-port: ${args["db-port"]}`);
                 }
             }
         }
-
-        const instances = filterInstances(config.instances, args.instance);
-
-        if (version === undefined && port === undefined && dbPort === undefined) {
-            throw new Error("There is nothing to set. You have to specify at least one config parameter. See command help.");
-        }
-
-        for (const instance of instances) {
-            if (version !== undefined) {
-                instance.version = version;
-            }
-            if (port !== undefined) {
-                instance.port = port;
-            }
-            if (dbPort === "none") {
-                delete instance.dbPort;
-            } else if (dbPort !== undefined) {
-                instance.dbPort = dbPort;
-            }
-            const def = instanceContainerDef(instance);
-            await docker.shutdownContainer(terminal, def, ContainerStatus.missing);
-            await docker.startupContainer(terminal, def, ContainerStatus.created);
-        }
-        setConfig(config);
+        await updateConfig(terminal, args.instance, updates);
     },
 };

@@ -1,20 +1,21 @@
 import * as path from "path";
 import * as fs from "fs";
 
-import { tondevHome } from "../../core";
+import { Terminal, tondevHome } from "../../core";
 import { httpsGetJson, userIdentifier, versionToNumber } from "../../core/utils";
-import { ContainerDef, DevDocker } from "./docker";
+import { ContainerDef, ContainerStatus, DevDocker } from "./docker";
 import Dockerode from "dockerode";
 
 const DEFAULT_INSTANCE_NAME = "default";
 const DEFAULT_INSTANCE_PORT = 80;
 const DOCKER_IMAGE_NAME = "tonlabs/local-node";
 const DOCKER_CONTAINER_NAME_PREFIX = "tonlabs-tonos-se";
+export const PORT_NONE = -1;
 
 /**
  * SE instance config
  */
-type SEInstanceConfig = {
+export type SEInstanceConfig = {
     /**
      * Instance name
      */
@@ -92,7 +93,7 @@ export async function getConfig(): Promise<SEConfig> {
     return config;
 }
 
-export async function setConfig(config: SEConfig) {
+export function setConfig(config: SEConfig) {
     const configDir = path.dirname(configPath());
     if (!fs.existsSync(configDir)) {
         fs.mkdirSync(configDir, { recursive: true });
@@ -181,3 +182,37 @@ export async function getInstanceInfo(docker: DevDocker, instance: SEInstanceCon
     };
 }
 
+
+export async function updateConfig(terminal: Terminal, filter: string, updates: Partial<SEInstanceConfig>): Promise<void> {
+    const config = await getConfig();
+    const docker = new DevDocker();
+
+    const instances = filterInstances(config.instances, filter);
+
+    if (updates.version === undefined && updates.port === undefined && updates.dbPort === undefined) {
+        throw new Error("There is nothing to set. You have to specify at least one config parameter. See command help.");
+    }
+
+    for (const instance of instances) {
+        if (updates.version !== undefined) {
+            instance.version = updates.version;
+        }
+        if (updates.port !== undefined) {
+            instance.port = updates.port;
+        }
+        if (updates.dbPort === PORT_NONE) {
+            delete instance.dbPort;
+        } else if (updates.dbPort !== undefined) {
+            instance.dbPort = updates.dbPort;
+        }
+        const def = instanceContainerDef(instance);
+        const info = await getInstanceInfo(docker, instance);
+        await docker.shutdownContainer(terminal, def, ContainerStatus.missing);
+        await docker.startupContainer(
+            terminal,
+            def,
+            info.state === "running" ? ContainerStatus.running : ContainerStatus.created,
+        );
+    }
+    setConfig(config);
+}
