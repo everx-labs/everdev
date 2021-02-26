@@ -1,0 +1,5 @@
+{
+    "dependencies": {
+        "tondev": "file:../../"
+    }
+}

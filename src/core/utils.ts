@@ -3,6 +3,7 @@ import * as os from "os";
 import * as fs from "fs";
 import { spawn, SpawnOptionsWithoutStdio } from "child_process";
 import * as http from "http";
+import * as https from "https";
 import * as zlib from "zlib";
 import { Terminal } from "./index";
 
@@ -181,4 +182,108 @@ export function stringTerminal(): Terminal & { output: string, error: string } {
             this.write(`${args.map(x => `${x}`).join(" ")}\n`);
         },
     };
+}
+
+export function versionToNumber(s: string): number {
+    if (s.toLowerCase() === "latest") {
+        return 1_000_000_000;
+    }
+    const parts = `${s || ''}`.split('.').map(x => Number.parseInt(x)).slice(0, 3);
+    while (parts.length < 3) {
+        parts.push(0);
+    }
+    return parts[0] * 1000000 + parts[1] * 1000 + parts[2];
+}
+
+let _progressLine: string = '';
+
+export function progressLine(terminal: Terminal, line: string) {
+    terminal.write(`\r${line}`);
+    const extra = _progressLine.length - line.length;
+    if (extra > 0) {
+        terminal.write(' '.repeat(extra) + '\b'.repeat(extra));
+    }
+    _progressLine = line;
+}
+
+export function progress(terminal: Terminal, info: string) {
+    progressLine(terminal, `${info}...`);
+}
+
+export function progressDone(terminal: Terminal) {
+    terminal.log(' ✓');
+    _progressLine = '';
+}
+
+
+export function httpsGetJson(url: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+        const tryUrl = (url: string) => {
+            https.get(url, function (res) {
+                let body = '';
+
+                res.on('data', function (chunk) {
+                    body += chunk;
+                });
+
+                res.on('end', function () {
+                    if (res.statusCode === 301) {
+                        const redirectUrl = res.headers['location'];
+                        if (redirectUrl) {
+                            tryUrl(redirectUrl);
+                        } else {
+                            reject(new Error("Redirect response has no `location` header."));
+                        }
+                        return;
+                    }
+                    const response = JSON.parse(body);
+                    resolve(response);
+                });
+            }).on('error', (error) => {
+                reject(error);
+            });
+        };
+        tryUrl(url);
+    })
+}
+
+function toIdentifier(s: string): string {
+    let identifier = "";
+    for (let i = 0; i < s.length; i += 1) {
+        const c = s[i];
+        const isLetter = c.toLowerCase() !== c.toUpperCase();
+        const isDigit = !isLetter && "0123456789".includes(c);
+        if (isLetter || isDigit) {
+            identifier += c;
+        }
+    }
+    return identifier;
+}
+
+export function userIdentifier(): string {
+    return toIdentifier(os.userInfo().username).toLowerCase();
+}
+
+function toString(value: any): string {
+    return value === null || value === undefined ? "" : value.toString();
+}
+
+export function formatTable(rows: any[][], options?: { headerSeparator?: boolean }): string {
+    const widths: number[] = [];
+    const updateWidth = (value: any, i: number) => {
+        const width = toString(value).length;
+        while (widths.length <= i) {
+            widths.push(0);
+        }
+        widths[i] = Math.max(widths[i], width);
+    };
+    rows.forEach(x => x.forEach(updateWidth));
+    const formatValue = (value: any, i: number) => toString(value).padEnd(widths[i]);
+    const formatRow = (row: any[]) => row.map(formatValue).join("  ").trimEnd();
+    const lines = rows.map(formatRow);
+    if (options?.headerSeparator) {
+        const separator = formatRow(widths.map(x => "-".repeat(x)));
+        lines.splice(1, 0, separator);
+    }
+    return lines.join("\n");
 }
