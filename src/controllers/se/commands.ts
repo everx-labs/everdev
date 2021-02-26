@@ -1,11 +1,11 @@
 import {
+    filterConfigInstances,
     filterInstances,
     getConfig,
     getInstanceInfo,
     getLatestVersion,
     getVersions,
     instanceContainerDef,
-    isInstanceMatched,
     setConfig
 } from "./installer";
 import { Command, CommandArg, Terminal } from "../../core";
@@ -13,6 +13,7 @@ import { ContainerDef, ContainerStatus, DevDocker } from "./docker";
 import { formatTable } from "../../core/utils";
 
 export const instanceArg: CommandArg = {
+    isArg: true,
     name: "instance",
     type: "string",
     defaultValue: "*",
@@ -23,7 +24,7 @@ async function controlInstances(
     instanceFilter: string,
     control: (docker: DevDocker, defs: ContainerDef[]) => Promise<void>
 ): Promise<void> {
-    const defs: ContainerDef[] = (await filterInstances(instanceFilter)).map(instanceContainerDef);
+    const defs: ContainerDef[] = (await filterConfigInstances(instanceFilter)).map(instanceContainerDef);
     await control(new DevDocker(), defs);
 }
 
@@ -42,7 +43,7 @@ export const seInfoCommand: Command = {
             "Docker Container",
             "Docker Image",
         ]]
-        for (const instance of await filterInstances(args.instance)) {
+        for (const instance of await filterConfigInstances(args.instance)) {
             const info = await getInstanceInfo(docker, instance);
             table.push([
                 instance.name,
@@ -111,13 +112,11 @@ export const seUpdateCommand: Command = {
         const config = await getConfig();
         const latestVersion = await getLatestVersion();
         const docker = new DevDocker();
-        for (const instance of config.instances) {
-            if (isInstanceMatched(instance, args.instance)) {
-                instance.version = latestVersion;
-                const def = instanceContainerDef(instance);
-                await docker.shutdownContainer(terminal, def, ContainerStatus.missing);
-                await docker.startupContainer(terminal, def, ContainerStatus.created);
-            }
+        for (const instance of filterInstances(config.instances, args.instance)) {
+            instance.version = latestVersion;
+            const def = instanceContainerDef(instance);
+            await docker.shutdownContainer(terminal, def, ContainerStatus.missing);
+            await docker.startupContainer(terminal, def, ContainerStatus.created);
         }
         setConfig(config);
     },
@@ -189,23 +188,27 @@ export const seSetCommand: Command = {
             }
         }
 
-        for (const instance of config.instances) {
-            if (isInstanceMatched(instance, args.instance)) {
-                if (version !== undefined) {
-                    instance.version = version;
-                }
-                if (port !== undefined) {
-                    instance.port = port;
-                }
-                if (dbPort === "none") {
-                    delete instance.dbPort;
-                } else if (dbPort !== undefined) {
-                    instance.dbPort = dbPort;
-                }
-                const def = instanceContainerDef(instance);
-                await docker.shutdownContainer(terminal, def, ContainerStatus.missing);
-                await docker.startupContainer(terminal, def, ContainerStatus.created);
+        const instances = filterInstances(config.instances, args.instance);
+
+        if (version === undefined && port === undefined && dbPort === undefined) {
+            throw new Error("There is nothing to set. You have to specify at least one config parameter. See command help.");
+        }
+
+        for (const instance of instances) {
+            if (version !== undefined) {
+                instance.version = version;
             }
+            if (port !== undefined) {
+                instance.port = port;
+            }
+            if (dbPort === "none") {
+                delete instance.dbPort;
+            } else if (dbPort !== undefined) {
+                instance.dbPort = dbPort;
+            }
+            const def = instanceContainerDef(instance);
+            await docker.shutdownContainer(terminal, def, ContainerStatus.missing);
+            await docker.startupContainer(terminal, def, ContainerStatus.created);
         }
         setConfig(config);
     },

@@ -115,6 +115,9 @@ function getArgValue(arg: CommandArg, commandLine: CommandLine): string | undefi
         if (value !== undefined) {
             return value;
         }
+        if (arg.defaultValue !== undefined) {
+            return arg.defaultValue;
+        }
         throw missingArgError(arg);
     }
     let value = commandLine.options[arg.name];

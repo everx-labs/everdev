@@ -7,7 +7,7 @@ import { ContainerDef, DevDocker } from "./docker";
 import Dockerode from "dockerode";
 
 const DEFAULT_INSTANCE_NAME = "default";
-const DEFAULT_INSTANCE_PORT = 2020;
+const DEFAULT_INSTANCE_PORT = 80;
 const DOCKER_IMAGE_NAME = "tonlabs/local-node";
 const DOCKER_CONTAINER_NAME_PREFIX = "tonlabs-tonos-se";
 
@@ -27,7 +27,7 @@ type SEInstanceConfig = {
      * Port on localhost used to expose GraphQL API
      * GraphQL API is accessible through http://localhost:port/graphql
      * Node Requests API is accessible through http://localhost:port/topics/requests
-     * Default value: 2020
+     * Default value: 80
      */
     port: number,
     /**
@@ -100,18 +100,24 @@ export async function setConfig(config: SEConfig) {
     fs.writeFileSync(configPath(), JSON.stringify(config, undefined, "    "), "utf8");
 }
 
-export function isInstanceMatched(instance: SEInstanceConfig, instanceFilter: string): boolean {
-    return instanceFilter === "*" || instanceFilter.toLowerCase() === instance.name.toLowerCase();
+export function filterInstances(instances: SEInstanceConfig[], filter: string): SEInstanceConfig[] {
+    const names = filter.toLowerCase().split(",").map(x => x.trim()).filter(x => x !== "");
+    if (names.includes("*")) {
+        return instances;
+    }
+    const filtered: SEInstanceConfig[] = [];
+    names.forEach(name => {
+        const instance = instances.find(x => x.name.toLowerCase() === name);
+        if (instance === undefined) {
+            throw new Error(`Instance \"${name}\" is not found`);
+        }
+        filtered.push(instance);
+    });
+    return filtered;
 }
 
-export async function filterInstances(instanceFilter: string): Promise<SEInstanceConfig[]> {
-    const filtered: SEInstanceConfig[] = [];
-    for (const instance of (await getConfig()).instances) {
-        if (isInstanceMatched(instance, instanceFilter)) {
-            filtered.push(instance);
-        }
-    }
-    return filtered;
+export async function filterConfigInstances(filter: string): Promise<SEInstanceConfig[]> {
+    return filterInstances(await (await getConfig()).instances, filter);
 }
 
 export function instanceContainerDef(instance: SEInstanceConfig): ContainerDef {
