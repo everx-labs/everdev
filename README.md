@@ -29,6 +29,14 @@ Download and install all the core [TON.DEV](https://docs.ton.dev/86757ecb2/p/04a
       - [Compile](#compile)
       - [Version](#version)
       - [Update](#update-1)
+    - [TON OS Startup Edition(SE)](#ton-os-startup-editionse)
+      - [Start](#start)
+      - [Version](#version-1)
+      - [Set](#set)
+      - [Reset](#reset)
+      - [Update](#update-2)
+      - [Stop](#stop)
+      - [Info](#info)
     - [SDK](#sdk)
       - [Create Demo Project](#create-demo-project)
   - [TONDEV Extensibility](#tondev-extensibility)
@@ -39,7 +47,6 @@ Download and install all the core [TON.DEV](https://docs.ton.dev/86757ecb2/p/04a
     - [TS4](#ts4)
     - [SDK](#sdk-1)
     - [Network support](#network-support)
-    - [etc](#etc)
 
 ## What is TONDEV?
 
@@ -151,6 +158,64 @@ This command updates the compiler to the latest version.
 
 ```shell
 tondev sol update
+```
+
+### TON OS Startup Edition(SE)
+
+#### Start
+This command starts the TON OS SE container (Docker must be launched). When executed for the first time downloads the latest SE image 
+from dockerhub.
+
+```shell
+tondev se start
+```
+
+#### Version
+This command shows the default TON OS SE version and list of other available versions. 
+
+```shell
+tondev se version
+
+default: 0.24.12
+Available Versions: 0, 0.24, 0.24.5, 0.24.6, 0.24.8, 0.24.9, 0.24.10, 0.24.11, 0.24.12, latest
+```
+
+#### Set
+This command switches tonon se to the specified version and downloads it, it is missing. 
+
+```shell
+tondev se set 0.24.11
+```
+
+#### Reset
+This command resets the TON OS SE container (Docker must be launched) - restarts it from scratch with a clean database. 
+
+```shell
+tondev se reset
+```
+#### Update
+This command downloads the latest TON OS SE image (Docker must be launched) and starts it. 
+
+```shell
+tondev se update
+```
+
+#### Stop
+This command stops TON OS SE container. 
+
+```shell
+tondev se stop
+```
+
+#### Info
+This command shows info about the downloaded versions. 
+
+```shell
+tondev se info
+
+Instance  State    Version  GraphQL Port  ArangoDB Port  Docker Container            Docker Image
+--------  -------  -------  ------------  -------------  --------------------------  --------------------------
+default   running  0.24.12  2020                         tonlabs-tonos-se-ekaterina  tonlabs/local-node:0.24.12
 ```
 
 ### SDK
