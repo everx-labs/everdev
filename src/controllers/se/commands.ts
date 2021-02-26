@@ -10,6 +10,7 @@ import {
 } from "./installer";
 import { Command, CommandArg, Terminal } from "../../core";
 import { ContainerDef, ContainerStatus, DevDocker } from "./docker";
+import { formatTable } from "../../core/utils";
 
 export const instanceArg: CommandArg = {
     name: "instance",
@@ -26,38 +27,45 @@ async function controlInstances(
     await control(new DevDocker(), defs);
 }
 
-
 export const seInfoCommand: Command = {
     name: "info",
-    title: "Show TON SE Info",
+    title: "Show SE Info",
     args: [instanceArg],
     async run(terminal: Terminal, args: { instance: string }): Promise<void> {
         const docker = new DevDocker();
+        const table: any[][] = [[
+            "Instance",
+            "State",
+            "Version",
+            "GraphQL Port",
+            "ArangoDB Port",
+            "Docker Container",
+            "Docker Image",
+        ]]
         for (const instance of await filterInstances(args.instance)) {
             const info = await getInstanceInfo(docker, instance);
-            terminal.log(`${instance.name}: ${info.state}`);
-            terminal.log(`    Config: --version ${instance.version} --port ${instance.port} --db-port ${instance.dbPort ?? "none"}`);
-            terminal.log(`    Docker: ${info.docker.container} (${info.docker.image})`);
+            table.push([
+                instance.name,
+                info.state,
+                instance.version,
+                instance.port,
+                instance.dbPort,
+                info.docker.container,
+                info.docker.image,
+            ]);
         }
+        terminal.log(formatTable(table, { headerSeparator: true }))
     },
 };
 
 export const seVersionCommand: Command = {
     name: "version",
-    title: "Show Node SE Version",
-    args: [{
-        name: "available",
-        type: "string",
-        defaultValue: "false",
-        title: "Show available versions",
-    }],
-    async run(terminal: Terminal, args: { available: string }): Promise<void> {
+    title: "Show SE Versions",
+    async run(terminal: Terminal, _args: {}): Promise<void> {
         for (const instance of (await getConfig()).instances) {
             terminal.log(`${instance.name}: ${instance.version}`);
         }
-        if (args.available === "true") {
-            terminal.log(`Available: ${(await getVersions()).join(", ")}`);
-        }
+        terminal.log(`Available Versions: ${(await getVersions()).join(", ")}`);
     },
 };
 
@@ -148,7 +156,7 @@ export const seSetCommand: Command = {
     }): Promise<void> {
         const config = await getConfig();
         const docker = new DevDocker();
-        
+
         let version: string | undefined = undefined;
         if (args.version !== "") {
             if (args.version.toLowerCase() === "latest") {
@@ -160,7 +168,7 @@ export const seSetCommand: Command = {
                 version = args.version;
             }
         }
-        
+
         let port: number | undefined = undefined;
         if (args.port !== "") {
             port = Number.parseInt(args.port);
@@ -168,7 +176,7 @@ export const seSetCommand: Command = {
                 throw new Error(`Invalid port: ${args.port}`);
             }
         }
-        
+
         let dbPort: number | "none" | undefined = undefined;
         if (args["db-port"] !== "") {
             if (args["db-port"].toLowerCase() === "none") {

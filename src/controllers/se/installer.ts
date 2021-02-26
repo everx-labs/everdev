@@ -93,6 +93,10 @@ export async function getConfig(): Promise<SEConfig> {
 }
 
 export async function setConfig(config: SEConfig) {
+    const configDir = path.dirname(configPath());
+    if (!fs.existsSync(configDir)) {
+        fs.mkdirSync(configDir, { recursive: true });
+    }
     fs.writeFileSync(configPath(), JSON.stringify(config, undefined, "    "), "utf8");
 }
 

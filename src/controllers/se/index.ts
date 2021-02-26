@@ -11,7 +11,7 @@ import {
 
 export const SE: ToolController = {
     name: "se",
-    title: "Node SE",
+    title: "SE",
     commands: [
         seInfoCommand,
         seVersionCommand,

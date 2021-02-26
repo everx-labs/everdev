@@ -3,6 +3,6 @@ import {ToolController} from "../../core";
 
 export const JsApps: ToolController = {
     name: "js",
-    title: "JS TON Applications",
+    title: "JS Apps",
     commands: [jsCreateCommand],
 };

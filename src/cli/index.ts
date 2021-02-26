@@ -1,6 +1,6 @@
 import { Command, CommandArg, ToolController } from "../core";
 import { controllers } from "../controllers";
-import { consoleTerminal } from "../core/utils";
+import { consoleTerminal, formatTable } from "../core/utils";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -70,45 +70,39 @@ export function printCommandUsage(controller: ToolController, command: Command) 
     console.log(`Use: tondev ${controller.name} ${command.name}${usageArgs}`);
     if (args.length > 0) {
         console.log("Args:");
-        let colWidth = options.reduce((w, x) => Math.max(w, x.name.length), 0);
-        args.forEach(x => {
-            console.log(`    ${x.name.padEnd(colWidth)}  ${x.title ?? ""}`);
-        });
+        console.log(formatTable(args.map(x => ["  ", x.name, x.title])));
     }
     console.log("Options:");
     console.log(`    --help, -h  Show command usage`);
-    let colWidth = options.reduce((w, x) => Math.max(w, x.name.length), 0);
-    options.forEach(x => {
-        console.log(`    --${x.name.padEnd(colWidth)}  ${x.title ?? ""}`);
-    });
+    console.log(formatTable(options.map(x => ["  ", `--${x.name}`, x.title])));
     return;
 }
 
-export function printUsage(useController?: ToolController, useCommand?: Command) {
+export function printControllerUsage(controller: ToolController) {
+    const commands: [string, Command][] = controller.commands
+        .map(x => [`${controller.name} ${x.name}`, x]);
+    console.log(formatTable(commands.map(x => ["  ", x[0], x[1].title])));
+}
+
+export function printUsage(controller?: ToolController, command?: Command) {
     const pkg = JSON.parse(fs.readFileSync(path.resolve(__dirname, "..", "..", "package.json"), "utf8"));
     console.log(`TONDev Version: ${pkg.version}`);
-    if (useController && useCommand) {
-        printCommandUsage(useController, useCommand);
+    if (controller && command) {
+        printCommandUsage(controller, command);
         return;
     }
-    console.log(`Use: tondev ${useController?.name ?? "tool"} ${useCommand?.name ?? "command"} args [options]`);
+    console.log(`Use: tondev ${controller?.name ?? "tool"} ${command?.name ?? "command"} args [options]`);
     console.log(`Options:`);
     console.log(`    --help, -h  Show command usage`);
-    console.log("Commands:");
-    const commands: [string, Command][] = [];
-    for (const controller of controllers) {
-        for (const command of controller.commands) {
-            if ((useController === undefined || useController === controller)
-                && (useCommand === undefined || useCommand === command)) {
-                commands.push([`${controller.name} ${command.name}`, command])
-            }
-        }
+    if (controller) {
+        console.log("Commands:");
+        printControllerUsage(controller);
+        return;
     }
-    let colWidth = commands.reduce((w, x) => Math.max(w, x[0].length), 0);
-    commands.forEach(x => {
-        console.log(`    ${x[0].padEnd(colWidth)}  ${x[1].title ?? ""}`);
-    });
-    return;
+    for (const controller of controllers) {
+        console.log(`\n${controller.title ?? controller.name} Commands:\n`);
+        printControllerUsage(controller);
+    }
 }
 
 function missingArgError(arg: CommandArg): Error {

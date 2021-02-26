@@ -263,3 +263,27 @@ function toIdentifier(s: string): string {
 export function userIdentifier(): string {
     return toIdentifier(os.userInfo().username).toLowerCase();
 }
+
+function toString(value: any): string {
+    return value === null || value === undefined ? "" : value.toString();
+}
+
+export function formatTable(rows: any[][], options?: { headerSeparator?: boolean }): string {
+    const widths: number[] = [];
+    const updateWidth = (value: any, i: number) => {
+        const width = toString(value).length;
+        while (widths.length <= i) {
+            widths.push(0);
+        }
+        widths[i] = Math.max(widths[i], width);
+    };
+    rows.forEach(x => x.forEach(updateWidth));
+    const formatValue = (value: any, i: number) => toString(value).padEnd(widths[i]);
+    const formatRow = (row: any[]) => row.map(formatValue).join("  ").trimEnd();
+    const lines = rows.map(formatRow);
+    if (options?.headerSeparator) {
+        const separator = formatRow(widths.map(x => "-".repeat(x)));
+        lines.splice(1, 0, separator);
+    }
+    return lines.join("\n");
+}
