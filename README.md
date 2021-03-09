@@ -58,16 +58,16 @@ Also, this project serves as a backend for [TONDEV VS Code extension](https://gi
 These components are supported or will be supported soon.  
 Each component is downloaded and installed automatically for the target platform upon the first request.
 
-- [Debot](https://docs.ton.dev/86757ecb2/p/72f1b7-debot-specifications) - **SOON**  
+- [Debot](https://github.com/tonlabs/debots) - **soon as part of tondev**  
 - [Solidity Compiler](https://github.com/tonlabs/TON-Solidity-Compiler)
-- [C/C++ Compiler](https://github.com/tonlabs/TON-Compiler) - **SOON**  
+- [C/C++ Compiler](https://github.com/tonlabs/TON-Compiler) - **soon as part of tondev**  
 - [TON OS Startup Edition](https://github.com/tonlabs/tonos-se) – 
   Local blockchain for development and testing
-- [TestSuite4](https://github.com/tonlabs/TestSuite4) – **SOON**  
+- [TestSuite4](https://github.com/tonlabs/TestSuite4) – **soon as part of tondev**  
   Python lightweight framework for Solidity testing 
-- [tonos-cli](https://github.com/tonlabs/tonos-cli) – **SOON** (installation only)     
+- [tonos-cli](https://github.com/tonlabs/tonos-cli) – **soon as part of tondev** (installation only)     
   Command line tool for TON OS
-- [TON-SDK](https://github.com/tonlabs/TON-SDK) -  **SOON**   
+- [TON-SDK](https://github.com/tonlabs/TON-SDK) -  **soon as part of tondev**   
   Core SDK Library features. 
 
 TONDEV can be extended with other tools following the [instructions of integration](#tondev-extensibility). 
