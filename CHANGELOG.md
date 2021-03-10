@@ -6,8 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ### New
 - SDK functionality added
-  - [See the list of available demo projects](readme.md#see-the-list-of-available-demo-projects)
-  - [Install demo project](readme.md#install-demo-project)
+  - [See the list of available demo projects](README.md#see-the-list-of-available-demo-projects)
+  - [Install demo project](README.md#install-demo-project)
 
 ## [0.2.0] - 2021-02-26
 
