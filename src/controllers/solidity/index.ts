@@ -2,7 +2,10 @@ import { solidityCreateCommand } from "./create";
 import { solidityCompileCommand } from "./compile";
 import { ToolController } from "../../core";
 import { solidityVersionCommand } from "./version";
-import { solidityUpdateCommand } from "./update";
+import {
+    soliditySetCommand,
+    solidityUpdateCommand,
+} from "./update";
 
 export const Solidity: ToolController = {
     name: "sol",
@@ -11,6 +14,7 @@ export const Solidity: ToolController = {
         solidityCreateCommand,
         solidityCompileCommand,
         solidityVersionCommand,
+        soliditySetCommand,
         solidityUpdateCommand
     ],
 };

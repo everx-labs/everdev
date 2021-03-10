@@ -6,7 +6,7 @@ const cli = require("./dist/cli/index");
     try {
         await cli.run();
     } catch (err) {
-        console.error(err.toString());
+        console.error(`${err}`);
         process.exit(1);
     }
 })();

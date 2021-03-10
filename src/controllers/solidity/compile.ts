@@ -29,14 +29,12 @@ export const solidityCompileCommand: Command = {
         const tvcName = changeExt(fileName, ".tvc");
         const codeName = changeExt(fileName, ".code");
 
-        const compilerOut = await solc(terminal, fileDir, [fileName]);
+        await solc(terminal, fileDir, [fileName]);
         const linkerOut = await tvmLinker(terminal, fileDir, ["compile", codeName, "--lib", stdLibPath()]);
 
         const generatedTvcName = `${/Saved contract to file (.*)$/mg.exec(linkerOut)?.[1]}`;
         fs.renameSync(path.resolve(fileDir, generatedTvcName), path.resolve(fileDir, tvcName));
         fs.unlinkSync(path.resolve(fileDir, codeName));
-        terminal.log(compilerOut);
-        terminal.log(linkerOut);
         terminal.log("Compile complete.");
     },
 };

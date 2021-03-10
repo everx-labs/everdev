@@ -1,11 +1,13 @@
 import * as path from "path";
 import * as os from "os";
 import * as fs from "fs";
-import { spawn, SpawnOptionsWithoutStdio } from "child_process";
-import * as http from "http";
+import {
+    spawn,
+    SpawnOptionsWithoutStdio,
+} from "child_process";
 import * as https from "https";
 import * as zlib from "zlib";
-import { Terminal } from "./index";
+import {Terminal} from "./index";
 
 export function executableName(name: string): string {
     return `${name}${os.platform() === "win32" ? ".exe" : ""}`;
@@ -17,14 +19,14 @@ export function changeExt(path: string, newExt: string): string {
 
 function downloadAndGunzip(dest: string, url: string): Promise<void> {
     return new Promise((resolve, reject) => {
-        const request = http.get(url, response => {
+        const request = https.get(url, response => {
             if (response.statusCode !== 200) {
-                reject({
-                    message: `Download from ${url} failed with ${response.statusCode}: ${response.statusMessage}`,
-                });
+                reject(new Error(
+                    `Download from ${url} failed with ${response.statusCode}: ${response.statusMessage}`,
+                ));
                 return;
             }
-            let file: fs.WriteStream | null = fs.createWriteStream(dest, { flags: "w" });
+            let file: fs.WriteStream | null = fs.createWriteStream(dest, {flags: "w"});
             let opened = false;
             const failed = (err: Error) => {
                 if (file) {
@@ -78,11 +80,11 @@ export async function downloadFromBinaries(
     options?: { executable?: boolean },
 ) {
     src = src.replace("{p}", os.platform());
-    const srcUrl = `http://sdkbinaries.tonlabs.io/${src}.gz`;
+    const srcUrl = `https://binaries.tonlabs.io/${src}.gz`;
     terminal.write(`Downloading from ${srcUrl} to ${dstPath} ...`);
     const dstDir = path.dirname(dstPath);
     if (!fs.existsSync(dstDir)) {
-        fs.mkdirSync(dstDir, { recursive: true });
+        fs.mkdirSync(dstDir, {recursive: true});
     }
     await downloadAndGunzip(dstPath, srcUrl);
     if (options?.executable && os.platform() !== "win32") {
@@ -127,7 +129,7 @@ export function run(name: string, args: string[], options: SpawnOptionsWithoutSt
                 if (code === 0) {
                     resolve(output.join(""));
                 } else {
-                    reject(errors.join(""));
+                reject(`${name} failed`);
                 }
             });
         } catch (error) {
@@ -188,20 +190,26 @@ export function versionToNumber(s: string): number {
     if (s.toLowerCase() === "latest") {
         return 1_000_000_000;
     }
-    const parts = `${s || ''}`.split('.').map(x => Number.parseInt(x)).slice(0, 3);
+    const parts = `${s || ""}`.split(".").map(x => Number.parseInt(x)).slice(0, 3);
     while (parts.length < 3) {
         parts.push(0);
     }
     return parts[0] * 1000000 + parts[1] * 1000 + parts[2];
 }
 
-let _progressLine: string = '';
+export function compareVersions(a: string, b: string): number {
+    const an = versionToNumber(a);
+    const bn = versionToNumber(b);
+    return an < bn ? -1 : (an === bn ? 0 : 1);
+}
+
+let _progressLine: string = "";
 
 export function progressLine(terminal: Terminal, line: string) {
     terminal.write(`\r${line}`);
     const extra = _progressLine.length - line.length;
     if (extra > 0) {
-        terminal.write(' '.repeat(extra) + '\b'.repeat(extra));
+        terminal.write(" ".repeat(extra) + "\b".repeat(extra));
     }
     _progressLine = line;
 }
@@ -211,8 +219,8 @@ export function progress(terminal: Terminal, info: string) {
 }
 
 export function progressDone(terminal: Terminal) {
-    terminal.log(' ✓');
-    _progressLine = '';
+    terminal.log(" ✓");
+    _progressLine = "";
 }
 
 
@@ -220,15 +228,15 @@ export function httpsGetJson(url: string): Promise<any> {
     return new Promise((resolve, reject) => {
         const tryUrl = (url: string) => {
             https.get(url, function (res) {
-                let body = '';
+                let body = "";
 
-                res.on('data', function (chunk) {
+                res.on("data", function (chunk) {
                     body += chunk;
                 });
 
-                res.on('end', function () {
+                res.on("end", function () {
                     if (res.statusCode === 301) {
-                        const redirectUrl = res.headers['location'];
+                        const redirectUrl = res.headers["location"];
                         if (redirectUrl) {
                             tryUrl(redirectUrl);
                         } else {
@@ -239,12 +247,12 @@ export function httpsGetJson(url: string): Promise<any> {
                     const response = JSON.parse(body);
                     resolve(response);
                 });
-            }).on('error', (error) => {
+            }).on("error", (error) => {
                 reject(error);
             });
         };
         tryUrl(url);
-    })
+    });
 }
 
 function toIdentifier(s: string): string {
