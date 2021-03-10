@@ -38,7 +38,9 @@ Download and install all the core [TON.DEV](https://docs.ton.dev/86757ecb2/p/04a
       - [Stop](#stop)
       - [Info](#info)
     - [SDK](#sdk)
-      - [Create Demo Project](#create-demo-project)
+      - [See the list of available Demo Projects](#see-the-list-of-available-demo-projects)
+      - [Install Demo Project](#install-demo-project)
+      - [Create Empty Project](#create-empty-project)
   - [TONDEV Extensibility](#tondev-extensibility)
   - [Backlog](#backlog)
     - [Debot](#debot)
@@ -221,7 +223,25 @@ default   running  0.24.12  2020                         tonlabs-tonos-se-ekater
 
 ### SDK
 
-#### Create Demo Project
+#### See the list of available Demo Projects
+
+This command shows the list of available Demo Projects
+
+```shell
+tondev demo 
+```
+
+#### Install Demo Project
+
+This command installs the spesified demo project in the current directory. Procede the instructions in terminal to run it.
+
+```shell
+tondev demo <demo name>
+```
+
+
+
+#### Create Empty Project
 
 This command creates a Node.js project with SDK latest dependencies and index.js file with main Client object creation.
 
@@ -260,7 +280,6 @@ Learn more about creating your own controller: [Creating Controller](docs/creati
 
 ### SDK
 
-- Create and run Web Demo DApp with one command
 - Generate keys
 - Calculate addresses
 - Estimate deploy fees
