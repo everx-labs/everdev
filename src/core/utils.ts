@@ -7,7 +7,9 @@ import {
 } from "child_process";
 import * as https from "https";
 import * as zlib from "zlib";
-import {Terminal} from "./index";
+import * as unzip from "unzip-stream";
+import request from "request";
+import { Terminal } from "./index";
 
 export function executableName(name: string): string {
     return `${name}${os.platform() === "win32" ? ".exe" : ""}`;
@@ -15,6 +17,26 @@ export function executableName(name: string): string {
 
 export function changeExt(path: string, newExt: string): string {
     return path.replace(/\.[^/.]+$/, newExt);
+}
+
+function downloadAndUnzip(dstPath: string, url: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+        request(url)
+            .on("error", reject) // http protocol errors
+            .pipe(
+                unzip
+                    .Extract({ path: dstPath })
+                    .on("error", reject) // unzip errors
+                    .on("close", resolve)
+            );
+    });
+}
+
+export async function downloadFromGithub(terminal: Terminal, srcUrl: string, dstPath: string) {
+    terminal.write(`Downloading from ${srcUrl} to ${dstPath} ...`);
+    if (!fs.existsSync(dstPath)) fs.mkdirSync(dstPath, { recursive: true });
+    await downloadAndUnzip(dstPath, srcUrl);
+    terminal.write("\n");
 }
 
 function downloadAndGunzip(dest: string, url: string): Promise<void> {

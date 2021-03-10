@@ -106,14 +106,23 @@ export function printUsage(controller?: ToolController, command?: Command) {
 }
 
 function missingArgError(arg: CommandArg): Error {
-    throw new Error(`Missing required ${arg.name}`);
+    const variants: string = arg.getVariants
+        ? "\n" +
+          formatTable(
+              [["Available variants:", ""], ...arg.getVariants().map(x => [x.name, x.description ?? ""])],
+              { headerSeparator: true }
+          )
+        : "";
+    throw new Error(`Missing required ${arg.name}${variants}`);
 }
 
 function getArgValue(arg: CommandArg, commandLine: CommandLine): string | undefined {
     if (arg.isArg) {
         const value = commandLine.args.splice(0, 1)[0];
         if (value !== undefined) {
-            return value;
+            if (arg.getVariants === undefined) return value;
+            if (arg.getVariants().find(x => x.name === value)) return value;
+            throw missingArgError(arg);
         }
         if (arg.defaultValue !== undefined) {
             return arg.defaultValue;
