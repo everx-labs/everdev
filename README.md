@@ -225,15 +225,15 @@ default   running  0.24.12  2020                         tonlabs-tonos-se-ekater
 
 #### See the list of available Demo Projects
 
-This command shows the list of available Demo Projects
+This command shows the list of available demo projects
 
 ```shell
 tondev demo 
 ```
 
-#### Install Demo Project
+#### Install demo project
 
-This command installs the spesified demo project in the current directory. Procede the instructions in terminal to run it.
+This command installs the specified demo project in the current directory. Proceede the instructions in the terminal to run it.
 
 ```shell
 tondev demo <demo name>
