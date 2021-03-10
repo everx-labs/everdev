@@ -233,7 +233,7 @@ tondev demo
 
 #### Install demo project
 
-This command installs the specified demo project in the current directory. Proceede the instructions in the terminal to run it.
+This command installs the specified demo project in the current directory. Proceed the instructions in the terminal to run it.
 
 ```shell
 tondev demo <demo name>
