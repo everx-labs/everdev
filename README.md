@@ -277,7 +277,7 @@ TONDEV installs tonos-cli globally, so after the installation is complete, you c
 ```shell
 tonos-cli <command> <args> 
 ```
-[See the tonos-cli usage documentation](https://github.com/tonlabs/tonos-cli#how-to-use).
+[See the tonos-cli usage documentation](https://github.com/tonlabs/tonos-cli#how-to-use).   
 [See tonos-cli guides](https://docs.ton.dev/86757ecb2/p/8080e6-tonos-cli/t/44972c).
 
 #### Install
