@@ -37,15 +37,15 @@ export function getVersionList(binaryName: string): Promise<string[]> {
 
 async function installGlobally(dstPath: string, version: string, terminal: Terminal): Promise<void> {
     const binDir = path.dirname(dstPath);
-    const binName = path.basename(dstPath, ".exe"); // if win32
+    const [name, ext] = path.basename(dstPath).split(".");
     try {
         fs.writeFileSync(
             `${binDir}/package.json`,
             JSON.stringify(
                 {
-                    name: binName, // ex: tonos-cli
+                    name: name, // ex: tonos-cli
                     version,
-                    bin: `./${binName}`,
+                    bin: `./${name}${ext ? "." + ext : ""} `,
                 },
                 null,
                 2
@@ -57,20 +57,20 @@ async function installGlobally(dstPath: string, version: string, terminal: Termi
 
         throw Error(
             [
-                `An error occured while trying to install ${binName} globally`,
+                `An error occured while trying to install ${name} globally`,
                 `Make sure you can execute 'npm i <package> -g' without using sudo and try again`,
             ].join("\n")
         );
     }
 }
 
-function downloadAndUnzip(dstPath: string, url: string): Promise<void> {
+function downloadAndUnzip(dst: string, url: string): Promise<void> {
     return new Promise((resolve, reject) => {
         request(url)
             .on("error", reject) // http protocol errors
             .pipe(
                 unzip
-                    .Extract({ path: dstPath })
+                    .Extract({ path: dst })
                     .on("error", reject) // unzip errors
                     .on("close", resolve)
             );
