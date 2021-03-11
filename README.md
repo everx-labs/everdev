@@ -39,9 +39,9 @@ Download and install all the core [TON.DEV](https://docs.ton.dev/86757ecb2/p/04a
       - [Stop](#stop)
       - [Info](#info)
     - [SDK](#sdk)
-      - [See the list of available Demo Projects](#see-the-list-of-available-demo-projects)
+      - [See the list of available demo projects](#see-the-list-of-available-demo-projects)
       - [Install demo project](#install-demo-project)
-      - [Create Empty Project](#create-empty-project)
+      - [Create an empty project](#create-an-empty-project)
   - [TONDEV Extensibility](#tondev-extensibility)
   - [Backlog](#backlog)
     - [Debot](#debot)
@@ -232,7 +232,7 @@ default   running  0.24.12  2020                         tonlabs-tonos-se-ekater
 
 ### SDK
 
-#### See the list of available Demo Projects
+#### See the list of available demo projects
 
 This command shows the list of available demo projects
 
@@ -257,9 +257,7 @@ This command installs the specified demo project to the current directory. Proce
 tondev js demo hello
 ```
 
-
-
-#### Create Empty Project
+#### Create an empty project
 
 This command creates a Node.js project with SDK latest dependencies and index.js file with main Client object creation.
 
