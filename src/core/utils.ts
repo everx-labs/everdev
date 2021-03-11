@@ -1,10 +1,14 @@
 import * as path from "path";
 import * as os from "os";
 import * as fs from "fs";
-import { spawn, SpawnOptionsWithoutStdio } from "child_process";
-import * as http from "http";
+import {
+    spawn,
+    SpawnOptionsWithoutStdio,
+} from "child_process";
 import * as https from "https";
 import * as zlib from "zlib";
+import * as unzip from "unzip-stream";
+import request from "request";
 import { Terminal } from "./index";
 
 export function executableName(name: string): string {
@@ -15,16 +19,36 @@ export function changeExt(path: string, newExt: string): string {
     return path.replace(/\.[^/.]+$/, newExt);
 }
 
+function downloadAndUnzip(dstPath: string, url: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+        request(url)
+            .on("error", reject) // http protocol errors
+            .pipe(
+                unzip
+                    .Extract({ path: dstPath })
+                    .on("error", reject) // unzip errors
+                    .on("close", resolve)
+            );
+    });
+}
+
+export async function downloadFromGithub(terminal: Terminal, srcUrl: string, dstPath: string) {
+    terminal.write(`Downloading from ${srcUrl} to ${dstPath} ...`);
+    if (!fs.existsSync(dstPath)) fs.mkdirSync(dstPath, { recursive: true });
+    await downloadAndUnzip(dstPath, srcUrl);
+    terminal.write("\n");
+}
+
 function downloadAndGunzip(dest: string, url: string): Promise<void> {
     return new Promise((resolve, reject) => {
-        const request = http.get(url, response => {
+        const request = https.get(url, response => {
             if (response.statusCode !== 200) {
-                reject({
-                    message: `Download from ${url} failed with ${response.statusCode}: ${response.statusMessage}`,
-                });
+                reject(new Error(
+                    `Download from ${url} failed with ${response.statusCode}: ${response.statusMessage}`,
+                ));
                 return;
             }
-            let file: fs.WriteStream | null = fs.createWriteStream(dest, { flags: "w" });
+            let file: fs.WriteStream | null = fs.createWriteStream(dest, {flags: "w"});
             let opened = false;
             const failed = (err: Error) => {
                 if (file) {
@@ -78,11 +102,11 @@ export async function downloadFromBinaries(
     options?: { executable?: boolean },
 ) {
     src = src.replace("{p}", os.platform());
-    const srcUrl = `http://sdkbinaries.tonlabs.io/${src}.gz`;
+    const srcUrl = `https://binaries.tonlabs.io/${src}.gz`;
     terminal.write(`Downloading from ${srcUrl} to ${dstPath} ...`);
     const dstDir = path.dirname(dstPath);
     if (!fs.existsSync(dstDir)) {
-        fs.mkdirSync(dstDir, { recursive: true });
+        fs.mkdirSync(dstDir, {recursive: true});
     }
     await downloadAndGunzip(dstPath, srcUrl);
     if (options?.executable && os.platform() !== "win32") {
@@ -127,7 +151,7 @@ export function run(name: string, args: string[], options: SpawnOptionsWithoutSt
                 if (code === 0) {
                     resolve(output.join(""));
                 } else {
-                    reject(errors.join(""));
+                reject(`${name} failed`);
                 }
             });
         } catch (error) {
@@ -168,40 +192,30 @@ export const nullTerminal: Terminal = {
     },
 };
 
-export function stringTerminal(): Terminal & { output: string, error: string } {
-    return {
-        output: "",
-        error: "",
-        write(text: string) {
-            this.output += text;
-        },
-        writeError(text: string) {
-            this.error += text;
-        },
-        log(...args: any[]) {
-            this.write(`${args.map(x => `${x}`).join(" ")}\n`);
-        },
-    };
-}
-
 export function versionToNumber(s: string): number {
     if (s.toLowerCase() === "latest") {
         return 1_000_000_000;
     }
-    const parts = `${s || ''}`.split('.').map(x => Number.parseInt(x)).slice(0, 3);
+    const parts = `${s || ""}`.split(".").map(x => Number.parseInt(x)).slice(0, 3);
     while (parts.length < 3) {
         parts.push(0);
     }
     return parts[0] * 1000000 + parts[1] * 1000 + parts[2];
 }
 
-let _progressLine: string = '';
+export function compareVersions(a: string, b: string): number {
+    const an = versionToNumber(a);
+    const bn = versionToNumber(b);
+    return an < bn ? -1 : (an === bn ? 0 : 1);
+}
+
+let _progressLine: string = "";
 
 export function progressLine(terminal: Terminal, line: string) {
     terminal.write(`\r${line}`);
     const extra = _progressLine.length - line.length;
     if (extra > 0) {
-        terminal.write(' '.repeat(extra) + '\b'.repeat(extra));
+        terminal.write(" ".repeat(extra) + "\b".repeat(extra));
     }
     _progressLine = line;
 }
@@ -211,8 +225,8 @@ export function progress(terminal: Terminal, info: string) {
 }
 
 export function progressDone(terminal: Terminal) {
-    terminal.log(' ✓');
-    _progressLine = '';
+    terminal.log(" ✓");
+    _progressLine = "";
 }
 
 
@@ -220,15 +234,15 @@ export function httpsGetJson(url: string): Promise<any> {
     return new Promise((resolve, reject) => {
         const tryUrl = (url: string) => {
             https.get(url, function (res) {
-                let body = '';
+                let body = "";
 
-                res.on('data', function (chunk) {
+                res.on("data", function (chunk) {
                     body += chunk;
                 });
 
-                res.on('end', function () {
+                res.on("end", function () {
                     if (res.statusCode === 301) {
-                        const redirectUrl = res.headers['location'];
+                        const redirectUrl = res.headers["location"];
                         if (redirectUrl) {
                             tryUrl(redirectUrl);
                         } else {
@@ -239,12 +253,12 @@ export function httpsGetJson(url: string): Promise<any> {
                     const response = JSON.parse(body);
                     resolve(response);
                 });
-            }).on('error', (error) => {
+            }).on("error", (error) => {
                 reject(error);
             });
         };
         tryUrl(url);
-    })
+    });
 }
 
 function toIdentifier(s: string): string {

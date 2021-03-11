@@ -47,6 +47,10 @@ export type BaseCommandArg = {
      * Determine that the arg is a CLI arg (not an option).
      */
     isArg?: boolean,
+    /**
+     * Get available CLI argument variants
+     */
+    getVariants?(): {name: string; description?: string}[],
 };
 
 /**

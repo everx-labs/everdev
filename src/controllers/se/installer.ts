@@ -2,7 +2,11 @@ import * as path from "path";
 import * as fs from "fs";
 
 import { Terminal, tondevHome } from "../../core";
-import { httpsGetJson, userIdentifier, versionToNumber } from "../../core/utils";
+import {
+    compareVersions,
+    httpsGetJson,
+    userIdentifier,
+} from "../../core/utils";
 import { ContainerDef, ContainerStatus, DevDocker } from "./docker";
 import Dockerode from "dockerode";
 
@@ -43,12 +47,6 @@ export type SEInstanceConfig = {
 
 type SEConfig = {
     instances: SEInstanceConfig[],
-}
-
-function compareVersions(a: string, b: string): number {
-    const an = versionToNumber(a);
-    const bn = versionToNumber(b);
-    return an < bn ? -1 : (an === bn ? 0 : 1);
 }
 
 export async function getVersions(): Promise<string[]> {
