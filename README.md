@@ -267,7 +267,7 @@ tondev js demo hello
 This command creates a Node.js project with SDK latest dependencies and index.js file with main Client object creation.
 
 ```shell
-tondev js create
+tondev js create test_project
 ```
 
 ### tonos-cli
