@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file.
 - SDK functionality added
   - [See the list of available demo projects](README.md#see-the-list-of-available-demo-projects)
   - [Install demo project](README.md#install-demo-project)
-- [tonos-cli](README.#tonos-cli)
+- [tonos-cli](README.md#tonos-cli)
   - Install
   - Version
   - Set
