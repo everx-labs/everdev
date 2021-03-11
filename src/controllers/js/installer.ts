@@ -9,7 +9,7 @@ import {
     httpsGetJson,
 } from "../../core/utils";
 
-const demoBranch = "rc";
+const demoBranch = "master";
 const demoInfoURL = `https://raw.githubusercontent.com/tonlabs/sdk-samples/${demoBranch}/demo.json`;
 const demoArchiveURL = `https://github.com/tonlabs/sdk-samples/archive/${demoBranch}.zip`;
 const demoFolder = `sdk-samples-${demoBranch}`;
