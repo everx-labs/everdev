@@ -45,7 +45,7 @@ async function installGlobally(dstPath: string, version: string, terminal: Termi
                 {
                     name: name, // ex: tonos-cli
                     version,
-                    bin: `./${name}${ext ? "." + ext : ""} `,
+                    bin: `./${name}${ext ? "." + ext : ""}`,
                 },
                 null,
                 2
