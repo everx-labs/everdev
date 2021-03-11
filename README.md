@@ -73,8 +73,8 @@ Each component is downloaded and installed automatically for the target platform
   Local blockchain for development and testing
 - [TestSuite4](https://github.com/tonlabs/TestSuite4) – **soon as part of tondev**  
   Python lightweight framework for Solidity testing 
-- [tonos-cli](https://github.com/tonlabs/tonos-cli) – **soon as part of tondev** (installation only)     
-  Command line tool for TON OS
+- [tonos-cli](https://github.com/tonlabs/tonos-cli) – 
+  Command line tool for TON OS. TONDEV helps with installation and version management. 
 - [TON-SDK](https://github.com/tonlabs/TON-SDK) -  **soon as part of tondev**   
   Core SDK Library features. 
 
@@ -271,6 +271,14 @@ tondev js create
 ```
 
 ### tonos-cli
+
+TONDEV installs tonos-cli globally, so after the installation is complete, you can access the functionality via command:
+
+```shell
+tonos-cli <command> <args> 
+```
+[See the tonos-cli usage documentation](https://github.com/tonlabs/tonos-cli#how-to-use).
+[See tonos-cli guides](https://docs.ton.dev/86757ecb2/p/8080e6-tonos-cli/t/44972c).
 
 #### Install
 
