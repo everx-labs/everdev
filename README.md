@@ -286,6 +286,10 @@ This command shows the used tonos-cli version and list of available for download
 
 ```shell
 tondev tonos-cli version
+
+Version    Available
+---------  ------------------------------------------------------
+0.8.1      0.6.0, 0.6.1, 0.6.2, 0.7.1, 0.6.3, 0.7.0, 0.8.0, 0.8.1
 ```
 
 #### Set
@@ -293,7 +297,7 @@ tondev tonos-cli version
 This command specifies tonos-cli version to use and downloads it if needed.
 
 ```shell
-tondev tonos-cli set --version 0.4.0
+tondev tonos-cli set --version 0.8.0
 ```
 
 
