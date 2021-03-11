@@ -29,17 +29,18 @@ Download and install all the core [TON.DEV](https://docs.ton.dev/86757ecb2/p/04a
       - [Compile](#compile)
       - [Version](#version)
       - [Update](#update-1)
+      - [Set](#set)
     - [TON OS Startup Edition(SE)](#ton-os-startup-editionse)
       - [Start](#start)
       - [Version](#version-1)
-      - [Set](#set)
+      - [Set](#set-1)
       - [Reset](#reset)
       - [Update](#update-2)
       - [Stop](#stop)
       - [Info](#info)
     - [SDK](#sdk)
       - [See the list of available Demo Projects](#see-the-list-of-available-demo-projects)
-      - [Install Demo Project](#install-demo-project)
+      - [Install demo project](#install-demo-project)
       - [Create Empty Project](#create-empty-project)
   - [TONDEV Extensibility](#tondev-extensibility)
   - [Backlog](#backlog)
@@ -156,10 +157,18 @@ tondev sol version
 
 #### Update
 
-This command updates the compiler to the latest version.
+This command updates the compiler and linker to the latest version.
 
 ```shell
 tondev sol update
+```
+
+#### Set
+
+This command sets the compiler and linker versions and downloads them if needed.
+
+```shell
+tondev sol set --compiler 0.38.0 --linker 0.23.54
 ```
 
 ### TON OS Startup Edition(SE)
@@ -235,17 +244,14 @@ Result:
 
 ```shell
 $ tondev js demo
-Downloading demo repository...
-Downloading from https://github.com/tonlabs/sdk-samples/archive/master.zip to /Users/ekaterina/.tondev/js ...
 Demo   Description
 -----  -------------------------
 hello  Simple NodeJs Application
-
 ```
 
 #### Install demo project
 
-This command installs the specified demo project in the current directory. Proceed the instructions in the terminal to run it.
+This command installs the specified demo project to the current directory. Proceed the instructions in the terminal to run it.
 
 ```shell
 tondev js demo hello
