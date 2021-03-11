@@ -42,6 +42,11 @@ Download and install all the core [TON.DEV](https://docs.ton.dev/86757ecb2/p/04a
       - [See the list of available demo projects](#see-the-list-of-available-demo-projects)
       - [Install demo project](#install-demo-project)
       - [Create an empty project](#create-an-empty-project)
+    - [tonos-cli](#tonos-cli)
+      - [Install](#install-1)
+      - [Version](#version-2)
+      - [Set](#set-2)
+      - [Update](#update-3)
   - [TONDEV Extensibility](#tondev-extensibility)
   - [Backlog](#backlog)
     - [Debot](#debot)
@@ -263,6 +268,41 @@ This command creates a Node.js project with SDK latest dependencies and index.js
 
 ```shell
 tondev js create
+```
+
+### tonos-cli
+
+#### Install
+
+This command installs the latest tonos-cli 
+
+```shell
+tondev tonos-cli install
+```
+
+#### Version
+
+This command shows the used tonos-cli version and list of available for download versions
+
+```shell
+tondev tonos-cli version
+```
+
+#### Set
+
+This command specifies tonos-cli version to use and downloads it if needed.
+
+```shell
+tondev tonos-cli set --version 0.4.0
+```
+
+
+#### Update
+
+This command updates tonos-cli version to the latest
+
+```shell
+tondev tonos-cli update
 ```
 
 ## TONDEV Extensibility
