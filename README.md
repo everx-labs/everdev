@@ -228,7 +228,19 @@ default   running  0.24.12  2020                         tonlabs-tonos-se-ekater
 This command shows the list of available demo projects
 
 ```shell
-tondev demo 
+tondev js demo 
+```
+
+Result:
+
+```shell
+$ tondev js demo
+Downloading demo repository...
+Downloading from https://github.com/tonlabs/sdk-samples/archive/master.zip to /Users/ekaterina/.tondev/js ...
+Demo   Description
+-----  -------------------------
+hello  Simple NodeJs Application
+
 ```
 
 #### Install demo project
@@ -236,7 +248,7 @@ tondev demo
 This command installs the specified demo project in the current directory. Proceed the instructions in the terminal to run it.
 
 ```shell
-tondev demo <demo name>
+tondev js demo hello
 ```
 
 
