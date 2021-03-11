@@ -8,8 +8,7 @@ import fs from "fs";
 import {BaseApp} from "./snippets";
 import {
     downloadDemo,
-    ensureDemoInstalled,
-    getInfo,
+    loadInfo,
 } from "./installer";
 import {formatTable} from "../../core/utils";
 
@@ -50,10 +49,9 @@ export const jsDemoCommand: Command = {
     ],
     async run(terminal: Terminal, args: { name: string; folder: string }) {
         if (args.name === "") {
-            await ensureDemoInstalled(terminal);
             const table = [
                 ["Demo", "Description"],
-                ...(await getInfo()).applications.map(x => [x.name, x.description]),
+                ...(await loadInfo()).applications.map(x => [x.name, x.description]),
             ];
             terminal.log(formatTable(table, {headerSeparator: true}));
         } else {

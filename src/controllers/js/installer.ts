@@ -26,10 +26,14 @@ export function getInfo(): DemoInfo {
     return JSON.parse(fs.readFileSync(path.resolve(demoHome(), "demo.json")).toString());
 }
 
+export async function loadInfo(): Promise<DemoInfo> {
+    return httpsGetJson(demoInfoURL);
+}
+
 export async function ensureDemoInstalled(terminal: Terminal) {
     if (fs.pathExistsSync(demoHome())) {
         const info = getInfo();
-        const remoteInfo: DemoInfo = await httpsGetJson(demoInfoURL);
+        const remoteInfo = await loadInfo();
         if (info.version === remoteInfo.version) {
             return;
         }
