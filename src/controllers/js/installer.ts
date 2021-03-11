@@ -1,98 +1,78 @@
 import path from "path";
 import fs from "fs-extra";
-import { Terminal, tondevHome } from "../../core";
-import { downloadFromGithub, formatTable } from "../../core/utils";
+import {
+    Terminal,
+    tondevHome,
+} from "../../core";
+import {
+    downloadFromGithub,
+    httpsGetJson,
+} from "../../core/utils";
 
-const repos: { url: string; root: string }[] = [
-    {
-        url: "https://github.com/tonlabs/sdk-samples/archive/master.zip",
+const demoBranch = "rc";
+const demoInfoURL = `https://raw.githubusercontent.com/tonlabs/sdk-samples/${demoBranch}/demo.json`;
+const demoArchiveURL = `https://github.com/tonlabs/sdk-samples/archive/${demoBranch}.zip`;
+const demoFolder = `sdk-samples-${demoBranch}`;
 
-        // Github makes this name when zipping files, so we should just write it here correctly
-        root: "sdk-samples-master",
-    },
-];
-
-export function getVariants() {
-    return [
-        {
-            name: "simple-app",
-            description: "This is the simplest app ever",
-            repository: 0,
-            relPath: "v1/web-pack/simple-app",
-        },
-        {
-            name: "subscription",
-            description: "Sometimes it's better to wait for a push than to poll",
-            repository: 0,
-            relPath: "v1/node-js/core-api/subscription",
-        },
-        {
-            name: "query",
-            description: "Try our queries",
-            repository: 0,
-            relPath: "v1/node-js/core-api/query",
-        },
-    ];
-}
-function getVariant(name: string) {
-    const app = getVariants().find(x => x.name === name);
-    // app !== undefined, but the compliler does't know that
-    if (!app) throw `An error occured while checking if "${name}" is installed`;
-    return app;
+function jsHome() {
+    return path.resolve(tondevHome(), "js");
 }
 
-export async function demoEnsureInstalled(terminal: Terminal, name: string, folder: string) {
-    const app = getVariant(name);
+function demoHome() {
+    return path.resolve(jsHome(), demoFolder);
+}
 
-    // Check if App is installed in the current folder
-    const { url: repoUrl, root: repoRoot } = repos[app.repository];
-    /*
-    appFolder = '/home/tondev/sdk-samples-master/v1/node-js/core-api'
-                |            |                  |                   |
-                |   folder   |     repoRoot     |     app.relPath   |
-    */
-    const appFolder = path.resolve(folder, repoRoot, app.relPath);
-    console.log({ appFolder });
+export function getInfo(): DemoInfo {
+    return JSON.parse(fs.readFileSync(path.resolve(demoHome(), "demo.json")).toString());
+}
 
-    if (!fs.existsSync(appFolder)) {
-        const _appFolder = path.resolve(tondevHome(), repoRoot, app.relPath);
-        console.log({ _appFolder });
-
-        // Check if App exists in .tondev
-        if (!fs.existsSync(_appFolder)) {
-            terminal.log("Cloning SDK samples respository...");
-            await downloadFromGithub(terminal, repoUrl, tondevHome());
+export async function ensureDemoInstalled(terminal: Terminal) {
+    if (fs.pathExistsSync(demoHome())) {
+        const info = getInfo();
+        const remoteInfo: DemoInfo = await httpsGetJson(demoInfoURL);
+        if (info.version === remoteInfo.version) {
+            return;
         }
-        fs.copySync(_appFolder, appFolder);
+        fs.rmdirSync(demoHome(), {recursive: true});
     }
-    return appFolder;
+    if (!fs.pathExistsSync(jsHome())) {
+        fs.mkdirSync(jsHome(), {recursive: true});
+    }
+    terminal.log("Downloading demo repository...");
+    await downloadFromGithub(terminal, demoArchiveURL, jsHome());
 }
-export async function demoUninstall(terminal: Terminal, name: string, folder: string) {
-    const app = getVariant(name);
 
-    // Check if App is installed in the current folder
-    const { root: repoRoot } = repos[app.repository];
-    /*
-    appFolder = '/home/tondev/sdk-samples-master/v1/node-js/core-api'
-                |            |                  |                   |
-                |   folder   |     repoRoot     |     app.relPath   |
-    */
-    const paths = [
-        path.resolve(folder, repoRoot, app.relPath),
-        path.resolve(tondevHome(), repoRoot, app.relPath),
-    ];
+export type DemoApp = {
+    name: string,
+    path: string,
+    description: string,
+}
 
-    let ok = false;
-    const table = paths.map(folder => {
-        if (fs.existsSync(folder)) {
-            fs.rmdirSync(folder, { recursive: true });
-            ok = true;
-            return [folder, "Removed"];
-        } else {
-            return [folder, "Not found"];
-        }
-    });
+export type DemoInfo = {
+    version: string,
+    applications: DemoApp[],
+}
 
-    terminal.log(formatTable(table));
-    return ok;
+export async function downloadDemo(terminal: Terminal, name: string, folder: string) {
+    await ensureDemoInstalled(terminal);
+    const info = getInfo();
+    const app = info.applications.find(x => x.name.toLowerCase() === name.toLowerCase());
+    if (!app) {
+        throw new Error(`Demo "${name} not found.`);
+    }
+    const dstPath = path.resolve(folder, name);
+    if (fs.existsSync(dstPath)) {
+        terminal.log(`This demo already downloaded in: ${dstPath}`);
+        return;
+    }
+    fs.copySync(path.resolve(demoHome(), app.path), dstPath);
+    terminal.log(`
+Demo ${name} is downloaded into ${dstPath}
+Check README.md or run application:
+$ cd ${path.relative(".", dstPath)}
+$ npm i
+$ npm start
+`,
+    );
+
 }

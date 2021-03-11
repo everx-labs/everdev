@@ -192,22 +192,6 @@ export const nullTerminal: Terminal = {
     },
 };
 
-export function stringTerminal(): Terminal & { output: string, error: string } {
-    return {
-        output: "",
-        error: "",
-        write(text: string) {
-            this.output += text;
-        },
-        writeError(text: string) {
-            this.error += text;
-        },
-        log(...args: any[]) {
-            this.write(`${args.map(x => `${x}`).join(" ")}\n`);
-        },
-    };
-}
-
 export function versionToNumber(s: string): number {
     if (s.toLowerCase() === "latest") {
         return 1_000_000_000;
