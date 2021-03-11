@@ -29,18 +29,24 @@ Download and install all the core [TON.DEV](https://docs.ton.dev/86757ecb2/p/04a
       - [Compile](#compile)
       - [Version](#version)
       - [Update](#update-1)
+      - [Set](#set)
     - [TON OS Startup Edition(SE)](#ton-os-startup-editionse)
       - [Start](#start)
       - [Version](#version-1)
-      - [Set](#set)
+      - [Set](#set-1)
       - [Reset](#reset)
       - [Update](#update-2)
       - [Stop](#stop)
       - [Info](#info)
     - [SDK](#sdk)
-      - [See the list of available Demo Projects](#see-the-list-of-available-demo-projects)
-      - [Install Demo Project](#install-demo-project)
-      - [Create Empty Project](#create-empty-project)
+      - [See the list of available demo projects](#see-the-list-of-available-demo-projects)
+      - [Install demo project](#install-demo-project)
+      - [Create an empty project](#create-an-empty-project)
+    - [tonos-cli](#tonos-cli)
+      - [Install](#install-1)
+      - [Version](#version-2)
+      - [Set](#set-2)
+      - [Update](#update-3)
   - [TONDEV Extensibility](#tondev-extensibility)
   - [Backlog](#backlog)
     - [Debot](#debot)
@@ -67,8 +73,8 @@ Each component is downloaded and installed automatically for the target platform
   Local blockchain for development and testing
 - [TestSuite4](https://github.com/tonlabs/TestSuite4) – **soon as part of tondev**  
   Python lightweight framework for Solidity testing 
-- [tonos-cli](https://github.com/tonlabs/tonos-cli) – **soon as part of tondev** (installation only)     
-  Command line tool for TON OS
+- [tonos-cli](https://github.com/tonlabs/tonos-cli) – 
+  Command line tool for TON OS. TONDEV helps with installation and version management. 
 - [TON-SDK](https://github.com/tonlabs/TON-SDK) -  **soon as part of tondev**   
   Core SDK Library features. 
 
@@ -156,10 +162,18 @@ tondev sol version
 
 #### Update
 
-This command updates the compiler to the latest version.
+This command updates the compiler and linker to the latest version.
 
 ```shell
 tondev sol update
+```
+
+#### Set
+
+This command sets the compiler and linker versions and downloads them if needed.
+
+```shell
+tondev sol set --compiler 0.38.0 --linker 0.23.54
 ```
 
 ### TON OS Startup Edition(SE)
@@ -223,30 +237,84 @@ default   running  0.24.12  2020                         tonlabs-tonos-se-ekater
 
 ### SDK
 
-#### See the list of available Demo Projects
+#### See the list of available demo projects
 
 This command shows the list of available demo projects
 
 ```shell
-tondev demo 
+tondev js demo 
+```
+
+Result:
+
+```shell
+$ tondev js demo
+Demo   Description
+-----  -------------------------
+hello  Simple NodeJs Application
 ```
 
 #### Install demo project
 
-This command installs the specified demo project in the current directory. Proceed the instructions in the terminal to run it.
+This command installs the specified demo project to the current directory. Proceed the instructions in the terminal to run it.
 
 ```shell
-tondev demo <demo name>
+tondev js demo hello
 ```
 
-
-
-#### Create Empty Project
+#### Create an empty project
 
 This command creates a Node.js project with SDK latest dependencies and index.js file with main Client object creation.
 
 ```shell
-tondev js create
+tondev js create test_project
+```
+
+### tonos-cli
+
+TONDEV installs tonos-cli globally, so after the installation is complete, you can access the functionality via command:
+
+```shell
+tonos-cli <command> <args> 
+```
+[See the tonos-cli usage documentation](https://github.com/tonlabs/tonos-cli#how-to-use).   
+[See tonos-cli guides](https://docs.ton.dev/86757ecb2/p/8080e6-tonos-cli/t/44972c).
+
+#### Install
+
+This command installs the latest tonos-cli 
+
+```shell
+tondev tonos-cli install
+```
+
+#### Version
+
+This command shows the used tonos-cli version and list of available for download versions
+
+```shell
+tondev tonos-cli version
+
+Version    Available
+---------  ------------------------------------------------------
+0.8.1      0.6.0, 0.6.1, 0.6.2, 0.7.1, 0.6.3, 0.7.0, 0.8.0, 0.8.1
+```
+
+#### Set
+
+This command specifies tonos-cli version to use and downloads it if needed.
+
+```shell
+tondev tonos-cli set --version 0.8.0
+```
+
+
+#### Update
+
+This command updates tonos-cli version to the latest
+
+```shell
+tondev tonos-cli update
 ```
 
 ## TONDEV Extensibility
