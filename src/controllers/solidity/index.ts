@@ -1,11 +1,9 @@
 import {
     Command,
+    Component,
     Terminal,
     ToolController,
 } from "../../core";
-import {
-    components,
-} from "./installer";
 import path from "path";
 import {
     changeExt,
@@ -13,7 +11,7 @@ import {
 } from "../../core/utils";
 import fs from "fs";
 import {BasicContract} from "./snippets";
-import {Component} from "./component";
+import {components} from "./components";
 
 export const solidityVersionCommand: Command = {
     name: "version",

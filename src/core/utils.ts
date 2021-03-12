@@ -1,12 +1,15 @@
 import * as path from "path";
 import * as os from "os";
 import * as fs from "fs";
-import { spawn, SpawnOptionsWithoutStdio } from "child_process";
+import {
+    spawn,
+    SpawnOptionsWithoutStdio,
+} from "child_process";
 import * as https from "https";
 import * as zlib from "zlib";
 import * as unzip from "unzip-stream";
 import request from "request";
-import { Terminal } from "./index";
+import {Terminal} from "./index";
 
 export function executableName(name: string): string {
     return `${name}${os.platform() === "win32" ? ".exe" : ""}`;
@@ -16,23 +19,10 @@ export function changeExt(path: string, newExt: string): string {
     return path.replace(/\.[^/.]+$/, newExt);
 }
 
-export function getVersionList(binaryName: string): Promise<string[]> {
-    return new Promise((resolve, reject) => {
-        const url = `http://sdkbinaries.tonlabs.io/${binaryName}.json`;
-        request(url, (error, { statusCode }, body) => {
-            try {
-                if (error) throw error;
-                if (statusCode !== 200) throw Error(`${url}, ${statusCode}`);
-                const result = JSON.parse(body)[binaryName];
-                if (!Array.isArray(result) || !result.length) {
-                    throw Error(`Unexpected body ${body}`);
-                }
-                resolve(result);
-            } catch (err) {
-                reject(err);
-            }
-        });
-    });
+export async function loadBinaryVersions(name: string): Promise<string[]> {
+    const info = await httpsGetJson(`https://binaries.tonlabs.io/${name}.json`);
+    const versions = info[name].sort(compareVersions).reverse();
+    return versions.length < 10 ? versions : [...versions.slice(0, 10), "..."];
 }
 
 async function installGlobally(dstPath: string, version: string, terminal: Terminal): Promise<void> {
@@ -48,18 +38,14 @@ async function installGlobally(dstPath: string, version: string, terminal: Termi
                     bin: `./${name}${ext ? "." + ext : ""}`,
                 },
                 null,
-                2
-            )
+                2,
+            ),
         );
-        await run("npm", ["install", "-g"], { cwd: binDir }, terminal);
+        await run("npm", ["install", "-g"], {cwd: binDir}, terminal);
     } catch (err) {
         terminal.writeError(err);
-
-        throw Error(
-            [
-                `An error occured while trying to install ${name} globally`,
-                `Make sure you can execute 'npm i <package> -g' without using sudo and try again`,
-            ].join("\n")
+        throw Error(`An error occurred while trying to install ${name} globally.
+Make sure you can execute 'npm i <package> -g' without using sudo and try again`,
         );
     }
 }
@@ -67,19 +53,21 @@ async function installGlobally(dstPath: string, version: string, terminal: Termi
 function downloadAndUnzip(dst: string, url: string): Promise<void> {
     return new Promise((resolve, reject) => {
         request(url)
-            .on("error", reject) // http protocol errors
-            .pipe(
-                unzip
-                    .Extract({ path: dst })
-                    .on("error", reject) // unzip errors
-                    .on("close", resolve)
-            );
+        .on("error", reject) // http protocol errors
+        .pipe(
+            unzip
+            .Extract({path: dst})
+            .on("error", reject) // unzip errors
+            .on("close", resolve),
+        );
     });
 }
 
 export async function downloadFromGithub(terminal: Terminal, srcUrl: string, dstPath: string) {
     terminal.write(`Downloading from ${srcUrl} to ${dstPath} ...`);
-    if (!fs.existsSync(dstPath)) fs.mkdirSync(dstPath, { recursive: true });
+    if (!fs.existsSync(dstPath)) {
+        fs.mkdirSync(dstPath, {recursive: true});
+    }
     await downloadAndUnzip(dstPath, srcUrl);
     terminal.write("\n");
 }
@@ -90,19 +78,20 @@ function downloadAndGunzip(dest: string, url: string): Promise<void> {
             if (response.statusCode !== 200) {
                 reject(
                     new Error(
-                        `Download from ${url} failed with ${response.statusCode}: ${response.statusMessage}`
-                    )
+                        `Download from ${url} failed with ${response.statusCode}: ${response.statusMessage}`,
+                    ),
                 );
                 return;
             }
-            let file: fs.WriteStream | null = fs.createWriteStream(dest, { flags: "w" });
+            let file: fs.WriteStream | null = fs.createWriteStream(dest, {flags: "w"});
             let opened = false;
             const failed = (err: Error) => {
                 if (file) {
                     file.close();
                     file = null;
 
-                    fs.unlink(dest, () => {});
+                    fs.unlink(dest, () => {
+                    });
                     reject(err);
                 }
             };
@@ -142,20 +131,23 @@ export async function downloadFromBinaries(
     terminal: Terminal,
     dstPath: string,
     src: string,
-    options?: { executable?: boolean; globally?: boolean; version?: string; ext?: string }
+    options?: {
+        executable?: boolean,
+        globally?: boolean,
+        version?: string,
+    },
 ) {
-    const srcExt = (options && options.ext) ?? "gz";
-
     src = src.replace("{p}", os.platform());
-    const srcUrl = `http://sdkbinaries.tonlabs.io/${src}.${srcExt}`;
+    const srcExt = path.extname(src).toLowerCase();
+    const srcUrl = `https://binaries.tonlabs.io/${src}`;
     terminal.write(`Downloading from ${srcUrl} to ${dstPath} ...`);
     const dstDir = path.dirname(dstPath);
     if (!fs.existsSync(dstDir)) {
-        fs.mkdirSync(dstDir, { recursive: true });
+        fs.mkdirSync(dstDir, {recursive: true});
     }
-    if (srcExt === "zip") {
+    if (srcExt === ".zip") {
         await downloadAndUnzip(dstDir, srcUrl);
-    } else if (srcExt === "gz") {
+    } else if (srcExt === ".gz") {
         await downloadAndGunzip(dstPath, srcUrl);
     } else {
         throw Error(`Unexpected binary file extension: ${srcExt}`);
@@ -164,9 +156,12 @@ export async function downloadFromBinaries(
         fs.chmodSync(dstPath, 0o755);
     }
     if (options?.globally) {
-        if (!options.version) throw Error("Version required to install package");
+        if (!options.version) {
+            throw Error("Version required to install package");
+        }
         await installGlobally(dstPath, options.version, terminal).catch(err => {
-            fs.unlink(dstPath, () => {});
+            fs.unlink(dstPath, () => {
+            });
             throw err;
         });
     }
@@ -177,21 +172,20 @@ export function run(
     name: string,
     args: string[],
     options: SpawnOptionsWithoutStdio,
-    terminal: Terminal
+    terminal: Terminal,
 ): Promise<string> {
     return new Promise((resolve, reject) => {
         try {
             const isWindows = os.platform() === "win32";
             const spawned = isWindows
                 ? spawn("cmd.exe", ["/c", name].concat(args), {
-                      env: process.env,
-                      ...options,
-                  })
+                    env: process.env,
+                    ...options,
+                })
                 : spawn(name, args, {
-                      env: process.env,
-                      ...options,
-                  });
-            const errors: string[] = [];
+                    env: process.env,
+                    ...options,
+                });
             const output: string[] = [];
 
             spawned.stdout.on("data", function (data) {
@@ -202,7 +196,6 @@ export function run(
 
             spawned.stderr.on("data", data => {
                 const text = data.toString();
-                errors.push(text);
                 terminal.writeError(text);
             });
 
@@ -228,7 +221,7 @@ export function uniqueFilePath(folderPath: string, namePattern: string): string 
     while (true) {
         const filePath = path.resolve(
             folderPath,
-            namePattern.replace("{}", index === 0 ? "" : index.toString())
+            namePattern.replace("{}", index === 0 ? "" : index.toString()),
         );
         if (!fs.existsSync(filePath)) {
             return filePath;
@@ -250,9 +243,12 @@ export const consoleTerminal: Terminal = {
 };
 
 export const nullTerminal: Terminal = {
-    write(_text: string) {},
-    writeError(_text: string) {},
-    log(..._args) {},
+    write(_text: string) {
+    },
+    writeError(_text: string) {
+    },
+    log(..._args) {
+    },
 };
 
 export function versionToNumber(s: string): number {
@@ -260,9 +256,9 @@ export function versionToNumber(s: string): number {
         return 1_000_000_000;
     }
     const parts = `${s || ""}`
-        .split(".")
-        .map(x => Number.parseInt(x))
-        .slice(0, 3);
+    .split(".")
+    .map(x => Number.parseInt(x))
+    .slice(0, 3);
     while (parts.length < 3) {
         parts.push(0);
     }
@@ -272,7 +268,7 @@ export function versionToNumber(s: string): number {
 export function compareVersions(a: string, b: string): number {
     const an = versionToNumber(a);
     const bn = versionToNumber(b);
-    return an < bn ? -1 : an === bn ? 0 : 1;
+    return an < bn ? -1 : (an === bn ? 0 : 1);
 }
 
 let _progressLine: string = "";
@@ -299,30 +295,30 @@ export function httpsGetJson(url: string): Promise<any> {
     return new Promise((resolve, reject) => {
         const tryUrl = (url: string) => {
             https
-                .get(url, function (res) {
-                    let body = "";
+            .get(url, function (res) {
+                let body = "";
 
-                    res.on("data", function (chunk) {
-                        body += chunk;
-                    });
-
-                    res.on("end", function () {
-                        if (res.statusCode === 301) {
-                            const redirectUrl = res.headers["location"];
-                            if (redirectUrl) {
-                                tryUrl(redirectUrl);
-                            } else {
-                                reject(new Error("Redirect response has no `location` header."));
-                            }
-                            return;
-                        }
-                        const response = JSON.parse(body);
-                        resolve(response);
-                    });
-                })
-                .on("error", error => {
-                    reject(error);
+                res.on("data", function (chunk) {
+                    body += chunk;
                 });
+
+                res.on("end", function () {
+                    if (res.statusCode === 301) {
+                        const redirectUrl = res.headers["location"];
+                        if (redirectUrl) {
+                            tryUrl(redirectUrl);
+                        } else {
+                            reject(new Error("Redirect response has no `location` header."));
+                        }
+                        return;
+                    }
+                    const response = JSON.parse(body);
+                    resolve(response);
+                });
+            })
+            .on("error", error => {
+                reject(error);
+            });
         };
         tryUrl(url);
     });

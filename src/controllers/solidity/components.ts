@@ -1,9 +1,9 @@
 import path from "path";
 import fs from "fs";
 import {
+    Component,
     tondevHome,
 } from "../../core";
-import {Component} from "./component";
 
 function solidityHome() {
     return path.resolve(tondevHome(), "solidity");
