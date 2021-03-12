@@ -1,5 +1,5 @@
-import path from "path";
 import fs from "fs";
+import path from "path";
 import {
     Component,
     tondevHome,
@@ -20,19 +20,20 @@ export const components = {
     }),
 
     stdlib: new class extends Component {
-        // TODO: support versioning
-        getSourceName(_version: string): string {
-            return `${this.name}.gz` ;
+        getSourceName(version: string): string {
+            return `${this.name}_${version.split(".").join("_")}.tvm.gz`;
         }
 
-        // TODO: support versioning
         async getCurrentVersion(): Promise<string> {
-            return fs.existsSync(this.path) ? "1.0.0" : "";
+            if (fs.existsSync(this.path)) {
+                return components.compiler.getCurrentVersion();
+            } else {
+                return "";
+            }
         }
 
-        // TODO: support versioning
         async loadAvailableVersions(): Promise<string[]> {
-            return ["1.0.0"];
+            return components.compiler.loadAvailableVersions();
         }
     }(solidityHome(), "stdlib_sol", {
         targetName: "stdlib_sol.tvm",

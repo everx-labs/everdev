@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.2] - 2021-03-12
+
+### Fixed
+- Support versioning at solidity components
+
 ## [0.3.0] - 2021-03-11
 
 ### New
