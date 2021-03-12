@@ -22,7 +22,7 @@ export const components = {
     stdlib: new class extends Component {
         // TODO: support versioning
         getSourceName(_version: string): string {
-            return this.name;
+            return `${this.name}.gz` ;
         }
 
         // TODO: support versioning
