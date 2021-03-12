@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2021-03-11
+
+### New
+- SDK functionality added
+  - [See the list of available demo projects](README.md#see-the-list-of-available-demo-projects)
+  - [Install demo project](README.md#install-demo-project)
+- [tonos-cli](README.md#tonos-cli)
+  - Install
+  - Version
+  - Set
+  - Update
+
 ## [0.2.0] - 2021-02-26
 
 ### New
@@ -24,4 +36,4 @@ All notable changes to this project will be documented in this file.
   - Get solidity compiler version
   - Download the latest compiler
 - SDK functionality added:
-  - Create a Node.js project with the latest SDK dependencies and index.js script with main client object creation
+  - Create an empty Node.js project with the latest SDK dependencies and index.js script with main client object creation

@@ -1,6 +1,11 @@
 import path from "path";
 import os from "os";
 
+export {
+    ComponentOptions,
+    Component,
+} from "./component";
+
 /**
  * Terminal object is implemented by `tondev` and passed to the controller's command handlers.
  * Command handler uses terminal to output some human readable information related to command execution.
@@ -11,11 +16,13 @@ export interface Terminal {
      * @param args values to print.
      */
     log(...args: any[]): void,
+
     /**
      * Prints text. No line feeds will be produced.
      * @param text Text that will be printed.
      */
     write(text: string): void,
+
     /**
      * Prints error text. In case of CLI this text will be printed to stderr.
      * @param text Error text.
@@ -47,6 +54,10 @@ export type BaseCommandArg = {
      * Determine that the arg is a CLI arg (not an option).
      */
     isArg?: boolean,
+    /**
+     * Get available CLI argument variants
+     */
+    getVariants?(): { name: string; description?: string }[],
 };
 
 /**
@@ -99,6 +110,7 @@ export interface Command {
      * Command argument definitions.
      */
     args?: CommandArg[],
+
     /**
      * Command handler.
      * @param terminal Terminal object provided by `tondev`.
