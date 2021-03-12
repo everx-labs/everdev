@@ -1,30 +1,45 @@
 import path from "path";
 import {
-    compareVersions,
     downloadFromBinaries,
     executableName,
     formatTable,
-    httpsGetJson,
+    loadBinaryVersions,
     nullTerminal,
     run,
-} from "../../core/utils";
-import {Terminal} from "../../core";
+} from "./utils";
+import {Terminal} from "./";
 import fs from "fs";
 
 export type ComponentOptions = {
+    /**
+     * Component is an executable file.
+     */
     executable?: boolean,
+    /**
+     * Component must be aliased to run globally.
+     */
+    globally?: boolean,
+    /**
+     * Regular expression to extract version from
+     * components --version output.
+     */
     extractCurrentVersionRegExp?: RegExp,
+    /**
+     * Target name for a component file.
+     */
     targetName?: string,
 }
 
 export class Component {
-    isExecutable: boolean = true;
+    isExecutable: boolean;
+    globally: boolean;
     extractCurrentVersionRegExp: RegExp;
     targetName: string;
     path: string;
 
     constructor(public home: string, public name: string, options?: ComponentOptions) {
         this.isExecutable = options?.executable ?? false;
+        this.globally = options?.globally ?? false;
         this.extractCurrentVersionRegExp = options?.extractCurrentVersionRegExp ?? /Version:\s*([0-9.]+)/;
         this.targetName = options?.targetName ?? name;
         if (this.isExecutable) {
@@ -39,13 +54,11 @@ export class Component {
     }
 
     getSourceName(version: string): string {
-        return `${this.name}_${version.split(".").join("_")}_{p}`;
+        return `${this.name}_${version.split(".").join("_")}_{p}.gz`;
     }
 
     async loadAvailableVersions(): Promise<string[]> {
-        const versions = (await httpsGetJson(`https://binaries.tonlabs.io/${this.name}.json`))
-            [this.name].sort(compareVersions).reverse();
-        return versions.length < 10 ? versions : [...versions.slice(0, 10), "..."];
+        return loadBinaryVersions(this.name);
     }
 
     async getCurrentVersion(): Promise<string> {
@@ -64,24 +77,26 @@ export class Component {
         if (current !== "" && !requiredVersion) {
             return false;
         }
-        let required = (requiredVersion ?? "latest").toLowerCase();
-        if (required === current) {
+        let version = (requiredVersion ?? "latest").toLowerCase();
+        if (version === current) {
             return false;
         }
         const available = await this.loadAvailableVersions();
-        if (required === "latest") {
-            required = available[0];
+        if (version === "latest") {
+            version = available[0];
         } else {
-            if (!available.includes(required)) {
-                throw new Error(`Invalid ${this.name} version ${required}`);
+            if (!available.includes(version)) {
+                throw new Error(`Invalid ${this.name} version ${version}`);
             }
         }
-        if (required === current) {
+        if (version === current) {
             return false;
         }
-        const sourceName = this.getSourceName(required);
+        const sourceName = this.getSourceName(version);
         await downloadFromBinaries(terminal, this.path, sourceName, {
             executable: this.isExecutable,
+            globally: this.globally,
+            version,
         });
         return true;
     }
