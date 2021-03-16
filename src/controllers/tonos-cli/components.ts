@@ -14,7 +14,7 @@ export const components = {
             return `tonos-cli-${version.split(".").join("_")}-{p}.zip`;
         }
     }(tonoscliHome(), "tonos-cli", {
-        extractCurrentVersionRegExp: /tonos_cli\s*([0-9.]+)/,
+        resolveVersionRegExp: /tonos_cli\s+([0-9.]+)/,
         executable: true,
         globally: true,
     }),

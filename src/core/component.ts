@@ -23,7 +23,7 @@ export type ComponentOptions = {
      * Regular expression to extract version from
      * components --version output.
      */
-    extractCurrentVersionRegExp?: RegExp,
+    resolveVersionRegExp?: RegExp,
     /**
      * Target name for a component file.
      */
@@ -33,14 +33,14 @@ export type ComponentOptions = {
 export class Component {
     isExecutable: boolean;
     globally: boolean;
-    extractCurrentVersionRegExp: RegExp;
+    resolveVersionRegExp: RegExp;
     targetName: string;
     path: string;
 
     constructor(public home: string, public name: string, options?: ComponentOptions) {
         this.isExecutable = options?.executable ?? false;
         this.globally = options?.globally ?? false;
-        this.extractCurrentVersionRegExp = options?.extractCurrentVersionRegExp ?? /Version:\s*([0-9.]+)/;
+        this.resolveVersionRegExp = options?.resolveVersionRegExp ?? /Version:\s*([0-9.]+)/;
         this.targetName = options?.targetName ?? name;
         if (this.isExecutable) {
             this.targetName = executableName(this.targetName);
@@ -61,12 +61,26 @@ export class Component {
         return loadBinaryVersions(this.name);
     }
 
-    async getCurrentVersion(): Promise<string> {
+    async resolveVersion(_downloadedVersion: string): Promise<string> {
         if (fs.existsSync(this.path)) {
             const compilerOut = await this.run(nullTerminal, process.cwd(), ["--version"]);
-            return compilerOut.match(this.extractCurrentVersionRegExp)?.[1] ?? "";
+            return compilerOut.match(this.resolveVersionRegExp)?.[1] ?? "";
         }
         return "";
+    }
+
+    async getCurrentVersion(): Promise<string> {
+        const infoPath = `${this.path}.json`;
+        if (fs.existsSync(infoPath)) {
+            try {
+                const info = JSON.parse(fs.readFileSync(infoPath, "utf8"));
+                if (info.version) {
+                    return info.version;
+                }
+            } catch {
+            }
+        }
+        return this.resolveVersion("");
     }
 
     async ensureVersion(
@@ -98,6 +112,10 @@ export class Component {
             globally: this.globally,
             version,
         });
+        const info = {
+            version: await this.resolveVersion(version),
+        };
+        fs.writeFileSync(`${this.path}.json`, JSON.stringify(info));
         return true;
     }
 

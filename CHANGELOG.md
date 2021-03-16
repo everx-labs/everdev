@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.3] - 2021-03-16
+
+### Fixed
+- Solidity stdlib didn't update.
+
 ## [0.3.2] - 2021-03-12
 
 ### Fixed

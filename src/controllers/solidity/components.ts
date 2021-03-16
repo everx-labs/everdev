@@ -1,4 +1,3 @@
-import fs from "fs";
 import path from "path";
 import {
     Component,
@@ -16,7 +15,7 @@ export const components = {
 
     linker: new Component(solidityHome(), "tvm_linker", {
         executable: true,
-        extractCurrentVersionRegExp: /TVM linker\s*([0-9.]+)/,
+        resolveVersionRegExp: /TVM linker\s*([0-9.]+)/,
     }),
 
     stdlib: new class extends Component {
@@ -24,12 +23,8 @@ export const components = {
             return `${this.name}_${version.split(".").join("_")}.tvm.gz`;
         }
 
-        async getCurrentVersion(): Promise<string> {
-            if (fs.existsSync(this.path)) {
-                return components.compiler.getCurrentVersion();
-            } else {
-                return "";
-            }
+        async resolveVersion(downloadedVersion: string): Promise<string> {
+            return downloadedVersion;
         }
 
         async loadAvailableVersions(): Promise<string[]> {
