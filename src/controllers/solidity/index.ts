@@ -107,20 +107,32 @@ export const soliditySetCommand: Command = {
             defaultValue: "",
 
         },
+        {
+            name: "stdlib",
+            title: "Stdlib version (version number or `latest`)",
+            type: "string",
+            defaultValue: "",
+
+        },
     ],
     async run(terminal: Terminal, args: {
         compiler: string,
         linker: string,
+        stdlib: string,
     }): Promise<void> {
         const versions: {
             compiler?: string,
             linker?: string,
+            stdlib?: string,
         } = {};
         if (args.compiler !== "") {
             versions.compiler = args.compiler;
         }
         if (args.linker !== "") {
             versions.linker = args.linker;
+        }
+        if (args.stdlib !== "") {
+            versions.stdlib = args.stdlib;
         }
         await Component.setVersions(terminal, components, versions);
     },
