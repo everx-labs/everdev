@@ -56,7 +56,6 @@ export const solidityCompileCommand: Command = {
         },
     ],
     async run(terminal: Terminal, args: { file: string }): Promise<void> {
-        terminal.log("Starting build...");
         const ext = path.extname(args.file);
         if (ext !== ".sol") {
             terminal.log(`Choose solidity source file.`);
@@ -77,7 +76,6 @@ export const solidityCompileCommand: Command = {
         const generatedTvcName = `${/Saved contract to file (.*)$/mg.exec(linkerOut)?.[1]}`;
         fs.renameSync(path.resolve(fileDir, generatedTvcName), path.resolve(fileDir, tvcName));
         fs.unlinkSync(path.resolve(fileDir, codeName));
-        terminal.log("Compile complete.");
     },
 };
 
