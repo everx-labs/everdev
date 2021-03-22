@@ -11,6 +11,7 @@ import {
     loadInfo,
 } from "./installer";
 import {formatTable} from "../../core/utils";
+import {jsWrapCommand} from "./wrap";
 
 export const jsCreateCommand: Command = {
     name: "create",
@@ -22,6 +23,7 @@ export const jsCreateCommand: Command = {
     }, {
         name: "folder",
         type: "folder",
+        title: "Target folder (current default)",
     }],
     async run(terminal: Terminal, args: { name: string, folder: string }) {
         const appFolderPath = path.resolve(args.folder, args.name);
@@ -45,6 +47,7 @@ export const jsDemoCommand: Command = {
         {
             name: "folder",
             type: "folder",
+            title: "Target folder (current default)",
         },
     ],
     async run(terminal: Terminal, args: { name: string; folder: string }) {
@@ -65,5 +68,7 @@ export const JsApps: ToolController = {
     title: "JS Apps",
     commands: [
         jsCreateCommand,
-        jsDemoCommand],
+        jsDemoCommand,
+        jsWrapCommand,
+    ],
 };
