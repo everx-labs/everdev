@@ -39,6 +39,10 @@ export type BaseCommandArg = {
      */
     name: string,
     /**
+     * Short alias for an optional arg name.
+     */
+    alias?: string,
+    /**
      * Title of the argument.
      */
     title?: string,
@@ -86,9 +90,16 @@ export type StringArg = BaseCommandArg & {
 }
 
 /**
+ * Boolean command argument.
+ */
+export type BooleanArg = BaseCommandArg & {
+    type: "boolean",
+}
+
+/**
  * Command argument.
  */
-export type CommandArg = FileArg | FolderArg | StringArg;
+export type CommandArg = FileArg | FolderArg | StringArg | BooleanArg;
 
 /**
  * Command definition.

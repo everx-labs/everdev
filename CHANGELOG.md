@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [0.4.0] - 2021-03-23
 
+### New
+
+- `--force` option for `sol update` and `sol set` commands.
+  If set then components will be reinstalled event if they are up to date.
+
 ## [0.3.3] - 2021-03-16
 
 ### Fixed
