@@ -158,9 +158,19 @@ export function printCommandUsage(controller: ToolController, command: Command) 
     }
     console.log("Options:");
     console.log(formatTable([
-        ["  ", "--help, -h", "Show command usage"],
-        ...options.map(x => ["  ", `--${x.name}${x.alias ? ", -" + x.alias : ""}`, x.title]),
-    ]));
+        ['  ', '--help, -h', 'Show command usage'],
+        ...options.flatMap((x) => {
+            const lines = [['  ', `--${x.name}${x.alias ? ', -' + x.alias : ''}`, x.title]]
+            if (x.getVariants) {
+                const variants = x.getVariants()
+                const maxLen = Math.max(...variants.map((v) => v.name.length))
+                for (const v of variants) {
+                    lines.push(['  ', '', `${v.name.padEnd(maxLen)} - ${v.description}`])
+                }
+            }
+            return lines
+        }),
+    ]))
     return;
 }
 

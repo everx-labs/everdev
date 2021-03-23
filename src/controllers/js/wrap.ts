@@ -81,7 +81,9 @@ export const jsWrapCommand: Command = {
         const abiPath = path.resolve(process.cwd(), args.file);
         const name = path.basename(abiPath).slice(0, -".abi.json".length);
         const abi = JSON.parse(fs.readFileSync(abiPath, "utf8"));
-        const contractName = `${name.substr(0, 1).toUpperCase()}${name.substr(1)}Contract`;
+        const contractName =  args.output !== 'false' 
+            ? args.output 
+            : `${name.substr(0, 1).toUpperCase()}${name.substr(1)}Contract`;
         const code = [`const ${contractName} = {`];
         const abiCode = JSON
             .stringify(abi, undefined, "    ")
