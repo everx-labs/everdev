@@ -85,14 +85,15 @@ export class Component {
 
     async ensureVersion(
         terminal: Terminal,
+        force: boolean,
         requiredVersion?: string,
     ): Promise<boolean> {
         const current = await this.getCurrentVersion();
-        if (current !== "" && !requiredVersion) {
+        if (!force && current !== "" && !requiredVersion) {
             return false;
         }
         let version = (requiredVersion ?? "latest").toLowerCase();
-        if (version === current) {
+        if (!force && version === current) {
             return false;
         }
         const available = await this.loadAvailableVersions();
@@ -103,7 +104,7 @@ export class Component {
                 throw new Error(`Invalid ${this.name} version ${version}`);
             }
         }
-        if (version === current) {
+        if (!force && version === current) {
             return false;
         }
         const sourceName = this.getSourceName(version);
@@ -121,17 +122,19 @@ export class Component {
 
     static async ensureInstalledAll(terminal: Terminal, components: { [name: string]: Component }) {
         for (const component of Object.values(components)) {
-            await component.ensureVersion(terminal);
+            await component.ensureVersion(terminal, false);
         }
     }
 
     static async setVersions(
         terminal: Terminal,
+        force: boolean,
         components: { [name: string]: Component },
-        versions: { [name: string]: any }) {
+        versions: { [name: string]: any },
+    ) {
         let hasUpdates = false;
         for (const [name, component] of Object.entries(components)) {
-            if (await component.ensureVersion(terminal, versions[name])) {
+            if (await component.ensureVersion(terminal, force, versions[name])) {
                 hasUpdates = true;
             }
         }
@@ -142,12 +145,12 @@ export class Component {
         }
     }
 
-    static async updateAll(terminal: Terminal, components: { [name: string]: Component }) {
+    static async updateAll(terminal: Terminal, force: boolean, components: { [name: string]: Component }) {
         const latest: { [name: string]: string } = {};
         for (const name of Object.keys(components)) {
             latest[name] = "latest";
         }
-        await this.setVersions(terminal, components, latest);
+        await this.setVersions(terminal, force, components, latest);
     }
 
     static async getInfoAll(components: { [name: string]: Component }): Promise<string> {
