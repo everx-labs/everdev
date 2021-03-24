@@ -1,6 +1,7 @@
 import {
     Command,
     CommandArg,
+    getArgVariants,
     ToolController,
 } from "../core";
 import {controllers} from "../controllers";
@@ -8,8 +9,7 @@ import {
     consoleTerminal,
     formatTable,
 } from "../core/utils";
-import * as fs from "fs";
-import * as path from "path";
+import {printUsage} from "./help";
 
 function findOptionArg(command: Command, name: string): CommandArg | undefined {
     if (name.startsWith("--")) {
@@ -39,7 +39,7 @@ class CommandLine {
         this.args[name] = value;
     }
 
-    resolveValue(arg: CommandArg, value: string | undefined) {
+    async resolveValue(arg: CommandArg, value: string | undefined) {
         if (arg.type === "boolean" && value === undefined) {
             value = "true";
         }
@@ -52,8 +52,9 @@ class CommandLine {
         } else {
             resolved = value;
         }
-        if (arg.getVariants !== undefined && !arg.getVariants().find(x => x.name === value)) {
-            throw missingArgError(arg);
+        const variants = await getArgVariants(arg);
+        if (variants && !variants.find(x => x.value === value)) {
+            throw await missingArgError(arg);
         }
         this.setArgValue(arg, resolved);
         this.unresolved.delete(arg.name);
@@ -66,19 +67,19 @@ class CommandLine {
         }
     }
 
-    resolveDefault(arg: CommandArg) {
+    async resolveDefault(arg: CommandArg) {
         if (arg.defaultValue !== undefined) {
             this.setArgValue(arg, arg.type === "boolean" ? arg.defaultValue === "true" : arg.defaultValue);
         } else if (arg.type === "folder") {
             this.setArgValue(arg, process.cwd());
         } else {
-            throw missingArgError(arg);
+            throw await missingArgError(arg);
         }
     }
 
-    parseOptionName(name: string) {
+    async parseOptionName(name: string) {
         if (this.pending) {
-            this.resolveValue(this.pending, undefined);
+            await this.resolveValue(this.pending, undefined);
         }
         const optionName: string = name.toLowerCase();
         if (optionName === "--help" || optionName === "-h") {
@@ -89,7 +90,7 @@ class CommandLine {
                 throw new Error(`Unknown option ${optionName}`);
             }
             if (this.pending.type === "boolean") {
-                this.resolveValue(this.pending, undefined);
+                await this.resolveValue(this.pending, undefined);
             }
         } else if (this.controller) {
             throw new Error(`Unexpected option ${optionName} before command name.`);
@@ -98,17 +99,17 @@ class CommandLine {
         }
     }
 
-    parse(programArgs: string[]) {
+    async parse(programArgs: string[]) {
         for (const arg of programArgs) {
             if (arg.startsWith("-")) {
-                this.parseOptionName(arg);
+                await this.parseOptionName(arg);
             } else if (this.pending) {
-                this.resolveValue(this.pending, arg);
+                await this.resolveValue(this.pending, arg);
             } else if (this.controller && this.command) {
                 if (this.positional.length === 0) {
                     throw new Error(`Unexpected argument ${arg}`);
                 }
-                this.resolveValue(this.positional[0], arg);
+                await this.resolveValue(this.positional[0], arg);
             } else if (this.controller) {
                 this.command = this.controller.commands.find(x => x.name === arg.toLowerCase());
                 if (!this.command) {
@@ -128,104 +129,45 @@ class CommandLine {
             }
         }
         if (this.pending) {
-            this.resolveValue(this.pending, undefined);
+            await this.resolveValue(this.pending, undefined);
+        }
+        if (this.args.help) {
+            return;
         }
         for (const arg of this.unresolved.values()) {
-            this.resolveDefault(arg);
+            await this.resolveDefault(arg);
         }
     }
 }
 
-export function printCommandUsage(controller: ToolController, command: Command) {
-    let usageArgs = "";
-    const options: CommandArg[] = [];
-    const args: CommandArg[] = [];
-    for (const arg of command.args ?? []) {
-        if (arg.isArg) {
-            usageArgs += ` ${arg.name}`;
-            args.push(arg);
-        } else {
-            options.push(arg);
-        }
-    }
-    if (options.length > 0) {
-        usageArgs += ` [options]`;
-    }
-    console.log(`Use: tondev ${controller.name} ${command.name}${usageArgs}`);
-    if (args.length > 0) {
-        console.log("Args:");
-        console.log(formatTable(args.map(x => ["  ", x.name, x.title])));
-    }
-    console.log("Options:");
-    console.log(formatTable([
-        ['  ', '--help, -h', 'Show command usage'],
-        ...options.flatMap((x) => {
-            const lines = [['  ', `--${x.name}${x.alias ? ', -' + x.alias : ''}`, x.title]]
-            if (x.getVariants) {
-                const variants = x.getVariants()
-                const maxLen = Math.max(...variants.map((v) => v.name.length))
-                for (const v of variants) {
-                    lines.push(['  ', '', `${v.name.padEnd(maxLen)} - ${v.description}`])
-                }
-            }
-            return lines
-        }),
-    ]))
-    return;
-}
-
-export function printControllerUsage(controller: ToolController) {
-    const commands: [string, Command][] = controller.commands
-        .map(x => [`${controller.name} ${x.name}`, x]);
-    console.log(formatTable(commands.map(x => ["  ", x[0], x[1].title])));
-}
-
-export function printUsage(controller?: ToolController, command?: Command) {
-    const pkg = JSON.parse(fs.readFileSync(path.resolve(__dirname, "..", "..", "package.json"), "utf8"));
-    console.log(`TONDev Version: ${pkg.version}`);
-    if (controller && command) {
-        printCommandUsage(controller, command);
-        return;
-    }
-    console.log(`Use: tondev ${controller?.name ?? "tool"} ${command?.name ?? "command"} args [options]`);
-    console.log(`Options:`);
-    console.log(`    --help, -h  Show command usage`);
-    if (controller) {
-        console.log("Commands:");
-        printControllerUsage(controller);
-        return;
-    }
-    for (const controller of controllers) {
-        console.log(`\n${controller.title ?? controller.name} Commands:\n`);
-        printControllerUsage(controller);
-    }
-}
-
-function missingArgError(arg: CommandArg): Error {
-    const variants: string = arg.getVariants
+async function missingArgError(arg: CommandArg): Promise<Error> {
+    const variants = await getArgVariants(arg);
+    const variantsString = variants
         ? "\n" +
-        formatTable(
-            [["Available variants:", ""], ...arg.getVariants().map(x => [x.name, x.description ?? ""])],
+        formatTable([
+                ["Available variants:", ""],
+                ...variants.map(x => [x.value, x.description ?? ""]),
+            ],
             {headerSeparator: true},
         )
         : "";
-    throw new Error(`Missing required ${arg.name}${variants}`);
+    throw new Error(`Missing required ${arg.name}${variantsString}`);
 }
 
 export async function run() {
     const parser = new CommandLine();
-    parser.parse(process.argv.slice(2));
+    await parser.parse(process.argv.slice(2));
     const {
         controller,
         command,
         args,
     } = parser;
     if (!controller || !command) {
-        printUsage(controller, command);
+        await printUsage(controller, command);
         return;
     }
     if (parser.args.help) {
-        printUsage(controller, command);
+        await printUsage(controller, command);
         return;
     }
     await command.run(consoleTerminal, args);
