@@ -5,15 +5,22 @@ import {
 import * as fs from "fs";
 import * as path from "path";
 
-function getExportSection(exportFormat: string, name: string): string {
-    switch (exportFormat.toLowerCase()) {
-    case "node":
-        return `module.export = { ${name} };`;
-    case "node-default":
-        return `module.export = ${name};`;
-    case "es":
+enum ExportFormat {
+    CommonJs = "commonjs",
+    CommonJsDefault = "commonjs-default",
+    Es6 = "es6",
+    Es6Default = "es6-default",
+}
+
+function getExportSection(exportFormat: ExportFormat, name: string): string {
+    switch (exportFormat) {
+    case ExportFormat.CommonJs:
+        return `module.exports = { ${name} };`;
+    case ExportFormat.CommonJsDefault:
+        return `module.exports = ${name};`;
+    case ExportFormat.Es6:
         return `export ${name};`;
-    case "es-default":
+    case ExportFormat.Es6Default:
         return `export default ${name};`;
     }
     throw new Error(`Invalid JS export mode ${exportFormat}`);
@@ -52,20 +59,20 @@ export const jsWrapCommand: Command = {
             getVariants(): { name: string; description?: string }[] {
                 return [
                     {
-                        name: "node",
-                        description: "Use NodeJs modules",
+                        name: "commonjs",
+                        description: "Use CommonJS modules (NodeJs)",
                     },
                     {
-                        name: "node-default",
-                        description: "Use NodeJs modules with default export",
+                        name: "commonjs-default",
+                        description: "Use CommonJS modules (NodeJS) with default export",
                     },
                     {
-                        name: "es",
-                        description: "Use ES modules",
+                        name: "es6",
+                        description: "Use ES6 modules",
                     },
                     {
-                        name: "es-default",
-                        description: "Use ES modules with default export",
+                        name: "es6-default",
+                        description: "Use ES6 modules with default export",
                     },
                 ];
             },
@@ -100,12 +107,15 @@ export const jsWrapCommand: Command = {
             code.push(`    tvc: "${fs.readFileSync(tvcPath).toString("base64")}",`);
         }
         code.push("};");
-        code.push(getExportSection(args.export, contractName));
+        code.push(getExportSection(args.export.toLowerCase() as ExportFormat, contractName));
         const wrapperCode = code.join("\n");
         if (args.print) {
             terminal.log(wrapperCode);
         } else {
-            const wrapperPath = path.resolve(path.dirname(abiPath), `${contractName}.js`);
+            const wrapperPath = path.resolve(
+                path.dirname(abiPath),
+                args.output !== "" ? args.output : `${contractName}.js`,
+            );
             fs.writeFileSync(wrapperPath, wrapperCode);
             terminal.log(`Generated wrapper code written to: ${wrapperPath}`);
         }
