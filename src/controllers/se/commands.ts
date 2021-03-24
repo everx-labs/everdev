@@ -144,7 +144,7 @@ export const seSetCommand: Command = {
     async run(terminal: Terminal, args: {
         version: string,
         port: string,
-        "db-port": string,
+        dbPort: string,
         instance: string
     }): Promise<void> {
         const updates: Partial<SEInstanceConfig> = {};
@@ -166,13 +166,13 @@ export const seSetCommand: Command = {
             }
         }
 
-        if (args["db-port"] !== "") {
-            if (args["db-port"].toLowerCase() === "none") {
+        if (args.dbPort !== "") {
+            if (args.dbPort.toLowerCase() === "none") {
                 updates.dbPort = PORT_NONE;
             } else {
-                updates.dbPort = Number.parseInt(args["db-port"]);
-                if (updates.port === undefined) {
-                    throw new Error(`Invalid db-port: ${args["db-port"]}`);
+                updates.dbPort = Number.parseInt(args.dbPort);
+                if (updates.dbPort === undefined) {
+                    throw new Error(`Invalid db-port: ${args.dbPort}`);
                 }
             }
         }

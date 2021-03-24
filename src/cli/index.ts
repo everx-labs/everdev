@@ -11,17 +11,16 @@ import {
 import * as fs from "fs";
 import * as path from "path";
 
-function argIsOption(arg: CommandArg, name: string, alias: string): boolean {
-    return !arg.isArg && (
-        name !== "" && arg.name === name
-        || alias !== "" && arg.alias === alias
-    );
-}
-
 function findOptionArg(command: Command, name: string): CommandArg | undefined {
-    const full = name.startsWith("--") ? name.substr(2).split("-").join("") : "";
-    const alias = name.startsWith("-") ? name.substr(1) : "";
-    return command.args?.find(arg => argIsOption(arg, full, alias));
+    if (name.startsWith("--")) {
+        name = name.substr(2).toLowerCase();
+        return command.args?.find(x => !x.isArg && x.name === name);
+    }
+    if (name.startsWith("-")) {
+        name = name.substr(1).toLowerCase();
+        return command.args?.find(x => !x.isArg && x.alias === name);
+    }
+    return undefined;
 }
 
 class CommandLine {
@@ -31,6 +30,14 @@ class CommandLine {
     positional: CommandArg[] = [];
     unresolved = new Map<string, CommandArg>();
     pending: CommandArg | undefined = undefined;
+
+    setArgValue(arg: CommandArg, value: any) {
+        const name = arg.name
+            .split("-")
+            .map((x, i) => i > 0 ? (x.substr(0, 1).toUpperCase() + x.substr(1)) : x)
+            .join("");
+        this.args[name] = value;
+    }
 
     resolveValue(arg: CommandArg, value: string | undefined) {
         if (arg.type === "boolean" && value === undefined) {
@@ -48,7 +55,7 @@ class CommandLine {
         if (arg.getVariants !== undefined && !arg.getVariants().find(x => x.name === value)) {
             throw missingArgError(arg);
         }
-        this.args[arg.name] = resolved;
+        this.setArgValue(arg, resolved);
         this.unresolved.delete(arg.name);
         const i = this.positional.indexOf(arg);
         if (i >= 0) {
@@ -61,13 +68,9 @@ class CommandLine {
 
     resolveDefault(arg: CommandArg) {
         if (arg.defaultValue !== undefined) {
-            if (arg.type === "boolean") {
-                this.args[arg.name] = arg.defaultValue === "true";
-            } else {
-                this.args[arg.name] = arg.defaultValue;
-            }
+            this.setArgValue(arg, arg.type === "boolean" ? arg.defaultValue === "true" : arg.defaultValue);
         } else if (arg.type === "folder") {
-            this.args[arg.name] = process.cwd();
+            this.setArgValue(arg, process.cwd());
         } else {
             throw missingArgError(arg);
         }
@@ -163,7 +166,7 @@ export function printCommandUsage(controller: ToolController, command: Command) 
 
 export function printControllerUsage(controller: ToolController) {
     const commands: [string, Command][] = controller.commands
-    .map(x => [`${controller.name} ${x.name}`, x]);
+        .map(x => [`${controller.name} ${x.name}`, x]);
     console.log(formatTable(commands.map(x => ["  ", x[0], x[1].title])));
 }
 
