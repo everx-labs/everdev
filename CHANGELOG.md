@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - `--force` option for `sol update` and `sol set` commands.
   If set then components will be reinstalled event if they are up to date.
 - `js wrap` command generates JS wrapper file from ABI file and optional TVC file. 
+- help includes commands option variants.
 
 ## [0.3.3] - 2021-03-16
 

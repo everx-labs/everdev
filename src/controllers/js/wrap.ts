@@ -1,5 +1,6 @@
 import {
     Command,
+    CommandArgVariant,
     Terminal,
 } from "../../core";
 import * as fs from "fs";
@@ -49,34 +50,34 @@ export const jsWrapCommand: Command = {
             alias: "o",
             type: "string",
             title: "Set output file name (default is built from source ABI file name)",
-            defaultValue: "false",
+            defaultValue: "",
         },
         {
             name: "export",
             alias: "e",
             type: "string",
             title: "Export type and options",
-            getVariants(): { name: string; description?: string }[] {
+            getVariants(): CommandArgVariant[] {
                 return [
                     {
-                        name: "commonjs",
+                        value: "commonjs",
                         description: "Use CommonJS modules (NodeJs)",
                     },
                     {
-                        name: "commonjs-default",
+                        value: "commonjs-default",
                         description: "Use CommonJS modules (NodeJS) with default export",
                     },
                     {
-                        name: "es6",
+                        value: "es6",
                         description: "Use ES6 modules",
                     },
                     {
-                        name: "es6-default",
+                        value: "es6-default",
                         description: "Use ES6 modules with default export",
                     },
                 ];
             },
-            defaultValue: "node",
+            defaultValue: ExportFormat.CommonJs,
         },
     ],
     async run(terminal: Terminal, args: {
