@@ -49,7 +49,7 @@ export const jsWrapCommand: Command = {
             alias: "o",
             type: "string",
             title: "Set output file name (default is built from source ABI file name)",
-            defaultValue: "false",
+            defaultValue: "",
         },
         {
             name: "export",
@@ -76,7 +76,7 @@ export const jsWrapCommand: Command = {
                     },
                 ];
             },
-            defaultValue: "node",
+            defaultValue: ExportFormat.CommonJs,
         },
     ],
     async run(terminal: Terminal, args: {
@@ -88,9 +88,7 @@ export const jsWrapCommand: Command = {
         const abiPath = path.resolve(process.cwd(), args.file);
         const name = path.basename(abiPath).slice(0, -".abi.json".length);
         const abi = JSON.parse(fs.readFileSync(abiPath, "utf8"));
-        const contractName =  args.output !== 'false' 
-            ? args.output 
-            : `${name.substr(0, 1).toUpperCase()}${name.substr(1)}Contract`;
+        const contractName = `${name.substr(0, 1).toUpperCase()}${name.substr(1)}Contract`;
         const code = [`const ${contractName} = {`];
         const abiCode = JSON
             .stringify(abi, undefined, "    ")
