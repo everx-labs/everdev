@@ -42,6 +42,7 @@ Download and install all the core [TON.DEV](https://docs.ton.dev/86757ecb2/p/04a
       - [See the list of available demo projects](#see-the-list-of-available-demo-projects)
       - [Install demo project](#install-demo-project)
       - [Create an empty project](#create-an-empty-project)
+      - [Create contract JS wrapper](#create-contract-js-wrapper)
     - [tonos-cli](#tonos-cli)
       - [Install](#install-1)
       - [Version](#version-2)
@@ -167,6 +168,7 @@ This command updates the compiler and linker to the latest version.
 ```shell
 tondev sol update
 ```
+**Attention!** At the moment linker does not support versioning, so dispite the fact that its functionality changes over time, version stays the same (0.1.0).Use --force option to force update of it as well.
 
 #### Set
 
@@ -175,6 +177,7 @@ This command sets the compiler and linker versions and downloads them if needed.
 ```shell
 tondev sol set --compiler 0.38.0 --linker 0.23.54
 ```
+**Attention!** At the moment linker does not support versioning, so dispite the fact that its functionality changes over time, version stays the same (0.1.0).Use --force option to force update of it as well.
 
 ### TON OS Startup Edition(SE)
 
@@ -269,6 +272,16 @@ This command creates a Node.js project with SDK latest dependencies and index.js
 ```shell
 tondev js create test_project
 ```
+
+#### Create contract JS wrapper
+
+This command takes abi and, optionally, tvc file and generates a JS wrapper with abi and tvc converted into base64 that can be used further in SDK.
+tvc file must have the same name as abi. 
+
+```shell
+tondev js wrap contractName.abi.json
+```
+The result name of the wrapper will be "ContractName||"Contract".js".
 
 ### tonos-cli
 
