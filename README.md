@@ -283,6 +283,25 @@ tondev js wrap contractName.abi.json
 ```
 The result name of the wrapper will be "ContractName||"Contract".js".
 
+See other available generation options with help command:
+
+```shell 
+tondev js wrap -h
+TONDev Version: 0.4.0
+Use: tondev js wrap file [options]
+Args:
+    file  ABI file
+Options:
+    --help, -h    Show command usage
+    --print, -p   Print code to console
+    --output, -o  Set output file name (default is built from source ABI file name)
+    --export, -e  Export type and options
+                  commonjs          Use CommonJS modules (NodeJs)
+                  commonjs-default  Use CommonJS modules (NodeJS) with default export
+                  es6               Use ES6 modules
+                  es6-default       Use ES6 modules with default export
+```
+
 ### tonos-cli
 
 TONDEV installs tonos-cli globally, so after the installation is complete, you can access the functionality via command:
