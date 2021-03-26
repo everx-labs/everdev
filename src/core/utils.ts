@@ -53,13 +53,13 @@ Make sure you can execute 'npm i <package> -g' without using sudo and try again`
 function downloadAndUnzip(dst: string, url: string): Promise<void> {
     return new Promise((resolve, reject) => {
         request(url)
-        .on("error", reject) // http protocol errors
-        .pipe(
-            unzip
-            .Extract({path: dst})
-            .on("error", reject) // unzip errors
-            .on("close", resolve),
-        );
+            .on("error", reject) // http protocol errors
+            .pipe(
+                unzip
+                    .Extract({path: dst})
+                    .on("error", reject) // unzip errors
+                    .on("close", resolve),
+            );
     });
 }
 
@@ -154,6 +154,10 @@ export async function downloadFromBinaries(
     }
     if (options?.executable && os.platform() !== "win32") {
         fs.chmodSync(dstPath, 0o755);
+        if (os.platform() === "linux") {
+            // Without pause on Fedora 32 Linux always leads to an error: spawn ETXTBSY
+            await new Promise(resolve => setTimeout(resolve, 100));
+        }
     }
     if (options?.globally) {
         if (!options.version) {
@@ -256,9 +260,9 @@ export function versionToNumber(s: string): number {
         return 1_000_000_000;
     }
     const parts = `${s || ""}`
-    .split(".")
-    .map(x => Number.parseInt(x))
-    .slice(0, 3);
+        .split(".")
+        .map(x => Number.parseInt(x))
+        .slice(0, 3);
     while (parts.length < 3) {
         parts.push(0);
     }
@@ -295,30 +299,30 @@ export function httpsGetJson(url: string): Promise<any> {
     return new Promise((resolve, reject) => {
         const tryUrl = (url: string) => {
             https
-            .get(url, function (res) {
-                let body = "";
+                .get(url, function (res) {
+                    let body = "";
 
-                res.on("data", function (chunk) {
-                    body += chunk;
-                });
+                    res.on("data", function (chunk) {
+                        body += chunk;
+                    });
 
-                res.on("end", function () {
-                    if (res.statusCode === 301) {
-                        const redirectUrl = res.headers["location"];
-                        if (redirectUrl) {
-                            tryUrl(redirectUrl);
-                        } else {
-                            reject(new Error("Redirect response has no `location` header."));
+                    res.on("end", function () {
+                        if (res.statusCode === 301) {
+                            const redirectUrl = res.headers["location"];
+                            if (redirectUrl) {
+                                tryUrl(redirectUrl);
+                            } else {
+                                reject(new Error("Redirect response has no `location` header."));
+                            }
+                            return;
                         }
-                        return;
-                    }
-                    const response = JSON.parse(body);
-                    resolve(response);
+                        const response = JSON.parse(body);
+                        resolve(response);
+                    });
+                })
+                .on("error", error => {
+                    reject(error);
                 });
-            })
-            .on("error", error => {
-                reject(error);
-            });
         };
         tryUrl(url);
     });

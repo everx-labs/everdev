@@ -33,6 +33,7 @@ export const solidityCreateCommand: Command = {
     }, {
         name: "folder",
         type: "folder",
+        title: "Target folder (current is default)",
     }],
     async run(terminal: Terminal, args: { name: string, folder: string }) {
         const filePath = uniqueFilePath(args.folder, `${args.name}{}.sol`);
@@ -82,8 +83,15 @@ export const solidityCompileCommand: Command = {
 export const solidityUpdateCommand: Command = {
     name: "update",
     title: "Update Solidity Compiler",
-    async run(terminal: Terminal, _args: {}): Promise<void> {
-        await Component.updateAll(terminal, components);
+    args: [{
+        name: "force",
+        alias: "f",
+        title: "Force reinstall even if up to date",
+        type: "boolean",
+        defaultValue: "false",
+    }],
+    async run(terminal: Terminal, args: { force: boolean }): Promise<void> {
+        await Component.updateAll(terminal, args.force, components);
     },
 };
 
@@ -93,6 +101,7 @@ export const soliditySetCommand: Command = {
     args: [
         {
             name: "compiler",
+            alias: "c",
             title: "Compiler version (version number or `latest`)",
             type: "string",
             defaultValue: "",
@@ -100,6 +109,7 @@ export const soliditySetCommand: Command = {
         },
         {
             name: "linker",
+            alias: "l",
             title: "Linker version (version number or `latest`)",
             type: "string",
             defaultValue: "",
@@ -107,13 +117,22 @@ export const soliditySetCommand: Command = {
         },
         {
             name: "stdlib",
+            alias: "s",
             title: "Stdlib version (version number or `latest`)",
             type: "string",
             defaultValue: "",
 
         },
+        {
+            name: "force",
+            alias: "f",
+            title: "Force reinstall even if up to date",
+            type: "boolean",
+            defaultValue: "false",
+        },
     ],
     async run(terminal: Terminal, args: {
+        force: boolean,
         compiler: string,
         linker: string,
         stdlib: string,
@@ -132,7 +151,7 @@ export const soliditySetCommand: Command = {
         if (args.stdlib !== "") {
             versions.stdlib = args.stdlib;
         }
-        await Component.setVersions(terminal, components, versions);
+        await Component.setVersions(terminal, args.force, components, versions);
     },
 };
 

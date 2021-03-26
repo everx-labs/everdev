@@ -30,6 +30,11 @@ export interface Terminal {
     writeError(text: string): void,
 }
 
+export type CommandArgVariant = {
+    value: string,
+    description?: string,
+}
+
 /**
  * Command argument.
  */
@@ -38,6 +43,10 @@ export type BaseCommandArg = {
      * Name of the command.
      */
     name: string,
+    /**
+     * Short alias for an optional arg name.
+     */
+    alias?: string,
     /**
      * Title of the argument.
      */
@@ -57,7 +66,7 @@ export type BaseCommandArg = {
     /**
      * Get available CLI argument variants
      */
-    getVariants?(): { name: string; description?: string }[],
+    getVariants?(): CommandArgVariant[] | Promise<CommandArgVariant[]>,
 };
 
 /**
@@ -86,9 +95,16 @@ export type StringArg = BaseCommandArg & {
 }
 
 /**
+ * Boolean command argument.
+ */
+export type BooleanArg = BaseCommandArg & {
+    type: "boolean",
+}
+
+/**
  * Command argument.
  */
-export type CommandArg = FileArg | FolderArg | StringArg;
+export type CommandArg = FileArg | FolderArg | StringArg | BooleanArg;
 
 /**
  * Command definition.
@@ -149,3 +165,13 @@ export function tondevHome() {
     return path.resolve(os.homedir(), ".tondev");
 }
 
+export async function getArgVariants(arg: CommandArg): Promise<CommandArgVariant[] | undefined> {
+    if (!arg.getVariants) {
+        return undefined;
+    }
+    const variants = arg.getVariants();
+    if (variants instanceof Promise) {
+        return await variants;
+    }
+    return variants;
+}

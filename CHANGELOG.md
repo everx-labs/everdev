@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2021-03-25
+
+### New
+
+- [`--force` option](README.md#update-1) for `sol update` and `sol set` commands.
+  If set then components will be reinstalled event if their version hasn't changed.
+- [`js wrap` command](README.md#create-contract-js-wrapper) generates JS wrapper file from ABI file and optional TVC file. 
+- `help` command prints documentation about variants of command options, like [here](#README.md#create-contract-js-wrapper) 
+
 ## [0.3.3] - 2021-03-16
 
 ### Fixed
