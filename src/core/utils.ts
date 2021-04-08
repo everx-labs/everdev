@@ -72,7 +72,7 @@ export async function downloadFromGithub(terminal: Terminal, srcUrl: string, dst
     terminal.write("\n");
 }
 
-function downloadAndGunzip(dest: string, url: string): Promise<void> {
+function downloadAndGunzip(dest: string, url: string, terminal: Terminal): Promise<void> {
     return new Promise((resolve, reject) => {
         const request = https.get(url, response => {
             if (response.statusCode !== 200) {
@@ -100,6 +100,10 @@ function downloadAndGunzip(dest: string, url: string): Promise<void> {
             unzip.pipe(file);
 
             response.pipe(unzip);
+
+            response.on("data", _ => {
+                terminal.write(".");
+            });
 
             request.on("error", err => {
                 failed(err);
@@ -148,7 +152,11 @@ export async function downloadFromBinaries(
     if (srcExt === ".zip") {
         await downloadAndUnzip(dstDir, srcUrl);
     } else if (srcExt === ".gz") {
-        await downloadAndGunzip(dstPath, srcUrl);
+        await downloadAndGunzip(dstPath, srcUrl, terminal);
+        if (path.extname(dstPath) === ".tar") {
+            await run("tar", ["xvf", dstPath], { cwd: path.dirname(dstPath) }, terminal);
+            fs.unlink(dstPath, () => {});
+        }
     } else {
         throw Error(`Unexpected binary file extension: ${srcExt}`);
     }
