@@ -119,6 +119,7 @@ export class Component {
         const sourceName = this.getSourceName(version);
         await downloadFromBinaries(terminal, this.path, sourceName, {
             executable: this.isExecutable,
+            adjustedPath: this.adjustedPath, // need for chmod only
             globally: this.globally,
             version,
         });

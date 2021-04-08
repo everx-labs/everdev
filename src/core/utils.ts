@@ -50,9 +50,12 @@ Make sure you can execute 'npm i <package> -g' without using sudo and try again`
     }
 }
 
-function downloadAndUnzip(dst: string, url: string): Promise<void> {
+function downloadAndUnzip(dst: string, url: string, terminal: Terminal): Promise<void> {
     return new Promise((resolve, reject) => {
         request(url)
+            .on("data", _ => {
+                terminal.write(".");
+            })
             .on("error", reject) // http protocol errors
             .pipe(
                 unzip
@@ -64,11 +67,11 @@ function downloadAndUnzip(dst: string, url: string): Promise<void> {
 }
 
 export async function downloadFromGithub(terminal: Terminal, srcUrl: string, dstPath: string) {
-    terminal.write(`Downloading from ${srcUrl} to ${dstPath} ...`);
+    terminal.write(`Downloading from ${srcUrl}`);
     if (!fs.existsSync(dstPath)) {
         fs.mkdirSync(dstPath, {recursive: true});
     }
-    await downloadAndUnzip(dstPath, srcUrl);
+    await downloadAndUnzip(dstPath, srcUrl, terminal);
     terminal.write("\n");
 }
 
@@ -137,6 +140,7 @@ export async function downloadFromBinaries(
     src: string,
     options?: {
         executable?: boolean,
+        adjustedPath?: string,
         globally?: boolean,
         version?: string,
     },
@@ -144,13 +148,13 @@ export async function downloadFromBinaries(
     src = src.replace("{p}", os.platform());
     const srcExt = path.extname(src).toLowerCase();
     const srcUrl = `https://binaries.tonlabs.io/${src}`;
-    terminal.write(`Downloading from ${srcUrl} to ${dstPath} ...`);
+    terminal.write(`Downloading from ${srcUrl}`);
     const dstDir = path.dirname(dstPath);
     if (!fs.existsSync(dstDir)) {
         fs.mkdirSync(dstDir, {recursive: true});
     }
     if (srcExt === ".zip") {
-        await downloadAndUnzip(dstDir, srcUrl);
+        await downloadAndUnzip(dstDir, srcUrl, terminal);
     } else if (srcExt === ".gz") {
         await downloadAndGunzip(dstPath, srcUrl, terminal);
         if (path.extname(dstPath) === ".tar") {
@@ -161,11 +165,9 @@ export async function downloadFromBinaries(
         throw Error(`Unexpected binary file extension: ${srcExt}`);
     }
     if (options?.executable && os.platform() !== "win32") {
-        fs.chmodSync(dstPath, 0o755);
-        if (os.platform() === "linux") {
-            // Without pause on Fedora 32 Linux always leads to an error: spawn ETXTBSY
-            await new Promise(resolve => setTimeout(resolve, 100));
-        }
+        fs.chmodSync(options?.adjustedPath ?? dstPath, 0o755);
+        // Without pause on Fedora 32 Linux always leads to an error: spawn ETXTBSY
+        await new Promise(resolve => setTimeout(resolve, 100));
     }
     if (options?.globally) {
         if (!options.version) {
