@@ -64,14 +64,17 @@ export const clangCompileCommand: Command = {
         }
         await Component.ensureInstalledAll(terminal, components);
         const tvcName = changeExt(args.file, ".tvc");
-        const abiName = changeExt(args.file, ".abi.json");
+        const generatedAbiName = changeExt(args.file, ".abi");
+        const renamedAbiName = changeExt(args.file, ".abi.json");
 
         await components.clang.run(
             terminal,
             path.dirname(args.file), // cd to this directory
             [args.file, "-o", tvcName]
         );
-        terminal.log(`Success, files created: ${tvcName}, ${abiName}`);
+
+        fs.renameSync( generatedAbiName, renamedAbiName )
+        terminal.log(`Success, files created: ${tvcName}, ${renamedAbiName}`);
     },
 };
 
