@@ -351,6 +351,80 @@ This command updates tonos-cli version to the latest
 tondev tonos-cli update
 ```
 
+### Key Store
+
+Key Store is a secured place where you can safely store you keys. The secret part of 
+each key is strongly encrypted with the password stored in system key chain.
+
+Each key in store has an unique user defined name. All tondev commands 
+that requires key for signing or encryption refers to the key by name.
+
+Key store separated on two parts: public and secret.
+
+Public part of the store holds the key names and the public sign keys.
+
+Secret part of the store holds the secret sign key and an optional original mnemonic seed phrase.
+
+Using of the keystore is safe and convenient.
+
+You can mark one of the key as a default key.
+It can be used in signing commands without providing key name. 
+
+Key management in tondev is accessible through the `key` tools.
+
+#### Generate Command
+
+Add a new randomly generated mnemonic seed phrase with derived key pair.
+
+You can specify a dictionary used to generate mnemonic phrase.
+
+#### Add Command
+
+Add a key with an existing secret key or a mnemonic phrase.
+
+#### Delete Command
+
+Deletes keys from store.
+
+#### List Command
+
+Show all keys in store. Only public information is shown.
+
+#### Export Command
+
+Prints full information for the specified key including all secret data.
+
+#### Default Command
+
+Sets specified key as the default.
+
+### Networks
+
+Net module of the tondev give you ability to easily deploy and run 
+your smart contracts on blockchain network(s).
+
+You can register several blockchains (networks) under short names 
+and then use this names as a target blockchain to play with contracts.  
+
+You can mark one of the network as a default.
+It can be used in network commands without providing net name. 
+
+#### Add Command
+
+Add network with specified endpoints to the network list.
+
+#### Delete Command
+
+Delete specified network from the network list.
+
+#### List Command
+
+Prints the network list.
+
+#### Default Command
+
+Sets the specified network as default.
+
 ## TONDEV Extensibility
 
 TON Dev Environment is an integration point for development tools related to Free TON Blockchain.

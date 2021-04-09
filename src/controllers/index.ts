@@ -5,8 +5,9 @@ import { SE } from "./se";
 import { TONOS } from "./tonos-cli";
 import { Terminal } from "../core";
 import {Key} from "./key";
+import {Net} from "./net";
 
-export const controllers = [Solidity, JsApps, SE, TONOS, Key];
+export const controllers = [Solidity, JsApps, SE, TONOS, Key, Net];
 
 export async function runCommand(terminal: Terminal, name: string, args: any): Promise<void> {
     const [controllerName, commandName] = name
