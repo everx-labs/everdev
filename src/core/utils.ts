@@ -165,7 +165,15 @@ export async function downloadFromBinaries(
         throw Error(`Unexpected binary file extension: ${srcExt}`);
     }
     if (options?.executable && os.platform() !== "win32") {
-        fs.chmodSync(options?.adjustedPath ?? dstPath, 0o755);
+        if (options?.adjustedPath) {
+            const dir = path.dirname(options.adjustedPath);
+            fs.readdirSync(dir)
+                .map(filename => path.resolve(dir, filename))
+                .filter(filename => !fs.lstatSync(filename).isDirectory())
+                .forEach(filename => fs.chmodSync(filename, 0o755));
+        } else {
+            fs.chmodSync(dstPath, 0o755);
+        }
         // Without pause on Fedora 32 Linux always leads to an error: spawn ETXTBSY
         await new Promise(resolve => setTimeout(resolve, 100));
     }
