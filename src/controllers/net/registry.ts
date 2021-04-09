@@ -5,12 +5,12 @@ import {
     tondevHome,
 } from "../../core";
 
-function netHome() {
-    return path.resolve(tondevHome(), "net");
+function networksHome() {
+    return path.resolve(tondevHome(), "networks");
 }
 
 function registryPath() {
-    return path.resolve(netHome(), "registry.json");
+    return path.resolve(networksHome(), "registry.json");
 }
 
 export type Network = {
@@ -50,8 +50,8 @@ export class NetworkRegistry {
     }
 
     save() {
-        if (!fs.pathExistsSync(netHome())) {
-            fs.mkdirSync(netHome(), {recursive: true});
+        if (!fs.pathExistsSync(networksHome())) {
+            fs.mkdirSync(networksHome(), {recursive: true});
         }
         fs.writeFileSync(registryPath(), JSON.stringify({
             networks: this.networks,
@@ -82,7 +82,11 @@ export class NetworkRegistry {
     }
 
     get(name: string): Network {
-        const network = this.networks.find(x => x.name.toLowerCase() === name.toLowerCase().trim());
+        let findName = name.toLowerCase().trim();
+        if (findName === "") {
+            findName = this.default ?? "";
+        }
+        const network = this.networks.find(x => x.name.toLowerCase() === findName);
         if (network) {
             return network;
         }

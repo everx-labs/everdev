@@ -6,7 +6,7 @@ import {
 } from "../../core";
 import {
     NetworkRegistry,
-} from "./store";
+} from "./registry";
 import {formatTable} from "../../core/utils";
 
 const forceArg: CommandArg = {
@@ -22,6 +22,14 @@ const networkArg: CommandArg = {
     alias: "n",
     type: "string",
     title: "Network name",
+    defaultValue: "",
+};
+
+const signerArg: CommandArg = {
+    name: "signer",
+    alias: "s",
+    title: "Signer key name",
+    type: "string",
     defaultValue: "",
 };
 
@@ -59,7 +67,7 @@ export const netListCommand: Command = {
     args: [],
     async run(terminal: Terminal, _args: {}) {
         const registry = new NetworkRegistry();
-        const rows = [["Net", "Endpoints", "Giver", "Description"]];
+        const rows = [["Network", "Endpoints", "Giver", "Description"]];
         registry.networks.forEach((network) => {
             rows.push([
                 `${network.name}${network.name === registry.default ? " (Default)" : ""}`,
@@ -69,7 +77,12 @@ export const netListCommand: Command = {
             ]);
             network.endpoints.slice(1).forEach(x => rows.push(["", x, ""]));
         });
-        terminal.log(formatTable(rows, {headerSeparator: true}));
+        const table = formatTable(rows, {headerSeparator: true});
+        if (table.trim() !== "") {
+            terminal.log();
+            terminal.log(table);
+            terminal.log();
+        }
     },
 };
 
@@ -115,11 +128,7 @@ export const netGiverCommand: Command = {
             title: "Giver address",
             type: "string",
         },
-        {
-            name: "signer",
-            title: "Signer key name",
-            type: "string",
-        },
+        signerArg,
     ],
     async run(_terminal: Terminal, args: {
         network: string,
@@ -130,10 +139,9 @@ export const netGiverCommand: Command = {
     },
 };
 
-
-export const Net: ToolController = {
+export const Networks: ToolController = {
     name: "net",
-    title: "Network",
+    title: "Network Registry",
     commands: [
         netAddCommand,
         netDeleteCommand,

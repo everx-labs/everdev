@@ -6,15 +6,19 @@ import {
     ToolController,
 } from "../../core";
 import {
-    getKey,
-    getKeySecret,
+    getSigner,
+    getSignerSecret,
     loadStore,
-    addKey,
+    addSigner,
     Secret,
     SecretType,
-    saveStore,
-} from "./store";
-import {TonClient} from "@tonclient/core";
+    saveRegistry,
+} from "./registry";
+import {
+    Signer,
+    signerKeys,
+    TonClient,
+} from "@tonclient/core";
 import {formatTable} from "../../core/utils";
 
 const typeArg: CommandArg = {
@@ -87,13 +91,13 @@ const forceArg: CommandArg = {
     name: "force",
     alias: "f",
     type: "boolean",
-    title: "Overwrite key if already exists",
+    title: "Overwrite signer if already exists",
     defaultValue: "false",
 };
 
-export const keyGenerateCommand: Command = {
+export const signerGenerateCommand: Command = {
     name: "generate",
-    title: "Add randomly generated key",
+    title: "Add signer with randomly generated keys",
     args: [
         {
             isArg: true,
@@ -142,13 +146,13 @@ export const keyGenerateCommand: Command = {
                 key: (await TonClient.default.crypto.generate_random_sign_keys()).secret,
             };
         }
-        await addKey(args.name, "", secret, args.force);
+        await addSigner(args.name, "", secret, args.force);
     },
 };
 
-export const keyAddCommand: Command = {
+export const signerAddCommand: Command = {
     name: "add",
-    title: "Add key",
+    title: "Add signer",
     args: [
         {
             isArg: true,
@@ -192,29 +196,34 @@ export const keyAddCommand: Command = {
                 key: words[0],
             };
         }
-        await addKey(args.name, "", secret, args.force);
+        await addSigner(args.name, "", secret, args.force);
     },
 };
 
-export const keyListCommand: Command = {
+export const signerListCommand: Command = {
     name: "list",
-    title: "Prints list of stored keys",
+    title: "Prints list of registered signers",
     args: [],
     async run(terminal: Terminal, _args: {}) {
         const store = loadStore();
-        const rows = store.keys.map(x => [
+        const rows = [["Signer", "Public Key", "Description"]];
+        store.signers.forEach(x => rows.push([
             `${x.name}${x.name === store.default ? " (Default)" : ""}`,
             x.public,
             x.description,
-        ]);
-        const table = [["Key", "Public", "Description"], ...rows];
-        terminal.log(formatTable(table, {headerSeparator: true}));
+        ]));
+        const table = formatTable(rows, {headerSeparator: true});
+        if (table.trim() !== "") {
+            terminal.log();
+            terminal.log(table);
+            terminal.log();
+        }
     },
 };
 
-export const keyExportCommand: Command = {
-    name: "export",
-    title: "Export key secret",
+export const signerGetCommand: Command = {
+    name: "get",
+    title: "Get signer details",
     args: [
         {
             isArg: true,
@@ -223,20 +232,20 @@ export const keyExportCommand: Command = {
         },
     ],
     async run(terminal: Terminal, args: { name: string }) {
-        const key = getKey(args.name);
-        const secret = await getKeySecret(key);
+        const signer = getSigner(args.name);
+        const secret = await getSignerSecret(signer);
         terminal.log(JSON.stringify({
-            name: key.name,
-            description: key.description,
-            public: key.public,
+            name: signer.name,
+            description: signer.description,
+            public: signer.public,
             secret,
         }, undefined, "    "));
     },
 };
 
-export const keyDeleteCommand: Command = {
+export const signerDeleteCommand: Command = {
     name: "delete",
-    title: "Delete key from store",
+    title: "Delete signer from registry",
     args: [
         {
             isArg: true,
@@ -245,19 +254,19 @@ export const keyDeleteCommand: Command = {
         },
     ],
     async run(_terminal: Terminal, args: { name: string }) {
-        const key = getKey(args.name);
+        const signer = getSigner(args.name);
         const store = loadStore();
-        store.keys.splice(store.keys.findIndex(x => x.name === key.name), 1);
-        if (store.default === key.name) {
+        store.signers.splice(store.signers.findIndex(x => x.name === signer.name), 1);
+        if (store.default === signer.name) {
             delete store.default;
         }
-        saveStore(store);
+        saveRegistry(store);
     },
 };
 
-export const keyDefaultCommand: Command = {
+export const signerDefaultCommand: Command = {
     name: "default",
-    title: "Set default key",
+    title: "Set default signer",
     args: [
         {
             isArg: true,
@@ -266,23 +275,31 @@ export const keyDefaultCommand: Command = {
         },
     ],
     async run(_terminal: Terminal, args: { name: string }) {
-        const key = getKey(args.name);
+        const signer = getSigner(args.name);
         const store = loadStore();
-        store.default = key.name;
-        saveStore(store);
+        store.default = signer.name;
+        saveRegistry(store);
     },
 };
 
+export async function createSigner(name: string): Promise<Signer> {
+    const signer = getSigner(name);
+    const secret = await getSignerSecret(signer);
+    return signerKeys({
+        public: signer.public,
+        secret: secret.key,
+    });
+}
 
-export const Key: ToolController = {
-    name: "key",
-    title: "Key Store",
+export const Signers: ToolController = {
+    name: "signer",
+    title: "Signer Registry",
     commands: [
-        keyGenerateCommand,
-        keyAddCommand,
-        keyDeleteCommand,
-        keyListCommand,
-        keyExportCommand,
-        keyDefaultCommand,
+        signerGenerateCommand,
+        signerAddCommand,
+        signerDeleteCommand,
+        signerListCommand,
+        signerGetCommand,
+        signerDefaultCommand,
     ],
 };
