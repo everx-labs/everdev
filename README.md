@@ -351,26 +351,19 @@ This command updates tonos-cli version to the latest
 tondev tonos-cli update
 ```
 
-### Key Store
+### Signer Registry
 
-Key Store is a secured place where you can safely store you keys. The secret part of 
-each key is strongly encrypted with the password stored in system key chain.
+Signer registry is a centralized place where you can store your development keys.
 
-Each key in store has an unique user defined name. All tondev commands 
-that requires key for signing or encryption refers to the key by name.
+Each signer in registry has an unique user defined name. All tondev commands 
+that requires signing or encryption refers to the signer by name.
 
-Key store separated on two parts: public and secret.
+Using of the registry is convenient.
 
-Public part of the store holds the key names and the public sign keys.
+You can mark one of the signer as a default.
+It can be used in signing commands without providing signer option. 
 
-Secret part of the store holds the secret sign key and an optional original mnemonic seed phrase.
-
-Using of the keystore is safe and convenient.
-
-You can mark one of the key as a default key.
-It can be used in signing commands without providing key name. 
-
-Key management in tondev is accessible through the `key` tools.
+Signer repository management in tondev is accessible through the `signer` tools.
 
 #### Generate Command
 
@@ -380,28 +373,27 @@ You can specify a dictionary used to generate mnemonic phrase.
 
 #### Add Command
 
-Add a key with an existing secret key or a mnemonic phrase.
+Add a signer with an existing secret key or a mnemonic phrase.
 
 #### Delete Command
 
-Deletes keys from store.
+Deletes signer from store.
 
 #### List Command
 
-Show all keys in store. Only public information is shown.
+Show all signer in the registry. Only non secret data are shown.
 
-#### Export Command
+#### Get Command
 
-Prints full information for the specified key including all secret data.
+Prints full information for the specified signer including all secret data.
 
 #### Default Command
 
-Sets specified key as the default.
+Sets specified signer as the default.
 
-### Networks
+### Network Registry
 
-Net module of the tondev give you ability to easily deploy and run 
-your smart contracts on blockchain network(s).
+Networks registry is a convenient way to organize all of your network configurations in one place.
 
 You can register several blockchains (networks) under short names 
 and then use this names as a target blockchain to play with contracts.  
@@ -411,7 +403,7 @@ It can be used in network commands without providing net name.
 
 #### Add Command
 
-Add network with specified endpoints to the network list.
+Add network with specified endpoints to the registry.
 
 #### Delete Command
 
@@ -424,6 +416,31 @@ Prints the network list.
 #### Default Command
 
 Sets the specified network as default.
+
+### Contract Management
+
+Contract management of the tondev give you an ability to easily deploy and run 
+your smart contracts on a blockchain network(s).
+
+#### Info Command
+
+Show account information.
+
+#### Deploy Command
+
+Deploy specified contract to the blockchain.
+
+#### Run Command
+
+Run specified contract on the blockchain.
+
+#### Run Local Command
+
+Load and run specified contract on the local TVM.
+
+#### Run Executor Command
+
+Load and emulates executor for the specified contract on the local TVM.
 
 ## TONDEV Extensibility
 

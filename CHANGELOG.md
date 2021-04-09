@@ -6,7 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ### New
 
-- `key` controller for keystore management. 
+- `signer` controller for signer registry management. 
+- `net` controller for network registry management. 
+- `contract` controller for contract management. 
 
 ## [0.4.0] - 2021-03-25
 
