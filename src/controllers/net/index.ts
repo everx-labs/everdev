@@ -5,10 +5,7 @@ import {
     ToolController,
 } from "../../core";
 import {
-    loadStore,
-    addNet,
-    saveStore,
-    getNet,
+    NetworkRegistry,
 } from "./store";
 import {formatTable} from "../../core/utils";
 
@@ -18,6 +15,14 @@ const forceArg: CommandArg = {
     type: "boolean",
     title: "Overwrite key if already exists",
     defaultValue: "false",
+};
+
+const networkArg: CommandArg = {
+    name: "network",
+    alias: "n",
+    type: "string",
+    title: "Network name",
+    defaultValue: "",
 };
 
 export const netAddCommand: Command = {
@@ -44,7 +49,7 @@ export const netAddCommand: Command = {
         force: boolean
     }) {
         const endpoints = args.endpoints.split(",").filter(x => x !== "");
-        await addNet(args.name, "", endpoints, args.force);
+        new NetworkRegistry().add(args.name, "", endpoints, args.force);
     },
 };
 
@@ -53,15 +58,16 @@ export const netListCommand: Command = {
     title: "Prints list of nets",
     args: [],
     async run(terminal: Terminal, _args: {}) {
-        const store = loadStore();
-        const rows = [["Net", "Endpoints", "Description"]];
-        store.nets.forEach((net) => {
+        const registry = new NetworkRegistry();
+        const rows = [["Net", "Endpoints", "Giver", "Description"]];
+        registry.networks.forEach((network) => {
             rows.push([
-                `${net.name}${net.name === store.default ? " (Default)" : ""}`,
-                net.endpoints[0] ?? "",
-                net.description ?? "",
+                `${network.name}${network.name === registry.default ? " (Default)" : ""}`,
+                network.endpoints[0] ?? "",
+                network.giver ? `${network.giver.address} (${network.giver.signer})` : "",
+                network.description ?? "",
             ]);
-            net.endpoints.slice(1).forEach(x => rows.push(["", x, ""]));
+            network.endpoints.slice(1).forEach(x => rows.push(["", x, ""]));
         });
         terminal.log(formatTable(rows, {headerSeparator: true}));
     },
@@ -69,7 +75,7 @@ export const netListCommand: Command = {
 
 export const netDeleteCommand: Command = {
     name: "delete",
-    title: "Delete net from store",
+    title: "Delete network from registry",
     args: [
         {
             isArg: true,
@@ -78,13 +84,7 @@ export const netDeleteCommand: Command = {
         },
     ],
     async run(_terminal: Terminal, args: { name: string }) {
-        const net = getNet(args.name);
-        const store = loadStore();
-        store.nets.splice(store.nets.findIndex(x => x.name === net.name), 1);
-        if (store.default === net.name) {
-            delete store.default;
-        }
-        saveStore(store);
+        new NetworkRegistry().delete(args.name);
     },
 };
 
@@ -99,21 +99,46 @@ export const netDefaultCommand: Command = {
         },
     ],
     async run(_terminal: Terminal, args: { name: string }) {
-        const net = getNet(args.name);
-        const store = loadStore();
-        store.default = net.name;
-        saveStore(store);
+        new NetworkRegistry().setDefault(args.name);
+    },
+};
+
+
+export const netGiverCommand: Command = {
+    name: "giver",
+    title: "Set giver for network",
+    args: [
+        networkArg,
+        {
+            isArg: true,
+            name: "address",
+            title: "Giver address",
+            type: "string",
+        },
+        {
+            name: "signer",
+            title: "Signer key name",
+            type: "string",
+        },
+    ],
+    async run(_terminal: Terminal, args: {
+        network: string,
+        address: string,
+        signer: string,
+    }) {
+        new NetworkRegistry().setGiver(args.network, args.address, args.signer);
     },
 };
 
 
 export const Net: ToolController = {
     name: "net",
-    title: "Blockchain Networks",
+    title: "Network",
     commands: [
         netAddCommand,
         netDeleteCommand,
         netListCommand,
         netDefaultCommand,
+        netGiverCommand,
     ],
 };
