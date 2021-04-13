@@ -1,3 +1,4 @@
+import { Clang } from "./clang";
 import { Solidity } from "./solidity";
 // import {TestSuite} from "./ts";
 import { JsApps } from "./js";
@@ -6,7 +7,7 @@ import { TONOS } from "./tonos-cli";
 import { Terminal } from "../core";
 import {Key} from "./key";
 
-export const controllers = [Solidity, JsApps, SE, TONOS, Key];
+export const controllers = [Clang, Solidity, JsApps, SE, TONOS, Key];
 
 export async function runCommand(terminal: Terminal, name: string, args: any): Promise<void> {
     const [controllerName, commandName] = name
