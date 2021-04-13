@@ -45,7 +45,7 @@ contract {name} {
         timestamp = now;
     }
 
-    function sendValue(address dest, uint128 amount, bool bounce) public {
+    function sendValue(address dest, uint128 amount, bool bounce) public view {
         require(msg.pubkey() == tvm.pubkey(), 102);
         tvm.accept();
         // It allows to make a transfer with arbitrary settings

@@ -28,6 +28,10 @@ export type ComponentOptions = {
      * Target name for a component file.
      */
     targetName?: string,
+    /**
+     * Path to executable file name inside targetName (when targetName is a directory)
+     */
+    innerPath?: string;
 }
 
 export class Component {
@@ -36,6 +40,7 @@ export class Component {
     resolveVersionRegExp: RegExp;
     targetName: string;
     path: string;
+    adjustedPath?: string;
 
     constructor(public home: string, public name: string, options?: ComponentOptions) {
         this.isExecutable = options?.executable ?? false;
@@ -46,10 +51,14 @@ export class Component {
             this.targetName = executableName(this.targetName);
         }
         this.path = path.resolve(home, this.targetName);
+
+        if (options?.innerPath) {
+            this.adjustedPath = path.resolve(home, options.innerPath);
+        }
     }
 
     async run(terminal: Terminal, workDir: string, args: string[]): Promise<string> {
-        const out = await run(this.path, args, {cwd: workDir}, terminal);
+        const out = await run(this.adjustedPath ?? this.path, args, { cwd: workDir }, terminal);
         return out.replace(/\r?\n/g, "\r\n");
     }
 
@@ -110,6 +119,7 @@ export class Component {
         const sourceName = this.getSourceName(version);
         await downloadFromBinaries(terminal, this.path, sourceName, {
             executable: this.isExecutable,
+            adjustedPath: this.adjustedPath, // need for chmod only
             globally: this.globally,
             version,
         });
