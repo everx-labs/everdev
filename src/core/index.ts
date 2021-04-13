@@ -1,5 +1,7 @@
 import path from "path";
 import os from "os";
+import {TonClient} from "@tonclient/core";
+import {libNode} from "@tonclient/lib-node";
 
 export {
     ComponentOptions,
@@ -156,6 +158,14 @@ export interface ToolController {
      * Commands provided by tool controller.
      */
     commands: Command[],
+}
+
+export function tondevInit() {
+    TonClient.useBinaryLibrary(libNode);
+}
+
+export function tondevDone() {
+    TonClient.default.close();
 }
 
 /**

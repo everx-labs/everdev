@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [0.5.0] - 2021-04-08
 
+### New
+
+- `key` controller for keystore management. 
+
 ## [0.4.0] - 2021-03-25
 
 ### New
