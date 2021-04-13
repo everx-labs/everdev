@@ -6,8 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ### New
 
-- `signer` controller for signer registry management. 
-- `net` controller for network registry management. 
+- `signers` controller for signer registry management. 
+- `networks` controller for network registry management. 
 - `contract` controller for contract management. 
 
 ## [0.4.0] - 2021-03-25
