@@ -1,4 +1,5 @@
-import {Solidity} from "./solidity";
+import { Clang } from "./clang";
+import { Solidity } from "./solidity";
 // import {TestSuite} from "./ts";
 import {JsApps} from "./js";
 import {SE} from "./se";
@@ -12,6 +13,7 @@ import {Networks} from "./networks";
 import {Contract} from "./contract";
 
 export const controllers = [
+    Clang,
     Solidity,
     SE,
     Networks,
