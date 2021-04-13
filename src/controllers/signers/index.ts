@@ -6,13 +6,7 @@ import {
     ToolController,
 } from "../../core";
 import {
-    getSigner,
-    getSignerSecret,
-    loadStore,
-    addSigner,
-    Secret,
-    SecretType,
-    saveRegistry,
+    SignerRegistry,
 } from "./registry";
 import {
     Signer,
@@ -21,27 +15,31 @@ import {
 } from "@tonclient/core";
 import {formatTable} from "../../core/utils";
 
-const typeArg: CommandArg = {
-    name: "type",
+const nameArg: CommandArg = {
+    isArg: true,
+    name: "name",
+    title: "Signer name",
     type: "string",
-    title: "Secret type",
-    defaultValue: "mnemonic",
-    getVariants(): CommandArgVariant[] {
-        return [
-            {
-                value: "mnemonic",
-                description: "Mnemonic seed phrase",
-            },
-            {
-                value: "key",
-                description: "Secret key",
-            },
-        ];
-    },
 };
 
-const dictionaryArg: CommandArg = {
+const secretArg: CommandArg = {
+    isArg: true,
+    name: "secret",
+    title: "Secret key or seed phrase",
+    type: "string",
+};
+
+const mnemonicOpt: CommandArg = {
+    name: "mnemonic",
+    alias: "m",
+    title: "Use mnemonic phrase",
+    type: "boolean",
+    defaultValue: "false",
+};
+
+const dictionaryOpt: CommandArg = {
     name: "dictionary",
+    alias: "d",
     type: "string",
     title: "Mnemonic dictionary",
     defaultValue: "0",
@@ -87,66 +85,56 @@ const dictionaryArg: CommandArg = {
     },
 };
 
-const forceArg: CommandArg = {
+const wordsOpt: CommandArg = {
+    name: "words",
+    alias: "w",
+    title: "Number of mnemonic words",
+    type: "string",
+    defaultValue: "12",
+};
+
+const forceOpt: CommandArg = {
     name: "force",
     alias: "f",
-    type: "boolean",
     title: "Overwrite signer if already exists",
+    type: "boolean",
     defaultValue: "false",
 };
 
 export const signerGenerateCommand: Command = {
     name: "generate",
+    alias: "gen",
     title: "Add signer with randomly generated keys",
     args: [
-        {
-            isArg: true,
-            name: "name",
-            type: "string",
-        },
-        typeArg,
-        dictionaryArg,
-        {
-            name: "words",
-            type: "string",
-            title: "Number of mnemonic words",
-            defaultValue: "12",
-        },
-        forceArg,
+        nameArg,
+        mnemonicOpt,
+        dictionaryOpt,
+        wordsOpt,
+        forceOpt,
     ],
     async run(_terminal: Terminal, args: {
         name: string,
-        type: string,
+        mnemonic: boolean,
         dictionary: string,
         words: string,
         force: boolean
     }) {
-        let secret: Secret;
-        if (args.type === "mnemonic") {
+        if (args.mnemonic) {
             const dictionary = Number.parseInt(args.dictionary);
             const word_count = Number.parseInt(args.words);
             const phrase = (await TonClient.default.crypto.mnemonic_from_random({
                 dictionary,
                 word_count,
             })).phrase;
-            const key = (await TonClient.default.crypto.mnemonic_derive_sign_keys({
-                phrase,
-                dictionary,
-                word_count,
-            })).secret;
-            secret = {
-                type: SecretType.mnemonic,
-                key,
-                dictionary,
-                phrase,
-            };
+            await new SignerRegistry().addMnemonicKey(args.name, "", phrase, dictionary, args.force);
         } else {
-            secret = {
-                type: SecretType.key,
-                key: (await TonClient.default.crypto.generate_random_sign_keys()).secret,
-            };
+            await new SignerRegistry().addSecretKey(
+                args.name,
+                "",
+                (await TonClient.default.crypto.generate_random_sign_keys()).secret,
+                args.force,
+            );
         }
-        await addSigner(args.name, "", secret, args.force);
     },
 };
 
@@ -154,19 +142,10 @@ export const signerAddCommand: Command = {
     name: "add",
     title: "Add signer",
     args: [
-        {
-            isArg: true,
-            name: "name",
-            type: "string",
-        },
-        {
-            isArg: true,
-            name: "secret",
-            type: "string",
-            title: "Secret key or mnemonic phrase",
-        },
-        dictionaryArg,
-        forceArg,
+        nameArg,
+        secretArg,
+        dictionaryOpt,
+        forceOpt,
     ],
     async run(_terminal: Terminal, args: {
         name: string,
@@ -174,42 +153,28 @@ export const signerAddCommand: Command = {
         dictionary: string,
         force: boolean
     }) {
-        let secret: Secret;
         const words = args.secret.split(" ").filter(x => x !== "");
         if (words.length > 1) {
             const dictionary = Number.parseInt(args.dictionary);
             const phrase = words.join(" ");
-            const key = (await TonClient.default.crypto.mnemonic_derive_sign_keys({
-                phrase,
-                dictionary,
-                word_count: words.length,
-            })).secret;
-            secret = {
-                type: SecretType.mnemonic,
-                key,
-                dictionary,
-                phrase,
-            };
+            await new SignerRegistry().addMnemonicKey(args.name, "", phrase, dictionary, args.force);
         } else {
-            secret = {
-                type: SecretType.key,
-                key: words[0],
-            };
+            await new SignerRegistry().addSecretKey(args.name, "", args.secret, args.force);
         }
-        await addSigner(args.name, "", secret, args.force);
     },
 };
 
 export const signerListCommand: Command = {
     name: "list",
+    alias: "l",
     title: "Prints list of registered signers",
     args: [],
     async run(terminal: Terminal, _args: {}) {
-        const store = loadStore();
+        const registry = new SignerRegistry();
         const rows = [["Signer", "Public Key", "Description"]];
-        store.signers.forEach(x => rows.push([
-            `${x.name}${x.name === store.default ? " (Default)" : ""}`,
-            x.public,
+        registry.items.forEach(x => rows.push([
+            `${x.name}${x.name === registry.default ? " (Default)" : ""}`,
+            x.keys.public,
             x.description,
         ]));
         const table = formatTable(rows, {headerSeparator: true});
@@ -223,77 +188,44 @@ export const signerListCommand: Command = {
 
 export const signerGetCommand: Command = {
     name: "get",
+    alias: "g",
     title: "Get signer details",
     args: [
-        {
-            isArg: true,
-            name: "name",
-            type: "string",
-        },
+        nameArg,
     ],
     async run(terminal: Terminal, args: { name: string }) {
-        const signer = getSigner(args.name);
-        const secret = await getSignerSecret(signer);
-        terminal.log(JSON.stringify({
-            name: signer.name,
-            description: signer.description,
-            public: signer.public,
-            secret,
-        }, undefined, "    "));
+        const signer = new SignerRegistry().get(args.name);
+        terminal.log(JSON.stringify(signer, undefined, "    "));
     },
 };
 
 export const signerDeleteCommand: Command = {
     name: "delete",
     title: "Delete signer from registry",
-    args: [
-        {
-            isArg: true,
-            name: "name",
-            type: "string",
-        },
-    ],
+    args: [nameArg],
     async run(_terminal: Terminal, args: { name: string }) {
-        const signer = getSigner(args.name);
-        const store = loadStore();
-        store.signers.splice(store.signers.findIndex(x => x.name === signer.name), 1);
-        if (store.default === signer.name) {
-            delete store.default;
-        }
-        saveRegistry(store);
+        new SignerRegistry().delete(args.name);
     },
 };
 
 export const signerDefaultCommand: Command = {
     name: "default",
+    alias: "d",
     title: "Set default signer",
-    args: [
-        {
-            isArg: true,
-            name: "name",
-            type: "string",
-        },
-    ],
+    args: [nameArg],
     async run(_terminal: Terminal, args: { name: string }) {
-        const signer = getSigner(args.name);
-        const store = loadStore();
-        store.default = signer.name;
-        saveRegistry(store);
+        new SignerRegistry().setDefault(args.name);
     },
 };
 
 export async function createSigner(name: string): Promise<Signer> {
-    const signer = getSigner(name);
-    const secret = await getSignerSecret(signer);
-    return signerKeys({
-        public: signer.public,
-        secret: secret.key,
-    });
+    return signerKeys(new SignerRegistry().get(name).keys);
 }
 
 export const Signers: ToolController = {
-    name: "signer",
-    title: "Signer Registry",
+    name: "signers",
+    alias: "s",
+    title: "Signers Registry",
     commands: [
         signerGenerateCommand,
         signerAddCommand,

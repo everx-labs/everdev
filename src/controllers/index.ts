@@ -3,19 +3,22 @@ import {Solidity} from "./solidity";
 import {JsApps} from "./js";
 import {SE} from "./se";
 import {TONOS} from "./tonos-cli";
-import {Terminal} from "../core";
-import {Signers} from "./signer";
-import {Networks} from "./net";
+import {
+    matchName,
+    Terminal,
+} from "../core";
+import {Signers} from "./signers";
+import {Networks} from "./networks";
 import {Contract} from "./contract";
 
 export const controllers = [
     Solidity,
-    JsApps,
     SE,
-    TONOS,
-    Signers,
     Networks,
+    Signers,
     Contract,
+    JsApps,
+    TONOS,
 ];
 
 export async function runCommand(terminal: Terminal, name: string, args: any): Promise<void> {
@@ -24,11 +27,11 @@ export async function runCommand(terminal: Terminal, name: string, args: any): P
         .split(" ")
         .map(x => x.trim())
         .filter(x => x !== "");
-    const controller = controllers.find(x => x.name === (controllerName || ""));
+    const controller = controllers.find(x => matchName(x, controllerName));
     if (!controller) {
         throw new Error(`Controller ${controllerName} not found`);
     }
-    const command = controller.commands.find(x => x.name === (commandName || ""));
+    const command = controller.commands.find(x => matchName(x, commandName));
     if (!command) {
         throw new Error(`Command ${commandName} not found in controller ${controllerName}`);
     }

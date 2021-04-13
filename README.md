@@ -358,12 +358,10 @@ Signer registry is a centralized place where you can store your development keys
 Each signer in registry has an unique user defined name. All tondev commands 
 that requires signing or encryption refers to the signer by name.
 
-Using of the registry is convenient.
-
 You can mark one of the signer as a default.
 It can be used in signing commands without providing signer option. 
 
-Signer repository management in tondev is accessible through the `signer` tools.
+Signer repository management in tondev is accessible through the `signer` tool.
 
 #### Generate Command
 

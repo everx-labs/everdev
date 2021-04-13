@@ -6,24 +6,25 @@ import {
 } from "../../core";
 import {
     Account,
-    AccountOptions,
     AccountType,
-    ContractPackage,
 } from "@tonclient/appkit";
-import fs from "fs";
+import {TonClient} from "@tonclient/core";
+import {getAccount} from "./accounts";
 import {
-    AbiParam,
-    DecodedMessageBody,
-    DecodedOutput,
-    MessageBodyType,
-    signerNone,
-    TonClient,
-} from "@tonclient/core";
-import {createSigner} from "../signer";
-import {getSigner} from "../signer/registry";
-import {NetworkRegistry} from "../net/registry";
+    getRunParams,
+    resolveInputs,
+    logRunResult,
+} from "./run";
 
-const networkArg: CommandArg = {
+const fileArg: CommandArg = {
+    isArg: true,
+    name: "file",
+    title: "ABI file",
+    type: "file",
+    nameRegExp: /\.abi$/i,
+};
+
+const networkOpt: CommandArg = {
     name: "network",
     alias: "n",
     type: "string",
@@ -31,7 +32,7 @@ const networkArg: CommandArg = {
     defaultValue: "",
 };
 
-const signerArg: CommandArg = {
+const signerOpt: CommandArg = {
     name: "signer",
     alias: "s",
     title: "Signer key name",
@@ -39,7 +40,7 @@ const signerArg: CommandArg = {
     defaultValue: "",
 };
 
-const addressArg: CommandArg = {
+const addressOpt: CommandArg = {
     name: "address",
     alias: "a",
     title: "Account address",
@@ -47,77 +48,39 @@ const addressArg: CommandArg = {
     defaultValue: "",
 };
 
-function findExisting(paths: string[]): string | undefined {
-    return paths.find(x => fs.existsSync(x));
-}
+const functionArg: CommandArg = {
+    isArg: true,
+    name: "function",
+    title: "Function name",
+    type: "string",
+    defaultValue: "",
+};
 
-function loadContract(filePath: string): ContractPackage {
-    filePath = filePath.trim();
-    const lowered = filePath.toLowerCase();
-    let basePath;
-    if (lowered.endsWith(".tvc") || lowered.endsWith(".abi")) {
-        basePath = filePath.slice(0, -4);
-    } else if (lowered.endsWith(".abi.json")) {
-        basePath = filePath.slice(0, -9);
-    } else {
-        basePath = filePath;
-    }
-    const tvcPath = findExisting([`${basePath}.tvc`]);
-    const abiPath = findExisting([`${basePath}.abi.json`, `${basePath}.abi`]);
-    const tvc = tvcPath ? fs.readFileSync(tvcPath).toString("base64") : undefined;
-    const abi = abiPath ? JSON.parse(fs.readFileSync(abiPath, "utf8")) : undefined;
-    if (!abi) {
-        throw new Error("ABI file missing.");
-    }
-    return {
-        abi,
-        tvc,
-    };
-}
+const inputOpt: CommandArg = {
+    name: "input",
+    alias: "i",
+    title: "Function parameters (name=value,...)",
+    type: "string",
+    defaultValue: "",
+};
 
-async function getAccount(terminal: Terminal, args: {
-    file: string,
-    network: string,
-    address: string,
-    signer: string,
-}): Promise<Account> {
-    const network = new NetworkRegistry().get(args.network);
-    const client = new TonClient({
-        network: {
-            endpoints: network.endpoints,
-        },
-    });
-    const signerDef = args.signer.trim().toLowerCase() === "none" ? undefined : getSigner(args.signer);
-    const signer = signerDef ? await createSigner(signerDef.name) : signerNone();
-    const contract = loadContract(args.file);
-    const options: AccountOptions = {
-        signer,
-        client,
-    };
-    if (args.address !== "") {
-        options.address = args.address;
-    }
-    const account = new Account(contract, options);
-    terminal.log("\nConfiguration\n");
-    terminal.log(`  Network: ${network.name}`);
-    terminal.log(`  Signer:  ${signerDef?.name ?? "None"}\n`);
-    terminal.log(`Address: ${await account.getAddress()}`);
-    return account;
-}
+const preventUiOpt: CommandArg = {
+    name: "prevent-ui",
+    alias: "p",
+    title: "User Interaction",
+    type: "boolean",
+    defaultValue: "false",
+};
 
 export const contractInfoCommand: Command = {
     name: "info",
+    alias: "i",
     title: "Prints contract summary",
     args: [
-        networkArg,
-        {
-            isArg: true,
-            name: "file",
-            title: "TVC file",
-            type: "file",
-            nameRegExp: /\.tvc$/i,
-        },
-        signerArg,
+        fileArg,
+        networkOpt,
+        signerOpt,
+        addressOpt,
     ],
     async run(terminal: Terminal, args: {
         file: string,
@@ -139,53 +102,37 @@ export const contractInfoCommand: Command = {
     },
 };
 
-function inputParam(terminal: Terminal, param: AbiParam): Promise<string> {
-    terminal.write(`  ${param.name} (${param.type}): `);
-    return new Promise((resolve) => {
-        const standard_input = process.stdin;
-        standard_input.setEncoding("utf-8");
-        standard_input.once("data", function (data) {
-            resolve(`${data}`.trim());
-        });
-    });
-}
-
-
-async function inputParams(terminal: Terminal, prompt: string, params: AbiParam[]): Promise<object> {
-    const values: { [name: string]: any } = {};
-    if (params.length > 0) {
-        terminal.log(`\n${prompt}\n`);
-        for (const param of params) {
-            const value = await inputParam(terminal, param);
-            values[param.name] = value;
-        }
-    }
-    return values;
-}
-
 export const contractDeployCommand: Command = {
     name: "deploy",
+    alias: "d",
     title: "Deploy contract to network",
     args: [
-        networkArg,
-        {
-            isArg: true,
-            name: "file",
-            title: "TVC file",
-            type: "file",
-            nameRegExp: /\.tvc$/i,
-        },
-        signerArg,
+        fileArg,
+        functionArg,
+        networkOpt,
+        signerOpt,
+        inputOpt,
+        preventUiOpt,
     ],
     async run(terminal: Terminal, args: {
         file: string,
         network: string,
         address: string,
         signer: string,
+        function: string,
+        input: string,
+        preventUi: boolean,
     }) {
         const account = await getAccount(terminal, args);
-        const initFunction = account.contract.abi.functions?.find(x => x.name === "constructor");
-        const initInput = await inputParams(terminal, "Enter constructor parameters", initFunction?.inputs ?? []);
+        const initFunctionName = args.function.toLowerCase() === "none" ? "" : (args.function || "constructor");
+        const initFunction = account.contract.abi.functions?.find(x => x.name === initFunctionName);
+        const initInput = await resolveInputs(
+            terminal,
+            "Enter constructor parameters",
+            initFunction?.inputs ?? [],
+            args.input,
+            args.preventUi,
+        );
         terminal.log("\nDeploying...");
         const giver = await Account.getGiverForClient(account.client);
         await account.deploy({
@@ -201,74 +148,19 @@ export const contractDeployCommand: Command = {
     },
 };
 
-async function getRunParams(
-    terminal: Terminal,
-    account: Account,
-    args: {
-        function: string
-    },
-): Promise<{
-    functionName: string,
-    functionInput: object,
-}> {
-    let functionName = args.function.trim();
-    if (functionName === "") {
-        const functions = account.contract.abi.functions ?? [];
-        terminal.log("\nAvailable functions:\n");
-        functions.forEach((x, i) => terminal.log(`  ${i + 1}) ${x.name}`));
-        terminal.log();
-        functionName = functions[Number.parseInt(await inputParam(terminal, {
-            name: "Select function",
-            type: "number",
-        })) - 1].name;
-    }
-    const func = account.contract.abi.functions?.find(x => x.name === functionName);
-    if (!func) {
-        throw new Error(`Function not found: ${functionName}`);
-    }
-    const functionInput = await inputParams(terminal, `\nEnter ${func.name} parameters:\n`, func.inputs);
-    return {
-        functionName,
-        functionInput,
-    };
-}
-
-async function logRunResult(
-    terminal: Terminal,
-    decoded: DecodedOutput | undefined,
-    transaction: any,
-): Promise<void> {
-    const outMessages: DecodedMessageBody[] = (decoded?.out_messages as any) ?? [];
-    const details = {
-        transaction,
-        output: decoded?.output,
-        out_messages: outMessages.filter(x => x.body_type !== MessageBodyType.Output),
-    };
-    terminal.log();
-    terminal.log(`Execution has finished with result: ${JSON.stringify(details, undefined, "    ")}`);
-}
 
 export const contractRunCommand: Command = {
     name: "run",
+    alias: "r",
     title: "Run contract deployed on the network",
     args: [
-        networkArg,
-        {
-            isArg: true,
-            name: "file",
-            title: "TVC file",
-            type: "file",
-            nameRegExp: /\.tvc$/i,
-        },
-        {
-            isArg: true,
-            name: "function",
-            title: "Function name",
-            type: "string",
-            defaultValue: "",
-        },
-        signerArg,
-        addressArg,
+        fileArg,
+        functionArg,
+        networkOpt,
+        signerOpt,
+        addressOpt,
+        inputOpt,
+        preventUiOpt,
     ],
     async run(terminal: Terminal, args: {
         file: string,
@@ -276,6 +168,8 @@ export const contractRunCommand: Command = {
         address: string,
         signer: string,
         function: string,
+        input: string,
+        preventUi: boolean,
     }) {
         const account = await getAccount(terminal, args);
         const {
@@ -295,25 +189,16 @@ export const contractRunCommand: Command = {
 
 export const contractRunLocalCommand: Command = {
     name: "run-local",
+    alias: "l",
     title: "Run contract locally on TVM",
     args: [
-        networkArg,
-        {
-            isArg: true,
-            name: "file",
-            title: "TVC file",
-            type: "file",
-            nameRegExp: /\.tvc$/i,
-        },
-        {
-            isArg: true,
-            name: "function",
-            title: "Function name",
-            type: "string",
-            defaultValue: "",
-        },
-        signerArg,
-        addressArg,
+        fileArg,
+        functionArg,
+        networkOpt,
+        signerOpt,
+        addressOpt,
+        inputOpt,
+        preventUiOpt,
     ],
     async run(terminal: Terminal, args: {
         file: string,
@@ -321,6 +206,8 @@ export const contractRunLocalCommand: Command = {
         address: string,
         signer: string,
         function: string,
+        input: string,
+        preventUi: boolean,
     }) {
         const account = await getAccount(terminal, args);
         const {
@@ -343,25 +230,16 @@ export const contractRunLocalCommand: Command = {
 
 export const contractRunExecutorCommand: Command = {
     name: "run-executor",
+    alias: "e",
     title: "Emulate transaction executor locally on TVM",
     args: [
-        networkArg,
-        {
-            isArg: true,
-            name: "file",
-            title: "TVC file",
-            type: "file",
-            nameRegExp: /\.tvc$/i,
-        },
-        {
-            isArg: true,
-            name: "function",
-            title: "Function name",
-            type: "string",
-            defaultValue: "",
-        },
-        signerArg,
-        addressArg,
+        fileArg,
+        functionArg,
+        networkOpt,
+        signerOpt,
+        addressOpt,
+        inputOpt,
+        preventUiOpt,
     ],
     async run(terminal: Terminal, args: {
         file: string,
@@ -369,6 +247,8 @@ export const contractRunExecutorCommand: Command = {
         address: string,
         signer: string,
         function: string,
+        input: string,
+        preventUi: boolean,
     }) {
         const account = await getAccount(terminal, args);
         const {
@@ -389,7 +269,8 @@ export const contractRunExecutorCommand: Command = {
 
 export const Contract: ToolController = {
     name: "contract",
-    title: "Contract",
+    alias: "c",
+    title: "Smart Contracts",
     commands: [
         contractInfoCommand,
         contractDeployCommand,

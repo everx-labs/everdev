@@ -17,21 +17,21 @@ const forceArg: CommandArg = {
     defaultValue: "false",
 };
 
-const networkArg: CommandArg = {
-    name: "network",
-    alias: "n",
-    type: "string",
-    title: "Network name",
-    defaultValue: "",
-};
-
-const signerArg: CommandArg = {
-    name: "signer",
-    alias: "s",
-    title: "Signer key name",
-    type: "string",
-    defaultValue: "",
-};
+// const networkArg: CommandArg = {
+//     name: "network",
+//     alias: "n",
+//     type: "string",
+//     title: "Network name",
+//     defaultValue: "",
+// };
+//
+// const signerArg: CommandArg = {
+//     name: "signer",
+//     alias: "s",
+//     title: "Signer key name",
+//     type: "string",
+//     defaultValue: "",
+// };
 
 export const netAddCommand: Command = {
     name: "add",
@@ -63,6 +63,7 @@ export const netAddCommand: Command = {
 
 export const netListCommand: Command = {
     name: "list",
+    alias: "l",
     title: "Prints list of nets",
     args: [],
     async run(terminal: Terminal, _args: {}) {
@@ -103,6 +104,7 @@ export const netDeleteCommand: Command = {
 
 export const netDefaultCommand: Command = {
     name: "default",
+    alias: "d",
     title: "Set default net",
     args: [
         {
@@ -117,36 +119,37 @@ export const netDefaultCommand: Command = {
 };
 
 
-export const netGiverCommand: Command = {
-    name: "giver",
-    title: "Set giver for network",
-    args: [
-        networkArg,
-        {
-            isArg: true,
-            name: "address",
-            title: "Giver address",
-            type: "string",
-        },
-        signerArg,
-    ],
-    async run(_terminal: Terminal, args: {
-        network: string,
-        address: string,
-        signer: string,
-    }) {
-        new NetworkRegistry().setGiver(args.network, args.address, args.signer);
-    },
-};
+// export const netGiverCommand: Command = {
+//     name: "giver",
+//     title: "Set giver for network",
+//     args: [
+//         networkArg,
+//         {
+//             isArg: true,
+//             name: "address",
+//             title: "Giver address",
+//             type: "string",
+//         },
+//         signerArg,
+//     ],
+//     async run(_terminal: Terminal, args: {
+//         network: string,
+//         address: string,
+//         signer: string,
+//     }) {
+//         new NetworkRegistry().setGiver(args.network, args.address, args.signer);
+//     },
+// };
 
 export const Networks: ToolController = {
-    name: "net",
-    title: "Network Registry",
+    name: "networks",
+    alias: "n",
+    title: "Networks Registry",
     commands: [
         netAddCommand,
         netDeleteCommand,
         netListCommand,
         netDefaultCommand,
-        netGiverCommand,
+        // netGiverCommand,
     ],
 };

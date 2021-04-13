@@ -40,7 +40,6 @@
 		"fs-extra": "^9.1.0",
 		"request": "^2.88.2",
 		"unzip-stream": "^0.3.1",
-		"keytar": "^7.6.0",
 		"@tonclient/core": "^1",
 		"@tonclient/lib-node": "^1",
 		"@tonclient/appkit": "^0"

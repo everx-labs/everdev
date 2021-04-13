@@ -65,7 +65,7 @@ export const jsDemoCommand: Command = {
 
 export const JsApps: ToolController = {
     name: "js",
-    title: "JS Apps",
+    title: "JavaScript Code Generators",
     commands: [
         jsCreateCommand,
         jsDemoCommand,

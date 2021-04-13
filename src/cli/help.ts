@@ -2,6 +2,7 @@ import {
     Command,
     CommandArg,
     getArgVariants,
+    nameInfo,
     ToolController,
 } from "../core";
 import {formatTable} from "../core/utils";
@@ -34,7 +35,7 @@ async function printCommandUsage(controller: ToolController, command: Command) {
     for (const option of options) {
         optionsTable.push([
             "  ",
-            `--${option.name}${option.alias ? ", -" + option.alias : ""}`,
+            nameInfo(option, "--", "-"),
             option.title ?? "",
         ]);
         const variants = await getArgVariants(option);
@@ -48,9 +49,7 @@ async function printCommandUsage(controller: ToolController, command: Command) {
 }
 
 function printControllerUsage(controller: ToolController) {
-    const commands: [string, Command][] = controller.commands
-        .map(x => [`${controller.name} ${x.name}`, x]);
-    console.log(formatTable(commands.map(x => ["  ", x[0], x[1].title])));
+    console.log(formatTable(controller.commands.map(x => ["  ", nameInfo(x), x.title])));
 }
 
 export async function printUsage(controller?: ToolController, command?: Command) {
@@ -68,8 +67,10 @@ export async function printUsage(controller?: ToolController, command?: Command)
         printControllerUsage(controller);
         return;
     }
-    for (const controller of controllers) {
-        console.log(`\n${controller.title ?? controller.name} Commands:\n`);
-        printControllerUsage(controller);
-    }
+    console.log("Tools:");
+    const rows: string[][] = [];
+    controllers.forEach((controller) => {
+        rows.push(["  ", nameInfo(controller), controller.title ?? ""]);
+    });
+    console.log(formatTable(rows));
 }
