@@ -351,6 +351,95 @@ This command updates tonos-cli version to the latest
 tondev tonos-cli update
 ```
 
+### Signer Registry
+
+Signer registry is a centralized place where you can store your development keys.
+
+Each signer in registry has an unique user defined name. All tondev commands 
+that requires signing or encryption refers to the signer by name.
+
+You can mark one of the signer as a default.
+It can be used in signing commands without providing signer option. 
+
+Signer repository management in tondev is accessible through the `signer` tool.
+
+#### Generate Command
+
+Add a new randomly generated mnemonic seed phrase with derived key pair.
+
+You can specify a dictionary used to generate mnemonic phrase.
+
+#### Add Command
+
+Add a signer with an existing secret key or a mnemonic phrase.
+
+#### Delete Command
+
+Deletes signer from store.
+
+#### List Command
+
+Show all signer in the registry. Only non secret data are shown.
+
+#### Get Command
+
+Prints full information for the specified signer including all secret data.
+
+#### Default Command
+
+Sets specified signer as the default.
+
+### Network Registry
+
+Networks registry is a convenient way to organize all of your network configurations in one place.
+
+You can register several blockchains (networks) under short names 
+and then use this names as a target blockchain to play with contracts.  
+
+You can mark one of the network as a default.
+It can be used in network commands without providing net name. 
+
+#### Add Command
+
+Add network with specified endpoints to the registry.
+
+#### Delete Command
+
+Delete specified network from the network list.
+
+#### List Command
+
+Prints the network list.
+
+#### Default Command
+
+Sets the specified network as default.
+
+### Contract Management
+
+Contract management of the tondev give you an ability to easily deploy and run 
+your smart contracts on a blockchain network(s).
+
+#### Info Command
+
+Show account information.
+
+#### Deploy Command
+
+Deploy specified contract to the blockchain.
+
+#### Run Command
+
+Run specified contract on the blockchain.
+
+#### Run Local Command
+
+Load and run specified contract on the local TVM.
+
+#### Run Executor Command
+
+Load and emulates executor for the specified contract on the local TVM.
+
 ## TONDEV Extensibility
 
 TON Dev Environment is an integration point for development tools related to Free TON Blockchain.

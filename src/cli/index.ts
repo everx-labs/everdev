@@ -2,6 +2,7 @@ import {
     Command,
     CommandArg,
     getArgVariants,
+    matchName,
     ToolController,
 } from "../core";
 import {controllers} from "../controllers";
@@ -111,7 +112,7 @@ class CommandLine {
                 }
                 await this.resolveValue(this.positional[0], arg);
             } else if (this.controller) {
-                this.command = this.controller.commands.find(x => x.name === arg.toLowerCase());
+                this.command = this.controller.commands.find(x => matchName(x, arg));
                 if (!this.command) {
                     throw new Error(`Unknown command: ${arg}`);
                 }
@@ -122,7 +123,7 @@ class CommandLine {
                     }
                 }
             } else {
-                this.controller = controllers.find(x => x.name === arg.toLowerCase());
+                this.controller = controllers.find(x => matchName(x, arg));
                 if (!this.controller) {
                     throw new Error(`Unknown tool: ${arg}.`);
                 }

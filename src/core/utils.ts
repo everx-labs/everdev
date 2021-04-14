@@ -367,18 +367,26 @@ function toString(value: any): string {
     return value === null || value === undefined ? "" : value.toString();
 }
 
-export function formatTable(rows: any[][], options?: { headerSeparator?: boolean }): string {
+export function formatTable(rows: any[][], options?: {
+    headerSeparator?: boolean
+}): string {
     const widths: number[] = [];
-    const updateWidth = (value: any, i: number) => {
+    const isEmpty: boolean[] = [];
+    const updateWidth = (value: any, i: number, rowIndex: number) => {
         const width = toString(value).length;
         while (widths.length <= i) {
             widths.push(0);
+            isEmpty.push(true);
         }
         widths[i] = Math.max(widths[i], width);
+        const isHeader = options?.headerSeparator && rowIndex === 0;
+        if (!isHeader && (width > 0)) {
+            isEmpty[i] = false;
+        }
     };
-    rows.forEach(x => x.forEach(updateWidth));
+    rows.forEach((row, ri) => row.forEach((value, vi) => updateWidth(value, vi, ri)));
     const formatValue = (value: any, i: number) => toString(value).padEnd(widths[i]);
-    const formatRow = (row: any[]) => row.map(formatValue).join("  ").trimEnd();
+    const formatRow = (row: any[]) => row.map(formatValue).filter((_, i) => !isEmpty[i]).join("  ").trimEnd();
     const lines = rows.map(formatRow);
     if (options?.headerSeparator) {
         const separator = formatRow(widths.map(x => "-".repeat(x)));
