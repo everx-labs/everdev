@@ -54,14 +54,14 @@ Download and install all the core [TON.DEV](https://docs.ton.dev/86757ecb2/p/04a
       - [Version](#version-3)
       - [Set](#set-3)
       - [Update](#update-4)
-    - [Signer Registry](#signer-registry)
+    - [Signer Tool](#signer-tool)
       - [Add a signer with randomly generated keys](#add-a-signer-with-randomly-generated-keys)
       - [Add a signer with specific keys](#add-a-signer-with-specific-keys)
       - [List registered signers](#list-registered-signers)
       - [Get signer details](#get-signer-details)
       - [Set default signer](#set-default-signer)
       - [Delete a signer](#delete-a-signer)
-    - [Network Registry](#network-registry)
+    - [Network Tool](#network-tool)
       - [Add a network](#add-a-network)
       - [List registered networks](#list-registered-networks)
       - [Set default network](#set-default-network)
@@ -418,7 +418,7 @@ This command updates tonos-cli version to the latest
 tondev tonos-cli update
 ```
 
-### Signer Registry
+### Signer Tool
 
 Signer registry is a centralized place where you can store your development keys.
 
@@ -435,15 +435,15 @@ Signer repository management in tondev is accessible through the `signer` tool.
 This command adds a signer with randomly generated keys.
 
 ```bash
-tondev signers generate signer_name
+tondev signer generate signer_name
 ```
 
 See other available generation options with help command:
 
 ```bash
-tondev signers generate -h
+tondev signer generate -h
 TONDev Version: 0.5.0
-Use: tondev signers generate name [options]
+Use: tondev signer generate name [options]
 Args:
     name  Signer name
 Options:
@@ -468,15 +468,15 @@ Options:
 This command adds a signer with previously generated (e.g. with tonos-cli) keys.
 
 ```bash
-tondev signers add signer_name signer_secret_key_or_seed_phrase_in_quotes
+tondev signer add signer_name signer_secret_key_or_seed_phrase_in_quotes
 ```
 
 See other available signer addition options with help command:
 
 ```bash
-tondev signers add -h
+tondev signer add -h
 TONDev Version: 0.5.0
-Use: tondev signers add name secret [options]
+Use: tondev signer add name secret [options]
 Args:
     name    Signer name
     secret  Secret key or seed phrase
@@ -502,13 +502,13 @@ Options:
 This command lists all registered signers with their public keys.
 
 ```bash
-tondev signers list
+tondev signer list
 ```
 
 Result:
 
 ```bash
-$ tondev signers list
+$ tondev signer list
 
 Signer           Public Key
 ---------------  ----------------------------------------------------------------
@@ -521,13 +521,13 @@ sign2            0fc4e781720d80f76257db333c6b6934090562418652cf30352878c87707aa9
 This command lists all information (including secret data) for a specified signer.
 
 ```bash
-tondev signers get signer_name
+tondev signer get signer_name
 ```
 
 Result:
 
 ```bash
-$ tondev signers get sign2
+$ tondev signer get sign2
 {
     "name": "sign2",
     "description": "",
@@ -543,7 +543,7 @@ $ tondev signers get sign2
 This command sets a previously added signer as default (initially the first added signer is used by default).
 
 ```bash
-tondev signers default signer_name
+tondev signer default signer_name
 ```
 
 #### Delete a signer
@@ -551,12 +551,12 @@ tondev signers default signer_name
 This command deletes a previously added signer from signer registry.
 
 ```bash
-tondev signers delete signer_name
+tondev signer delete signer_name
 ```
 
-### Network Registry
+### Network Tool
 
-Networks registry is a convenient way to organize all of your network configurations in one place.
+Network tool is a convenient way to organize all of your network configurations in one place.
 
 You can register several blockchains (networks) under short names 
 and then use these names as a target blockchain when working with contracts.  
@@ -569,15 +569,15 @@ It can be used in network commands without providing net name.
 This command adds a network to the tondev registry.
 
 ```bash
-tondev networks add network_name network_endpoint
+tondev network add network_name network_endpoint
 ```
 
 See other available network addition options with help command:
 
 ```bash
-$ tondev networks add -h
+$ tondev network add -h
 TONDev Version: 0.5.0
-Use: tondev networks add name endpoints [options]
+Use: tondev network add name endpoints [options]
 Args:
     name
     endpoints  Comma separated endpoints
@@ -591,13 +591,13 @@ Options:
 This command lists all registered networks and their public endpoints.
 
 ```bash
-tondev networks list
+tondev network list
 ```
 
 Result:
 
 ```bash
-$ tondev networks list
+$ tondev network list
 
 Network         Endpoints
 --------------  ------------
@@ -610,7 +610,7 @@ dev             net.ton.dev
 This command sets a previously added network as default (initially the mainnet is used by default).
 
 ```bash
-tondev signers default network_name
+tondev network default network_name
 ```
 
 #### Delete a network
@@ -618,7 +618,7 @@ tondev signers default network_name
 This command deletes a network from tondev registry.
 
 ```bash
-tondev networks delete network_name
+tondev network delete network_name
 ```
 ### Contract Management
 
