@@ -171,7 +171,7 @@ tondev sol create Contract
 #### Compile
 
 This command compiles and links a selected Solidity contract. 
-After successful compilation you get .abi.json and .tvc files that you can later [use in your DApps to deploy and call contract methods](https://docs.ton.dev/86757ecb2/p/07f1a5-add-contract-to-your-app-/b/462f33).
+After successful compilation you get .abi.json and .tvc files that you can later [use in your DApps to deploy and run contract methods](https://docs.ton.dev/86757ecb2/p/07f1a5-add-contract-to-your-app-/b/462f33).
 
 ```shell
 tondev sol compile Contract.sol
@@ -216,7 +216,7 @@ tondev clang create Contract
 #### Compile
 
 This command compiles and links a selected C++ contract.
-After successful compilation you get .abi.json and .tvc files that you can later [use in your DApps to deploy and call contract methods](https://docs.ton.dev/86757ecb2/p/07f1a5-add-contract-to-your-app-/b/462f33).
+After successful compilation you get .abi.json and .tvc files that you can later [use in your DApps to deploy and run contract methods](https://docs.ton.dev/86757ecb2/p/07f1a5-add-contract-to-your-app-/b/462f33).
 
 ```shell
 tondev clang compile Contract.cpp
