@@ -9,12 +9,12 @@ import {
     TonClient,
 } from "@tonclient/core";
 
-function signersHome() {
-    return path.resolve(tondevHome(), "signers");
+function signerHome() {
+    return path.resolve(tondevHome(), "signer");
 }
 
 function registryPath() {
-    return path.resolve(signersHome(), "registry.json");
+    return path.resolve(signerHome(), "registry.json");
 }
 
 export enum MnemonicDictionary {
@@ -56,8 +56,8 @@ export class SignerRegistry {
     }
 
     save() {
-        if (!fs.pathExistsSync(signersHome())) {
-            fs.mkdirSync(signersHome(), {recursive: true});
+        if (!fs.pathExistsSync(signerHome())) {
+            fs.mkdirSync(signerHome(), {recursive: true});
         }
         fs.writeFileSync(registryPath(), JSON.stringify({
             items: this.items,
@@ -113,6 +113,20 @@ export class SignerRegistry {
         let findName = name.toLowerCase().trim();
         if (findName === "") {
             findName = this.default ?? "";
+        }
+        if (findName === "") {
+            if (this.items.length === 0) {
+                throw new Error(
+                    "There are no signers defined. " +
+                    "Use \"tondev signer add\" command to register a signer.",
+                );
+            } else {
+                throw new Error(
+                    "There is no default signer. " +
+                    "Use \"tondev signer default\" command to set the default signer. " +
+                    "Or explicitly specify the signer with \"--signer\" option.",
+                );
+            }
         }
         const key = this.items.find(x => x.name.toLowerCase() === findName);
         if (key) {

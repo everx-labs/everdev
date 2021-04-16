@@ -222,10 +222,10 @@ export async function createSigner(name: string): Promise<Signer> {
     return signerKeys(new SignerRegistry().get(name).keys);
 }
 
-export const Signers: ToolController = {
-    name: "signers",
+export const SignerTool: ToolController = {
+    name: "signer",
     alias: "s",
-    title: "Signers Registry",
+    title: "Signer Registry",
     commands: [
         signerGenerateCommand,
         signerAddCommand,
