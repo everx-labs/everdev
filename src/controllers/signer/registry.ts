@@ -114,6 +114,20 @@ export class SignerRegistry {
         if (findName === "") {
             findName = this.default ?? "";
         }
+        if (findName === "") {
+            if (this.items.length === 0) {
+                throw new Error(
+                    "There are no signers defined. " +
+                    "Use \"tondev signer add\" command to register a signer.",
+                );
+            } else {
+                throw new Error(
+                    "There is no default signer. " +
+                    "Use \"tondev signer default\" command to set the default signer. " +
+                    "Or explicitly specify the signer with \"--signer\" option.",
+                );
+            }
+        }
         const key = this.items.find(x => x.name.toLowerCase() === findName);
         if (key) {
             return key;

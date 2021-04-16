@@ -51,7 +51,7 @@ export class NetworkRegistry {
 
     save() {
         if (!fs.pathExistsSync(networkHome())) {
-            fs.mkdirSync(networkHome(), {recursive: true});
+            fs.mkdirSync(networkHome(), { recursive: true });
         }
         fs.writeFileSync(registryPath(), JSON.stringify({
             items: this.items,
@@ -85,6 +85,20 @@ export class NetworkRegistry {
         let findName = name.toLowerCase().trim();
         if (findName === "") {
             findName = this.default ?? "";
+        }
+        if (findName === "") {
+            if (this.items.length === 0) {
+                throw new Error(
+                    "There are no networks defined. " +
+                    "Use \"tondev network add\" command to register a network.",
+                );
+            } else {
+                throw new Error(
+                    "There is no default network. " +
+                    "Use \"tondev network default\" command to set the default network. " +
+                    "Or explicitly specify the network with \"--network\" option.",
+                );
+            }
         }
         const network = this.items.find(x => x.name.toLowerCase() === findName);
         if (network) {
