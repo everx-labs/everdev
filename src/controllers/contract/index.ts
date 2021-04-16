@@ -92,7 +92,7 @@ export const contractInfoCommand: Command = {
         const parsed = await account.getAccount();
         const accType = parsed.acc_type as AccountType;
         if (accType === AccountType.nonExist) {
-            terminal.log("Account: Not exists");
+            terminal.log("Account: Doesn't exist");
         } else {
             terminal.log(`Account: ${parsed.acc_type_name}`);
             terminal.log(`Details: ${JSON.stringify(parsed, undefined, "    ")}`);
