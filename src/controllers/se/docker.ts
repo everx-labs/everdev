@@ -12,11 +12,22 @@
  * limitations under the License.
  *
  */
-import Dockerode, { Container, ContainerInfo, DockerVersion, Image, ImageInfo } from "dockerode";
+import Dockerode, {
+    Container,
+    ContainerInfo,
+    DockerVersion,
+    Image,
+    ImageInfo,
+} from "dockerode";
 import Docker from "dockerode";
-import { Terminal } from "../../core";
+import {Terminal} from "../../core";
 
-import { progress, progressDone, progressLine, versionToNumber } from "../../core/utils";
+import {
+    progress,
+    progressDone,
+    progressLine,
+    versionToNumber,
+} from "../../core/utils";
 
 
 export enum ContainerStatus {
@@ -133,12 +144,12 @@ class DevDocker {
                 }
 
                 function onProgress(event: any) {
-                    progressLine(terminal, `${title}... ${event.progress || ''}`);
+                    progressLine(terminal, `${title}... ${event.progress || ""}`);
                 }
             });
         });
         progress(terminal, title);
-        progressDone(terminal, );
+        progressDone(terminal);
         return image;
     }
 
@@ -158,7 +169,7 @@ class DevDocker {
         if (downTo < ContainerStatus.running && DevDocker.isRunning(info)) {
             progress(terminal, `Stopping [${def.containerName}]`);
             await this.client.getContainer(info.Id).stop();
-            progressDone(terminal, );
+            progressDone(terminal);
             this.dropCache();
         }
         if (downTo < ContainerStatus.created) {
@@ -222,7 +233,7 @@ class DevDocker {
     }
 
     static containerTitle(info: ContainerInfo): string {
-        return info.Names.map(name => name.startsWith('/') ? name.substr(1) : name).join(';');
+        return info.Names.map(name => name.startsWith("/") ? name.substr(1) : name).join(";");
     }
 
     // if match specified with tag compare exactly
@@ -230,11 +241,11 @@ class DevDocker {
     static imageNameMatched(imageName: string, match: string): boolean {
         imageName = imageName.toLowerCase();
         match = match.toLowerCase();
-        const matchParts = match.split(':');
+        const matchParts = match.split(":");
         if (matchParts.length > 1) {
             return imageName === match;
         }
-        const imageParts = imageName.split(':');
+        const imageParts = imageName.split(":");
         return imageParts[0] === matchParts[0];
     }
 
@@ -242,7 +253,7 @@ class DevDocker {
         return [
             ...(info.RepoTags || []),
             ...(info.RepoDigests || []).map((digest) => {
-                return digest.split('@').join(':');
+                return digest.split("@").join(":");
             }),
         ];
     }
@@ -252,7 +263,7 @@ class DevDocker {
     }
 
     static isRunning(info: ContainerInfo | null): boolean {
-        return !!info && info.State.toLowerCase() === 'running';
+        return !!info && info.State.toLowerCase() === "running";
     }
 
     static containersImageMatched(info: ContainerInfo, match: string): boolean {
@@ -263,4 +274,4 @@ class DevDocker {
 
 export {
     DevDocker,
-}
+};

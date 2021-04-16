@@ -42,7 +42,7 @@ const dictionaryOpt: CommandArg = {
     alias: "d",
     type: "string",
     title: "Mnemonic dictionary",
-    defaultValue: "0",
+    defaultValue: "1",
     getVariants(): CommandArgVariant[] {
         return [
             {
