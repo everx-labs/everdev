@@ -6,9 +6,13 @@ All notable changes to this project will be documented in this file.
 
 ### New
 
-- `signers` controller for signer registry management. 
-- `networks` controller for network registry management. 
+- `signer` controller for signer registry management. 
+- `network` controller for network registry management. 
 - `contract` controller for contract management. 
+
+### Fixed
+
+- `tvm_linker` downloads always even if it's up to date.
 
 ## [0.4.0] - 2021-03-25
 

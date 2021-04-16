@@ -69,7 +69,7 @@ export const netListCommand: Command = {
     async run(terminal: Terminal, _args: {}) {
         const registry = new NetworkRegistry();
         const rows = [["Network", "Endpoints", "Giver", "Description"]];
-        registry.networks.forEach((network) => {
+        registry.items.forEach((network) => {
             rows.push([
                 `${network.name}${network.name === registry.default ? " (Default)" : ""}`,
                 network.endpoints[0] ?? "",
@@ -141,10 +141,10 @@ export const netDefaultCommand: Command = {
 //     },
 // };
 
-export const Networks: ToolController = {
-    name: "networks",
+export const NetworkTool: ToolController = {
+    name: "network",
     alias: "n",
-    title: "Networks Registry",
+    title: "Network Registry",
     commands: [
         netAddCommand,
         netDeleteCommand,

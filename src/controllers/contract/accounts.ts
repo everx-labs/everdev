@@ -4,14 +4,14 @@ import {
     AccountOptions,
     ContractPackage,
 } from "@tonclient/appkit";
-import {NetworkRegistry} from "../networks/registry";
+import {NetworkRegistry} from "../network/registry";
 import {
     signerNone,
     TonClient,
 } from "@tonclient/core";
-import {createSigner} from "../signers";
+import {createSigner} from "../signer";
 import fs from "fs";
-import {SignerRegistry} from "../signers/registry";
+import {SignerRegistry} from "../signer/registry";
 
 function findExisting(paths: string[]): string | undefined {
     return paths.find(x => fs.existsSync(x));

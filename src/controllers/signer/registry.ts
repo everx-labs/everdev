@@ -9,12 +9,12 @@ import {
     TonClient,
 } from "@tonclient/core";
 
-function signersHome() {
-    return path.resolve(tondevHome(), "signers");
+function signerHome() {
+    return path.resolve(tondevHome(), "signer");
 }
 
 function registryPath() {
-    return path.resolve(signersHome(), "registry.json");
+    return path.resolve(signerHome(), "registry.json");
 }
 
 export enum MnemonicDictionary {
@@ -56,8 +56,8 @@ export class SignerRegistry {
     }
 
     save() {
-        if (!fs.pathExistsSync(signersHome())) {
-            fs.mkdirSync(signersHome(), {recursive: true});
+        if (!fs.pathExistsSync(signerHome())) {
+            fs.mkdirSync(signerHome(), {recursive: true});
         }
         fs.writeFileSync(registryPath(), JSON.stringify({
             items: this.items,

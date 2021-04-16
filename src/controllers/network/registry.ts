@@ -5,12 +5,12 @@ import {
     tondevHome,
 } from "../../core";
 
-function networksHome() {
-    return path.resolve(tondevHome(), "networks");
+function networkHome() {
+    return path.resolve(tondevHome(), "network");
 }
 
 function registryPath() {
-    return path.resolve(networksHome(), "registry.json");
+    return path.resolve(networkHome(), "registry.json");
 }
 
 export type Network = {
@@ -24,7 +24,7 @@ export type Network = {
 }
 
 export class NetworkRegistry {
-    readonly networks: Network[] = [];
+    readonly items: Network[] = [];
     default?: string;
 
     constructor() {
@@ -32,7 +32,7 @@ export class NetworkRegistry {
         if (fs.pathExistsSync(registryPath())) {
             try {
                 const data = JSON.parse(fs.readFileSync(registryPath(), "utf8"));
-                this.networks = data.networks ?? [];
+                this.items = data.items ?? [];
                 if (data.default) {
                     this.default = data.default;
                 }
@@ -41,7 +41,7 @@ export class NetworkRegistry {
             }
         }
         if (!loaded) {
-            this.networks = [{
+            this.items = [{
                 name: "main",
                 endpoints: ["main.ton.dev"],
             }];
@@ -50,18 +50,18 @@ export class NetworkRegistry {
     }
 
     save() {
-        if (!fs.pathExistsSync(networksHome())) {
-            fs.mkdirSync(networksHome(), {recursive: true});
+        if (!fs.pathExistsSync(networkHome())) {
+            fs.mkdirSync(networkHome(), {recursive: true});
         }
         fs.writeFileSync(registryPath(), JSON.stringify({
-            networks: this.networks,
+            items: this.items,
             default: this.default,
         }));
     }
 
     add(name: string, description: string, endpoints: string[], overwrite: boolean) {
         name = name.trim();
-        const existingIndex = this.networks.findIndex(x => x.name.toLowerCase() === name.toLowerCase());
+        const existingIndex = this.items.findIndex(x => x.name.toLowerCase() === name.toLowerCase());
         if (existingIndex >= 0 && !overwrite) {
             throw new Error(`Net "${name}" already exists.`);
         }
@@ -71,9 +71,9 @@ export class NetworkRegistry {
             endpoints,
         };
         if (existingIndex >= 0) {
-            this.networks[existingIndex] = network;
+            this.items[existingIndex] = network;
         } else {
-            this.networks.push(network);
+            this.items.push(network);
         }
         if (!this.default) {
             this.default = name;
@@ -86,7 +86,7 @@ export class NetworkRegistry {
         if (findName === "") {
             findName = this.default ?? "";
         }
-        const network = this.networks.find(x => x.name.toLowerCase() === findName);
+        const network = this.items.find(x => x.name.toLowerCase() === findName);
         if (network) {
             return network;
         }
@@ -95,7 +95,7 @@ export class NetworkRegistry {
 
     delete(name: string) {
         const net = this.get(name);
-        this.networks.splice(this.networks.findIndex(x => x.name === net.name), 1);
+        this.items.splice(this.items.findIndex(x => x.name === net.name), 1);
         if (this.default === net.name) {
             delete this.default;
         }

@@ -8,16 +8,16 @@ import {
     matchName,
     Terminal,
 } from "../core";
-import {Signers} from "./signers";
-import {Networks} from "./networks";
+import {SignerTool} from "./signer";
+import {NetworkTool} from "./network";
 import {Contract} from "./contract";
 
 export const controllers = [
     Clang,
     Solidity,
     SE,
-    Networks,
-    Signers,
+    NetworkTool,
+    SignerTool,
     Contract,
     JsApps,
     TONOS,
