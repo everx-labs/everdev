@@ -30,12 +30,18 @@ Download and install all the core [TON.DEV](https://docs.ton.dev/86757ecb2/p/04a
       - [Version](#version)
       - [Update](#update-1)
       - [Set](#set)
+    - [C++](#c)
+      - [Create your first contract](#create-your-first-contract-1)
+      - [Compile](#compile-1)
+      - [Version](#version-1)
+      - [Update](#update-2)
+      - [Set](#set-1)  
     - [TON OS Startup Edition(SE)](#ton-os-startup-editionse)
       - [Start](#start)
-      - [Version](#version-1)
-      - [Set](#set-1)
+      - [Version](#version-2)
+      - [Set](#set-2)
       - [Reset](#reset)
-      - [Update](#update-2)
+      - [Update](#update-3)
       - [Stop](#stop)
       - [Info](#info)
     - [SDK](#sdk)
@@ -45,9 +51,27 @@ Download and install all the core [TON.DEV](https://docs.ton.dev/86757ecb2/p/04a
       - [Create contract JS wrapper](#create-contract-js-wrapper)
     - [tonos-cli](#tonos-cli)
       - [Install](#install-1)
-      - [Version](#version-2)
-      - [Set](#set-2)
-      - [Update](#update-3)
+      - [Version](#version-3)
+      - [Set](#set-3)
+      - [Update](#update-4)
+    - [Signer Registry](#signer-registry)
+      - [Add a signer with randomly generated keys](#add-a-signer-with-randomly-generated-keys)
+      - [Add a signer with specific keys](#add-a-signer-with-specific-keys)
+      - [List registered signers](#list-registered-signers)
+      - [Get signer details](#get-signer-details)
+      - [Set default signer](#set-default-signer)
+      - [Delete a signer](#delete-a-signer)
+    - [Network Registry](#network-registry)
+      - [Add a network](#add-a-network)
+      - [List registered networks](#list-registered-networks)
+      - [Set default network](#set-default-network)
+      - [Delete a network](#delete-a-network)
+    - [Contract Management](#contract-management)
+      - [View contract info](#view-contract-info)
+      - [Deploy contract](#deploy-contract)
+      - [Run contract deployed on the network](#run-contract-deployed-on-the-network)
+      - [Run contract locally on TVM](#run-contract-locally-on-tvm)
+      - [Emulate transaction executor locally on TVM](#emulate-transaction-executor-locally-on-tvm)
   - [TONDEV Extensibility](#tondev-extensibility)
   - [Backlog](#backlog)
     - [Debot](#debot)
@@ -69,7 +93,7 @@ Each component is downloaded and installed automatically for the target platform
 
 - [Debot](https://github.com/tonlabs/debots) - **soon as part of tondev**  
 - [Solidity Compiler](https://github.com/tonlabs/TON-Solidity-Compiler)
-- [C/C++ Compiler](https://github.com/tonlabs/TON-Compiler) - **soon as part of tondev**  
+- [C/C++ Compiler](https://github.com/tonlabs/TON-Compiler)
 - [TON OS Startup Edition](https://github.com/tonlabs/tonos-se) – 
   Local blockchain for development and testing
 - [TestSuite4](https://github.com/tonlabs/TestSuite4) – **soon as part of tondev**  
@@ -178,6 +202,49 @@ This command sets the compiler and linker versions and downloads them if needed.
 tondev sol set --compiler 0.38.0 --linker 0.23.54
 ```
 **Attention!** At the moment linker does not support versioning, so dispite the fact that its functionality changes over time, version stays the same (0.1.0).Use --force option to force update of it as well.
+
+### C++
+
+#### Create your first contract
+
+This command creates a basic C++ contract with comments that you can observe and compile.
+
+```shell
+tondev clang create Contract
+```
+
+#### Compile
+
+This command compiles and links a selected C++ contract.
+After successful compilation you get .abi.json and .tvc files that you can later [use in your DApps to deploy and call contract methods](https://docs.ton.dev/86757ecb2/p/07f1a5-add-contract-to-your-app-/b/462f33).
+
+```shell
+tondev clang compile Contract.cpp
+```
+
+#### Version
+
+This command shows the currently installed C++ compiler version.
+
+```shell
+tondev clang version
+```
+
+#### Update
+
+This command updates the compiler to the latest version.
+
+```shell
+tondev clang update
+```
+
+#### Set
+
+This command sets the compiler version and downloads it if needed.
+
+```shell
+tondev clang set --compiler 7.0.0
+```
 
 ### TON OS Startup Edition(SE)
 
@@ -356,89 +423,431 @@ tondev tonos-cli update
 Signer registry is a centralized place where you can store your development keys.
 
 Each signer in registry has an unique user defined name. All tondev commands 
-that requires signing or encryption refers to the signer by name.
+that require signing or encryption refer to the signer by name.
 
-You can mark one of the signer as a default.
+You can mark one of the signers as a default.
 It can be used in signing commands without providing signer option. 
 
 Signer repository management in tondev is accessible through the `signer` tool.
 
-#### Generate Command
+#### Add a signer with randomly generated keys
 
-Add a new randomly generated mnemonic seed phrase with derived key pair.
+This command adds a signer with randomly generated keys.
 
-You can specify a dictionary used to generate mnemonic phrase.
+```bash
+tondev signers generate signer_name
+```
 
-#### Add Command
+See other available generation options with help command:
 
-Add a signer with an existing secret key or a mnemonic phrase.
+```bash
+tondev signers generate -h
+TONDev Version: 0.5.0
+Use: tondev signers generate name [options]
+Args:
+    name  Signer name
+Options:
+    --help, -h        Show command usage
+    --mnemonic, -m    Use mnemonic phrase
+    --dictionary, -d  Mnemonic dictionary
+                      0  TON
+                      1  English
+                      2  Chinese Simplified
+                      3  Chinese Traditional
+                      4  French
+                      5  Italian
+                      6  Japanese
+                      7  Korean
+                      8  Spanish
+    --words, -w       Number of mnemonic words
+    --force, -f       Overwrite signer if already exists
+```
 
-#### Delete Command
+#### Add a signer with specific keys
 
-Deletes signer from store.
+This command adds a signer with previously generated (e.g. with tonos-cli) keys.
 
-#### List Command
+```bash
+tondev signers add signer_name signer_secret_key_or_seed_phrase_in_quotes
+```
 
-Show all signer in the registry. Only non secret data are shown.
+See other available signer addition options with help command:
 
-#### Get Command
+```bash
+tondev signers add -h
+TONDev Version: 0.5.0
+Use: tondev signers add name secret [options]
+Args:
+    name    Signer name
+    secret  Secret key or seed phrase
+Options:
+    --help, -h        Show command usage
+    --dictionary, -d  Mnemonic dictionary
+                      0  TON
+                      1  English
+                      2  Chinese Simplified
+                      3  Chinese Traditional
+                      4  French
+                      5  Italian
+                      6  Japanese
+                      7  Korean
+                      8  Spanish
+    --force, -f       Overwrite signer if already exists
+```
+**Note:** By default the dictionary is set to english, which allows using seed phrases generated by other TONOS tools, such as tonos-cli.
 
-Prints full information for the specified signer including all secret data.
 
-#### Default Command
+#### List registered signers
 
-Sets specified signer as the default.
+This command lists all registered signers with their public keys.
+
+```bash
+tondev signers list
+```
+
+Result:
+
+```bash
+$ tondev signers list
+
+Signer           Public Key
+---------------  ----------------------------------------------------------------
+sign1 (Default)  cffd3a2f1d241807b2205220a7d6df980e67a3cc7c47eba2766cdc1bbddfc0e3
+sign2            0fc4e781720d80f76257db333c6b6934090562418652cf30352878c87707aa94
+```
+
+#### Get signer details
+
+This command lists all information (including secret data) for a specified signer.
+
+```bash
+tondev signers get signer_name
+```
+
+Result:
+
+```bash
+$ tondev signers get sign2
+{
+    "name": "sign2",
+    "description": "",
+    "keys": {
+        "public": "760d69964d038997d891fca0a0407c2ffefb701e7cb2f9ff0a87fbbf1e8098f2",
+        "secret": "72571b5a9392e6bb215b460ca3c0545c34d790e185f66f5b2e7564329ffea86c"
+    }
+}
+```
+
+#### Set default signer
+
+This command sets a previously added signer as default (initially the first added signer is used by default).
+
+```bash
+tondev signers default signer_name
+```
+
+#### Delete a signer
+
+This command deletes a previously added signer from signer registry.
+
+```bash
+tondev signers delete signer_name
+```
 
 ### Network Registry
 
 Networks registry is a convenient way to organize all of your network configurations in one place.
 
 You can register several blockchains (networks) under short names 
-and then use this names as a target blockchain to play with contracts.  
+and then use these names as a target blockchain when working with contracts.  
 
-You can mark one of the network as a default.
+You can mark one of the networks as a default.
 It can be used in network commands without providing net name. 
 
-#### Add Command
+#### Add a network
 
-Add network with specified endpoints to the registry.
+This command adds a network to the tondev registry.
 
-#### Delete Command
+```bash
+tondev networks add network_name network_endpoint
+```
 
-Delete specified network from the network list.
+See other available network addition options with help command:
 
-#### List Command
+```bash
+$ tondev networks add -h
+TONDev Version: 0.5.0
+Use: tondev networks add name endpoints [options]
+Args:
+    name
+    endpoints  Comma separated endpoints
+Options:
+    --help, -h   Show command usage
+    --force, -f  Overwrite key if already exists
+```
 
-Prints the network list.
+#### List registered networks
 
-#### Default Command
+This command lists all registered networks and their public endpoints.
 
-Sets the specified network as default.
+```bash
+tondev networks list
+```
 
+Result:
+
+```bash
+$ tondev networks list
+
+Network         Endpoints
+--------------  ------------
+main (Default)  main.ton.dev
+dev             net.ton.dev
+```
+
+#### Set default network
+
+This command sets a previously added network as default (initially the mainnet is used by default).
+
+```bash
+tondev signers default network_name
+```
+
+#### Delete a network
+
+This command deletes a network from tondev registry.
+
+```bash
+tondev networks delete network_name
+```
 ### Contract Management
 
-Contract management of the tondev give you an ability to easily deploy and run 
-your smart contracts on a blockchain network(s).
+Contract management in tondev gives you the ability to easily deploy and run 
+your smart contracts on blockchain network(s).
 
-#### Info Command
+#### View contract info
 
-Show account information.
+This command displays a summary (selected network and signer, account address and account status). Contract ABI and TVC files are required to run it.
 
-#### Deploy Command
+```bash
+tondev contract info abi_filename
+```
 
-Deploy specified contract to the blockchain.
+Result example:
 
-#### Run Command
+```bash
+$ tondev contract info Contract
 
-Run specified contract on the blockchain.
+Configuration
 
-#### Run Local Command
+  Network: main
+  Signer:  sign1
 
-Load and run specified contract on the local TVM.
+Address: 0:0435cb4e70585759ac514bb9fd1770caeb8c3941d882b5a16d589b368cb49261
+Account: Not exists
+```
 
-#### Run Executor Command
+Network, signer and account address parameters can be overridden with the following options:
 
-Load and emulates executor for the specified contract on the local TVM.
+```bash
+$ tondev contract info -h
+TONDev Version: 0.5.0
+Use: tondev contract info file [options]
+Args:
+    file  ABI file
+Options:
+    --help, -h     Show command usage
+    --network, -n  Network name
+    --signer, -s   Signer key name
+    --address, -a  Account address
+```
+
+#### Deploy contract
+
+This command deploys a contract to the blockchain. Contract ABI and TVC files are required to run it.
+
+```bash
+tondev contract deploy abi_filename
+```
+
+Command displays deployment summary and requests constructor function parameters. Result example:
+
+```bash
+$ tondev contract deploy Contract
+
+Configuration
+
+  Network: dev
+  Signer:  sign1
+
+Address: 0:0435cb4e70585759ac514bb9fd1770caeb8c3941d882b5a16d589b368cb49261
+
+Enter constructor parameters
+
+  param1 (uint256[]): value
+
+Enter constructor parameters
+
+  param2 (uint8): value
+
+Deploying...
+```
+
+Network, signer and account address parameters can be overridden and constructor parameters specified in the deploy command with the following options:
+
+```bash
+$ tondev contract deploy -h
+TONDev Version: 0.5.0
+Use: tondev contract deploy file function [options]
+Args:
+    file      ABI file
+    function  Function name
+Options:
+    --help, -h        Show command usage
+    --network, -n     Network name
+    --signer, -s      Signer key name
+    --input, -i       Function parameters (name=value,...)
+    --prevent-ui, -p  User Interaction
+```
+
+#### Run contract deployed on the network
+
+This command runs any function of a contract deployed on the blockchain. Contract ABI and TVC files are required to run it.
+
+```bash
+tondev contract run abi_filename
+```
+
+Command displays available functions and asks to select one. Result example:
+
+```bash
+$ tondev contract run Contract
+
+Configuration
+
+  Network: dev
+  Signer:  sign1
+
+Address: 0:a4629d617df931d8ad86ed24f4cac3d321788ba082574144f5820f2894493fbc
+
+Available functions:
+
+  1) func1
+  2) func2
+
+  Select function (number): 2
+
+Running...
+```
+
+Network, signer and account address parameters can be overridden and function parameters specified in the command with the following options:
+
+```bash
+$ tondev contract run -h
+TONDev Version: 0.5.0
+Use: tondev contract run file function [options]
+Args:
+    file      ABI file
+    function  Function name
+Options:
+    --help, -h        Show command usage
+    --network, -n     Network name
+    --signer, -s      Signer key name
+    --address, -a     Account address
+    --input, -i       Function parameters (name=value,...)
+    --prevent-ui, -p  User Interaction
+```
+
+#### Run contract locally on TVM
+
+This command downloads a contract and runs it locally on TVM. Contract ABI and TVC files are required to run it.
+
+```bash
+tondev contract run-local abi_filename
+```
+
+Command displays available functions and asks to select one. Result example:
+
+```jsx
+$ tondev contract run-local Contract
+Configuration
+
+  Network: dev
+  Signer:  sign1
+
+Address: 0:a4629d617df931d8ad86ed24f4cac3d321788ba082574144f5820f2894493fbc
+
+Available functions:
+
+  1) func1
+  2) func1
+
+  Select function (number):
+```
+
+Network, signer and account address parameters can be overridden and function parameters specified in the command with the following options:
+
+```bash
+$ tondev contract run-local -h
+TONDev Version: 0.5.0
+Use: tondev contract run-local file function [options]
+Args:
+    file      ABI file
+    function  Function name
+Options:
+    --help, -h        Show command usage
+    --network, -n     Network name
+    --signer, -s      Signer key name
+    --address, -a     Account address
+    --input, -i       Function parameters (name=value,...)
+    --prevent-ui, -p  User Interaction
+```
+
+#### Emulate transaction executor locally on TVM
+
+This command downloads a contract and emulates transaction execution locally on TVM. Contract ABI and TVC files are required to run it.
+
+```bash
+tondev contract run-executor abi_filename
+```
+
+Command displays available functions and asks to select one. Result:
+
+```bash
+$ tondev contract run-executor Contract
+
+Configuration
+
+  Network: dev
+  Signer:  sign1
+
+Address: 0:a4629d617df931d8ad86ed24f4cac3d321788ba082574144f5820f2894493fbc
+
+Available functions:
+
+  1) func1
+  2) func2
+
+  Select function (number):
+```
+
+Network, signer and account address parameters can be overridden and function parameters specified in the command with the following options:
+
+```bash
+$ tondev contract run-executor -h
+TONDev Version: 0.5.0
+Use: tondev contract run-executor file function [options]
+Args:
+    file      ABI file
+    function  Function name
+Options:
+    --help, -h        Show command usage
+    --network, -n     Network name
+    --signer, -s      Signer key name
+    --address, -a     Account address
+    --input, -i       Function parameters (name=value,...)
+    --prevent-ui, -p  User Interaction
+```
 
 ## TONDEV Extensibility
 
