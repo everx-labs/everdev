@@ -238,6 +238,8 @@ This command updates the compiler to the latest version.
 tondev clang update
 ```
 
+Use `--force` or `-f` option to force reinstall, if the compiler is already up to date.
+
 #### Set
 
 This command sets the compiler version and downloads it if needed.
@@ -245,6 +247,8 @@ This command sets the compiler version and downloads it if needed.
 ```shell
 tondev clang set --compiler 7.0.0
 ```
+
+Use `--force` or `-f` option to force reinstall, if the current version is the same as the requested version.
 
 ### TON OS Startup Edition(SE)
 
@@ -569,7 +573,7 @@ It can be used in network commands without providing net name.
 This command adds a network to the tondev registry.
 
 ```bash
-tondev network add network_name network_endpoint
+tondev network add network_name network_endpoints
 ```
 
 See other available network addition options with help command:
@@ -584,6 +588,12 @@ Args:
 Options:
     --help, -h   Show command usage
     --force, -f  Overwrite key if already exists
+```
+
+Example with all [main.ton.dev endpoints](https://docs.ton.dev/86757ecb2/p/85c869-networks):
+
+```bash
+tondev network add main main.ton.dev,main2.ton.dev,main3.ton.dev,main4.ton.dev
 ```
 
 #### List registered networks
@@ -644,7 +654,7 @@ Configuration
   Signer:  sign1
 
 Address: 0:0435cb4e70585759ac514bb9fd1770caeb8c3941d882b5a16d589b368cb49261
-Account: Not exists
+Account: Doesn't exist
 ```
 
 Network, signer and account address parameters can be overridden with the following options:
@@ -709,6 +719,7 @@ Options:
     --input, -i       Function parameters (name=value,...)
     --prevent-ui, -p  User Interaction
 ```
+
 
 #### Run contract deployed on the network
 
