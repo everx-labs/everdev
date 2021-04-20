@@ -103,7 +103,7 @@ const forceOpt: CommandArg = {
 
 export const signerGenerateCommand: Command = {
     name: "generate",
-    alias: "gen",
+    alias: "g",
     title: "Add signer with randomly generated keys",
     args: [
         nameArg,
@@ -177,7 +177,7 @@ export const signerListCommand: Command = {
             x.keys.public,
             x.description,
         ]));
-        const table = formatTable(rows, {headerSeparator: true});
+        const table = formatTable(rows, { headerSeparator: true });
         if (table.trim() !== "") {
             terminal.log();
             terminal.log(table);
@@ -187,13 +187,20 @@ export const signerListCommand: Command = {
 };
 
 export const signerGetCommand: Command = {
-    name: "get",
-    alias: "g",
-    title: "Get signer details",
+    name: "info",
+    alias: "i",
+    title: "Get signer detailed information",
     args: [
-        nameArg,
+        {
+            ...nameArg,
+            defaultValue: "",
+        },
     ],
     async run(terminal: Terminal, args: { name: string }) {
+        if (args.name === "") {
+            await signerListCommand.run(terminal, {});
+            return;
+        }
         const signer = new SignerRegistry().get(args.name);
         terminal.log(JSON.stringify(signer, undefined, "    "));
     },

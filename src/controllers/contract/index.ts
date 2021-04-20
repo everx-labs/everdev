@@ -15,6 +15,9 @@ import {
     resolveInputs,
     logRunResult,
 } from "./run";
+import {NetworkGiver} from "../network/giver";
+import {NetworkRegistry} from "../network/registry";
+import {parseNumber} from "../../core/utils";
 
 const fileArg: CommandArg = {
     isArg: true,
@@ -60,6 +63,14 @@ const inputOpt: CommandArg = {
     name: "input",
     alias: "i",
     title: "Function parameters (name=value,...)",
+    type: "string",
+    defaultValue: "",
+};
+
+const valueOpt: CommandArg = {
+    name: "value",
+    alias: "v",
+    title: "Deploying balance value",
     type: "string",
     defaultValue: "",
 };
@@ -112,6 +123,7 @@ export const contractDeployCommand: Command = {
         networkOpt,
         signerOpt,
         inputOpt,
+        valueOpt,
         preventUiOpt,
     ],
     async run(terminal: Terminal, args: {
@@ -121,9 +133,27 @@ export const contractDeployCommand: Command = {
         signer: string,
         function: string,
         input: string,
+        value: string,
         preventUi: boolean,
     }) {
         const account = await getAccount(terminal, args);
+        const info = await account.getAccount();
+
+        let giver: NetworkGiver | undefined = undefined;
+        if (info.acc_type === AccountType.nonExist) {
+            const networkGiverInfo = new NetworkRegistry().get(args.network).giver;
+            giver = networkGiverInfo
+                ? await NetworkGiver.get(account.client, networkGiverInfo)
+                : undefined;
+            if (!giver) {
+                throw new Error(`Account ${await account.getAddress()} has no balance.\n` +
+                    `You have to create a positive balance before deploying in two ways: \n` +
+                    `sending some value to this address\n` +
+                    `or setting up a giver for the network with \`tondev network giver\` command.`,
+                );
+            }
+            giver.value = parseNumber(args.value) ?? giver.value;
+        }
         const initFunctionName = args.function.toLowerCase() === "none" ? "" : (args.function || "constructor");
         const initFunction = account.contract.abi.functions?.find(x => x.name === initFunctionName);
         const initInput = await resolveInputs(
@@ -134,13 +164,13 @@ export const contractDeployCommand: Command = {
             args.preventUi,
         );
         terminal.log("\nDeploying...");
-        const giver = await Account.getGiverForClient(account.client);
         await account.deploy({
             useGiver: giver,
             initFunctionName: initFunction?.name,
             initInput,
         });
         terminal.log(`Contract has deployed at address: ${await account.getAddress()}`);
+        await giver?.account.free();
         await account.free();
         account.client.close();
         TonClient.default.close();

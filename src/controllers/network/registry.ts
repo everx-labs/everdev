@@ -4,6 +4,9 @@ import fs from "fs-extra";
 import {
     tondevHome,
 } from "../../core";
+import {NetworkGiver} from "./giver";
+import {TonClient} from "@tonclient/core";
+import {KnownContracts} from "../../core/known-contracts";
 
 function networkHome() {
     return path.resolve(tondevHome(), "network");
@@ -13,14 +16,19 @@ function registryPath() {
     return path.resolve(networkHome(), "registry.json");
 }
 
+export type NetworkGiverInfo = {
+    name: string,
+    address: string,
+    signer: string,
+    value?: number,
+
+}
+
 export type Network = {
     name: string,
     description?: string,
     endpoints: string[],
-    giver?: {
-        address: string,
-        signer: string,
-    }
+    giver?: NetworkGiverInfo,
 }
 
 export class NetworkRegistry {
@@ -42,10 +50,23 @@ export class NetworkRegistry {
         }
         if (!loaded) {
             this.items = [{
+                name: "se",
+                endpoints: ["http://localhost"],
+                giver: {
+                    name: KnownContracts.GiverV2.name,
+                    address: "0:b5e9240fc2d2f1ff8cbb1d1dee7fb7cae155e5f6320e585fcc685698994a19a5",
+                    signer: "",
+                },
+            }, {
+                name: "dev",
+                endpoints: [
+                    "net.ton.dev", "net1.ton.dev", "net5.ton.dev",
+                ],
+            }, {
                 name: "main",
-                endpoints: ["main.ton.dev"],
+                endpoints: ["main.ton.dev", "main2.ton.dev", "main3.ton.dev", "main4.ton.dev"],
             }];
-            this.default = "main";
+            this.default = "dev";
         }
     }
 
@@ -123,13 +144,26 @@ export class NetworkRegistry {
 
     }
 
-    setGiver(name: string, address: string, signer: string) {
+    async setGiver(name: string, address: string, signer: string, value: number | undefined) {
         const network = this.get(name);
-        network.giver = {
-            address,
-            signer,
-        };
-        this.save();
+        const client = new TonClient({ network: { endpoints: network.endpoints } });
+        try {
+            const giver = await NetworkGiver.get(client, {
+                name: "",
+                address,
+                signer,
+                value,
+            });
+            network.giver = {
+                name: giver.contract.name,
+                address: giver.address,
+                signer,
+                value,
+            };
+            this.save();
+        } finally {
+            await client.close();
+        }
     }
 }
 

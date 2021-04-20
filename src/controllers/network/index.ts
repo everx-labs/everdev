@@ -7,7 +7,10 @@ import {
 import {
     NetworkRegistry,
 } from "./registry";
-import {formatTable} from "../../core/utils";
+import {
+    formatTable,
+    parseNumber,
+} from "../../core/utils";
 
 const forceArg: CommandArg = {
     name: "force",
@@ -17,31 +20,18 @@ const forceArg: CommandArg = {
     defaultValue: "false",
 };
 
-// const networkArg: CommandArg = {
-//     name: "network",
-//     alias: "n",
-//     type: "string",
-//     title: "Network name",
-//     defaultValue: "",
-// };
-//
-// const signerArg: CommandArg = {
-//     name: "signer",
-//     alias: "s",
-//     title: "Signer key name",
-//     type: "string",
-//     defaultValue: "",
-// };
+const nameArg: CommandArg = {
+    isArg: true,
+    name: "name",
+    type: "string",
+    title: "Network name",
+};
 
-export const netAddCommand: Command = {
+export const networkAddCommand: Command = {
     name: "add",
     title: "Add net",
     args: [
-        {
-            isArg: true,
-            name: "name",
-            type: "string",
-        },
+        nameArg,
         {
             isArg: true,
             name: "endpoints",
@@ -61,24 +51,27 @@ export const netAddCommand: Command = {
     },
 };
 
-export const netListCommand: Command = {
+export const networkListCommand: Command = {
     name: "list",
     alias: "l",
-    title: "Prints list of nets",
+    title: "Prints list of networks",
     args: [],
     async run(terminal: Terminal, _args: {}) {
         const registry = new NetworkRegistry();
         const rows = [["Network", "Endpoints", "Giver", "Description"]];
         registry.items.forEach((network) => {
+            const maxEndpoints = 3;
+            const endpoints = network.endpoints.length <= maxEndpoints
+                ? network.endpoints
+                : [...network.endpoints.slice(0, maxEndpoints), "..."];
             rows.push([
                 `${network.name}${network.name === registry.default ? " (Default)" : ""}`,
-                network.endpoints[0] ?? "",
-                network.giver ? `${network.giver.address} (${network.giver.signer})` : "",
+                endpoints.join(", "),
+                network.giver?.address ?? "",
                 network.description ?? "",
             ]);
-            network.endpoints.slice(1).forEach(x => rows.push(["", x, ""]));
         });
-        const table = formatTable(rows, {headerSeparator: true});
+        const table = formatTable(rows, { headerSeparator: true });
         if (table.trim() !== "") {
             terminal.log();
             terminal.log(table);
@@ -87,69 +80,112 @@ export const netListCommand: Command = {
     },
 };
 
-export const netDeleteCommand: Command = {
-    name: "delete",
-    title: "Delete network from registry",
+export const networkInfoCommand: Command = {
+    name: "info",
+    alias: "i",
+    title: "Prints network detailed information",
     args: [
         {
-            isArg: true,
-            name: "name",
-            type: "string",
+            ...nameArg,
+            defaultValue: "",
         },
     ],
+    async run(terminal: Terminal, args: { name: string }) {
+        if (args.name === "") {
+            return networkListCommand.run(terminal, {});
+        }
+        const registry = new NetworkRegistry();
+        const network = registry.get(args.name);
+        const rows = [["Network", network.name]];
+        rows.push(["Endpoints", network.endpoints.join(", ")]);
+        const giver = network.giver;
+        if (giver) {
+            rows.push([
+                "Giver",
+                `${giver.name} at ${giver.address}${giver.signer ? ` signed by ${giver.signer}` : ""}`,
+            ]);
+        }
+        if (network.name === registry.default) {
+            rows.push(["Default", "true"]);
+        }
+        if (network.description) {
+            rows.push(["Description", network.description]);
+        }
+        terminal.log();
+        terminal.log(formatTable(rows));
+        terminal.log();
+    },
+};
+
+export const networkDeleteCommand: Command = {
+    name: "delete",
+    title: "Delete network from registry",
+    args: [nameArg],
     async run(_terminal: Terminal, args: { name: string }) {
         new NetworkRegistry().delete(args.name);
     },
 };
 
-export const netDefaultCommand: Command = {
+export const networkDefaultCommand: Command = {
     name: "default",
     alias: "d",
-    title: "Set default net",
-    args: [
-        {
-            isArg: true,
-            name: "name",
-            type: "string",
-        },
-    ],
+    title: "Set default network",
+    args: [nameArg],
     async run(_terminal: Terminal, args: { name: string }) {
         new NetworkRegistry().setDefault(args.name);
     },
 };
 
 
-// export const netGiverCommand: Command = {
-//     name: "giver",
-//     title: "Set giver for network",
-//     args: [
-//         networkArg,
-//         {
-//             isArg: true,
-//             name: "address",
-//             title: "Giver address",
-//             type: "string",
-//         },
-//         signerArg,
-//     ],
-//     async run(_terminal: Terminal, args: {
-//         network: string,
-//         address: string,
-//         signer: string,
-//     }) {
-//         new NetworkRegistry().setGiver(args.network, args.address, args.signer);
-//     },
-// };
+export const networkGiverCommand: Command = {
+    name: "giver",
+    alias: "g",
+    title: "Set giver for network",
+    args: [
+        nameArg,
+        {
+            isArg: true,
+            name: "address",
+            title: "Giver address",
+            type: "string",
+            defaultValue: "",
+        },
+        {
+            name: "signer",
+            alias: "s",
+            title: "Signer to be used with giver",
+            type: "string",
+            defaultValue: "",
+        },
+        {
+            name: "value",
+            alias: "v",
+            title: "Deploying account initial balance",
+            type: "string",
+            defaultValue: "",
+        },
+    ],
+    async run(_terminal: Terminal, args: {
+        name: string,
+        address: string,
+        signer: string,
+        value: string,
+    }) {
+        const value = parseNumber(args.value);
+        return new NetworkRegistry().setGiver(args.name, args.address, args.signer, value);
+    },
+};
 
 export const NetworkTool: ToolController = {
     name: "network",
     alias: "n",
     title: "Network Registry",
     commands: [
-        netAddCommand,
-        netDeleteCommand,
-        netListCommand,
-        netDefaultCommand,
-        // netGiverCommand,
+        networkAddCommand,
+        networkDeleteCommand,
+        networkListCommand,
+        networkInfoCommand,
+        networkDefaultCommand,
+        networkGiverCommand,
     ],
 };

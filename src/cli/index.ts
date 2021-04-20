@@ -5,7 +5,10 @@ import {
     matchName,
     ToolController,
 } from "../core";
-import {controllers} from "../controllers";
+import {
+    controllers,
+    findControllerAndCommandByAlias,
+} from "../controllers";
 import {
     consoleTerminal,
     formatTable,
@@ -23,6 +26,7 @@ function findOptionArg(command: Command, name: string): CommandArg | undefined {
     }
     return undefined;
 }
+
 
 class CommandLine {
     args: { help?: boolean, [name: string]: any } = {};
@@ -100,6 +104,17 @@ class CommandLine {
         }
     }
 
+    setCommand(command: Command) {
+        this.command = command;
+        for (const arg of this.command.args ?? []) {
+            this.unresolved.set(arg.name, arg);
+            if (arg.isArg) {
+                this.positional.push(arg);
+            }
+        }
+
+    }
+
     async parse(programArgs: string[]) {
         for (const arg of programArgs) {
             if (arg.startsWith("-")) {
@@ -112,20 +127,22 @@ class CommandLine {
                 }
                 await this.resolveValue(this.positional[0], arg);
             } else if (this.controller) {
-                this.command = this.controller.commands.find(x => matchName(x, arg));
-                if (!this.command) {
+                const command = this.controller.commands.find(x => matchName(x, arg));
+                if (command) {
+                    this.setCommand(command);
+                } else {
                     throw new Error(`Unknown command: ${arg}`);
-                }
-                for (const arg of this.command.args ?? []) {
-                    this.unresolved.set(arg.name, arg);
-                    if (arg.isArg) {
-                        this.positional.push(arg);
-                    }
                 }
             } else {
                 this.controller = controllers.find(x => matchName(x, arg));
                 if (!this.controller) {
-                    throw new Error(`Unknown tool: ${arg}.`);
+                    const byAlias = findControllerAndCommandByAlias(arg);
+                    if (byAlias) {
+                        this.controller = byAlias.controller;
+                        this.setCommand(byAlias.command);
+                    } else {
+                        throw new Error(`Unknown tool: ${arg}.`);
+                    }
                 }
             }
         }
@@ -149,7 +166,7 @@ async function missingArgError(arg: CommandArg): Promise<Error> {
                 ["Available variants:", ""],
                 ...variants.map(x => [x.value, x.description ?? ""]),
             ],
-            {headerSeparator: true},
+            { headerSeparator: true },
         )
         : "";
     throw new Error(`Missing required ${arg.name}${variantsString}`);
