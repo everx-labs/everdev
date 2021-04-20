@@ -69,6 +69,6 @@ export async function getAccount(terminal: Terminal, args: {
     terminal.log("\nConfiguration\n");
     terminal.log(`  Network: ${network.name}`);
     terminal.log(`  Signer:  ${signerItem?.name ?? "None"}\n`);
-    terminal.log(`Address: ${await account.getAddress()}`);
+    terminal.log(`Address:   ${await account.getAddress()}`);
     return account;
 }

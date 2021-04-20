@@ -102,11 +102,18 @@ export const contractInfoCommand: Command = {
         const account = await getAccount(terminal, args);
         const parsed = await account.getAccount();
         const accType = parsed.acc_type as AccountType;
+        if (account.contract.tvc) {
+            const boc = account.client.boc;
+            const codeHash = (await boc.get_boc_hash({
+                boc: (await boc.get_code_from_tvc({ tvc: account.contract.tvc })).code,
+            })).hash;
+            terminal.log(`Code Hash: ${codeHash}`);
+        }
         if (accType === AccountType.nonExist) {
-            terminal.log("Account: Not exists");
+            terminal.log("Account:   Not exists");
         } else {
-            terminal.log(`Account: ${parsed.acc_type_name}`);
-            terminal.log(`Details: ${JSON.stringify(parsed, undefined, "    ")}`);
+            terminal.log(`Account:   ${parsed.acc_type_name}`);
+            terminal.log(`Details:   ${JSON.stringify(parsed, undefined, "    ")}`);
         }
         await account.free();
         account.client.close();

@@ -10,6 +10,8 @@ All notable changes to this project will be documented in this file.
 - `network` controller for network registry management. 
 - `contract` controller for contract management.
 - `tondev js wrap` generates `code` and `codeHash` fields in addition to `tvc`.
+- `tondev contract info` prints code hash.
+  
 - short aliases for controllers, commands and options.
   For example instead of using `tondev network list` 
   you can use `tondev n l` and even shorter `tondev nl`.
