@@ -15,6 +15,7 @@ import {jsWrapCommand} from "./wrap";
 
 export const jsCreateCommand: Command = {
     name: "create",
+    alias: "c",
     title: "Create FreeTON JS App",
     args: [{
         isArg: true,
@@ -65,6 +66,7 @@ export const jsDemoCommand: Command = {
 
 export const JsApps: ToolController = {
     name: "js",
+    alias: "j",
     title: "JavaScript Code Generators",
     commands: [
         jsCreateCommand,
