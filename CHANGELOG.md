@@ -6,9 +6,12 @@ All notable changes to this project will be documented in this file.
 
 ### New
 
-- `signer` controller for signer registry management. 
+- `signer` controller for signer registry management.
 - `network` controller for network registry management. 
-- `contract` controller for contract management. 
+- `contract` controller for contract management.
+- short aliases for controllers, commands and options.
+  For example instead of using `tondev network list` 
+  you can use `tondev n l` and even shorter `tondev nl`.
 
 ### Fixed
 
