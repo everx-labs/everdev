@@ -14,6 +14,7 @@ import {
     formatTable,
 } from "../core/utils";
 import {printUsage} from "./help";
+import {printSummaryInfo} from "./summary-info";
 
 function findOptionArg(command: Command, name: string): CommandArg | undefined {
     if (name.startsWith("--")) {
@@ -35,6 +36,7 @@ class CommandLine {
     positional: CommandArg[] = [];
     unresolved = new Map<string, CommandArg>();
     pending: CommandArg | undefined = undefined;
+    printSummaryInfo = false;
 
     setArgValue(arg: CommandArg, value: any) {
         const name = arg.name
@@ -140,6 +142,9 @@ class CommandLine {
                     if (byAlias) {
                         this.controller = byAlias.controller;
                         this.setCommand(byAlias.command);
+                    } else if (arg.toLowerCase().trim() === "info") {
+                        this.printSummaryInfo = true;
+                        break;
                     } else {
                         throw new Error(`Unknown tool: ${arg}.`);
                     }
@@ -149,7 +154,7 @@ class CommandLine {
         if (this.pending) {
             await this.resolveValue(this.pending, undefined);
         }
-        if (this.args.help) {
+        if (this.args.help || this.printSummaryInfo) {
             return;
         }
         for (const arg of this.unresolved.values()) {
@@ -175,6 +180,10 @@ async function missingArgError(arg: CommandArg): Promise<Error> {
 export async function run() {
     const parser = new CommandLine();
     await parser.parse(process.argv.slice(2));
+    if (parser.printSummaryInfo) {
+        await printSummaryInfo();
+        return;
+    }
     const {
         controller,
         command,

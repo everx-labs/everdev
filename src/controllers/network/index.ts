@@ -73,9 +73,7 @@ export const networkListCommand: Command = {
         });
         const table = formatTable(rows, { headerSeparator: true });
         if (table.trim() !== "") {
-            terminal.log();
             terminal.log(table);
-            terminal.log();
         }
     },
 };
@@ -111,9 +109,7 @@ export const networkInfoCommand: Command = {
         if (network.description) {
             rows.push(["Description", network.description]);
         }
-        terminal.log();
         terminal.log(formatTable(rows));
-        terminal.log();
     },
 };
 

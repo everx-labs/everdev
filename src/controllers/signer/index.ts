@@ -179,9 +179,7 @@ export const signerListCommand: Command = {
         ]));
         const table = formatTable(rows, { headerSeparator: true });
         if (table.trim() !== "") {
-            terminal.log();
             terminal.log(table);
-            terminal.log();
         }
     },
 };
