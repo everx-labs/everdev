@@ -128,11 +128,11 @@ export class SignerRegistry {
                 );
             }
         }
-        const key = this.items.find(x => x.name.toLowerCase() === findName);
-        if (key) {
-            return key;
+        const signer = this.items.find(x => x.name.toLowerCase() === findName);
+        if (signer) {
+            return signer;
         }
-        throw new Error(`Key not found: ${name}`);
+        throw new Error(`Signer not found: ${name}`);
     }
 
     delete(name: string) {
