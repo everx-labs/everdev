@@ -30,6 +30,11 @@ const fileArg: CommandArg = {
     nameRegExp: /\.abi$/i,
 };
 
+const infoFileArg: CommandArg = {
+    ...fileArg,
+    defaultValue: "",
+};
+
 const networkOpt: CommandArg = {
     name: "network",
     alias: "n",
@@ -101,7 +106,7 @@ export const contractInfoCommand: Command = {
     alias: "i",
     title: "Prints contract summary",
     args: [
-        fileArg,
+        infoFileArg,
         networkOpt,
         signerOpt,
         addressOpt,

@@ -53,11 +53,15 @@ export async function getAccount(terminal: Terminal, args: {
             endpoints: network.endpoints,
         },
     });
-    const signerItem = args.signer.trim().toLowerCase() === "none"
+    const infoByAddressMode = args.file === "" && args.address !== "";
+    const signerItem = infoByAddressMode || args.signer.trim().toLowerCase() === "none"
         ? undefined
         : new SignerRegistry().get(args.signer);
     const signer = signerItem ? await createSigner(signerItem.name) : signerNone();
-    const contract = loadContract(args.file);
+    const contract =
+        infoByAddressMode
+            ? { abi: {} }
+            : loadContract(args.file);
     const options: AccountOptions = {
         signer,
         client,
