@@ -5,10 +5,14 @@ All notable changes to this project will be documented in this file.
 ## [0.5.0] - 2021-04-08
 
 ### New
-
-- `signer` controller for signer registry management.
-- `network` controller for network registry management. 
-- `contract` controller for contract management.
+- `clang` controller for C++ compiler: 
+  install, compile with 1 command, manage versions, etc.
+- `signer` controller for signer registry management:
+  generate keys, import keys and mnemonics, specify default signer, etc.
+- `network` controller for network registry management:
+  add networks, configure network giver, specify default network, etc.
+- `contract` controller for contract management:
+- get contract info summary, deploy, run, run-local, run-executor
 - `tondev js wrap` generates `code` and `codeHash` fields in addition to `tvc`.
 - `tondev contract info` prints code hash.
 - `tondev info` command prints a summary information from all controllers.
