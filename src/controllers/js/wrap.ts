@@ -5,6 +5,7 @@ import {
 } from "../../core";
 import * as fs from "fs";
 import * as path from "path";
+import {TonClient} from "@tonclient/core";
 
 enum ExportFormat {
     CommonJs = "commonjs",
@@ -29,6 +30,7 @@ function getExportSection(exportFormat: ExportFormat, name: string): string {
 
 export const jsWrapCommand: Command = {
     name: "wrap",
+    alias: "w",
     title: "Wrap ABI file into JavaScript code.",
     args: [
         {
@@ -102,8 +104,15 @@ export const jsWrapCommand: Command = {
         code.push(`    abi: ${abiCode},`);
         const tvcPath = path.resolve(path.dirname(abiPath), `${name}.tvc`);
         terminal.log(tvcPath);
+
         if (fs.existsSync(tvcPath)) {
-            code.push(`    tvc: "${fs.readFileSync(tvcPath).toString("base64")}",`);
+            const tvc = fs.readFileSync(tvcPath).toString("base64");
+            code.push(`    tvc: "${tvc}",`);
+            const client = new TonClient();
+            const tvcCode = (await client.boc.get_code_from_tvc({ tvc })).code;
+            code.push(`    code: "${tvcCode}",`);
+            code.push(`    codeHash: "${(await client.boc.get_boc_hash({ boc: tvcCode })).hash}",`);
+            await client.close();
         }
         code.push("};");
         code.push(getExportSection(args.export.toLowerCase() as ExportFormat, contractName));

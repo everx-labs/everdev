@@ -9,12 +9,12 @@ import {
     TonClient,
 } from "@tonclient/core";
 
-function signersHome() {
-    return path.resolve(tondevHome(), "signers");
+function signerHome() {
+    return path.resolve(tondevHome(), "signer");
 }
 
 function registryPath() {
-    return path.resolve(signersHome(), "registry.json");
+    return path.resolve(signerHome(), "registry.json");
 }
 
 export enum MnemonicDictionary {
@@ -56,8 +56,8 @@ export class SignerRegistry {
     }
 
     save() {
-        if (!fs.pathExistsSync(signersHome())) {
-            fs.mkdirSync(signersHome(), {recursive: true});
+        if (!fs.pathExistsSync(signerHome())) {
+            fs.mkdirSync(signerHome(), {recursive: true});
         }
         fs.writeFileSync(registryPath(), JSON.stringify({
             items: this.items,
@@ -109,16 +109,38 @@ export class SignerRegistry {
         }, overwrite);
     }
 
+    find(name: string): SignerRegistryItem | undefined {
+        let findName = name.toLowerCase().trim();
+        if (findName === "") {
+            findName = this.default ?? "";
+        }
+        return this.items.find(x => x.name.toLowerCase() === findName);
+    }
+
     get(name: string): SignerRegistryItem {
         let findName = name.toLowerCase().trim();
         if (findName === "") {
             findName = this.default ?? "";
         }
-        const key = this.items.find(x => x.name.toLowerCase() === findName);
-        if (key) {
-            return key;
+        if (findName === "") {
+            if (this.items.length === 0) {
+                throw new Error(
+                    "There are no signers defined. " +
+                    "Use \"tondev signer add\" command to register a signer.",
+                );
+            } else {
+                throw new Error(
+                    "There is no default signer. " +
+                    "Use \"tondev signer default\" command to set the default signer. " +
+                    "Or explicitly specify the signer with \"--signer\" option.",
+                );
+            }
         }
-        throw new Error(`Key not found: ${name}`);
+        const signer = this.items.find(x => x.name.toLowerCase() === findName);
+        if (signer) {
+            return signer;
+        }
+        throw new Error(`Signer not found: ${name}`);
     }
 
     delete(name: string) {

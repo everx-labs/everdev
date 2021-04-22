@@ -12,9 +12,15 @@ import {TonClient} from "@tonclient/core";
 import {getAccount} from "./accounts";
 import {
     getRunParams,
-    resolveInputs,
     logRunResult,
+    resolveParams,
 } from "./run";
+import {NetworkGiver} from "../network/giver";
+import {NetworkRegistry} from "../network/registry";
+import {
+    parseNumber,
+    reduceBase64String,
+} from "../../core/utils";
 
 const fileArg: CommandArg = {
     isArg: true,
@@ -22,6 +28,11 @@ const fileArg: CommandArg = {
     title: "ABI file",
     type: "file",
     nameRegExp: /\.abi$/i,
+};
+
+const infoFileArg: CommandArg = {
+    ...fileArg,
+    defaultValue: "",
 };
 
 const networkOpt: CommandArg = {
@@ -59,7 +70,31 @@ const functionArg: CommandArg = {
 const inputOpt: CommandArg = {
     name: "input",
     alias: "i",
-    title: "Function parameters (name=value,...)",
+    title: "Function parameters as name:value,...",
+    description: "Array values must be specified as [item,...]. " +
+        "Spaces are not allowed. If value contains spaces or special symbols \"[],:\" " +
+        "it must be enclosed in \"\" or ''",
+    type: "string",
+    defaultValue: "",
+};
+
+const dataOpt: CommandArg = {
+    name: "data",
+    alias: "d",
+    title: "Deploying initial data as name:value,...",
+    description:
+        "This data is required to calculate the account address and to deploy contract.\n" +
+        "Array values must be specified as [item,...]. " +
+        "Spaces are not allowed. If value contains spaces or special symbols \"[],:\" " +
+        "it must be enclosed in \"\" or ''",
+    type: "string",
+    defaultValue: "",
+};
+
+const valueOpt: CommandArg = {
+    name: "value",
+    alias: "v",
+    title: "Deploying balance value in nano tokens",
     type: "string",
     defaultValue: "",
 };
@@ -67,35 +102,65 @@ const inputOpt: CommandArg = {
 const preventUiOpt: CommandArg = {
     name: "prevent-ui",
     alias: "p",
-    title: "User Interaction",
+    title: "Prevent user interaction",
+    description:
+        "Useful in shell scripting e.g. on server or in some automating to disable " +
+        "waiting for the user input.\n" +
+        "Instead tondev will abort with error.\n" +
+        "For example when some parameters are missing in command line " +
+        "then ton dev will prompt user to input values for missing parameters " +
+        "(or fails if prevent-ui option is specified).",
     type: "boolean",
     defaultValue: "false",
 };
+
+const DEFAULT_TOPUP_VALUE = 10_000_000_000;
 
 export const contractInfoCommand: Command = {
     name: "info",
     alias: "i",
     title: "Prints contract summary",
     args: [
-        fileArg,
+        infoFileArg,
         networkOpt,
         signerOpt,
+        dataOpt,
         addressOpt,
     ],
     async run(terminal: Terminal, args: {
         file: string,
         network: string,
-        address: string,
         signer: string,
+        data: string,
+        address: string,
     }) {
+        if (args.file === "" && args.address === "") {
+            throw new Error("File argument or address option must be specified");
+        }
         const account = await getAccount(terminal, args);
         const parsed = await account.getAccount();
         const accType = parsed.acc_type as AccountType;
+        if (account.contract.tvc) {
+            const boc = account.client.boc;
+            const codeHash = (await boc.get_boc_hash({
+                boc: (await boc.get_code_from_tvc({ tvc: account.contract.tvc })).code,
+            })).hash;
+            terminal.log(`Code Hash: ${codeHash} (from TVC file)`);
+        }
         if (accType === AccountType.nonExist) {
-            terminal.log("Account: Doesn't exist");
+            terminal.log("Account:   Doesn't exist");
         } else {
-            terminal.log(`Account: ${parsed.acc_type_name}`);
-            terminal.log(`Details: ${JSON.stringify(parsed, undefined, "    ")}`);
+            const token = BigInt(1000000000);
+            const balance = BigInt(parsed.balance);
+            let tokens = Number(balance / token) + Number(balance % token) / Number(token);
+            const tokensString = tokens < 1 ? tokens.toString() : `≈ ${Math.round(tokens)}`;
+            terminal.log(`Account:   ${parsed.acc_type_name}`);
+            terminal.log(`Balance:   ${balance} (${tokensString} tokens)`);
+            parsed.boc = reduceBase64String(parsed.boc);
+            parsed.code = reduceBase64String(parsed.code);
+            parsed.data = reduceBase64String(parsed.data);
+
+            terminal.log(`Details:   ${JSON.stringify(parsed, undefined, "    ")}`);
         }
         await account.free();
         account.client.close();
@@ -108,39 +173,129 @@ export const contractDeployCommand: Command = {
     title: "Deploy contract to network",
     args: [
         fileArg,
-        functionArg,
         networkOpt,
         signerOpt,
+        functionArg,
         inputOpt,
+        dataOpt,
+        valueOpt,
         preventUiOpt,
     ],
     async run(terminal: Terminal, args: {
         file: string,
         network: string,
-        address: string,
         signer: string,
         function: string,
         input: string,
+        data: string,
+        value: string,
         preventUi: boolean,
     }) {
-        const account = await getAccount(terminal, args);
+        let account = await getAccount(terminal, args);
+        const info = await account.getAccount();
+        if (info.acc_type === AccountType.active) {
+            throw new Error(`Account ${await account.getAddress()} already deployed.`);
+        }
+        const network = new NetworkRegistry().get(args.network);
+        const currentBalance = BigInt(info.balance ?? 0);
+        const requiredBalance = parseNumber(args.value) ?? network.giver?.value ?? DEFAULT_TOPUP_VALUE;
+
+        if (currentBalance < BigInt(requiredBalance)) {
+            const giverInfo = new NetworkRegistry().get(args.network).giver;
+            if (!giverInfo) {
+                throw new Error(`Account ${await account.getAddress()} has low balance to deploy.\n` +
+                    `You have to create an enough balance before deploying in two ways: \n` +
+                    `sending some value to this address\n` +
+                    `or setting up a giver for the network with \`tondev network giver\` command.`,
+                );
+            }
+            const giver = await NetworkGiver.get(account.client, giverInfo);
+            giver.value = requiredBalance;
+            await giver.sendTo(await account.getAddress(), requiredBalance);
+            await giver.account.free();
+        }
+
+        const dataParams = account.contract.abi.data ?? [];
+        if (dataParams.length > 0) {
+            const initData = await resolveParams(
+                terminal,
+                `\nDeploying initial data:\n`,
+                dataParams,
+                args.data ?? "",
+                args.preventUi,
+            );
+            await account.free();
+            account = new Account(account.contract, {
+                client: account.client,
+                address: await account.getAddress(),
+                signer: account.signer,
+                initData,
+            });
+        }
+
         const initFunctionName = args.function.toLowerCase() === "none" ? "" : (args.function || "constructor");
         const initFunction = account.contract.abi.functions?.find(x => x.name === initFunctionName);
-        const initInput = await resolveInputs(
+        const initInput = await resolveParams(
             terminal,
-            "Enter constructor parameters",
+            "\nParameters of constructor:\n",
             initFunction?.inputs ?? [],
             args.input,
             args.preventUi,
         );
         terminal.log("\nDeploying...");
-        const giver = await Account.getGiverForClient(account.client);
         await account.deploy({
-            useGiver: giver,
             initFunctionName: initFunction?.name,
             initInput,
+
         });
         terminal.log(`Contract has deployed at address: ${await account.getAddress()}`);
+        await account.free();
+        account.client.close();
+        TonClient.default.close();
+        process.exit(0);
+    },
+};
+
+
+export const contractTopUpCommand: Command = {
+    name: "topup",
+    alias: "t",
+    title: "Top up account from giver",
+    args: [
+        infoFileArg,
+        addressOpt,
+        networkOpt,
+        signerOpt,
+        dataOpt,
+        valueOpt,
+    ],
+    async run(terminal: Terminal, args: {
+        file: string,
+        address: string,
+        network: string,
+        signer: string,
+        data: string,
+        value: string,
+    }) {
+        if (args.file === "" && args.address === "") {
+            throw new Error("File argument or address option must be specified");
+        }
+        const account = await getAccount(terminal, args);
+
+        const network = new NetworkRegistry().get(args.network);
+        const networkGiverInfo = network.giver;
+        if (!networkGiverInfo) {
+            throw new Error(
+                `Missing giver for the network ${network.name}.\n` +
+                `You have to set up a giver for this network with \`tondev network giver\` command.`,
+            );
+        }
+        const giver = await NetworkGiver.get(account.client, networkGiverInfo);
+        const value = parseNumber(args.value) ?? giver.value ?? 1000000000;
+        giver.value = value;
+        await giver.sendTo(await account.getAddress(), value);
+        terminal.log(`${giver.value} were sent to address ${await account.getAddress()}`);
+        await giver.account.free();
         await account.free();
         account.client.close();
         TonClient.default.close();
@@ -155,18 +310,20 @@ export const contractRunCommand: Command = {
     title: "Run contract deployed on the network",
     args: [
         fileArg,
-        functionArg,
         networkOpt,
         signerOpt,
+        dataOpt,
         addressOpt,
+        functionArg,
         inputOpt,
         preventUiOpt,
     ],
     async run(terminal: Terminal, args: {
         file: string,
         network: string,
-        address: string,
         signer: string,
+        data: string,
+        address: string,
         function: string,
         input: string,
         preventUi: boolean,
@@ -193,18 +350,20 @@ export const contractRunLocalCommand: Command = {
     title: "Run contract locally on TVM",
     args: [
         fileArg,
-        functionArg,
         networkOpt,
         signerOpt,
+        dataOpt,
         addressOpt,
+        functionArg,
         inputOpt,
         preventUiOpt,
     ],
     async run(terminal: Terminal, args: {
         file: string,
         network: string,
-        address: string,
         signer: string,
+        data: string,
+        address: string,
         function: string,
         input: string,
         preventUi: boolean,
@@ -234,18 +393,20 @@ export const contractRunExecutorCommand: Command = {
     title: "Emulate transaction executor locally on TVM",
     args: [
         fileArg,
-        functionArg,
         networkOpt,
         signerOpt,
+        dataOpt,
         addressOpt,
+        functionArg,
         inputOpt,
         preventUiOpt,
     ],
     async run(terminal: Terminal, args: {
         file: string,
         network: string,
-        address: string,
         signer: string,
+        data: string,
+        address: string,
         function: string,
         input: string,
         preventUi: boolean,
@@ -273,6 +434,7 @@ export const Contract: ToolController = {
     title: "Smart Contracts",
     commands: [
         contractInfoCommand,
+        contractTopUpCommand,
         contractDeployCommand,
         contractRunCommand,
         contractRunLocalCommand,

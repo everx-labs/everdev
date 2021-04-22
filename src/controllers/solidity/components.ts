@@ -15,7 +15,7 @@ export const components = {
 
     linker: new Component(solidityHome(), "tvm_linker", {
         executable: true,
-        resolveVersionRegExp: /TVM linker\s*([0-9.]+)/,
+        resolveVersionRegExp: /[^0-9]*([0-9.]+)/,
     }),
 
     stdlib: new class extends Component {
