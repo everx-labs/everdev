@@ -15,6 +15,7 @@ import {
     SignerRegistry,
     SignerRegistryItem,
 } from "../signer/registry";
+import {ParamParser} from "./param-parser";
 
 function findExisting(paths: string[]): string | undefined {
     return paths.find(x => fs.existsSync(x));
@@ -47,8 +48,9 @@ function loadContract(filePath: string): ContractPackage {
 export async function getAccount(terminal: Terminal, args: {
     file: string,
     network: string,
-    address?: string,
     signer: string,
+    data: string,
+    address?: string,
 }): Promise<Account> {
     const address = args.address ?? "";
     const network = new NetworkRegistry().get(args.network);
@@ -64,7 +66,7 @@ export async function getAccount(terminal: Terminal, args: {
     if (signerArg === "none") {
         signerItem = undefined;
     } else if (signerArg === "" && !signers.default && address !== "") {
-        signerItem = undefined
+        signerItem = undefined;
     } else {
         signerItem = signers.get(signerArg);
     }
@@ -73,6 +75,13 @@ export async function getAccount(terminal: Terminal, args: {
         signer,
         client,
     };
+    const abiData = contract.abi.data ?? [];
+    if (abiData.length > 0 && args.data !== "") {
+        options.initData = ParamParser.components({
+            name: "data",
+            type: "tuple",
+        }, args.data);
+    }
     if (address !== "") {
         options.address = address;
     }
@@ -80,7 +89,7 @@ export async function getAccount(terminal: Terminal, args: {
     terminal.log("\nConfiguration\n");
     terminal.log(`  Network: ${network.name} (${NetworkRegistry.getEndpointsSummary(network)})`);
     terminal.log(`  Signer:  ${signerItem ? `${signerItem.name} (public ${signerItem.keys.public})` : "None"}\n`);
-    if (address === "" && (account.contract.abi.data ?? []).length > 0) {
+    if (address === "" && abiData.length > 0 && !options.initData) {
         terminal.log(`Address:   Can't calculate address: additional deploying data required.`);
     } else {
         terminal.log(`Address:   ${await account.getAddress()}${address === "" ? " (calculated from TVC and signer public)" : ""}`);

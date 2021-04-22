@@ -82,7 +82,9 @@ const dataOpt: CommandArg = {
     name: "data",
     alias: "d",
     title: "Deploying initial data as name:value,...",
-    description: "Array values must be specified as [item,...]. " +
+    description:
+        "This data is required to calculate the account address and to deploy contract.\n" +
+        "Array values must be specified as [item,...]. " +
         "Spaces are not allowed. If value contains spaces or special symbols \"[],:\" " +
         "it must be enclosed in \"\" or ''",
     type: "string",
@@ -120,13 +122,15 @@ export const contractInfoCommand: Command = {
         infoFileArg,
         networkOpt,
         signerOpt,
+        dataOpt,
         addressOpt,
     ],
     async run(terminal: Terminal, args: {
         file: string,
         network: string,
-        address: string,
         signer: string,
+        data: string,
+        address: string,
     }) {
         if (args.file === "" && args.address === "") {
             throw new Error("File argument or address option must be specified");
@@ -167,9 +171,9 @@ export const contractDeployCommand: Command = {
     title: "Deploy contract to network",
     args: [
         fileArg,
-        functionArg,
         networkOpt,
         signerOpt,
+        functionArg,
         inputOpt,
         dataOpt,
         valueOpt,
@@ -178,7 +182,6 @@ export const contractDeployCommand: Command = {
     async run(terminal: Terminal, args: {
         file: string,
         network: string,
-        address: string,
         signer: string,
         function: string,
         input: string,
@@ -258,13 +261,15 @@ export const contractTopUpCommand: Command = {
         addressOpt,
         networkOpt,
         signerOpt,
+        dataOpt,
         valueOpt,
     ],
     async run(terminal: Terminal, args: {
         file: string,
-        network: string,
         address: string,
+        network: string,
         signer: string,
+        data: string,
         value: string,
     }) {
         if (args.file === "" && args.address === "") {
@@ -300,18 +305,20 @@ export const contractRunCommand: Command = {
     title: "Run contract deployed on the network",
     args: [
         fileArg,
-        functionArg,
         networkOpt,
         signerOpt,
+        dataOpt,
         addressOpt,
+        functionArg,
         inputOpt,
         preventUiOpt,
     ],
     async run(terminal: Terminal, args: {
         file: string,
         network: string,
-        address: string,
         signer: string,
+        data: string,
+        address: string,
         function: string,
         input: string,
         preventUi: boolean,
@@ -338,18 +345,20 @@ export const contractRunLocalCommand: Command = {
     title: "Run contract locally on TVM",
     args: [
         fileArg,
-        functionArg,
         networkOpt,
         signerOpt,
+        dataOpt,
         addressOpt,
+        functionArg,
         inputOpt,
         preventUiOpt,
     ],
     async run(terminal: Terminal, args: {
         file: string,
         network: string,
-        address: string,
         signer: string,
+        data: string,
+        address: string,
         function: string,
         input: string,
         preventUi: boolean,
@@ -379,18 +388,20 @@ export const contractRunExecutorCommand: Command = {
     title: "Emulate transaction executor locally on TVM",
     args: [
         fileArg,
-        functionArg,
         networkOpt,
         signerOpt,
+        dataOpt,
         addressOpt,
+        functionArg,
         inputOpt,
         preventUiOpt,
     ],
     async run(terminal: Terminal, args: {
         file: string,
         network: string,
-        address: string,
         signer: string,
+        data: string,
+        address: string,
         function: string,
         input: string,
         preventUi: boolean,
