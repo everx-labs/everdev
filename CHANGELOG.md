@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file.
 - `network` controller for network registry management:   
   add networks, configure network giver, specify default network, etc.   
 - `contract` controller for contract management:   
-- get contract info summary, deploy, run, run-local, run-executor   
+- get contract info summary, top up balance, deploy, run, run-local, run-executor   
 - `tondev js wrap` generates `code` and `codeHash` fields in addition to `tvc`.   
 - `tondev contract info` prints code hash.   
 - `tondev info` command prints a summary information from all controllers.   
