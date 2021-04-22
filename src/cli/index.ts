@@ -119,7 +119,7 @@ class CommandLine {
 
     async parse(programArgs: string[]) {
         for (let arg of programArgs) {
-            if (arg.startsWith("-")) {
+            if (arg.startsWith("-") && !this.pending) {
                 await this.parseOptionName(arg);
             } else {
                 arg = arg.trim();
