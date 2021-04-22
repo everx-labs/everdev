@@ -109,6 +109,14 @@ export class SignerRegistry {
         }, overwrite);
     }
 
+    find(name: string): SignerRegistryItem | undefined {
+        let findName = name.toLowerCase().trim();
+        if (findName === "") {
+            findName = this.default ?? "";
+        }
+        return this.items.find(x => x.name.toLowerCase() === findName);
+    }
+
     get(name: string): SignerRegistryItem {
         let findName = name.toLowerCase().trim();
         if (findName === "") {
