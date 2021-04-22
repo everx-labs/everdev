@@ -152,7 +152,7 @@ export const networkGiverCommand: Command = {
         {
             name: "value",
             alias: "v",
-            title: "Deploying account initial balance",
+            title: "Deploying account initial balance in nanotokens",
             type: "string",
             defaultValue: "",
         },
