@@ -30,12 +30,18 @@ Download and install all the core [TON.DEV](https://docs.ton.dev/86757ecb2/p/04a
       - [Version](#version)
       - [Update](#update-1)
       - [Set](#set)
+    - [C++](#c)
+      - [Create your first contract](#create-your-first-contract-1)
+      - [Compile](#compile-1)
+      - [Version](#version-1)
+      - [Update](#update-2)
+      - [Set](#set-1)  
     - [TON OS Startup Edition(SE)](#ton-os-startup-editionse)
       - [Start](#start)
-      - [Version](#version-1)
-      - [Set](#set-1)
+      - [Version](#version-2)
+      - [Set](#set-2)
       - [Reset](#reset)
-      - [Update](#update-2)
+      - [Update](#update-3)
       - [Stop](#stop)
       - [Info](#info)
     - [SDK](#sdk)
@@ -45,9 +51,30 @@ Download and install all the core [TON.DEV](https://docs.ton.dev/86757ecb2/p/04a
       - [Create contract JS wrapper](#create-contract-js-wrapper)
     - [tonos-cli](#tonos-cli)
       - [Install](#install-1)
-      - [Version](#version-2)
-      - [Set](#set-2)
-      - [Update](#update-3)
+      - [Version](#version-3)
+      - [Set](#set-3)
+      - [Update](#update-4)
+    - [Signer Tool](#signer-tool)
+      - [Add a signer with randomly generated keys](#add-a-signer-with-randomly-generated-keys)
+      - [Add a signer with specific keys](#add-a-signer-with-specific-keys)
+      - [List registered signers](#list-registered-signers)
+      - [Get signer details](#get-signer-details)
+      - [Set default signer](#set-default-signer)
+      - [Delete a signer](#delete-a-signer)
+    - [Network Tool](#network-tool)
+      - [Add a network](#add-a-network)
+      - [Set a giver for a network](#set-a-giver-for-a-network)
+      - [List registered networks](#list-registered-networks)
+      - [Set default network](#set-default-network)
+      - [Delete a network](#delete-a-network)
+    - [Contract Management](#contract-management)
+      - [View contract info](#view-contract-info)
+      - [Deploy contract](#deploy-contract)
+      - [Run contract deployed on the network](#run-contract-deployed-on-the-network)
+      - [Run contract locally on TVM](#run-contract-locally-on-tvm)
+      - [Emulate transaction executor locally on TVM](#emulate-transaction-executor-locally-on-tvm)
+      - [Top up contract balance from giver](#top-up-contract-balance-from-giver)
+  - [View controller info](#view-controller-info)
   - [TONDEV Extensibility](#tondev-extensibility)
   - [Backlog](#backlog)
     - [Debot](#debot)
@@ -69,7 +96,7 @@ Each component is downloaded and installed automatically for the target platform
 
 - [Debot](https://github.com/tonlabs/debots) - **soon as part of tondev**  
 - [Solidity Compiler](https://github.com/tonlabs/TON-Solidity-Compiler)
-- [C/C++ Compiler](https://github.com/tonlabs/TON-Compiler) - **soon as part of tondev**  
+- [C/C++ Compiler](https://github.com/tonlabs/TON-Compiler)
 - [TON OS Startup Edition](https://github.com/tonlabs/tonos-se) – 
   Local blockchain for development and testing
 - [TestSuite4](https://github.com/tonlabs/TestSuite4) – **soon as part of tondev**  
@@ -133,6 +160,8 @@ main();
 ```shell
 tondev <tool> <command> ...args
 ```
+Some tools (network, signer, contract, js) and commands have short aliases. For example instead of using `tondev network list` you can use `tondev n l` and even shorter `tondev nl`.
+
 
 ### Solidity
 
@@ -147,7 +176,7 @@ tondev sol create Contract
 #### Compile
 
 This command compiles and links a selected Solidity contract. 
-After successful compilation you get .abi.json and .tvc files that you can later [use in your DApps to deploy and call contract methods](https://docs.ton.dev/86757ecb2/p/07f1a5-add-contract-to-your-app-/b/462f33).
+After successful compilation you get .abi.json and .tvc files that you can later [use in your DApps to deploy and run contract methods](https://docs.ton.dev/86757ecb2/p/07f1a5-add-contract-to-your-app-/b/462f33).
 
 ```shell
 tondev sol compile Contract.sol
@@ -178,6 +207,53 @@ This command sets the compiler and linker versions and downloads them if needed.
 tondev sol set --compiler 0.38.0 --linker 0.23.54
 ```
 **Attention!** At the moment linker does not support versioning, so dispite the fact that its functionality changes over time, version stays the same (0.1.0).Use --force option to force update of it as well.
+
+### C++
+
+#### Create your first contract
+
+This command creates a basic C++ contract with comments that you can observe and compile.
+
+```shell
+tondev clang create Contract
+```
+
+#### Compile
+
+This command compiles and links a selected C++ contract.
+After successful compilation you get .abi.json and .tvc files that you can later [use in your DApps to deploy and run contract methods](https://docs.ton.dev/86757ecb2/p/07f1a5-add-contract-to-your-app-/b/462f33).
+
+```shell
+tondev clang compile Contract.cpp
+```
+
+#### Version
+
+This command shows the currently installed C++ compiler version.
+
+```shell
+tondev clang version
+```
+
+#### Update
+
+This command updates the compiler to the latest version.
+
+```shell
+tondev clang update
+```
+
+Use `--force` or `-f` option to force reinstall, if the compiler is already up to date.
+
+#### Set
+
+This command sets the compiler version and downloads it if needed.
+
+```shell
+tondev clang set --compiler 7.0.0
+```
+
+Use `--force` or `-f` option to force reinstall, if the current version is the same as the requested version.
 
 ### TON OS Startup Edition(SE)
 
@@ -351,94 +427,663 @@ This command updates tonos-cli version to the latest
 tondev tonos-cli update
 ```
 
-### Signer Registry
+### Signer Tool
 
 Signer registry is a centralized place where you can store your development keys.
 
 Each signer in registry has an unique user defined name. All tondev commands 
-that requires signing or encryption refers to the signer by name.
+that require signing or encryption refer to the signer by name.
 
-You can mark one of the signer as a default.
+You can mark one of the signers as a default.
 It can be used in signing commands without providing signer option. 
 
 Signer repository management in tondev is accessible through the `signer` tool.
 
-#### Generate Command
+**Note:** If you need to generate an unsigned message, you may use the option `--signer none` in any relevant commands in other controllers. Omitting the signer option altogether always means using the default signer.
 
-Add a new randomly generated mnemonic seed phrase with derived key pair.
+**Note:** Keys in the repository are stored unencrypted.
 
-You can specify a dictionary used to generate mnemonic phrase.
+#### Add a signer with randomly generated keys
 
-#### Add Command
+This command adds a signer with randomly generated keys.
 
-Add a signer with an existing secret key or a mnemonic phrase.
+```bash
+tondev signer generate signer_name
+```
 
-#### Delete Command
+See other available generation options with help command:
 
-Deletes signer from store.
+```bash
+tondev signer generate -h
+TONDev Version: 0.5.0
+Use: tondev signer generate name [options]
+Args:
+    name  Signer name
+Options:
+    --help, -h        Show command usage
+    --mnemonic, -m    Use mnemonic phrase
+    --dictionary, -d  Mnemonic dictionary
+                      0  TON
+                      1  English
+                      2  Chinese Simplified
+                      3  Chinese Traditional
+                      4  French
+                      5  Italian
+                      6  Japanese
+                      7  Korean
+                      8  Spanish
+    --words, -w       Number of mnemonic words
+    --force, -f       Overwrite signer if already exists
+```
 
-#### List Command
+#### Add a signer with specific keys
 
-Show all signer in the registry. Only non secret data are shown.
+This command adds a signer with previously generated (e.g. with tonos-cli) keys.
 
-#### Get Command
+```bash
+tondev signer add signer_name signer_secret_key_or_seed_phrase_in_quotes
+```
 
-Prints full information for the specified signer including all secret data.
+See other available signer addition options with help command:
 
-#### Default Command
+```bash
+tondev signer add -h
+TONDev Version: 0.5.0
+Use: tondev signer add name secret [options]
+Args:
+    name    Signer name
+    secret  Secret key or seed phrase
+Options:
+    --help, -h        Show command usage
+    --dictionary, -d  Mnemonic dictionary
+                      0  TON
+                      1  English
+                      2  Chinese Simplified
+                      3  Chinese Traditional
+                      4  French
+                      5  Italian
+                      6  Japanese
+                      7  Korean
+                      8  Spanish
+    --force, -f       Overwrite signer if already exists
+```
+**Note:** By default the dictionary is set to english, which allows using seed phrases generated by other TONOS tools, such as tonos-cli.
 
-Sets specified signer as the default.
 
-### Network Registry
+#### List registered signers
 
-Networks registry is a convenient way to organize all of your network configurations in one place.
+This command lists all registered signers with their public keys.
+
+```bash
+tondev signer list
+```
+
+Result:
+
+```bash
+$ tondev signer list
+
+Signer           Public Key
+---------------  ----------------------------------------------------------------
+sign1 (Default)  cffd3a2f1d241807b2205220a7d6df980e67a3cc7c47eba2766cdc1bbddfc0e3
+sign2            0fc4e781720d80f76257db333c6b6934090562418652cf30352878c87707aa94
+```
+
+#### Get signer details
+
+This command lists all information (including secret data) for a specified signer.
+
+```bash
+tondev signer info signer_name
+```
+
+Result:
+
+```bash
+$ tondev signer info sign2
+{
+    "name": "sign2",
+    "description": "",
+    "keys": {
+        "public": "760d69964d038997d891fca0a0407c2ffefb701e7cb2f9ff0a87fbbf1e8098f2",
+        "secret": "72571b5a9392e6bb215b460ca3c0545c34d790e185f66f5b2e7564329ffea86c"
+    }
+}
+```
+
+#### Set default signer
+
+This command sets a previously added signer as default (initially the first added signer is used by default).
+
+```bash
+tondev signer default signer_name
+```
+
+#### Delete a signer
+
+This command deletes a previously added signer from signer registry.
+
+```bash
+tondev signer delete signer_name
+```
+
+### Network Tool
+
+Network tool is a convenient way to organize all of your network configurations in one place.
 
 You can register several blockchains (networks) under short names 
-and then use this names as a target blockchain to play with contracts.  
+and then use these names as a target blockchain when working with contracts.  
 
-You can mark one of the network as a default.
+You can mark one of the networks as a default.
 It can be used in network commands without providing net name. 
 
-#### Add Command
+#### Add a network
 
-Add network with specified endpoints to the registry.
+This command adds a network to the tondev registry.
 
-#### Delete Command
+```bash
+tondev network add network_name network_endpoints
+```
 
-Delete specified network from the network list.
+See other available network addition options with help command:
 
-#### List Command
+```bash
+$ tondev network add -h
+TONDev Version: 0.5.0
+Use: tondev network add name endpoints [options]
+Args:
+    name
+    endpoints  Comma separated endpoints
+Options:
+    --help, -h   Show command usage
+    --force, -f  Overwrite key if already exists
+```
 
-Prints the network list.
+Example with all [main.ton.dev endpoints](https://docs.ton.dev/86757ecb2/p/85c869-networks):
 
-#### Default Command
+```bash
+tondev network add main main.ton.dev,main2.ton.dev,main3.ton.dev,main4.ton.dev
+```
 
-Sets the specified network as default.
+#### Set a giver for a network
+
+This command sets a giver account for a network. Giver will be used to top up your account balances on the network, including during deployment.
+
+```bash
+tondev network giver network_name giver_address
+```
+
+See other available network addition options with help command:
+
+```bash
+$ tondev network giver -h
+TONDev Version: 0.5.0
+Use: tondev network giver name address [options]
+Args:
+    name     Network name
+    address  Giver address
+Options:
+    --help, -h    Show command usage
+    --signer, -s  Signer to be used with giver
+    --value, -v   Deploying account initial balance in nanotokens
+```
+**Note:** The default signer and the initial balance value of 10 tokens will be used, unless otherwise specified through options. Also note, that some contracts may require a higher initial balance for successful deployment. DePool contract, for instance, requires a minimun of 21 tokens.
+
+
+#### List registered networks
+
+This command lists all registered networks, their public endpoints, and their giver addresses, if any.
+
+```bash
+tondev network list
+```
+
+Result:
+
+```bash
+$ tondev network list
+Network        Endpoints                                        Giver
+-------------  -----------------------------------------------  ------------------------------------------------------------------
+se             http://localhost                                 0:b5e9240fc2d2f1ff8cbb1d1dee7fb7cae155e5f6320e585fcc685698994a19a5
+dev (Default)  net.ton.dev, net1.ton.dev, net5.ton.dev          0:255a3ad9dfa8aa4f3481856aafc7d79f47d50205190bd56147138740e9b177f3
+main           main.ton.dev, main2.ton.dev, main3.ton.dev, ...
+```
+
+#### Set default network
+
+This command sets a previously added network as default (initially the mainnet is used by default).
+
+```bash
+tondev network default network_name
+```
+
+#### Delete a network
+
+This command deletes a network from tondev registry.
+
+```bash
+tondev network delete network_name
+```
+
 
 ### Contract Management
 
-Contract management of the tondev give you an ability to easily deploy and run 
-your smart contracts on a blockchain network(s).
+Contract management in tondev gives you the ability to easily deploy and run 
+your smart contracts on blockchain network(s).
 
-#### Info Command
+#### View contract info
 
-Show account information.
+This command displays a detailed summary for a contract. Contract ABI and TVC files are required to run it. Account address on the network is calculated from TVC and signer.
 
-#### Deploy Command
+```bash
+tondev contract info abi_filename
+```
 
-Deploy specified contract to the blockchain.
+Result example:
 
-#### Run Command
+```bash
+$ tondev contract info SetcodeMultisigWallet.abi.json
 
-Run specified contract on the blockchain.
+Configuration
 
-#### Run Local Command
+  Network: dev (net.ton.dev, net1.ton.dev, net5.ton.dev)
+  Signer:  test (public ad4bf7bd8da244932c52127a943bfa9217b6e215c1b3307272283c4d64f34486)
 
-Load and run specified contract on the local TVM.
+Address:   0:04dee1edc3f3d6b23529dcf5a6133627d06a39826bb14cc6334ffea272b15d50 (calculated from TVC and signer public)
+Code Hash: e2b60b6b602c10ced7ea8ede4bdf96342c97570a3798066f3fb50a4b2b27a208 (from TVC file)
+Account:   Active
+Balance:   1919381000 (≈ 2 tokens)
+Details:   {
+    "json_version": 5,
+    "id": "0:04dee1edc3f3d6b23529dcf5a6133627d06a39826bb14cc6334ffea272b15d50",
+    "workchain_id": 0,
+    "boc": "te6ccgECZwEAGvQAAm/AAE3uHtw/PW ... 4MEDIoIQ/////byxkOAB8AH4R26Q3o (6912 bytes)",
+    "last_paid": 1619084675,
+    "bits": "0xcbc7",
+    "cells": "0x67",
+    "public_cells": "0x0",
+    "last_trans_lt": "0x3baac81fb43",
+    "balance": "0x72676e08",
+    "code": "te6ccgECXwEAGcoAAib/APSkICLAAZ ... wQMighD////9vLGQ4AHwAfhHbpDeg= (6614 bytes)",
+    "code_hash": "e2b60b6b602c10ced7ea8ede4bdf96342c97570a3798066f3fb50a4b2b27a208",
+    "data": "te6ccgEBBwEA7gAC361L972NokSTLF ... S/Xy90TNN3lUFM1WGpdlIcBQDAAAFA (249 bytes)",
+    "data_hash": "ec28abd34e75f40a66561bdc06b436cbe24d10d5da7519a7d5db41026c67155d",
+    "acc_type": 1,
+    "acc_type_name": "Active"
+}
 
-#### Run Executor Command
+```
 
-Load and emulates executor for the specified contract on the local TVM.
+Network, signer, data and account address parameters can be overridden with the following options:
+
+```bash
+$ tondev contract info -h
+TONDev Version: 0.5.0
+Use: tondev contract info file [options]
+Args:
+    file  ABI file
+Options:
+    --help, -h     Show command usage
+    --network, -n  Network name
+    --signer, -s   Signer key name
+    --data, -d     Deploying initial data as name:value,...
+                   This data is required to calculate the account address and to
+                   deploy contract.
+                   Array values must be specified as [item,...]. Spaces are not
+                   allowed. If value contains spaces or special symbols "[],:"
+                   it must be enclosed in "" or ''
+    --address, -a  Account address
+```
+
+#### Deploy contract
+
+This command deploys a contract to the blockchain. Contract ABI and TVC files are required to run it.
+
+```bash
+tondev contract deploy abi_filename
+```
+
+Command displays deployment summary and requests constructor function parameters. Result example:
+
+```bash
+$ tondev contract deploy Contract.abi.json
+
+Configuration
+
+  Network: dev
+  Signer:  sign1
+
+Address: 0:0435cb4e70585759ac514bb9fd1770caeb8c3941d882b5a16d589b368cb49261
+
+Enter constructor parameters
+
+  param1 (uint256[]): value
+
+Enter constructor parameters
+
+  param2 (uint8): value
+
+Deploying...
+```
+
+Deploy parameters can be specified in the deploy command with the following options:
+
+```bash
+$ tondev contract deploy -h
+TONDev Version: 0.5.0
+Use: tondev contract deploy file function [options]
+Args:
+    file      ABI file
+    function  Function name
+Options:
+    --help, -h        Show command usage
+    --network, -n     Network name
+    --signer, -s      Signer key name
+    --input, -i       Function parameters as name:value,...
+                      Array values must be specified as [item,...]. Spaces are not
+                      allowed. If value contains spaces or special symbols "[],:"
+                      it must be enclosed in "" or ''
+    --data, -d        Deploying initial data as name:value,...
+                      This data is required to calculate the account address and to
+                      deploy contract.
+                      Array values must be specified as [item,...]. Spaces are not
+                      allowed. If value contains spaces or special symbols "[],:"
+                      it must be enclosed in "" or ''
+    --value, -v       Deploying balance value in nano tokens
+    --prevent-ui, -p  Prevent user interaction
+                      Useful in shell scripting e.g. on server or in some
+                      automating to disable waiting for the user input.
+                      Instead tondev will abort with error.
+                      For example when some parameters are missing in command line
+                      then ton dev will prompt user to input values for missing
+                      parameters (or fails if prevent-ui option is specified).
+
+```
+
+Example of a 2/3 multisig wallet deployment command:
+
+```bash
+tondev contract deploy SetcodeMultisigWallet.abi.json constructor -n dev -s sign1 -i owners:[0xad4bf7bd8da244932c52127a943bfa9217b6e215c1b3307272283c4d64f34486,0x5c2e348c5caeb420a863dc5e972f897ebe5ee899a6ef2a8299aac352eca4380a,0x8534c46f7a135058773fa1298cb3a299a5ddd40dafe41cb06c64f274da360bfb],reqConfirms:2
+```
+
+#### Run contract deployed on the network
+
+This command runs any function of a contract deployed on the blockchain. Contract ABI and TVC files are required to run it.
+
+```bash
+tondev contract run abi_filename
+```
+
+Command displays available functions and asks to select one. Result example:
+
+```bash
+$ tondev contract run Contract.abi.json
+
+Configuration
+
+  Network: dev
+  Signer:  sign1
+
+Address: 0:a4629d617df931d8ad86ed24f4cac3d321788ba082574144f5820f2894493fbc
+
+Available functions:
+
+  1) func1
+  2) func2
+
+  Select function (number): 2
+
+Running...
+```
+
+Network, signer and account address parameters can be overridden and function parameters specified in the command with the following options:
+
+```bash
+$ tondev contract run -h
+TONDev Version: 0.5.0
+Use: tondev contract run file function [options]
+Args:
+    file      ABI file
+    function  Function name
+Options:
+    --help, -h        Show command usage
+    --network, -n     Network name
+    --signer, -s      Signer key name
+    --data, -d        Deploying initial data as name:value,...
+                      This data is required to calculate the account address and to
+                      deploy contract.
+                      Array values must be specified as [item,...]. Spaces are not
+                      allowed. If value contains spaces or special symbols "[],:"
+                      it must be enclosed in "" or ''
+    --address, -a     Account address
+    --input, -i       Function parameters as name:value,...
+                      Array values must be specified as [item,...]. Spaces are not
+                      allowed. If value contains spaces or special symbols "[],:"
+                      it must be enclosed in "" or ''
+    --prevent-ui, -p  Prevent user interaction
+                      Useful in shell scripting e.g. on server or in some
+                      automating to disable waiting for the user input.
+                      Instead tondev will abort with error.
+                      For example when some parameters are missing in command line
+                      then ton dev will prompt user to input values for missing
+                      parameters (or fails if prevent-ui option is specified).
+```
+
+Example of creating a transaction and cnfirming it in a multisig wallet:
+
+```
+tondev contract run SetcodeMultisigWallet.abi.json submitTransaction -n dev -s sign1 -i dest:255a3ad9dfa8aa4f3481856aafc7d79f47d50205190bd56147138740e9b177f3,value:500000000,bounce:true,allBalance:false,payload:""
+```
+
+```
+tondev contract run SetcodeMultisigWallet.abi.json confirmTransaction -n dev -a 0:04dee1edc3f3d6b23529dcf5a6133627d06a39826bb14cc6334ffea272b15d50 -s sign2 -i transactionId:6954030467099431873
+```
+
+#### Run contract locally on TVM
+
+This command downloads a contract and runs it locally on TVM. Contract ABI and TVC files are required to run it.
+
+```bash
+tondev contract run-local abi_filename
+```
+
+Command displays available functions and asks to select one. Result example:
+
+```jsx
+$ tondev contract run-local Contract.abi.json
+Configuration
+
+  Network: dev
+  Signer:  sign1
+
+Address: 0:a4629d617df931d8ad86ed24f4cac3d321788ba082574144f5820f2894493fbc
+
+Available functions:
+
+  1) func1
+  2) func1
+
+  Select function (number):
+```
+
+Network, signer and account address parameters can be overridden and function parameters specified in the command with the following options:
+
+```bash
+$ tondev contract run-local -h
+TONDev Version: 0.5.0
+Use: tondev contract run-local file function [options]
+Args:
+    file      ABI file
+    function  Function name
+Options:
+    --help, -h        Show command usage
+    --network, -n     Network name
+    --signer, -s      Signer key name
+    --data, -d        Deploying initial data as name:value,...
+                      This data is required to calculate the account address and to
+                      deploy contract.
+                      Array values must be specified as [item,...]. Spaces are not
+                      allowed. If value contains spaces or special symbols "[],:"
+                      it must be enclosed in "" or ''
+    --address, -a     Account address
+    --input, -i       Function parameters as name:value,...
+                      Array values must be specified as [item,...]. Spaces are not
+                      allowed. If value contains spaces or special symbols "[],:"
+                      it must be enclosed in "" or ''
+    --prevent-ui, -p  Prevent user interaction
+                      Useful in shell scripting e.g. on server or in some
+                      automating to disable waiting for the user input.
+                      Instead tondev will abort with error.
+                      For example when some parameters are missing in command line
+                      then ton dev will prompt user to input values for missing
+                      parameters (or fails if prevent-ui option is specified).
+```
+
+#### Emulate transaction executor locally on TVM
+
+This command downloads a contract and emulates transaction execution locally on TVM. Contract ABI and TVC files are required to run it.
+
+```bash
+tondev contract run-executor abi_filename
+```
+
+Command displays available functions and asks to select one. Result:
+
+```bash
+$ tondev contract run-executor Contract.abi.json
+
+Configuration
+
+  Network: dev
+  Signer:  sign1
+
+Address: 0:a4629d617df931d8ad86ed24f4cac3d321788ba082574144f5820f2894493fbc
+
+Available functions:
+
+  1) func1
+  2) func2
+
+  Select function (number):
+```
+
+Network, signer and account address parameters can be overridden and function parameters specified in the command with the following options:
+
+```bash
+$ tondev contract run-executor -h
+TONDev Version: 0.5.0
+Use: tondev contract run-executor file function [options]
+Args:
+    file      ABI file
+    function  Function name
+Options:
+    --help, -h        Show command usage
+    --network, -n     Network name
+    --signer, -s      Signer key name
+    --data, -d        Deploying initial data as name:value,...
+                      This data is required to calculate the account address and to
+                      deploy contract.
+                      Array values must be specified as [item,...]. Spaces are not
+                      allowed. If value contains spaces or special symbols "[],:"
+                      it must be enclosed in "" or ''
+    --address, -a     Account address
+    --input, -i       Function parameters as name:value,...
+                      Array values must be specified as [item,...]. Spaces are not
+                      allowed. If value contains spaces or special symbols "[],:"
+                      it must be enclosed in "" or ''
+    --prevent-ui, -p  Prevent user interaction
+                      Useful in shell scripting e.g. on server or in some
+                      automating to disable waiting for the user input.
+                      Instead tondev will abort with error.
+                      For example when some parameters are missing in command line
+                      then ton dev will prompt user to input values for missing
+                      parameters (or fails if prevent-ui option is specified).
+```
+
+#### Top up contract balance from giver
+If you have set a giver for a network, you can top up contract balances on it with the following command.
+
+```
+tondev contract topup abi_filename
+```
+
+Defalt signer and giver parameters will be used, unless otherwise specified through the following options:
+
+```
+$ tondev contract topup -h
+TONDev Version: 0.5.0
+Use: tondev contract topup file [options]
+Args:
+    file  ABI file
+Options:
+    --help, -h     Show command usage
+    --address, -a  Account address
+    --network, -n  Network name
+    --signer, -s   Signer key name
+    --data, -d     Deploying initial data as name:value,...
+                   This data is required to calculate the account address and to
+                   deploy contract.
+                   Array values must be specified as [item,...]. Spaces are not
+                   allowed. If value contains spaces or special symbols "[],:"
+                   it must be enclosed in "" or ''
+    --value, -v    Deploying balance value in nano tokens
+```
+
+
+## View controller info
+
+This command displays a summary of all controller configurations.
+
+```
+tondev info
+```
+Output example:
+
+$ tondev info
+
+```
+C++ compiler
+
+Component  Version  Available
+---------  -------  ---------
+clang      7.0.0    7.0.0
+
+Solidity Compiler
+
+Component  Available
+---------  ----------------------------------------------
+compiler   0.42.0, 0.41.0, 0.40.0, 0.39.0, 0.38.2, 0.38.1
+linker     0.3.0, 0.1.0
+stdlib     0.42.0, 0.41.0, 0.40.0, 0.39.0, 0.38.2, 0.38.1
+
+TON OS SE
+
+Instance  State          Version  GraphQL Port  Docker Container      Docker Image
+--------  -------------  -------  ------------  --------------------  -----------------------
+default   not installed  0.27     80            tonlabs-tonos-se-test  tonlabs/local-node:0.27
+
+Network Registry
+
+Network        Endpoints                                        Giver
+-------------  -----------------------------------------------  ------------------------------------------------------------------
+se             http://localhost                                 0:b5e9240fc2d2f1ff8cbb1d1dee7fb7cae155e5f6320e585fcc685698994a19a5
+dev (Default)  net.ton.dev, net1.ton.dev, net5.ton.dev          0:255a3ad9dfa8aa4f3481856aafc7d79f47d50205190bd56147138740e9b177f3
+main           main.ton.dev, main2.ton.dev, main3.ton.dev, ...
+
+Signer Registry
+
+Signer          Public Key
+--------------  ----------------------------------------------------------------
+surf            8534c46f7a135058773fa1298cb3a299a5ddd40dafe41cb06c64f274da360bfb
+test (Default)  ad4bf7bd8da244932c52127a943bfa9217b6e215c1b3307272283c4d64f34486
+test2           5c2e348c5caeb420a863dc5e972f897ebe5ee899a6ef2a8299aac352eca4380a
+
+TON OS CLI
+
+Component  Version  Available
+---------  -------  --------------------------------------------------------------------------------
+tonoscli   0.11.3   0.11.4, 0.11.3, 0.11.2, 0.11.1, 0.11.0, 0.10.1, 0.10.0, 0.9.2, 0.9.1, 0.9.0, ...
+```
 
 ## TONDEV Extensibility
 

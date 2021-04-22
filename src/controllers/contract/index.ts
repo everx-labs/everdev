@@ -148,7 +148,7 @@ export const contractInfoCommand: Command = {
             terminal.log(`Code Hash: ${codeHash} (from TVC file)`);
         }
         if (accType === AccountType.nonExist) {
-            terminal.log("Account:   Not exists");
+            terminal.log("Account:   Doesn't exist");
         } else {
             const token = BigInt(1000000000);
             const balance = BigInt(parsed.balance);
