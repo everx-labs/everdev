@@ -47,9 +47,10 @@ function loadContract(filePath: string): ContractPackage {
 export async function getAccount(terminal: Terminal, args: {
     file: string,
     network: string,
-    address: string,
+    address?: string,
     signer: string,
 }): Promise<Account> {
+    const address = args.address ?? "";
     const network = new NetworkRegistry().get(args.network);
     const client = new TonClient({
         network: {
@@ -62,7 +63,7 @@ export async function getAccount(terminal: Terminal, args: {
     let signerItem: SignerRegistryItem | undefined;
     if (signerArg === "none") {
         signerItem = undefined;
-    } else if (signerArg === "" && !signers.default && args.address !== "") {
+    } else if (signerArg === "" && !signers.default && address !== "") {
         signerItem = undefined
     } else {
         signerItem = signers.get(signerArg);
@@ -72,14 +73,18 @@ export async function getAccount(terminal: Terminal, args: {
         signer,
         client,
     };
-    if (args.address !== "") {
-        options.address = args.address;
+    if (address !== "") {
+        options.address = address;
     }
     const account = new Account(contract, options);
     terminal.log("\nConfiguration\n");
     terminal.log(`  Network: ${network.name} (${NetworkRegistry.getEndpointsSummary(network)})`);
     terminal.log(`  Signer:  ${signerItem ? `${signerItem.name} (public ${signerItem.keys.public})` : "None"}\n`);
-    terminal.log(`Address:   ${await account.getAddress()}${args.address === "" ? " (calculated from TVC and signer public)" : ""}`);
+    if (address === "" && (account.contract.abi.data ?? []).length > 0) {
+        terminal.log(`Address:   Can't calculate address: additional deploying data required.`);
+    } else {
+        terminal.log(`Address:   ${await account.getAddress()}${address === "" ? " (calculated from TVC and signer public)" : ""}`);
+    }
     return account;
 }
 

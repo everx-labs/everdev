@@ -13,7 +13,7 @@ import {getAccount} from "./accounts";
 import {
     getRunParams,
     logRunResult,
-    resolveInputs,
+    resolveParams,
 } from "./run";
 import {NetworkGiver} from "../network/giver";
 import {NetworkRegistry} from "../network/registry";
@@ -71,6 +71,17 @@ const inputOpt: CommandArg = {
     name: "input",
     alias: "i",
     title: "Function parameters as name:value,...",
+    description: "Array values must be specified as [item,...]. " +
+        "Spaces are not allowed. If value contains spaces or special symbols \"[],:\" " +
+        "it must be enclosed in \"\" or ''",
+    type: "string",
+    defaultValue: "",
+};
+
+const dataOpt: CommandArg = {
+    name: "data",
+    alias: "d",
+    title: "Deploying initial data as name:value,...",
     description: "Array values must be specified as [item,...]. " +
         "Spaces are not allowed. If value contains spaces or special symbols \"[],:\" " +
         "it must be enclosed in \"\" or ''",
@@ -160,6 +171,7 @@ export const contractDeployCommand: Command = {
         networkOpt,
         signerOpt,
         inputOpt,
+        dataOpt,
         valueOpt,
         preventUiOpt,
     ],
@@ -170,10 +182,11 @@ export const contractDeployCommand: Command = {
         signer: string,
         function: string,
         input: string,
+        data: string,
         value: string,
         preventUi: boolean,
     }) {
-        const account = await getAccount(terminal, args);
+        let account = await getAccount(terminal, args);
         const info = await account.getAccount();
 
         let giver: NetworkGiver | undefined = undefined;
@@ -191,9 +204,28 @@ export const contractDeployCommand: Command = {
             }
             giver.value = parseNumber(args.value) ?? giver.value;
         }
+
+        const dataParams = account.contract.abi.data ?? [];
+        if (dataParams.length > 0) {
+            const initData = await resolveParams(
+                terminal,
+                `\nDeploying initial data:\n`,
+                dataParams,
+                args.data ?? "",
+                args.preventUi,
+            );
+            await account.free();
+            account = new Account(account.contract, {
+                client: account.client,
+                address: await account.getAddress(),
+                signer: account.signer,
+                initData,
+            });
+        }
+
         const initFunctionName = args.function.toLowerCase() === "none" ? "" : (args.function || "constructor");
         const initFunction = account.contract.abi.functions?.find(x => x.name === initFunctionName);
-        const initInput = await resolveInputs(
+        const initInput = await resolveParams(
             terminal,
             "\nParameters of constructor:\n",
             initFunction?.inputs ?? [],
@@ -205,9 +237,55 @@ export const contractDeployCommand: Command = {
             useGiver: giver,
             initFunctionName: initFunction?.name,
             initInput,
+
         });
         terminal.log(`Contract has deployed at address: ${await account.getAddress()}`);
         await giver?.account.free();
+        await account.free();
+        account.client.close();
+        TonClient.default.close();
+        process.exit(0);
+    },
+};
+
+
+export const contractTopUpCommand: Command = {
+    name: "topup",
+    alias: "t",
+    title: "Top up account from giver",
+    args: [
+        infoFileArg,
+        addressOpt,
+        networkOpt,
+        signerOpt,
+        valueOpt,
+    ],
+    async run(terminal: Terminal, args: {
+        file: string,
+        network: string,
+        address: string,
+        signer: string,
+        value: string,
+    }) {
+        if (args.file === "" && args.address === "") {
+            throw new Error("File argument or address option must be specified");
+        }
+        const account = await getAccount(terminal, args);
+
+        const network = new NetworkRegistry().get(args.network);
+        const networkGiverInfo = network.giver;
+        if (!networkGiverInfo) {
+            throw new Error(
+                `Missing giver for the network ${network.name}.\n` +
+                `You have to set up a giver for this network with \`tondev network giver\` command.`,
+            );
+        }
+        const giver = await NetworkGiver.get(account.client, networkGiverInfo);
+        const value = parseNumber(args.value) ?? giver.value ?? 1000000000;
+        giver.value = value;
+        await giver.sendTo(await account.getAddress(), value);
+        terminal.log(`${giver.value} were sent to address ${await account.getAddress()}`);
+        await giver.account.free();
         await account.free();
         account.client.close();
         TonClient.default.close();
@@ -340,6 +418,7 @@ export const Contract: ToolController = {
     title: "Smart Contracts",
     commands: [
         contractInfoCommand,
+        contractTopUpCommand,
         contractDeployCommand,
         contractRunCommand,
         contractRunLocalCommand,

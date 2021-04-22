@@ -85,25 +85,25 @@ async function inputParam(terminal: Terminal, param: AbiParam): Promise<any> {
     }
 }
 
-export async function resolveInputs(
+export async function resolveParams(
     terminal: Terminal,
     prompt: string,
     params: AbiParam[],
-    inputString: string,
+    paramsString: string,
     preventUi: boolean,
 ): Promise<object> {
     const values: { [name: string]: any } = ParamParser.components({
-        name: "input",
+        name: "params",
         type: "tuple",
         components: params,
-    }, inputString);
+    }, paramsString);
     let hasUserInput = false;
     if (params.length > 0) {
         terminal.log(prompt);
     }
     for (const param of params) {
         if (param.name in values) {
-            terminal.log(`  ${param.name} (${param.type}): ${JSON.stringify(values[param.name])}`)
+            terminal.log(`  ${param.name} (${param.type}): ${JSON.stringify(values[param.name])}`);
         }
     }
     for (const param of params) {
@@ -133,7 +133,7 @@ export async function getRunParams(
     functionInput: object,
 }> {
     const func = await resolveFunction(terminal, account, args.function, args.preventUi);
-    const functionInput = await resolveInputs(
+    const functionInput = await resolveParams(
         terminal,
         `\nParameters of ${func.name}:\n`,
         func.inputs,
