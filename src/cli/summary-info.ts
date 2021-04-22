@@ -6,6 +6,9 @@ import {
 import {consoleTerminal} from "../core/utils";
 
 function findInfoCommand(controller: ToolController, name: string): { command: Command, args: any } | undefined {
+    if (controller.name === "contract" && name === "info") {
+        return undefined;
+    }
     const command = controller.commands.find(x => x.name == name);
     if (!command) {
         return undefined;
