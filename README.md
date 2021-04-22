@@ -625,7 +625,7 @@ Args:
 Options:
     --help, -h    Show command usage
     --signer, -s  Signer to be used with giver
-    --value, -v   Deploying account initial balance
+    --value, -v   Deploying account initial balance in nanotokens
 ```
 **Note:** The default signer and the initial balance value of 10 tokens will be used, unless otherwise specified through options. Also note, that some contracts may require a higher initial balance for successful deployment. DePool contract, for instance, requires a minimun of 21 tokens.
 
