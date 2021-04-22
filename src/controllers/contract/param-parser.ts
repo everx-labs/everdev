@@ -52,7 +52,7 @@ export class ParamParser {
     }
 
     expect(test: string, param: AbiParam): string {
-        return this.expectIf(x => x === test, param, test);
+        return this.expectIf(x => x === test, param, `"${test}"`);
     }
 
     parseScalar(param: AbiParam): any {
@@ -96,13 +96,13 @@ export class ParamParser {
     }
 
     parseComponents(param: AbiParam): { [name: string]: any } {
+        const isLetter = (x: string) => x.toLowerCase() !== x.toUpperCase();
+        const isDigit = (x: string) => x >= "0" && x <= "9";
+        const isIdent = (x: string) => isLetter(x) || isDigit(x) || x === "_";
         const components = param.components ?? [];
         const value: { [name: string]: any } = {};
         while (this.hasMore()) {
-            const name = this.parseScalar({
-                name: "name",
-                type: "string",
-            });
+            const name = this.expectIf(isIdent, param, "name");
             this.expect(":", param);
             const component = components.find(x => x.name.toLowerCase() === name.toLowerCase());
             if (!component) {
@@ -121,6 +121,13 @@ export class ParamParser {
 
 
     private error(message: string) {
-        return new Error(`${message}: ${this.text.substr(this.pos)}`);
+        const text = this.text;
+        const pos = this.pos;
+        const start = Math.max(pos - 12, 0);
+        const end = Math.min(pos + 12, text.length);
+        const prefix = start > 0 ? "..." : "";
+        const suffix = end < text.length ? "..." : "";
+        let context = `"${prefix}${text.substring(start, pos)} -> ${text.substring(pos, end)}${suffix}"`;
+        return new Error(`${message} at ${context}`);
     }
 }

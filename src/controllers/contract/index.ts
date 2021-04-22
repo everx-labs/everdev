@@ -62,7 +62,7 @@ const functionArg: CommandArg = {
 const inputOpt: CommandArg = {
     name: "input",
     alias: "i",
-    title: "Function parameters (name:value,...)",
+    title: "Function parameters as name:value,array:[item,...],...",
     type: "string",
     defaultValue: "",
 };
