@@ -67,8 +67,10 @@ export async function getAccount(terminal: Terminal, args: {
     }
     const account = new Account(contract, options);
     terminal.log("\nConfiguration\n");
-    terminal.log(`  Network: ${network.name}`);
-    terminal.log(`  Signer:  ${signerItem?.name ?? "None"}\n`);
-    terminal.log(`Address:   ${await account.getAddress()}`);
+    terminal.log(`  Network: ${network.name} (${NetworkRegistry.getEndpointsSummary(network)})`);
+    terminal.log(`  Signer:  ${signerItem ? `${signerItem.name} (public ${signerItem.keys.public})` : "None"}\n`);
+    terminal.log(`Address:   ${await account.getAddress()}${args.address === "" ? " (calculated from TVC and signer public)" : ""}`);
     return account;
 }
+
+

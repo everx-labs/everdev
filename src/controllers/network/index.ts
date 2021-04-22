@@ -60,13 +60,9 @@ export const networkListCommand: Command = {
         const registry = new NetworkRegistry();
         const rows = [["Network", "Endpoints", "Giver", "Description"]];
         registry.items.forEach((network) => {
-            const maxEndpoints = 3;
-            const endpoints = network.endpoints.length <= maxEndpoints
-                ? network.endpoints
-                : [...network.endpoints.slice(0, maxEndpoints), "..."];
             rows.push([
                 `${network.name}${network.name === registry.default ? " (Default)" : ""}`,
-                endpoints.join(", "),
+                NetworkRegistry.getEndpointsSummary(network),
                 network.giver?.address ?? "",
                 network.description ?? "",
             ]);

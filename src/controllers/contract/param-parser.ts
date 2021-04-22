@@ -21,22 +21,30 @@ export class ParamParser {
     }
 
     nextIs(test: (c: string) => boolean): boolean {
-        const passed = this.hasMore() && test(this.text[this.pos]);
-        if (passed) {
-            this.pos += 1;
-        }
-        return passed;
+        return this.hasMore() && test(this.text[this.pos]);
     }
 
-    pass(test: (c: string) => boolean): string | undefined {
+    passIf(test: (c: string) => boolean): boolean {
+        if (this.nextIs(test)) {
+            this.pos += 1;
+            return true;
+        }
+        return false;
+    }
+
+    pass(c: string): boolean {
+        return this.passIf(x => x === c);
+    }
+
+    passWhile(test: (c: string) => boolean): string | undefined {
         const savePos = this.pos;
-        while (this.nextIs(test)) {
+        while (this.passIf(test)) {
         }
         return this.pos > savePos ? this.text.substring(savePos, this.pos) : undefined;
     }
 
     expectIf(test: (c: string) => boolean, param: AbiParam, expectMessage: string): string {
-        const passed = this.pass(test);
+        const passed = this.passWhile(test);
         if (passed !== undefined) {
             return passed;
         }
@@ -49,6 +57,20 @@ export class ParamParser {
 
     parseScalar(param: AbiParam): any {
         const isScalarChar = (x: string) => x !== "," && x !== ":" && x !== "[" && x !== "]";
+        let quote = "";
+        if (this.pass("\"")) {
+            quote = "\"";
+        } else if (this.pass("'")) {
+            quote = "'";
+        }
+        if (quote !== "") {
+            const value = this.passWhile(x => x !== quote) ?? "";
+            this.expect(quote, param);
+            return value;
+        }
+        if (!this.nextIs(isScalarChar)) {
+            return "";
+        }
         return this.expectIf(isScalarChar, param, "value");
     }
 
@@ -58,9 +80,9 @@ export class ParamParser {
         item.type = param.type.slice(0, -2);
         this.expect("[", param);
         const value = [];
-        while (!this.pass(x => x === "]")) {
+        while (!this.pass("]")) {
             value.push(this.parseParam(item));
-            this.pass(x => x === ",");
+            this.pass(",");
         }
         return value;
     }
@@ -82,7 +104,7 @@ export class ParamParser {
                 type: "string",
             });
             this.expect(":", param);
-            const component = components.find(x => x.name === name.toLowerCase());
+            const component = components.find(x => x.name.toLowerCase() === name.toLowerCase());
             if (!component) {
                 throw this.error(`Unknown field ${name}`);
             }
@@ -90,6 +112,9 @@ export class ParamParser {
                 throw new Error(`Field "${name}" already defined.`);
             }
             value[name] = this.parseParam(component);
+            if (this.hasMore()) {
+                this.expect(",", param);
+            }
         }
         return value;
     }

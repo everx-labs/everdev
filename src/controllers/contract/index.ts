@@ -62,7 +62,7 @@ const functionArg: CommandArg = {
 const inputOpt: CommandArg = {
     name: "input",
     alias: "i",
-    title: "Function parameters (name=value,...)",
+    title: "Function parameters (name:value,...)",
     type: "string",
     defaultValue: "",
 };
@@ -78,10 +78,21 @@ const valueOpt: CommandArg = {
 const preventUiOpt: CommandArg = {
     name: "prevent-ui",
     alias: "p",
-    title: "User Interaction",
+    title: "Prevent user interaction",
     type: "boolean",
     defaultValue: "false",
 };
+
+function reduceBase64String(s: string | undefined): string | undefined {
+    if (s === undefined) {
+        return undefined;
+    }
+    if (s.length < 80) {
+        return s;
+    }
+    const bytes = Buffer.from(s, "base64");
+    return `${s.slice(0,30)} ... ${s.slice(-30)} (${bytes.length} bytes)`;
+}
 
 export const contractInfoCommand: Command = {
     name: "info",
@@ -107,12 +118,21 @@ export const contractInfoCommand: Command = {
             const codeHash = (await boc.get_boc_hash({
                 boc: (await boc.get_code_from_tvc({ tvc: account.contract.tvc })).code,
             })).hash;
-            terminal.log(`Code Hash: ${codeHash}`);
+            terminal.log(`Code Hash: ${codeHash} (from TVC file)`);
         }
         if (accType === AccountType.nonExist) {
             terminal.log("Account:   Not exists");
         } else {
+            const token = BigInt(1000000000);
+            const balance = BigInt(parsed.balance);
+            let tokens = Number(balance / token) + Number(balance % token) / Number(token);
+            const tokensString = tokens < 1 ? tokens.toString() : `≈ ${Math.round(tokens)}`;
             terminal.log(`Account:   ${parsed.acc_type_name}`);
+            terminal.log(`Balance:   ${balance} (${tokensString} tokens)`);
+            parsed.boc = reduceBase64String(parsed.boc);
+            parsed.code = reduceBase64String(parsed.code);
+            parsed.data = reduceBase64String(parsed.data);
+
             terminal.log(`Details:   ${JSON.stringify(parsed, undefined, "    ")}`);
         }
         await account.free();
@@ -165,7 +185,7 @@ export const contractDeployCommand: Command = {
         const initFunction = account.contract.abi.functions?.find(x => x.name === initFunctionName);
         const initInput = await resolveInputs(
             terminal,
-            "Enter constructor parameters",
+            "\nParameters of constructor:\n",
             initFunction?.inputs ?? [],
             args.input,
             args.preventUi,

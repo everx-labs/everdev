@@ -17,11 +17,21 @@ import {
 } from "../../core/known-contracts";
 import {NetworkGiverInfo} from "./registry";
 
-async function walletSend(giver: Account, address: string, value: number): Promise<void> {
+async function giverV2Send(giver: Account, address: string, value: number): Promise<void> {
     await giver.run("sendTransaction", {
         "dest": address,
         "value": value,
         "bounce": false,
+    });
+}
+
+async function multisigSend(giver: Account, address: string, value: number): Promise<void> {
+    await giver.run("sendTransaction", {
+        "dest": address,
+        "value": value,
+        "bounce": false,
+        "flags": 1,
+        "payload": "",
     });
 }
 
@@ -68,11 +78,11 @@ export class NetworkGiver implements AccountGiver {
         const contract = await knownContractFromAddress(client, address);
         let send: (giver: Account, address: string, value: number) => Promise<void>;
         if (contract === KnownContracts.GiverV2) {
-            send = walletSend;
+            send = giverV2Send;
         } else if (contract === KnownContracts.SetcodeMultisigWallet) {
-            send = walletSend;
+            send = multisigSend;
         } else if (contract === KnownContracts.SafeMultisigWallet) {
-            send = walletSend;
+            send = multisigSend;
         } else {
             throw new Error(`Contract ${contract.name} can't be used as a giver.`);
         }

@@ -165,5 +165,13 @@ export class NetworkRegistry {
             await client.close();
         }
     }
+
+    static getEndpointsSummary(network: Network): string {
+        const maxEndpoints = 3;
+        const endpoints = network.endpoints.length <= maxEndpoints
+            ? network.endpoints
+            : [...network.endpoints.slice(0, maxEndpoints), "..."];
+        return endpoints.join(", ");
+    }
 }
 

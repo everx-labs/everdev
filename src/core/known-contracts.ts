@@ -869,6 +869,7 @@ export const KnownContracts = {
 
 const contracts: { [codeHash: string]: KnownContract } = {
     "4e92716de61d456e58f16e4e867e3e93a7548321eace86301b51c8b80ca6239b": KnownContracts.GiverV2,
+    "ccbfc821853aa641af3813ebd477e26818b51e4ca23e5f6d34509215aa7123d9": KnownContracts.GiverV2,
     "e2b60b6b602c10ced7ea8ede4bdf96342c97570a3798066f3fb50a4b2b27a208": KnownContracts.SetcodeMultisigWallet,
     "207dc560c5956de1a2c1479356f8f3ee70a59767db2bf4788b1d61ad42cdad82": KnownContracts.SetcodeMultisigWallet,
     "80d6c47c4a25543c9b397b71716f3fae1e2c5d247174c52e2c19bd896442b105": KnownContracts.SafeMultisigWallet,

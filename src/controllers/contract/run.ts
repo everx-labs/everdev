@@ -56,7 +56,7 @@ async function inputScalar(terminal: Terminal, param: AbiParam): Promise<any> {
     while (true) {
         const value = await inputLine(terminal, `${param.name} (${param.type})`);
         try {
-            return ParamParser.scalar(param, value);
+            return ParamParser.scalar(param, `"${value}"`);
         } catch (err) {
             terminal.log(err.toString());
         }
@@ -98,13 +98,20 @@ export async function resolveInputs(
         components: params,
     }, inputString);
     let hasUserInput = false;
+    if (params.length > 0) {
+        terminal.log(prompt);
+    }
+    for (const param of params) {
+        if (param.name in values) {
+            terminal.log(`  ${param.name} (${param.type}): ${JSON.stringify(values[param.name])}`)
+        }
+    }
     for (const param of params) {
         if (!(param.name in values)) {
             if (!hasUserInput) {
                 if (preventUi) {
                     throw new Error(`Missing parameter "${param.name}".`);
                 }
-                terminal.log(`\n${prompt}\n`);
                 hasUserInput = true;
             }
             values[param.name] = await inputParam(terminal, param);
@@ -128,7 +135,7 @@ export async function getRunParams(
     const func = await resolveFunction(terminal, account, args.function, args.preventUi);
     const functionInput = await resolveInputs(
         terminal,
-        `\nEnter ${func.name} parameters:\n`,
+        `\nParameters of ${func.name}:\n`,
         func.inputs,
         args.input,
         args.preventUi,
@@ -148,7 +155,7 @@ export async function logRunResult(
     const details = {
         transaction,
         output: decoded?.output,
-        out_messages: outMessages.filter(x => x.body_type !== MessageBodyType.Output),
+        out_messages: outMessages.filter(x => x?.body_type !== MessageBodyType.Output),
     };
     terminal.log();
     terminal.log(`Execution has finished with result: ${JSON.stringify(details, undefined, "    ")}`);
