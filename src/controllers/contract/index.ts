@@ -114,6 +114,8 @@ const preventUiOpt: CommandArg = {
     defaultValue: "false",
 };
 
+const DEFAULT_TOPUP_VALUE = 10_000_000_000;
+
 export const contractInfoCommand: Command = {
     name: "info",
     alias: "i",
@@ -191,21 +193,26 @@ export const contractDeployCommand: Command = {
     }) {
         let account = await getAccount(terminal, args);
         const info = await account.getAccount();
+        if (info.acc_type === AccountType.active) {
+            throw new Error(`Account ${await account.getAddress()} already deployed.`);
+        }
+        const network = new NetworkRegistry().get(args.network);
+        const currentBalance = BigInt(info.balance ?? 0);
+        const requiredBalance = parseNumber(args.value) ?? network.giver?.value ?? DEFAULT_TOPUP_VALUE;
 
-        let giver: NetworkGiver | undefined = undefined;
-        if (info.acc_type === AccountType.nonExist) {
-            const networkGiverInfo = new NetworkRegistry().get(args.network).giver;
-            giver = networkGiverInfo
-                ? await NetworkGiver.get(account.client, networkGiverInfo)
-                : undefined;
-            if (!giver) {
-                throw new Error(`Account ${await account.getAddress()} has no balance.\n` +
-                    `You have to create a positive balance before deploying in two ways: \n` +
+        if (currentBalance < BigInt(requiredBalance)) {
+            const giverInfo = new NetworkRegistry().get(args.network).giver;
+            if (!giverInfo) {
+                throw new Error(`Account ${await account.getAddress()} has low balance to deploy.\n` +
+                    `You have to create an enough balance before deploying in two ways: \n` +
                     `sending some value to this address\n` +
                     `or setting up a giver for the network with \`tondev network giver\` command.`,
                 );
             }
-            giver.value = parseNumber(args.value) ?? giver.value;
+            const giver = await NetworkGiver.get(account.client, giverInfo);
+            giver.value = requiredBalance;
+            await giver.sendTo(await account.getAddress(), requiredBalance);
+            await giver.account.free();
         }
 
         const dataParams = account.contract.abi.data ?? [];
@@ -237,13 +244,11 @@ export const contractDeployCommand: Command = {
         );
         terminal.log("\nDeploying...");
         await account.deploy({
-            useGiver: giver,
             initFunctionName: initFunction?.name,
             initInput,
 
         });
         terminal.log(`Contract has deployed at address: ${await account.getAddress()}`);
-        await giver?.account.free();
         await account.free();
         account.client.close();
         TonClient.default.close();
