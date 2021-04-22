@@ -56,6 +56,7 @@ export async function getAccount(terminal: Terminal, args: {
             endpoints: network.endpoints,
         },
     });
+    const contract = args.file !== "" ? loadContract(args.file) : { abi: {} };
     const signerArg = args.signer.trim().toLowerCase();
     const signers = new SignerRegistry();
     let signerItem: SignerRegistryItem | undefined;
@@ -67,7 +68,6 @@ export async function getAccount(terminal: Terminal, args: {
         signerItem = signers.get(signerArg);
     }
     const signer = signerItem ? await createSigner(signerItem.name) : signerNone();
-    const contract = args.file !== "" ? loadContract(args.file) : { abi: {} };
     const options: AccountOptions = {
         signer,
         client,

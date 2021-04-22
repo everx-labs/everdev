@@ -118,35 +118,38 @@ class CommandLine {
     }
 
     async parse(programArgs: string[]) {
-        for (const arg of programArgs) {
+        for (let arg of programArgs) {
             if (arg.startsWith("-")) {
                 await this.parseOptionName(arg);
-            } else if (this.pending) {
-                await this.resolveValue(this.pending, arg);
-            } else if (this.controller && this.command) {
-                if (this.positional.length === 0) {
-                    throw new Error(`Unexpected argument ${arg}`);
-                }
-                await this.resolveValue(this.positional[0], arg);
-            } else if (this.controller) {
-                const command = this.controller.commands.find(x => matchName(x, arg));
-                if (command) {
-                    this.setCommand(command);
-                } else {
-                    throw new Error(`Unknown command: ${arg}`);
-                }
             } else {
-                this.controller = controllers.find(x => matchName(x, arg));
-                if (!this.controller) {
-                    const byAlias = findControllerAndCommandByAlias(arg);
-                    if (byAlias) {
-                        this.controller = byAlias.controller;
-                        this.setCommand(byAlias.command);
-                    } else if (arg.toLowerCase().trim() === "info") {
-                        this.printSummaryInfo = true;
-                        break;
+                arg = arg.trim();
+                if (this.pending) {
+                    await this.resolveValue(this.pending, arg);
+                } else if (this.controller && this.command) {
+                    if (this.positional.length === 0) {
+                        throw new Error(`Unexpected argument ${arg}`);
+                    }
+                    await this.resolveValue(this.positional[0], arg);
+                } else if (this.controller) {
+                    const command = this.controller.commands.find(x => matchName(x, arg));
+                    if (command) {
+                        this.setCommand(command);
                     } else {
-                        throw new Error(`Unknown tool: ${arg}.`);
+                        throw new Error(`Unknown command: ${arg}`);
+                    }
+                } else {
+                    this.controller = controllers.find(x => matchName(x, arg));
+                    if (!this.controller) {
+                        const byAlias = findControllerAndCommandByAlias(arg);
+                        if (byAlias) {
+                            this.controller = byAlias.controller;
+                            this.setCommand(byAlias.command);
+                        } else if (arg.toLowerCase().trim() === "info") {
+                            this.printSummaryInfo = true;
+                            break;
+                        } else {
+                            throw new Error(`Unknown tool: ${arg}.`);
+                        }
                     }
                 }
             }
