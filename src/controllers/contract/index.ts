@@ -117,6 +117,9 @@ export const contractInfoCommand: Command = {
         address: string,
         signer: string,
     }) {
+        if (args.file === "" && args.address === "") {
+            throw new Error("File argument or address option must be specified");
+        }
         const account = await getAccount(terminal, args);
         const parsed = await account.getAccount();
         const accType = parsed.acc_type as AccountType;

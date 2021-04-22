@@ -11,7 +11,10 @@ import {
 } from "@tonclient/core";
 import {createSigner} from "../signer";
 import fs from "fs";
-import {SignerRegistry} from "../signer/registry";
+import {
+    SignerRegistry,
+    SignerRegistryItem,
+} from "../signer/registry";
 
 function findExisting(paths: string[]): string | undefined {
     return paths.find(x => fs.existsSync(x));
@@ -53,15 +56,18 @@ export async function getAccount(terminal: Terminal, args: {
             endpoints: network.endpoints,
         },
     });
-    const infoByAddressMode = args.file === "" && args.address !== "";
-    const signerItem = infoByAddressMode || args.signer.trim().toLowerCase() === "none"
-        ? undefined
-        : new SignerRegistry().get(args.signer);
+    const contract = args.file !== "" ? loadContract(args.file) : { abi: {} };
+    const signerArg = args.signer.trim().toLowerCase();
+    const signers = new SignerRegistry();
+    let signerItem: SignerRegistryItem | undefined;
+    if (signerArg === "none") {
+        signerItem = undefined;
+    } else if (signerArg === "" && !signers.default && args.address !== "") {
+        signerItem = undefined
+    } else {
+        signerItem = signers.get(signerArg);
+    }
     const signer = signerItem ? await createSigner(signerItem.name) : signerNone();
-    const contract =
-        infoByAddressMode
-            ? { abi: {} }
-            : loadContract(args.file);
     const options: AccountOptions = {
         signer,
         client,
