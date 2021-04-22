@@ -12,12 +12,15 @@ import {TonClient} from "@tonclient/core";
 import {getAccount} from "./accounts";
 import {
     getRunParams,
-    resolveInputs,
     logRunResult,
+    resolveInputs,
 } from "./run";
 import {NetworkGiver} from "../network/giver";
 import {NetworkRegistry} from "../network/registry";
-import {parseNumber} from "../../core/utils";
+import {
+    parseNumber,
+    reduceBase64String,
+} from "../../core/utils";
 
 const fileArg: CommandArg = {
     isArg: true,
@@ -62,7 +65,10 @@ const functionArg: CommandArg = {
 const inputOpt: CommandArg = {
     name: "input",
     alias: "i",
-    title: "Function parameters as name:value,array:[item,...],...",
+    title: "Function parameters as name:value,...",
+    description: "Array values must be specified as [item,...]. " +
+        "Spaces are not allowed. If value contains spaces or special symbols \"[],:\" " +
+        "it must be enclosed in \"\" or ''",
     type: "string",
     defaultValue: "",
 };
@@ -70,7 +76,7 @@ const inputOpt: CommandArg = {
 const valueOpt: CommandArg = {
     name: "value",
     alias: "v",
-    title: "Deploying balance value",
+    title: "Deploying balance value in nano tokens",
     type: "string",
     defaultValue: "",
 };
@@ -79,20 +85,16 @@ const preventUiOpt: CommandArg = {
     name: "prevent-ui",
     alias: "p",
     title: "Prevent user interaction",
+    description:
+        "Useful in shell scripting e.g. on server or in some automating to disable " +
+        "waiting for the user input.\n" +
+        "Instead tondev will abort with error.\n" +
+        "For example when some parameters are missing in command line " +
+        "then ton dev will prompt user to input values for missing parameters " +
+        "(or fails if prevent-ui option is specified).",
     type: "boolean",
     defaultValue: "false",
 };
-
-function reduceBase64String(s: string | undefined): string | undefined {
-    if (s === undefined) {
-        return undefined;
-    }
-    if (s.length < 80) {
-        return s;
-    }
-    const bytes = Buffer.from(s, "base64");
-    return `${s.slice(0,30)} ... ${s.slice(-30)} (${bytes.length} bytes)`;
-}
 
 export const contractInfoCommand: Command = {
     name: "info",

@@ -406,3 +406,42 @@ export function parseNumber(s: string | undefined | null): number | undefined {
     }
     return n;
 }
+
+export function reduceBase64String(s: string | undefined): string | undefined {
+    if (s === undefined) {
+        return undefined;
+    }
+    if (s.length < 80) {
+        return s;
+    }
+    const bytes = Buffer.from(s, "base64");
+    return `${s.slice(0, 30)} ... ${s.slice(-30)} (${bytes.length} bytes)`;
+}
+
+export function breakWords(s: string, maxLen: number = 80): string {
+    let result = "";
+    for (const sourceLine of s.split("\n")) {
+        const words = sourceLine.split(" ");
+        let line = "";
+        words.forEach((w) => {
+            if (line.length + w.length > maxLen) {
+                if (result !== "") {
+                    result += "\n";
+                }
+                result += line;
+                line = "";
+            }
+            if (line !== "") {
+                line += " ";
+            }
+            line += w;
+        });
+        if (line !== "") {
+            if (result !== "") {
+                result += "\n";
+            }
+            result += line;
+        }
+    }
+    return result;
+}
