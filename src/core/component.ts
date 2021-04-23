@@ -50,7 +50,12 @@ export class Component {
         if (this.isExecutable) {
             this.targetName = executableName(this.targetName);
         }
-        this.path = path.resolve(home, this.targetName);
+
+        if (this.globally && !home) {
+            this.path = this.targetName;
+        } else {
+            this.path = path.resolve(home, this.targetName);
+        }
 
         if (options?.innerPath) {
             this.adjustedPath = path.resolve(home, options.innerPath);
@@ -132,7 +137,7 @@ export class Component {
 
     static async ensureInstalledAll(terminal: Terminal, components: { [name: string]: Component }) {
         for (const component of Object.values(components)) {
-            await component.ensureVersion(terminal, false);
+            const res = await component.ensureVersion(terminal, false);
         }
     }
 
