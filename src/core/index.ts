@@ -1,5 +1,7 @@
 import path from "path";
 import os from "os";
+import {TonClient} from "@tonclient/core";
+import {libNode} from "@tonclient/lib-node";
 
 export {
     ComponentOptions,
@@ -115,6 +117,10 @@ export interface Command {
      */
     name: string,
     /**
+     * Command alias. Used in cli instead of full command name..
+     */
+    alias?: string,
+    /**
      * Command Title. Used in CLI short help and as a menu titles in IDE.
      */
     title: string,
@@ -136,6 +142,21 @@ export interface Command {
     run(terminal: Terminal, args: any): Promise<void>,
 }
 
+type NameAlias = {
+    name: string,
+    alias?: string,
+}
+
+export function matchName(x: NameAlias, test: string | undefined | null,
+): boolean {
+    test = (test || "").toLowerCase();
+    return x.name === test || x.alias === test;
+}
+
+export function nameInfo(x: NameAlias, namePrefix = "", aliasPrefix = ""): string {
+    return x.alias ? `${namePrefix}${x.name}, ${aliasPrefix}${x.alias}` : `${namePrefix}${x.name}`;
+}
+
 /**
  * Interface to be implemented by every controller.
  */
@@ -144,6 +165,10 @@ export interface ToolController {
      * Tool name. This is an identifier. Used only in configs.
      */
     name: string,
+    /**
+     * Tool alias. Used in cli instead of full tool name..
+     */
+    alias?: string,
     /**
      * Tool title. Human readable name of the tool.
      */
@@ -156,6 +181,14 @@ export interface ToolController {
      * Commands provided by tool controller.
      */
     commands: Command[],
+}
+
+export function tondevInit() {
+    TonClient.useBinaryLibrary(libNode);
+}
+
+export function tondevDone() {
+    TonClient.default.close();
 }
 
 /**

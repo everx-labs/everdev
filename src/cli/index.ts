@@ -2,14 +2,19 @@ import {
     Command,
     CommandArg,
     getArgVariants,
+    matchName,
     ToolController,
 } from "../core";
-import {controllers} from "../controllers";
+import {
+    controllers,
+    findControllerAndCommandByAlias,
+} from "../controllers";
 import {
     consoleTerminal,
     formatTable,
 } from "../core/utils";
 import {printUsage} from "./help";
+import {printSummaryInfo} from "./summary-info";
 
 function findOptionArg(command: Command, name: string): CommandArg | undefined {
     if (name.startsWith("--")) {
@@ -23,6 +28,7 @@ function findOptionArg(command: Command, name: string): CommandArg | undefined {
     return undefined;
 }
 
+
 class CommandLine {
     args: { help?: boolean, [name: string]: any } = {};
     controller: ToolController | undefined = undefined;
@@ -30,6 +36,7 @@ class CommandLine {
     positional: CommandArg[] = [];
     unresolved = new Map<string, CommandArg>();
     pending: CommandArg | undefined = undefined;
+    printSummaryInfo = false;
 
     setArgValue(arg: CommandArg, value: any) {
         const name = arg.name
@@ -99,39 +106,58 @@ class CommandLine {
         }
     }
 
+    setCommand(command: Command) {
+        this.command = command;
+        for (const arg of this.command.args ?? []) {
+            this.unresolved.set(arg.name, arg);
+            if (arg.isArg) {
+                this.positional.push(arg);
+            }
+        }
+
+    }
+
     async parse(programArgs: string[]) {
-        for (const arg of programArgs) {
-            if (arg.startsWith("-")) {
+        for (let arg of programArgs) {
+            if (arg.startsWith("-") && !this.pending) {
                 await this.parseOptionName(arg);
-            } else if (this.pending) {
-                await this.resolveValue(this.pending, arg);
-            } else if (this.controller && this.command) {
-                if (this.positional.length === 0) {
-                    throw new Error(`Unexpected argument ${arg}`);
-                }
-                await this.resolveValue(this.positional[0], arg);
-            } else if (this.controller) {
-                this.command = this.controller.commands.find(x => x.name === arg.toLowerCase());
-                if (!this.command) {
-                    throw new Error(`Unknown command: ${arg}`);
-                }
-                for (const arg of this.command.args ?? []) {
-                    this.unresolved.set(arg.name, arg);
-                    if (arg.isArg) {
-                        this.positional.push(arg);
-                    }
-                }
             } else {
-                this.controller = controllers.find(x => x.name === arg.toLowerCase());
-                if (!this.controller) {
-                    throw new Error(`Unknown tool: ${arg}.`);
+                arg = arg.trim();
+                if (this.pending) {
+                    await this.resolveValue(this.pending, arg);
+                } else if (this.controller && this.command) {
+                    if (this.positional.length === 0) {
+                        throw new Error(`Unexpected argument ${arg}`);
+                    }
+                    await this.resolveValue(this.positional[0], arg);
+                } else if (this.controller) {
+                    const command = this.controller.commands.find(x => matchName(x, arg));
+                    if (command) {
+                        this.setCommand(command);
+                    } else {
+                        throw new Error(`Unknown command: ${arg}`);
+                    }
+                } else {
+                    this.controller = controllers.find(x => matchName(x, arg));
+                    if (!this.controller) {
+                        const byAlias = findControllerAndCommandByAlias(arg);
+                        if (byAlias) {
+                            this.controller = byAlias.controller;
+                            this.setCommand(byAlias.command);
+                        } else if (arg.toLowerCase().trim() === "info") {
+                            this.printSummaryInfo = true;
+                            break;
+                        } else {
+                            throw new Error(`Unknown tool: ${arg}.`);
+                        }
+                    }
                 }
             }
         }
         if (this.pending) {
             await this.resolveValue(this.pending, undefined);
         }
-        if (this.args.help) {
+        if (this.args.help || this.printSummaryInfo) {
             return;
         }
         for (const arg of this.unresolved.values()) {
@@ -148,7 +174,7 @@ async function missingArgError(arg: CommandArg): Promise<Error> {
                 ["Available variants:", ""],
                 ...variants.map(x => [x.value, x.description ?? ""]),
             ],
-            {headerSeparator: true},
+            { headerSeparator: true },
         )
         : "";
     throw new Error(`Missing required ${arg.name}${variantsString}`);
@@ -157,6 +183,10 @@ async function missingArgError(arg: CommandArg): Promise<Error> {
 export async function run() {
     const parser = new CommandLine();
     await parser.parse(process.argv.slice(2));
+    if (parser.printSummaryInfo) {
+        await printSummaryInfo();
+        return;
+    }
     const {
         controller,
         command,

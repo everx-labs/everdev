@@ -41,7 +41,7 @@ async function installGlobally(dstPath: string, version: string, terminal: Termi
                 2,
             ),
         );
-        await run("npm", ["install", "-g"], {cwd: binDir}, terminal);
+        await run("npm", ["install", "-g"], { cwd: binDir }, terminal);
     } catch (err) {
         terminal.writeError(err);
         throw Error(`An error occurred while trying to install ${name} globally.
@@ -50,13 +50,16 @@ Make sure you can execute 'npm i <package> -g' without using sudo and try again`
     }
 }
 
-function downloadAndUnzip(dst: string, url: string): Promise<void> {
+function downloadAndUnzip(dst: string, url: string, terminal: Terminal): Promise<void> {
     return new Promise((resolve, reject) => {
         request(url)
+            .on("data", _ => {
+                terminal.write(".");
+            })
             .on("error", reject) // http protocol errors
             .pipe(
                 unzip
-                    .Extract({path: dst})
+                    .Extract({ path: dst })
                     .on("error", reject) // unzip errors
                     .on("close", resolve),
             );
@@ -64,15 +67,15 @@ function downloadAndUnzip(dst: string, url: string): Promise<void> {
 }
 
 export async function downloadFromGithub(terminal: Terminal, srcUrl: string, dstPath: string) {
-    terminal.write(`Downloading from ${srcUrl} to ${dstPath} ...`);
+    terminal.write(`Downloading from ${srcUrl}`);
     if (!fs.existsSync(dstPath)) {
-        fs.mkdirSync(dstPath, {recursive: true});
+        fs.mkdirSync(dstPath, { recursive: true });
     }
-    await downloadAndUnzip(dstPath, srcUrl);
+    await downloadAndUnzip(dstPath, srcUrl, terminal);
     terminal.write("\n");
 }
 
-function downloadAndGunzip(dest: string, url: string): Promise<void> {
+function downloadAndGunzip(dest: string, url: string, terminal: Terminal): Promise<void> {
     return new Promise((resolve, reject) => {
         const request = https.get(url, response => {
             if (response.statusCode !== 200) {
@@ -83,7 +86,7 @@ function downloadAndGunzip(dest: string, url: string): Promise<void> {
                 );
                 return;
             }
-            let file: fs.WriteStream | null = fs.createWriteStream(dest, {flags: "w"});
+            let file: fs.WriteStream | null = fs.createWriteStream(dest, { flags: "w" });
             let opened = false;
             const failed = (err: Error) => {
                 if (file) {
@@ -100,6 +103,10 @@ function downloadAndGunzip(dest: string, url: string): Promise<void> {
             unzip.pipe(file);
 
             response.pipe(unzip);
+
+            response.on("data", _ => {
+                terminal.write(".");
+            });
 
             request.on("error", err => {
                 failed(err);
@@ -133,6 +140,7 @@ export async function downloadFromBinaries(
     src: string,
     options?: {
         executable?: boolean,
+        adjustedPath?: string,
         globally?: boolean,
         version?: string,
     },
@@ -140,24 +148,35 @@ export async function downloadFromBinaries(
     src = src.replace("{p}", os.platform());
     const srcExt = path.extname(src).toLowerCase();
     const srcUrl = `https://binaries.tonlabs.io/${src}`;
-    terminal.write(`Downloading from ${srcUrl} to ${dstPath} ...`);
+    terminal.write(`Downloading from ${srcUrl}`);
     const dstDir = path.dirname(dstPath);
     if (!fs.existsSync(dstDir)) {
-        fs.mkdirSync(dstDir, {recursive: true});
+        fs.mkdirSync(dstDir, { recursive: true });
     }
     if (srcExt === ".zip") {
-        await downloadAndUnzip(dstDir, srcUrl);
+        await downloadAndUnzip(dstDir, srcUrl, terminal);
     } else if (srcExt === ".gz") {
-        await downloadAndGunzip(dstPath, srcUrl);
+        await downloadAndGunzip(dstPath, srcUrl, terminal);
+        if (path.extname(dstPath) === ".tar") {
+            await run("tar", ["xvf", dstPath], { cwd: path.dirname(dstPath) }, terminal);
+            fs.unlink(dstPath, () => {
+            });
+        }
     } else {
         throw Error(`Unexpected binary file extension: ${srcExt}`);
     }
     if (options?.executable && os.platform() !== "win32") {
-        fs.chmodSync(dstPath, 0o755);
-        if (os.platform() === "linux") {
-            // Without pause on Fedora 32 Linux always leads to an error: spawn ETXTBSY
-            await new Promise(resolve => setTimeout(resolve, 100));
+        if (options?.adjustedPath) {
+            const dir = path.dirname(options.adjustedPath);
+            fs.readdirSync(dir)
+                .map(filename => path.resolve(dir, filename))
+                .filter(filename => !fs.lstatSync(filename).isDirectory())
+                .forEach(filename => fs.chmodSync(filename, 0o755));
+        } else {
+            fs.chmodSync(dstPath, 0o755);
         }
+        // Without pause on Fedora 32 Linux always leads to an error: spawn ETXTBSY
+        await new Promise(resolve => setTimeout(resolve, 100));
     }
     if (options?.globally) {
         if (!options.version) {
@@ -349,22 +368,80 @@ function toString(value: any): string {
     return value === null || value === undefined ? "" : value.toString();
 }
 
-export function formatTable(rows: any[][], options?: { headerSeparator?: boolean }): string {
+export function formatTable(rows: any[][], options?: {
+    headerSeparator?: boolean
+}): string {
     const widths: number[] = [];
-    const updateWidth = (value: any, i: number) => {
+    const isEmpty: boolean[] = [];
+    const updateWidth = (value: any, i: number, rowIndex: number) => {
         const width = toString(value).length;
         while (widths.length <= i) {
             widths.push(0);
+            isEmpty.push(true);
         }
         widths[i] = Math.max(widths[i], width);
+        const isHeader = options?.headerSeparator && rowIndex === 0;
+        if (!isHeader && (width > 0)) {
+            isEmpty[i] = false;
+        }
     };
-    rows.forEach(x => x.forEach(updateWidth));
+    rows.forEach((row, ri) => row.forEach((value, vi) => updateWidth(value, vi, ri)));
     const formatValue = (value: any, i: number) => toString(value).padEnd(widths[i]);
-    const formatRow = (row: any[]) => row.map(formatValue).join("  ").trimEnd();
+    const formatRow = (row: any[]) => row.map(formatValue).filter((_, i) => !isEmpty[i]).join("  ").trimEnd();
     const lines = rows.map(formatRow);
     if (options?.headerSeparator) {
         const separator = formatRow(widths.map(x => "-".repeat(x)));
         lines.splice(1, 0, separator);
     }
     return lines.join("\n");
+}
+
+export function parseNumber(s: string | undefined | null): number | undefined {
+    if (s === null || s === undefined || s === "") {
+        return undefined;
+    }
+    const n = Number(s);
+    if (Number.isNaN(n)) {
+        throw Error(`Invalid number: ${s}`);
+    }
+    return n;
+}
+
+export function reduceBase64String(s: string | undefined): string | undefined {
+    if (s === undefined) {
+        return undefined;
+    }
+    if (s.length < 80) {
+        return s;
+    }
+    const bytes = Buffer.from(s, "base64");
+    return `${s.slice(0, 30)} ... ${s.slice(-30)} (${bytes.length} bytes)`;
+}
+
+export function breakWords(s: string, maxLen: number = 80): string {
+    let result = "";
+    for (const sourceLine of s.split("\n")) {
+        const words = sourceLine.split(" ");
+        let line = "";
+        words.forEach((w) => {
+            if (line.length + w.length > maxLen) {
+                if (result !== "") {
+                    result += "\n";
+                }
+                result += line;
+                line = "";
+            }
+            if (line !== "") {
+                line += " ";
+            }
+            line += w;
+        });
+        if (line !== "") {
+            if (result !== "") {
+                result += "\n";
+            }
+            result += line;
+        }
+    }
+    return result;
 }

@@ -2,9 +2,13 @@ import {
     Command,
     CommandArg,
     getArgVariants,
+    nameInfo,
     ToolController,
 } from "../core";
-import {formatTable} from "../core/utils";
+import {
+    breakWords,
+    formatTable,
+} from "../core/utils";
 import fs from "fs";
 import path from "path";
 import {controllers} from "../controllers";
@@ -34,11 +38,17 @@ async function printCommandUsage(controller: ToolController, command: Command) {
     for (const option of options) {
         optionsTable.push([
             "  ",
-            `--${option.name}${option.alias ? ", -" + option.alias : ""}`,
+            nameInfo(option, "--", "-"),
             option.title ?? "",
         ]);
+        if (option.description) {
+            breakWords(option.description, 60).split("\n").forEach((line) => {
+                optionsTable.push(["", "", line]);
+            });
+        }
         const variants = await getArgVariants(option);
         if (variants) {
+            optionsTable.push(["", "", "Variants:"]);
             formatTable(variants.map(x => [x.value, x.description])).split("\n").forEach(line => {
                 optionsTable.push(["", "", line]);
             });
@@ -48,9 +58,7 @@ async function printCommandUsage(controller: ToolController, command: Command) {
 }
 
 function printControllerUsage(controller: ToolController) {
-    const commands: [string, Command][] = controller.commands
-        .map(x => [`${controller.name} ${x.name}`, x]);
-    console.log(formatTable(commands.map(x => ["  ", x[0], x[1].title])));
+    console.log(formatTable(controller.commands.map(x => ["  ", nameInfo(x), x.title])));
 }
 
 export async function printUsage(controller?: ToolController, command?: Command) {
@@ -68,8 +76,10 @@ export async function printUsage(controller?: ToolController, command?: Command)
         printControllerUsage(controller);
         return;
     }
-    for (const controller of controllers) {
-        console.log(`\n${controller.title ?? controller.name} Commands:\n`);
-        printControllerUsage(controller);
-    }
+    console.log("Tools:");
+    const rows: string[][] = [];
+    controllers.forEach((controller) => {
+        rows.push(["  ", nameInfo(controller), controller.title ?? ""]);
+    });
+    console.log(formatTable(rows));
 }
