@@ -48,16 +48,15 @@ export const components = {
             if (!force && version === current) {
                 return false;
             }
-            terminal = nullTerminal
-            const output = (await run(PIP, ['install', '-U', TS4_PKG], {}, terminal)).split(os.EOL)
+            const output = await run(PIP, ['install', '-U', TS4_PKG], {}, nullTerminal)
             const successPattern = `Successfully installed ${TS4_PKG}-${version}`
-            const isOk = output.find(line => line === successPattern)
+            const isOk = output.split(os.EOL).find(line => line === successPattern)
 
             if (!isOk) {
-                console.error(`Failed to install ${TS4_PKG}==${version}`)
+                terminal.writeError(output)
                 return false
             } else {
-                console.info(successPattern)
+                terminal.log(successPattern)
             }
 
             return true
