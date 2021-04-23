@@ -4,14 +4,18 @@ import {
     AccountOptions,
     ContractPackage,
 } from "@tonclient/appkit";
-import {NetworkRegistry} from "../networks/registry";
+import {NetworkRegistry} from "../network/registry";
 import {
     signerNone,
     TonClient,
 } from "@tonclient/core";
-import {createSigner} from "../signers";
+import {createSigner} from "../signer";
 import fs from "fs";
-import {SignerRegistry} from "../signers/registry";
+import {
+    SignerRegistry,
+    SignerRegistryItem,
+} from "../signer/registry";
+import {ParamParser} from "./param-parser";
 
 function findExisting(paths: string[]): string | undefined {
     return paths.find(x => fs.existsSync(x));
@@ -44,31 +48,53 @@ function loadContract(filePath: string): ContractPackage {
 export async function getAccount(terminal: Terminal, args: {
     file: string,
     network: string,
-    address: string,
     signer: string,
+    data: string,
+    address?: string,
 }): Promise<Account> {
+    const address = args.address ?? "";
     const network = new NetworkRegistry().get(args.network);
     const client = new TonClient({
         network: {
             endpoints: network.endpoints,
         },
     });
-    const signerItem = args.signer.trim().toLowerCase() === "none"
-        ? undefined
-        : new SignerRegistry().get(args.signer);
+    const contract = args.file !== "" ? loadContract(args.file) : { abi: {} };
+    const signerArg = args.signer.trim().toLowerCase();
+    const signers = new SignerRegistry();
+    let signerItem: SignerRegistryItem | undefined;
+    if (signerArg === "none") {
+        signerItem = undefined;
+    } else if (signerArg === "" && !signers.default && address !== "") {
+        signerItem = undefined;
+    } else {
+        signerItem = signers.get(signerArg);
+    }
     const signer = signerItem ? await createSigner(signerItem.name) : signerNone();
-    const contract = loadContract(args.file);
     const options: AccountOptions = {
         signer,
         client,
     };
-    if (args.address !== "") {
-        options.address = args.address;
+    const abiData = contract.abi.data ?? [];
+    if (abiData.length > 0 && args.data !== "") {
+        options.initData = ParamParser.components({
+            name: "data",
+            type: "tuple",
+        }, args.data);
+    }
+    if (address !== "") {
+        options.address = address;
     }
     const account = new Account(contract, options);
     terminal.log("\nConfiguration\n");
-    terminal.log(`  Network: ${network.name}`);
-    terminal.log(`  Signer:  ${signerItem?.name ?? "None"}\n`);
-    terminal.log(`Address: ${await account.getAddress()}`);
+    terminal.log(`  Network: ${network.name} (${NetworkRegistry.getEndpointsSummary(network)})`);
+    terminal.log(`  Signer:  ${signerItem ? `${signerItem.name} (public ${signerItem.keys.public})` : "None"}\n`);
+    if (address === "" && abiData.length > 0 && !options.initData) {
+        terminal.log(`Address:   Can't calculate address: additional deploying data required.`);
+    } else {
+        terminal.log(`Address:   ${await account.getAddress()}${address === "" ? " (calculated from TVC and signer public)" : ""}`);
+    }
     return account;
 }
+
+

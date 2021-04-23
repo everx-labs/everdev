@@ -1,27 +1,48 @@
-import { Clang } from "./clang";
-import { Solidity } from "./solidity";
+import {Clang} from "./clang";
+import {Solidity} from "./solidity";
 // import {TestSuite} from "./ts";
 import {JsApps} from "./js";
 import {SE} from "./se";
 import {TONOS} from "./tonos-cli";
 import {
+    Command,
     matchName,
     Terminal,
+    ToolController,
 } from "../core";
-import {Signers} from "./signers";
-import {Networks} from "./networks";
+import {SignerTool} from "./signer";
+import {NetworkTool} from "./network";
 import {Contract} from "./contract";
 
 export const controllers = [
     Clang,
     Solidity,
     SE,
-    Networks,
-    Signers,
+    NetworkTool,
+    SignerTool,
     Contract,
     JsApps,
     TONOS,
 ];
+
+export function findControllerAndCommandByAlias(
+    alias: string,
+): { controller: ToolController, command: Command } | undefined {
+    alias = alias.trim().toLowerCase();
+    for (const controller of controllers) {
+        for (const command of controller.commands) {
+            if (controller.alias && command.alias) {
+                if (`${controller.alias}${command.alias}` === alias) {
+                    return {
+                        controller,
+                        command,
+                    };
+                }
+            }
+        }
+    }
+    return undefined;
+}
 
 export async function runCommand(terminal: Terminal, name: string, args: any): Promise<void> {
     const [controllerName, commandName] = name

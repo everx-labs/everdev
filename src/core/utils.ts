@@ -41,7 +41,7 @@ async function installGlobally(dstPath: string, version: string, terminal: Termi
                 2,
             ),
         );
-        await run("npm", ["install", "-g"], {cwd: binDir}, terminal);
+        await run("npm", ["install", "-g"], { cwd: binDir }, terminal);
     } catch (err) {
         terminal.writeError(err);
         throw Error(`An error occurred while trying to install ${name} globally.
@@ -59,7 +59,7 @@ function downloadAndUnzip(dst: string, url: string, terminal: Terminal): Promise
             .on("error", reject) // http protocol errors
             .pipe(
                 unzip
-                    .Extract({path: dst})
+                    .Extract({ path: dst })
                     .on("error", reject) // unzip errors
                     .on("close", resolve),
             );
@@ -69,7 +69,7 @@ function downloadAndUnzip(dst: string, url: string, terminal: Terminal): Promise
 export async function downloadFromGithub(terminal: Terminal, srcUrl: string, dstPath: string) {
     terminal.write(`Downloading from ${srcUrl}`);
     if (!fs.existsSync(dstPath)) {
-        fs.mkdirSync(dstPath, {recursive: true});
+        fs.mkdirSync(dstPath, { recursive: true });
     }
     await downloadAndUnzip(dstPath, srcUrl, terminal);
     terminal.write("\n");
@@ -86,7 +86,7 @@ function downloadAndGunzip(dest: string, url: string, terminal: Terminal): Promi
                 );
                 return;
             }
-            let file: fs.WriteStream | null = fs.createWriteStream(dest, {flags: "w"});
+            let file: fs.WriteStream | null = fs.createWriteStream(dest, { flags: "w" });
             let opened = false;
             const failed = (err: Error) => {
                 if (file) {
@@ -151,7 +151,7 @@ export async function downloadFromBinaries(
     terminal.write(`Downloading from ${srcUrl}`);
     const dstDir = path.dirname(dstPath);
     if (!fs.existsSync(dstDir)) {
-        fs.mkdirSync(dstDir, {recursive: true});
+        fs.mkdirSync(dstDir, { recursive: true });
     }
     if (srcExt === ".zip") {
         await downloadAndUnzip(dstDir, srcUrl, terminal);
@@ -159,7 +159,8 @@ export async function downloadFromBinaries(
         await downloadAndGunzip(dstPath, srcUrl, terminal);
         if (path.extname(dstPath) === ".tar") {
             await run("tar", ["xvf", dstPath], { cwd: path.dirname(dstPath) }, terminal);
-            fs.unlink(dstPath, () => {});
+            fs.unlink(dstPath, () => {
+            });
         }
     } else {
         throw Error(`Unexpected binary file extension: ${srcExt}`);
@@ -393,4 +394,54 @@ export function formatTable(rows: any[][], options?: {
         lines.splice(1, 0, separator);
     }
     return lines.join("\n");
+}
+
+export function parseNumber(s: string | undefined | null): number | undefined {
+    if (s === null || s === undefined || s === "") {
+        return undefined;
+    }
+    const n = Number(s);
+    if (Number.isNaN(n)) {
+        throw Error(`Invalid number: ${s}`);
+    }
+    return n;
+}
+
+export function reduceBase64String(s: string | undefined): string | undefined {
+    if (s === undefined) {
+        return undefined;
+    }
+    if (s.length < 80) {
+        return s;
+    }
+    const bytes = Buffer.from(s, "base64");
+    return `${s.slice(0, 30)} ... ${s.slice(-30)} (${bytes.length} bytes)`;
+}
+
+export function breakWords(s: string, maxLen: number = 80): string {
+    let result = "";
+    for (const sourceLine of s.split("\n")) {
+        const words = sourceLine.split(" ");
+        let line = "";
+        words.forEach((w) => {
+            if (line.length + w.length > maxLen) {
+                if (result !== "") {
+                    result += "\n";
+                }
+                result += line;
+                line = "";
+            }
+            if (line !== "") {
+                line += " ";
+            }
+            line += w;
+        });
+        if (line !== "") {
+            if (result !== "") {
+                result += "\n";
+            }
+            result += line;
+        }
+    }
+    return result;
 }

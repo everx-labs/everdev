@@ -5,7 +5,10 @@ import {
     nameInfo,
     ToolController,
 } from "../core";
-import {formatTable} from "../core/utils";
+import {
+    breakWords,
+    formatTable,
+} from "../core/utils";
 import fs from "fs";
 import path from "path";
 import {controllers} from "../controllers";
@@ -38,8 +41,14 @@ async function printCommandUsage(controller: ToolController, command: Command) {
             nameInfo(option, "--", "-"),
             option.title ?? "",
         ]);
+        if (option.description) {
+            breakWords(option.description, 60).split("\n").forEach((line) => {
+                optionsTable.push(["", "", line]);
+            });
+        }
         const variants = await getArgVariants(option);
         if (variants) {
+            optionsTable.push(["", "", "Variants:"]);
             formatTable(variants.map(x => [x.value, x.description])).split("\n").forEach(line => {
                 optionsTable.push(["", "", line]);
             });

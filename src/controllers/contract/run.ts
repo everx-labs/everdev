@@ -7,6 +7,7 @@ import {
     MessageBodyType,
 } from "@tonclient/core";
 import {Account} from "@tonclient/appkit";
+import {ParamParser} from "./param-parser";
 
 export async function resolveFunction(
     terminal: Terminal,
@@ -40,8 +41,8 @@ export async function resolveFunction(
     return func;
 }
 
-function inputParam(terminal: Terminal, param: AbiParam): Promise<string> {
-    terminal.write(`  ${param.name} (${param.type}): `);
+function inputLine(terminal: Terminal, prompt: string): Promise<string> {
+    terminal.write(`  ${prompt}: `);
     return new Promise((resolve) => {
         const standard_input = process.stdin;
         standard_input.setEncoding("utf-8");
@@ -51,55 +52,69 @@ function inputParam(terminal: Terminal, param: AbiParam): Promise<string> {
     });
 }
 
-function resolveParamValue(_param: AbiParam, value: string): any {
-    return value;
+async function inputScalar(terminal: Terminal, param: AbiParam): Promise<any> {
+    while (true) {
+        const value = await inputLine(terminal, `${param.name} (${param.type})`);
+        try {
+            return ParamParser.scalar(param, `"${value}"`);
+        } catch (err) {
+            terminal.log(err.toString());
+        }
+    }
 }
 
-export async function resolveInputs(
+async function inputArray(terminal: Terminal, param: AbiParam): Promise<any[]> {
+    const item = JSON.parse(JSON.stringify(param)) as AbiParam;
+    item.type = param.type.slice(0, -2);
+    let count = Number(await inputLine(terminal, `Enter number of items in ${param.name}`));
+    const items = [];
+    let i = 1;
+    while (i <= count) {
+        item.name = `${param.name} ${i}`;
+        items.push(await inputParam(terminal, item));
+        i += 1;
+    }
+    return items;
+}
+
+async function inputParam(terminal: Terminal, param: AbiParam): Promise<any> {
+    if (param.type.endsWith("[]")) {
+        return inputArray(terminal, param);
+    } else {
+        return inputScalar(terminal, param);
+    }
+}
+
+export async function resolveParams(
     terminal: Terminal,
     prompt: string,
     params: AbiParam[],
-    inputString: string,
+    paramsString: string,
     preventUi: boolean,
 ): Promise<object> {
-    const values: { [name: string]: any } = {};
-    inputString
-        .split(",")
-        .map(x => x.trim())
-        .filter(x => x !== "")
-        .map(x => x.split("="))
-        .forEach((nameValue) => {
-            if (nameValue.length < 2) {
-                throw new Error(`Missing value for parameter "${nameValue[0]}".`);
-            }
-            const [name, value] = nameValue;
-            const param = params.find(x => x.name === name.trim().toLowerCase());
-            if (!param) {
-                throw new Error(`Parameter "${name}" not found.`);
-            }
-            if (param.name in values) {
-                throw new Error(`Parameter "${name}" already defined.`);
-            }
-            values[param.name] = resolveParamValue(param, value);
-        });
+    const values: { [name: string]: any } = ParamParser.components({
+        name: "params",
+        type: "tuple",
+        components: params,
+    }, paramsString);
     let hasUserInput = false;
+    if (params.length > 0) {
+        terminal.log(prompt);
+    }
+    for (const param of params) {
+        if (param.name in values) {
+            terminal.log(`  ${param.name} (${param.type}): ${JSON.stringify(values[param.name])}`);
+        }
+    }
     for (const param of params) {
         if (!(param.name in values)) {
             if (!hasUserInput) {
                 if (preventUi) {
                     throw new Error(`Missing parameter "${param.name}".`);
                 }
-                terminal.log(`\n${prompt}\n`);
+                hasUserInput = true;
             }
-            while (true) {
-                const value = await inputParam(terminal, param);
-                try {
-                    values[param.name] = resolveParamValue(param, value);
-                    break;
-                } catch (err) {
-                    terminal.log(err.toString());
-                }
-            }
+            values[param.name] = await inputParam(terminal, param);
         }
     }
     return values;
@@ -118,9 +133,9 @@ export async function getRunParams(
     functionInput: object,
 }> {
     const func = await resolveFunction(terminal, account, args.function, args.preventUi);
-    const functionInput = await resolveInputs(
-        terminal
-        , `\nEnter ${func.name} parameters:\n`,
+    const functionInput = await resolveParams(
+        terminal,
+        `\nParameters of ${func.name}:\n`,
         func.inputs,
         args.input,
         args.preventUi,
@@ -140,7 +155,7 @@ export async function logRunResult(
     const details = {
         transaction,
         output: decoded?.output,
-        out_messages: outMessages.filter(x => x.body_type !== MessageBodyType.Output),
+        out_messages: outMessages.filter(x => x?.body_type !== MessageBodyType.Output),
     };
     terminal.log();
     terminal.log(`Execution has finished with result: ${JSON.stringify(details, undefined, "    ")}`);
