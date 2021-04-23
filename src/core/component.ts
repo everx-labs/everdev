@@ -137,7 +137,7 @@ export class Component {
 
     static async ensureInstalledAll(terminal: Terminal, components: { [name: string]: Component }) {
         for (const component of Object.values(components)) {
-            const res = await component.ensureVersion(terminal, false);
+            await component.ensureVersion(terminal, false);
         }
     }
 
