@@ -1,6 +1,9 @@
 import path from 'path'
+import fs from 'fs'
 import { Command, Component, Terminal, ToolController } from '../../core'
+import { uniqueFilePath } from '../../core/utils'
 import { components } from './components'
+import { BasicTest } from './snippets'
 
 export const ts4VersionCommand: Command = {
     name: "version",
@@ -24,6 +27,28 @@ export const ts4UpdateCommand: Command = {
     title: "Update to the latest version",
     async run(terminal: Terminal, _args: {}): Promise<void> {
         await Component.updateAll(terminal, true, components)
+    },
+}
+
+export const ts4CreateCommand: Command = {
+    name: "create",
+    title: "Create TestSuite4 test",
+    args: [{
+        isArg: true,
+        name: "name",
+        title: "Test script name",
+        type: "string",
+        defaultValue: "Test",
+    }, {
+        name: "folder",
+        type: "folder",
+        title: "Target folder (current is default)",
+    }],
+    async run(terminal: Terminal, args: { name: string, folder: string }) {
+        const filePath = uniqueFilePath(args.folder, `${args.name}{}.py`)
+        const text = BasicTest.split("{name}").join(args.name)
+        fs.writeFileSync(filePath, text)
+        terminal.log(`TestSuite4 test script ${path.basename(filePath)} created.`)
     },
 }
 
@@ -54,5 +79,11 @@ export const ts4RunCommand: Command = {
 export const TestSuite4: ToolController = {
     name: "ts4",
     title: "TestSuite4 framework",
-    commands: [ts4VersionCommand, ts4InstallCommand, ts4UpdateCommand, ts4RunCommand],
+    commands: [
+        ts4VersionCommand,
+        ts4InstallCommand,
+        ts4UpdateCommand,
+        ts4CreateCommand,
+        ts4RunCommand,
+    ],
 }
