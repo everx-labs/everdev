@@ -100,11 +100,11 @@ Each component is downloaded and installed automatically for the target platform
 - [TON OS Startup Edition](https://github.com/tonlabs/tonos-se) – 
   Local blockchain for development and testing
 - [TestSuite4](https://github.com/tonlabs/TestSuite4) – **soon as part of tondev**  
-  Python lightweight framework for Solidity testing 
+  Python lightweight framework for contract testing 
 - [tonos-cli](https://github.com/tonlabs/tonos-cli) – 
   Command line tool for TON OS. TONDEV helps with installation and version management. 
-- [TON-SDK](https://github.com/tonlabs/TON-SDK) -  **soon as part of tondev**   
-  Core SDK Library features. 
+- [TON-SDK](https://github.com/tonlabs/TON-SDK) - 
+  Core SDK Library features: deploy and execute contracts, run get methods and so on.
 
 TONDEV can be extended with other tools following the [instructions of integration](#tondev-extensibility). 
 
