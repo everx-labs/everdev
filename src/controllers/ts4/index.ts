@@ -65,7 +65,7 @@ export const ts4RunCommand: Command = {
     async run(terminal: Terminal, args: { file: string }): Promise<void> {
         const ext = path.extname(args.file)
         if (ext !== ".py") {
-            terminal.log(`Choose TestSuite4 test.`)
+            terminal.log(`Choose file *.py`)
             return
         }
         await Component.ensureInstalledAll(terminal, components)
