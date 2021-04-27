@@ -1,47 +1,65 @@
 type Query {
-    " TONDev home folder"
+    " Returns TONDev home folder"
     home: String
-    " TONDev tool list"
+
+    " Returns TONDev tool list"
     tools: [Tool]
-    " Query variants for command arg"
+
+    " Returns variants for command arg"
     commandArgVariants(tool: String, command: String, arg: String): [ArgVariant]
 
-    " Validate terminal input values"
-    validateInput(terminalId: ID, inputId: ID, values: [ArgValue]): [ValidateArgResult]
-    " Query input arg variants"
-    inputVariants(terminalId: ID, inputId: ID, arg: String, values: [ArgValue]): [ArgVariant]
+    " Validates task input values"
+    validateInput(task: ID, input: ID, values: [InputArgValue]): [ValidateArgResult]
+
+    " Returns input arg variants"
+    inputVariants(task: ID, input: ID, arg: String, values: [InputArgValue]): [ArgVariant]
+
+    " Returns running tasks"
+    runningTasks(tool: String, first: Int, after: Int): [Task]
+
+    " Returns recently ran tasks"
+    recentTasks(tool: String, first: Int, after: Int): [Task]
 }
 
 type Subscription {
-    runCommand(tool: String, command: String, args: [ArgValue]): [TerminalCommand]
+    runTask(tool: String, command: String, args: [InputArgValue]): [Terminal]
+    listenTask(task: String): [Terminal]
 }
 
 type Mutation {
     " Accepts requested input values"
-    acceptInput(terminalId: ID, inputId: ID, values: [ArgValue]): [ValidateArgResult]
+    acceptInput(terminalId: ID, inputId: ID, values: [InputArgValue]): [ValidateArgResult]
 }
 
-type TerminalCommand {
-    start: TerminalStartCommand
-    stop: TerminalStopCommand
-    message: TerminalMessageCommand
-    input: TerminalInputCommand
+type Task {
+    id: ID,
+    time: Float,
+    tool: String,
+    command: String,
+    args: [ArgValue],
 }
 
-" Notify that terminal has started with specified id."
-type TerminalStartCommand {
-    " Terminal id"
-    id: ID
+type Terminal {
+    start: TerminalStart
+    stop: TerminalStop
+    message: TerminalMessage
+    input: TerminalInput
 }
 
-" Notify that terminal has stopped."
-type TerminalStopCommand {
+" Notify that task terminal has started with specified task id."
+type TerminalStart {
+    " Task id"
+    task: ID
+}
+
+" Notify that task terminal has stopped."
+type TerminalStop {
 }
 
 " Show/update message to user."
-type TerminalMessageCommand {
+type TerminalMessage {
     " Message Id"
-    id: ID,
+    message: ID,
     " Target channel"
     channel: TerminalMessageChannel
     " Message text"
@@ -51,9 +69,9 @@ type TerminalMessageCommand {
 }
 
 " Prints text. No line feeds will be produced."
-type TerminalInputCommand {
+type TerminalInput {
     " Input id (used in validateInput and acceptInput)"
-    id: ID
+    input: ID
     " Input sections"
     sections: [TerminalInputSection]
 }
@@ -153,9 +171,14 @@ type Tool {
     commands: [Command]
 }
 
-input ArgValue {
+input InputArgValue {
     name: String
     value: String
+}
+
+type ArgValue {
+    name: String,
+    value: String,
 }
 
 type ValidateArgResult {
@@ -163,5 +186,3 @@ type ValidateArgResult {
     error: String
     hint: String
 }
-
-
