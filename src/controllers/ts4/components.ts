@@ -1,6 +1,6 @@
 import os from 'os'
 import { Component, Terminal } from '../../core'
-import { compareVersions, httpsGetJson, nullTerminal, run } from '../../core/utils'
+import { compareVersions, httpsGetJson, nullTerminal,  run } from '../../core/utils'
 
 const TS4_PKG = 'tonos-ts4'
 const PYPI = `https://pypi.org/pypi/${TS4_PKG}/json`
@@ -48,7 +48,8 @@ export const components = {
             if (!force && version === current) {
                 return false;
             }
-            const output = await run(PIP, ['install', '-U', TS4_PKG], {}, nullTerminal)
+            const pkg = TS4_PKG + (version ? `==${version}` : '')
+            const output = await run(PIP, ['install', '-U', pkg], {}, nullTerminal)
             const successPattern = `Successfully installed ${TS4_PKG}-${version}`
             const isOk = output.split(os.EOL).find(line => line === successPattern)
 

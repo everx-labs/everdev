@@ -16,9 +16,19 @@ export const ts4VersionCommand: Command = {
 export const ts4InstallCommand: Command = {
     name: "install",
     title: "Install latest release of TestSuite4",
-    args: [],
-    async run(terminal: Terminal) {
-        await Component.ensureInstalledAll(terminal, components)
+    args: [{
+        isArg: true,
+        name: 'version',
+        type: 'string',
+        title: 'TestSuite4 version (semver compatible)',
+    }],
+    async run(terminal: Terminal, args: { version: string }) {
+        const versions: {
+            ts4?: string;
+        } = {
+            ...(args.version !== "" ? { ts4: args.version } : {}),
+        }
+        await Component.setVersions(terminal, false, components, versions)
     },
 }
 
