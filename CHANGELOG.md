@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [0.6.0] - 2021-04-28
 
 ### New
-- `ts4` TestSuite4[README.md#testsuite4] framework for contract testing is supported: install, manage versions, create test template, run tests.
+- `ts4` (TestSuite4)[README.md#testsuite4] framework for contract testing is supported: install, manage versions, create test template, run tests.
 
 ## [0.5.0] - 2021-04-23
 
