@@ -105,7 +105,7 @@ Each component is downloaded and installed automatically for the target platform
 - [C/C++ Compiler](https://github.com/tonlabs/TON-Compiler)
 - [TON OS Startup Edition](https://github.com/tonlabs/tonos-se) – 
   Local blockchain for development and testing
-- [TestSuite4](https://github.com/tonlabs/TestSuite4) – **soon as part of tondev**  
+- [TestSuite4](https://github.com/tonlabs/TestSuite4) – 
   Python lightweight framework for contract testing 
 - [tonos-cli](https://github.com/tonlabs/tonos-cli) – 
   Command line tool for TON OS. TONDEV helps with installation and version management. 
@@ -1161,35 +1161,8 @@ Learn more about creating your own controller: [Creating Controller](docs/creati
 ## Backlog
 
 ### Debot
-- Support of debot test chat(browser for debot testing), 
-- Debot publishing, etc.
+- Debot deployment
 
 ### Solidity
 
 - Support other compilation and linking options
-
-### C/C++
-
-- Integrate C/C++ compiler - easily install and compile C/C++ contracts
-
-### TS4
-
-- Debug contracts with TS framework and tools
-
-### SDK
-
-- Generate keys
-- Calculate addresses
-- Estimate deploy fees
-- Deploy contracts,
-- Run on-chain methods 
-- Run get-methods
-- Convert addresses, etc.
-
-### Network support
-
-Q1 2021:
-
-- Connect to networks: main.ton.dev, net.ton.dev, local network
-- Add a custom network
-- Setup network giver
