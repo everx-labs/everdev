@@ -6,7 +6,7 @@
 
 **Get quick help in our telegram channel:**
 
-[![Channel on Telegram](https://img.shields.io/badge/chat-on%20telegram-9cf.svg)](https://t.me/ton_sdk) 
+[![Channel on Telegram](https://img.shields.io/badge/chat-on%20telegram-9cf.svg)](https://t.me/ton_sdk)  
 
 # TONDEV - Free TON Development Environment
 Download and install all the core [TON.DEV](https://docs.ton.dev/86757ecb2/p/04a4ba-) components in one click and access them from a single interface.
@@ -35,7 +35,7 @@ Download and install all the core [TON.DEV](https://docs.ton.dev/86757ecb2/p/04a
       - [Compile](#compile-1)
       - [Version](#version-1)
       - [Update](#update-2)
-      - [Set](#set-1)  
+      - [Set](#set-1)
     - [TON OS Startup Edition(SE)](#ton-os-startup-editionse)
       - [Start](#start)
       - [Version](#version-2)
@@ -54,12 +54,12 @@ Download and install all the core [TON.DEV](https://docs.ton.dev/86757ecb2/p/04a
       - [Version](#version-3)
       - [Set](#set-3)
       - [Update](#update-4)
-    - [TestSuite4](#TestSuite4)
-      - [Show available versions](#version-4)
-      - [Install TestSuite4](#install-2)
-      - [Update TestSuite4](#update-5)
-      - [Create template of the test](#create)
-      - [Run test](#run)
+    - [TestSuite4](#testsuite4)
+      - [Version](#version-4)
+      - [Install](#install-2)
+      - [Update](#update-5)
+      - [Create](#create)
+      - [Run](#run)
     - [Signer Tool](#signer-tool)
       - [Add a signer with randomly generated keys](#add-a-signer-with-randomly-generated-keys)
       - [Add a signer with specific keys](#add-a-signer-with-specific-keys)
@@ -85,10 +85,6 @@ Download and install all the core [TON.DEV](https://docs.ton.dev/86757ecb2/p/04a
   - [Backlog](#backlog)
     - [Debot](#debot)
     - [Solidity](#solidity-1)
-    - [C/C++](#cc)
-    - [TS4](#ts4)
-    - [SDK](#sdk-1)
-    - [Network support](#network-support)
 
 ## What is TONDEV?
 
@@ -477,7 +473,7 @@ This command creates a TestSuite4's template of the test (`TestName.py`).
 ```bash
 tondev ts4 create TestName
 
-tondev ts4 create TestName --folder tests # creates tests/TestName.py (folder must exists)
+tondev ts4 create TestName --folder tests # creates tests/TestName.py (folder must exist)
 ```
 
 #### Run
