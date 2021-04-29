@@ -6,7 +6,7 @@
 
 **Get quick help in our telegram channel:**
 
-[![Channel on Telegram](https://img.shields.io/badge/chat-on%20telegram-9cf.svg)](https://t.me/ton_sdk) 
+[![Channel on Telegram](https://img.shields.io/badge/chat-on%20telegram-9cf.svg)](https://t.me/ton_sdk)  
 
 # TONDEV - Free TON Development Environment
 Download and install all the core [TON.DEV](https://docs.ton.dev/86757ecb2/p/04a4ba-) components in one click and access them from a single interface.
@@ -35,7 +35,7 @@ Download and install all the core [TON.DEV](https://docs.ton.dev/86757ecb2/p/04a
       - [Compile](#compile-1)
       - [Version](#version-1)
       - [Update](#update-2)
-      - [Set](#set-1)  
+      - [Set](#set-1)
     - [TON OS Startup Edition(SE)](#ton-os-startup-editionse)
       - [Start](#start)
       - [Version](#version-2)
@@ -54,6 +54,12 @@ Download and install all the core [TON.DEV](https://docs.ton.dev/86757ecb2/p/04a
       - [Version](#version-3)
       - [Set](#set-3)
       - [Update](#update-4)
+    - [TestSuite4](#testsuite4)
+      - [Version](#version-4)
+      - [Install](#install-2)
+      - [Update](#update-5)
+      - [Create](#create)
+      - [Run](#run)
     - [Signer Tool](#signer-tool)
       - [Add a signer with randomly generated keys](#add-a-signer-with-randomly-generated-keys)
       - [Add a signer with specific keys](#add-a-signer-with-specific-keys)
@@ -79,10 +85,6 @@ Download and install all the core [TON.DEV](https://docs.ton.dev/86757ecb2/p/04a
   - [Backlog](#backlog)
     - [Debot](#debot)
     - [Solidity](#solidity-1)
-    - [C/C++](#cc)
-    - [TS4](#ts4)
-    - [SDK](#sdk-1)
-    - [Network support](#network-support)
 
 ## What is TONDEV?
 
@@ -99,7 +101,7 @@ Each component is downloaded and installed automatically for the target platform
 - [C/C++ Compiler](https://github.com/tonlabs/TON-Compiler)
 - [TON OS Startup Edition](https://github.com/tonlabs/tonos-se) – 
   Local blockchain for development and testing
-- [TestSuite4](https://github.com/tonlabs/TestSuite4) – **soon as part of tondev**  
+- [TestSuite4](https://github.com/tonlabs/TestSuite4) – 
   Python lightweight framework for contract testing 
 - [tonos-cli](https://github.com/tonlabs/tonos-cli) – 
   Command line tool for TON OS. TONDEV helps with installation and version management. 
@@ -115,18 +117,14 @@ TONDEV can be extended with other tools following the [instructions of integrati
 - [`Node.js`](https://nodejs.org/) >= 10.x installed
 - (optional) [`Docker`](https://www.docker.com/)  >= 19.x installed
 - Solidity compiler requires VC++ Runtime on Windows. You can install it from [the latest supported Visual C++ downloads](https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0).
-- You need to be root (or use sudo) to be able to install globally on macOS and Linux.
 
 ### Install
 
 ```shell
 npm i -g tondev
 ```
-or 
-```shell
-sudo npm i -g tondev
-```
 
+If you see an EACCES error when you try to install a package globally on Mac or Linux, [please see this instruction](https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally)
 
 ### Update
 
@@ -432,6 +430,60 @@ This command updates tonos-cli version to the latest
 ```shell
 tondev tonos-cli update
 ```
+
+
+### TestSuite4
+
+TestSuite4 is a framework designed to simplify development and testing of TON Contracts. It contains lightweight blockchain emulator making it easy to develop contracts in a TDD-friendly style.
+
+For more information, visit [TestSuite4's documentation](https://tonlabs.github.io/TestSuite4/).
+
+:information_source: `Python 3.6 - 3.9` and `pip` required.
+
+#### Version
+
+This command shows the currently installed and available TestSuite4 framework versions.
+
+```
+tondev ts4 version
+```
+
+#### Install
+
+This command installs (using `pip`) TestSuite4's latest or selected version and downloads them if needed.
+
+```bash
+tondev ts4 install # install latest version
+
+tondev ts4 install 0.2.0 # install version 0.2.0
+```
+
+#### Update
+
+This command updates TestSuite4 to the latest version.
+
+```
+tondev ts4 update
+```
+
+#### Create
+
+This command creates a TestSuite4's template of the test (`TestName.py`).
+
+```bash
+tondev ts4 create TestName
+
+tondev ts4 create TestName --folder tests # creates tests/TestName.py (folder must exist)
+```
+
+#### Run
+
+This command runs selected test (`TestName.py`).
+
+```
+tondev ts4 run TestName
+```
+
 
 ### Signer Tool
 
@@ -1105,35 +1157,8 @@ Learn more about creating your own controller: [Creating Controller](docs/creati
 ## Backlog
 
 ### Debot
-- Support of debot test chat(browser for debot testing), 
-- Debot publishing, etc.
+- Debot deployment
 
 ### Solidity
 
 - Support other compilation and linking options
-
-### C/C++
-
-- Integrate C/C++ compiler - easily install and compile C/C++ contracts
-
-### TS4
-
-- Debug contracts with TS framework and tools
-
-### SDK
-
-- Generate keys
-- Calculate addresses
-- Estimate deploy fees
-- Deploy contracts,
-- Run on-chain methods 
-- Run get-methods
-- Convert addresses, etc.
-
-### Network support
-
-Q1 2021:
-
-- Connect to networks: main.ton.dev, net.ton.dev, local network
-- Add a custom network
-- Setup network giver
