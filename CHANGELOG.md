@@ -2,10 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.5.0] - 2021-04-08
+## [0.6.0] - 2021-04-28
 
 ### New
-- `clang` controller for C++ compiler:   
+- `ts4` [TestSuite4](README.md#testsuite4) framework for contract testing is supported: install, manage versions, create test template, run tests.
+
+## [0.5.0] - 2021-04-23
+
+### New
+- `clang` controller for [C++ compiler](https://github.com/tonlabs/TON-Compiler):   
   install, compile with 1 command, manage versions, etc.   
 - `signer` controller for signer registry management:   
   generate keys, import keys and mnemonics, specify default signer, etc.   
