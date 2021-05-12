@@ -15,14 +15,6 @@
 	"bin": {
 		"tondev": "./cli.js"
 	},
-	"pkg": {
-		"assets": [
-			"node_modules/@tonclient/lib-node/tonclient.node"
-		],
-		"targets": [
-			"node12-macos-x64"
-		]
-	},
 	"keywords": [
 		"Free",
 		"TON",
