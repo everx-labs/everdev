@@ -55,8 +55,14 @@ export const solidityCompileCommand: Command = {
             title: "Source file",
             nameRegExp: /\.sol$/i,
         },
+        {
+            name: 'output-dir',
+            alias: 'o',
+            type: 'folder',
+            title: 'Output folder (current is default)',
+        },
     ],
-    async run(terminal: Terminal, args: { file: string }): Promise<void> {
+    async run(terminal: Terminal, args: { file: string, outputDir: string }): Promise<void> {
         const ext = path.extname(args.file);
         if (ext !== ".sol") {
             terminal.log(`Choose solidity source file.`);
@@ -65,17 +71,19 @@ export const solidityCompileCommand: Command = {
         await Component.ensureInstalledAll(terminal, components);
         const fileDir = path.dirname(args.file);
         const fileName = path.basename(args.file);
-        const tvcName = changeExt(fileName, ".tvc");
-        const codeName = changeExt(fileName, ".code");
 
-        await components.compiler.run(terminal, fileDir, [fileName]);
+        const outputDir = path.resolve(args.outputDir ?? ".");
+        const tvcName = path.resolve( outputDir, changeExt(fileName, ".tvc"));
+        const codeName = path.resolve( outputDir, changeExt(fileName, ".code" ));
+
+        await components.compiler.run(terminal, fileDir, ["-o", outputDir, fileName]);
         const linkerOut = await components.linker.run(
             terminal,
             fileDir,
             ["compile", codeName, "--lib", components.stdlib.path]);
 
         const generatedTvcName = `${/Saved contract to file (.*)$/mg.exec(linkerOut)?.[1]}`;
-        fs.renameSync(path.resolve(fileDir, generatedTvcName), path.resolve(fileDir, tvcName));
+        fs.renameSync(path.resolve(fileDir, generatedTvcName), path.resolve(outputDir, tvcName));
         fs.unlinkSync(path.resolve(fileDir, codeName));
     },
 };
