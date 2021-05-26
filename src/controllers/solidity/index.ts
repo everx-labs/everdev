@@ -10,6 +10,7 @@ import {
     uniqueFilePath,
 } from "../../core/utils";
 import fs from "fs";
+import mv from 'mv';
 import {BasicContract} from "./snippets";
 import {components} from "./components";
 
@@ -83,7 +84,16 @@ export const solidityCompileCommand: Command = {
             ["compile", codeName, "--lib", components.stdlib.path]);
 
         const generatedTvcName = `${/Saved contract to file (.*)$/mg.exec(linkerOut)?.[1]}`;
-        fs.renameSync(path.resolve(fileDir, generatedTvcName), path.resolve(outputDir, tvcName));
+
+        // fs.renameSync was replaces by this code, because of an error: EXDEV: cross-device link not permitted
+        await new Promise((res, rej) =>
+            mv(
+                path.resolve(fileDir, generatedTvcName),
+                path.resolve(outputDir, tvcName),
+                { mkdirp: true, clobber: true },
+                (err: Error) => (err ? rej(err) : res(true)),
+            )
+        );
         fs.unlinkSync(path.resolve(fileDir, codeName));
     },
 };

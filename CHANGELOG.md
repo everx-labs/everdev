@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.0] - 2021-05-26
+
+### New
+- Added new option `--output-dir, -o` for solidity compiler to store `*.abi.json` and `*.tvc` files in a separate directory.
+   Example: `tondev sol compile hello.sol -o ~/assets`
+
 ## [0.6.0] - 2021-04-28
 
 ### New
