@@ -6,13 +6,37 @@ on:
 
 jobs:
   publish-npm:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [windows, macos, ubuntu]
+        include:
+          - os: windows
+            build: npx caxa --directory . --command "{{caxa}}/node_modules/.bin/node" "{{caxa}}/cli.js" --output "tondev-windows-${{ github.sha }}.exe"
+            artifact: tondev-windows-${{ github.sha }}.exe
+          - os: macos
+            build: |
+              npx caxa --directory . --command "{{caxa}}/node_modules/.bin/node" "{{caxa}}/cli.js" --output "tondev"
+              tar -czf "tondev-macos-${{ github.sha }}.tgz" "tondev"
+            artifact: tondev-macos-${{ github.sha }}.tgz
+          - os: ubuntu
+            build: |
+              npx caxa --directory . --command "{{caxa}}/node_modules/.bin/node" "{{caxa}}/cli.js" --output "tondev"
+              tar -czf "tondev-linux-${{ github.sha }}.tgz" "tondev"
+            artifact: tondev-linux-${{ github.sha }}.tgz
+    runs-on: ${{ matrix.os }}-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
           node-version: 12
           registry-url: https://registry.npmjs.org/
-      - run: npm publish
+      - run: |
+          npm publish
+          ${{ matrix.build }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - uses: softprops/action-gh-release@v1
+        with:
+          files: ${{ matrix.artifact }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
