@@ -9,8 +9,7 @@
 		"url": "https://github.com/tonlabs/tondev.git"
 	},
 	"scripts": {
-		"prepublishOnly": "npm i",
-		"prepare": "tsc",
+		"prepublishOnly": "npm i && tsc",
 		"tondev": "node ./cli.js"
 	},
 	"bin": {
