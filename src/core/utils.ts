@@ -199,6 +199,8 @@ export function run(
 ): Promise<string> {
     return new Promise((resolve, reject) => {
         try {
+            const { cwd } = options
+            if (cwd && !fs.existsSync(cwd)) throw Error(`Directory not exists: ${cwd}`)
             const isWindows = os.platform() === "win32";
             const spawned = isWindows
                 ? spawn("cmd.exe", ["/c", name].concat(args), {
