@@ -61,6 +61,7 @@ export const solidityCompileCommand: Command = {
             alias: 'o',
             type: 'folder',
             title: 'Output folder (current is default)',
+            defaultValue: '',
         },
     ],
     async run(terminal: Terminal, args: { file: string, outputDir: string }): Promise<void> {
