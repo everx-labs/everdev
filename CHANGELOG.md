@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 ### New
 - Added new option `--output-dir, -o` for solidity compiler to store `*.abi.json` and `*.tvc` files in a separate directory.
    Example: `tondev sol compile hello.sol -o ~/assets`
-- Use caxa to create standalone portable binaries for windows, macos, linux
+- Created standalone portable binaries for windows, macos, linux
 
 ## [0.6.0] - 2021-04-28
 
