@@ -1,0 +1,188 @@
+type Query {
+    " Returns TONDev home folder"
+    home: String
+
+    " Returns TONDev tool list"
+    tools: [Tool]
+
+    " Returns variants for command arg"
+    commandArgVariants(tool: String, command: String, arg: String): [ArgVariant]
+
+    " Validates task input values"
+    validateInput(task: ID, input: ID, values: [InputArgValue]): [ValidateArgResult]
+
+    " Returns input arg variants"
+    inputVariants(task: ID, input: ID, arg: String, values: [InputArgValue]): [ArgVariant]
+
+    " Returns running tasks"
+    runningTasks(tool: String, first: Int, after: Int): [Task]
+
+    " Returns recently ran tasks"
+    recentTasks(tool: String, first: Int, after: Int): [Task]
+}
+
+type Subscription {
+    runTask(tool: String, command: String, args: [InputArgValue]): [Terminal]
+    listenTask(task: String): [Terminal]
+}
+
+type Mutation {
+    " Accepts requested input values"
+    acceptInput(terminalId: ID, inputId: ID, values: [InputArgValue]): [ValidateArgResult]
+}
+
+type Task {
+    id: ID,
+    time: Float,
+    tool: String,
+    command: String,
+    args: [ArgValue],
+}
+
+type Terminal {
+    start: TerminalStart
+    stop: TerminalStop
+    message: TerminalMessage
+    input: TerminalInput
+}
+
+" Notify that task terminal has started with specified task id."
+type TerminalStart {
+    " Task id"
+    task: ID
+}
+
+" Notify that task terminal has stopped."
+type TerminalStop {
+}
+
+" Show/update message to user."
+type TerminalMessage {
+    " Message Id"
+    message: ID,
+    " Target channel"
+    channel: TerminalMessageChannel
+    " Message text"
+    text: String
+    " Text format (default is TEXT)"
+    format: TerminalMessageFormat
+}
+
+" Prints text. No line feeds will be produced."
+type TerminalInput {
+    " Input id (used in validateInput and acceptInput)"
+    input: ID
+    " Input sections"
+    sections: [TerminalInputSection]
+}
+
+" Input section."
+type TerminalInputSection {
+    " Section title"
+    title: String
+    " Input fields"
+    fields: [CommandArg]
+}
+
+enum TerminalMessageChannel {
+    OUTPUT,
+    ERROR,
+}
+
+enum TerminalMessageFormat {
+    TEXT,
+    MD,
+}
+
+type ArgVariant {
+    value: String
+    description: String
+}
+
+enum ArgType {
+    STRING,
+    BOOLEAN,
+    NUMBER,
+    FILE,
+    FOLDER
+}
+
+enum ArgVariants {
+    NONE,
+    SUGGESTED,
+    RESTRICTED,
+}
+
+" Command argument"
+type CommandArg {
+    " Type of the value"
+    type: ArgType,
+    " Name of the argument"
+    name: String
+    " Short alias for an optional arg name"
+    alias: String
+    " Title of the argument"
+    title: String
+    " Description of the argument"
+    description: String,
+    " Default value for the command. If missing then the user must specify value for this argument."
+    defaultValue: String
+    " Determine that the arg is a CLI arg (not an option)"
+    isArg: Boolean
+
+    " Determine is this arg has predefined values"
+    variants: ArgVariants,
+
+    " Additional properties for file type arg"
+    file: FileArg,
+}
+
+" Argument with path of the file"
+type FileArg {
+    " Determine files matched for this argument"
+    nameRegExp: String
+}
+
+" Command definition"
+type Command {
+    " Command name"
+    name: String
+    " Command alias. Used in cli instead of full command name."
+    alias: String
+    " Command Title. Used in CLI short help and as a menu titles in IDE."
+    title: String
+    " Description of the command"
+    description: String
+    " Command argument definitions"
+    args: [CommandArg]
+}
+
+" TONDev tool"
+type Tool {
+    " Tool name. This is an identifier. Used only in configs."
+    name: String
+    " Tool alias. Used in cli instead of full tool name."
+    alias: String
+    " Tool title. Human readable name of the tool."
+    title: String
+    " Tool description"
+    description: String
+    " Commands provided by tool controller"
+    commands: [Command]
+}
+
+input InputArgValue {
+    name: String
+    value: String
+}
+
+type ArgValue {
+    name: String,
+    value: String,
+}
+
+type ValidateArgResult {
+    name: String
+    error: String
+    hint: String
+}
