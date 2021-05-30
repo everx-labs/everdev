@@ -9,11 +9,7 @@ In this article, you learn how to deploy a contact with tondev. For a demonstrat
 
             1) Click the Setting icon in the upper left corner.
 
-    ![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/bd770ec9-8065-4e11-a3b7-92dec1f127af/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/bd770ec9-8065-4e11-a3b7-92dec1f127af/Untitled.png)
-
             2) Select Advanced settings and turn on the Developer mode:
-
-    ![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d7527bdc-2d8e-45f1-9e41-fbb70dfe5a2e/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d7527bdc-2d8e-45f1-9e41-fbb70dfe5a2e/Untitled.png)
 
             3) Click Chain Rider > Get Rubies.
 
