@@ -6,13 +6,13 @@ In this article, you learn how to deploy a contact with tondev. For a demonstrat
 1. To deploy the contract in the Developer network, install the TON Surf application on your mobile device and receive the developer’s tokens (Rubies). You need to have them on your developer’s account to pay for deployment of the contracts. To get Rubies in the TON Surf mobile application:
     1. Click the Settings icon in the upper left corner and select Advanced settings. **Note:** The [T](https://www.apple.com/ru/search/ton-surf?src=globalnav)ON Surf application downloaded from [App Store](https://www.apple.com/ru/search/TON-surf?src=globalnav) or [Google Play](https://play.google.com/store/apps/details?id=surf.ton&hl=ru&gl=US) should be installed on your mobile device.
     2. In TON Surf, enable the Developer mode:
-            1) Click the Setting icon in the upper left corner.
+          Click the Setting icon in the upper left corner.
 
-            2) Select Advanced settings and turn on the Developer mode:
+          Select Advanced settings and turn on the Developer mode:
 
-            3) Select Advanced settings and turn on the Developer mode:
+          Select Advanced settings and turn on the Developer mode:
 
-            4) Verify that the Rubies you received are displayed in the Developer balance.
+          Verify that the Rubies you received are displayed in the Developer balance.
 
 **Note:** Only the mobile version of TON Surf enables you to get Rubies. After installing TON Surf on your mobile device and receiving Rubies, you can access your TON Surf account via the web (URL: [https://web.ton.surf/](https://web.ton.surf/)).
 
