@@ -8,11 +8,11 @@ In this article, you learn how to deploy a contact with tondev. For a demonstrat
     2) In TON Surf, enable the Developer mode:
           1. Click the Setting icon in the upper left corner.
 
-          Select Advanced settings and turn on the Developer mode:
+          2. Select Advanced settings and turn on the Developer mode:
 
-          Select Advanced settings and turn on the Developer mode:
+          3. Select Advanced settings and turn on the Developer mode:
 
-          Verify that the Rubies you received are displayed in the Developer balance.
+          4. Verify that the Rubies you received are displayed in the Developer balance.
 
 **Note:** Only the mobile version of TON Surf enables you to get Rubies. After installing TON Surf on your mobile device and receiving Rubies, you can access your TON Surf account via the web (URL: [https://web.ton.surf/](https://web.ton.surf/)).
 
