@@ -1,3 +1,4 @@
+# Deploy and call your contracts with tondev
 In this article, you learn how to deploy a contact with tondev. For a demonstration of the tondev functionality, this topic describes how to deploy a multi-signature contract with two custodians, which confirm a transaction to transfer funds from a surf wallet to another surf wallet account.
 
 ## Preparing the contract deployment environment
