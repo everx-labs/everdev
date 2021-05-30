@@ -7,17 +7,17 @@ In this article, you learn how to deploy a contact with tondev. For a demonstrat
     1. Click the Settings icon in the upper left corner and select Advanced settings. **Note:** The [T](https://www.apple.com/ru/search/ton-surf?src=globalnav)ON Surf application downloaded from [App Store](https://www.apple.com/ru/search/TON-surf?src=globalnav) or [Google Play](https://play.google.com/store/apps/details?id=surf.ton&hl=ru&gl=US) should be installed on your mobile device.
     2. In TON Surf, enable the Developer mode:
 
-    1) Click the Setting icon in the upper left corner.
+            1) Click the Setting icon in the upper left corner.
 
     ![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/bd770ec9-8065-4e11-a3b7-92dec1f127af/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/bd770ec9-8065-4e11-a3b7-92dec1f127af/Untitled.png)
 
-    2) Select Advanced settings and turn on the Developer mode:
+            2) Select Advanced settings and turn on the Developer mode:
 
     ![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d7527bdc-2d8e-45f1-9e41-fbb70dfe5a2e/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d7527bdc-2d8e-45f1-9e41-fbb70dfe5a2e/Untitled.png)
 
-    3) Click Chain Rider > Get Rubies.
+            3) Click Chain Rider > Get Rubies.
 
-    4) Verify that the Rubies you received are displayed in the Developer balance.
+            4) Verify that the Rubies you received are displayed in the Developer balance.
 
 **Note:** Only the mobile version of TON Surf enables you to get Rubies. After installing TON Surf on your mobile device and receiving Rubies, you can access your TON Surf account via the web (URL: [https://web.ton.surf/](https://web.ton.surf/)).
 
