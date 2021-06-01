@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.1] - 2021-06-01
+
+### Fixed
+- GitHub Action
+
 ## [0.7.0] - 2021-05-26
 
 ### New

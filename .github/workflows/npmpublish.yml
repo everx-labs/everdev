@@ -5,7 +5,7 @@ on:
     types: [published]
 
 jobs:
-  publish-npm:
+  build-binaries:
     strategy:
       matrix:
         os: [windows, macos, ubuntu]
@@ -31,12 +31,25 @@ jobs:
           node-version: 12
           registry-url: https://registry.npmjs.org/
       - run: |
-          npm publish
+          npm i
+          npx tsc
           ${{ matrix.build }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - uses: softprops/action-gh-release@v1
         with:
           files: ${{ matrix.artifact }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-npm:
+    needs: [build-binaries]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+          registry-url: https://registry.npmjs.org/
+      - run: |
+          npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
