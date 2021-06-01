@@ -11,18 +11,18 @@ jobs:
         os: [windows, macos, ubuntu]
         include:
           - os: windows
-            build: npx caxa --directory . --command "{{caxa}}/node_modules/.bin/node" "{{caxa}}/cli.js" --output "tondev-windows-${{ github.sha }}.exe"
-            artifact: tondev-windows-${{ github.sha }}.exe
+            build: npx caxa --directory . --command "{{caxa}}/node_modules/.bin/node" "{{caxa}}/cli.js" --output "tondev-windows.exe"
+            artifact: "tondev-windows.exe"
           - os: macos
             build: |
               npx caxa --directory . --command "{{caxa}}/node_modules/.bin/node" "{{caxa}}/cli.js" --output "tondev"
-              tar -czf "tondev-macos-${{ github.sha }}.tgz" "tondev"
-            artifact: tondev-macos-${{ github.sha }}.tgz
+              tar -czf "tondev-macos.tgz" "tondev"
+            artifact: tondev-macos.tgz
           - os: ubuntu
             build: |
               npx caxa --directory . --command "{{caxa}}/node_modules/.bin/node" "{{caxa}}/cli.js" --output "tondev"
-              tar -czf "tondev-linux-${{ github.sha }}.tgz" "tondev"
-            artifact: tondev-linux-${{ github.sha }}.tgz
+              tar -czf "tondev-linux.tgz" "tondev"
+            artifact: tondev-linux.tgz
     runs-on: ${{ matrix.os }}-latest
     steps:
       - uses: actions/checkout@v2
