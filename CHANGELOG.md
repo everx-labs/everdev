@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.2] - 2021-06-02
+
+### Fixed
+- Update README with information about how to install tondev after download binaries
+
 ## [0.7.1] - 2021-06-01
 
 ### Fixed
