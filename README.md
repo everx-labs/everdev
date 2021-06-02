@@ -138,6 +138,9 @@ For linux/macos:
 > ```
 > Then unpack `tondev` from archive into this folder.
 
+For macos:
+> _To download apps from anywhere on Mac go to `System Preferences > Security & Privacy > General`. At the bottom of the window, you’ll see multiple options under `Allow apps to be downloaded from`. Select Anywhere to allow your Mac to download any and all apps._
+
 For windows:
 > ```shell
 > md $env:HOMEDRIVE$env:HOMEPATH\.tondev\bin
