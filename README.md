@@ -20,6 +20,7 @@ Download and install all the core [TON.DEV](https://docs.ton.dev/86757ecb2/p/04a
   - [Installation](#installation)
     - [Prerequisites](#prerequisites)
     - [Install](#install)
+    - [Download](#download)
     - [Update](#update)
   - [Use in JS applications](#use-in-js-applications)
   - [Command Line Interface](#command-line-interface)
@@ -125,6 +126,38 @@ npm i -g tondev
 ```
 
 If you see an EACCES error when you try to install a package globally on Mac or Linux, [please see this instruction](https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally)
+
+### Download
+
+You can download precompiled binaries for your platform from [the latest release](https://github.com/tonlabs/tondev/releases/latest).
+After download you need to create directory if it does not exists.
+
+For linux/macos:
+> ```shell
+> mkdir -p ~/.tondev/bin
+> ```
+> Then unpack `tondev` from archive into this folder.
+
+For windows:
+> ```shell
+> md $env:HOMEDRIVE$env:HOMEPATH\.tondev\bin
+> ```
+> Then move downloaded binary as `tondev.exe` into this folder.
+
+To make it possible to run `tondev` from any folder, you need to update the system PATH environment variable.
+
+For linux/macos:
+> ```shell
+> echo 'export PATH=~/.tondev/bin:$PATH' >> ~/.profile && source ~/.profile
+> ```
+
+For windows run PowerShell and execute this line:
+> ```powershell
+> [System.Environment]::SetEnvironmentVariable("PATH", "$env:HOMEDRIVE$env:HOMEPATH\.tondev\bin;$([System.Environment]::GetEnvironmentVariable("PATH", [System.EnvironmentVariableTarget]::User))", [System.EnvironmentVariableTarget]::User)
+> ```
+
+*After trying to run `tondev` on macos you can see the error: "tondev" cannot be opened because the developer cannot be verified. Open your computer System Preferences > Security & Privacy > Privacy. Here, you should see an option to click "Allow Anyway" next to the "tondev" application in question.*
+
 
 ### Update
 
