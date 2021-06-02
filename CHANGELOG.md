@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.3] - 2021-06-03
+
+### Fixed
+- Incorrect parsing initial data params with options `--data, -d`.
+
 ## [0.7.2] - 2021-06-02
 
 ### Fixed
