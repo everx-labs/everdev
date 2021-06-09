@@ -13,10 +13,10 @@ To cover this functionality we will test the following use-case: deploy a multi-
 **Attention!** Only the mobile version of TON Surf enables you to get Rubies. After installing TON Surf on your mobile device and receiving Rubies, you can access your TON Surf account via the web (URL: [https://web.ton.surf/](https://web.ton.surf/)).
 
  To get Rubies:
-    1. Click the Settings icon in the upper left corner and select Advanced settings. 
-    2. Turn on the Developer mode.
-    3. Go back to the main screen and click Chain Rider > Get Rubies.
-    4. Verify that the Rubies you received are displayed in the Developer balance.
+    1. Click the Settings icon in the upper left corner and select Advanced settings.    
+    2. Turn on the Developer mode.   
+    3. Go back to the main screen and click Chain Rider > Get Rubies.   
+    4. Verify that the Rubies you received are displayed in the Developer balance.   
 
 2. To configure the environment required for contract development, you should install the TONDev tool by running the following command:
 
