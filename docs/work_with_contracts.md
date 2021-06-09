@@ -233,7 +233,7 @@ In this example, you will create a transaction by the first custodian and confir
     ...
     ```
 
-2.	Execute the command to run the contract locally and call the get`getTransaction` method.
+3.	Execute the command to run the contract locally and call the get`getTransaction` method.
 
     ```
     tondev contract run-local <contract_name>
@@ -273,7 +273,7 @@ In this example, you will create a transaction by the first custodian and confir
     transactionId (uint64): 6963980449992624641
     ```
 
-3. Run the contract and call the [confirmTransaction](https://github.com/tonlabs/ton-labs-contracts/blob/776bc3d614ded58330577167313a9b4f80767f41/solidity/setcodemultisig/SetcodeMultisigWallet.sol#L307) method with the second custodian key to confirm the transaction:
+4. Run the contract and call the [confirmTransaction](https://github.com/tonlabs/ton-labs-contracts/blob/776bc3d614ded58330577167313a9b4f80767f41/solidity/setcodemultisig/SetcodeMultisigWallet.sol#L307) method with the second custodian key to confirm the transaction:
 
     ```
     tondev contract run <contract_name> -a <contract_address> --signer (second_signer name)
