@@ -8,49 +8,49 @@ To cover this functionality we will test the following use-case: deploy a multi-
 
 1. To deploy the contract in the Developer network, you need to have a wallet with tokens, that you will use to prepay the initial deploy operation. Surf can help us with that.
 
- Install the TON Surf application on your mobile device. 
+    Install the TON Surf application on your mobile device. 
 
-**Attention!** Only the mobile version of TON Surf enables you to get Rubies. After installing TON Surf on your mobile device and receiving Rubies, you can access your TON Surf account via the web (URL: [https://web.ton.surf/](https://web.ton.surf/)).
+    **Attention!** Only the mobile version of TON Surf enables you to get Rubies. After installing TON Surf on your mobile device and receiving Rubies, you can access your TON Surf account via the web (URL: [https://web.ton.surf/](https://web.ton.surf/)).
 
- To get Rubies:
-    1. Click the Settings icon in the upper left corner and select Advanced settings.    
-    2. Turn on the Developer mode.   
-    3. Go back to the main screen and click Chain Rider > Get Rubies.   
-    4. Verify that the Rubies you received are displayed in the Developer balance.   
+    To get Rubies:   
+        1. Click the Settings icon in the upper left corner and select Advanced settings.    
+        2. Turn on the Developer mode.   
+        3. Go back to the main screen and click Chain Rider > Get Rubies.   
+        4. Verify that the Rubies you received are displayed in the Developer balance.   
 
 2. To configure the environment required for contract development, you should install the TONDev tool by running the following command:
 
-```
-npm i -g tondev
-```
+    ```
+    npm i -g tondev
+    ```
 
 3. Add a Developer Network to the TONDev registry with two endpoints (for details, see [Networks](https://docs.ton.dev/86757ecb2/p/85c869-networks/t/660e33)):
 
-```
-tondev network add devnet net1.ton.dev,net5.ton.dev
-```
+    ```
+    tondev network add devnet net1.ton.dev,net5.ton.dev
+    ```
 
 4.	Specify the developer’s network devnet as a default network for contract development (see the [TONDev documentation](https://github.com/tonlabs/TONDEV#network-tool)) by running the following command:
 
-```
-tondev network default devnet
-```
+    ```
+    tondev network default devnet
+    ```
 
 5.	To enable using your wallet as a giver, you need to import the seed phrase from Surf to TONDev. In Surf, select: Settings > Safety protection > Master password. The system will ask you to enter your PIN. After successful PIN validation, it will display the master password, consisting of 12 words (seed phrase). Copy and save your seed phrase.
 
 6.	Add a signer with previously generated keys (seed phrase):
 
-```
-tondev signer add <signer_name> <seed_phrase_in_quotes>
-```
+    ```
+    tondev signer add <signer_name> <seed_phrase_in_quotes>
+    ```
 
 **Note:** The seed is enclosed in quotes and consists of 12 words, separated by space (see [TONDEV Free TON Development Environment](https://github.com/tonlabs/tondev#add-a-signer-with-specific-keys)).
 
-For example:
+    For example:
 
-```
-tondev signer add signer1 "word1 word2 word3 word4 word5 word6 word7 word8 word9 word10 word11 word12"
-```
+    ```
+    tondev signer add signer1 "word1 word2 word3 word4 word5 word6 word7 word8 word9 word10 word11 word12"
+    ```
 
 7. Copy and save the wallet address from Surf by selecting: Chain Rider > Share wallet address.
 
