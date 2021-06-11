@@ -9,7 +9,7 @@
 [![Channel on Telegram](https://img.shields.io/badge/chat-on%20telegram-9cf.svg)](https://t.me/ton_sdk)  
 
 # TONDEV - Free TON Development Environment
-Download and install all the core [TON.DEV](https://docs.ton.dev/86757ecb2/p/04a4ba-) components in one click and access them from a single interface.
+Download and install all the core [TON.DEV](https://ton.dev/) components in one click and access them from a single interface.
 
 ## Content Table
 
