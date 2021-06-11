@@ -14,7 +14,7 @@ To cover this functionality we will test the following use-case: deploy a multi-
 
     To get Rubies:   
         1. Click the Settings icon in the upper left corner and select Advanced settings.    
-        2. Turn on the Developer mode.   
+        2. Click Network. Choose Devnet.   
         3. Go back to the main screen and click Chain Rider > Get Rubies.   
         4. Verify that the Rubies you received are displayed in the Developer balance.   
 
