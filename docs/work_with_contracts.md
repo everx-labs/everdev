@@ -8,7 +8,7 @@ To cover this functionality we will test the following use-case: deploy a multi-
 
 1. To deploy the contract in the Developer network, you need to have a wallet with tokens, that you will use to prepay the initial deploy operation. Surf can help us with that.
 
-    Install the TON Surf application on your mobile device. 
+    Proceed to [ton.surf](https://ton.surf/) and install the TON Surf application on your mobile device. 
 
     **Attention!** Only the mobile version of TON Surf enables you to get Rubies. After installing TON Surf on your mobile device and receiving Rubies, you can access your TON Surf account via the web (URL: [https://web.ton.surf/](https://web.ton.surf/)).
 
@@ -172,10 +172,10 @@ In this example, you will create a transaction by the first custodian and confir
 
     2) Off-chain call of the [getTransaction](https://github.com/tonlabs/ton-labs-contracts/blob/776bc3d614ded58330577167313a9b4f80767f41/solidity/setcodemultisig/SetcodeMultisigWallet.sol#L398) method to get the created transaction ID
 
-    3) The last on-chain call of the [confirmTransactio](https://github.com/tonlabs/ton-labs-contracts/blob/776bc3d614ded58330577167313a9b4f80767f41/solidity/setcodemultisig/SetcodeMultisigWallet.sol#L307)n method to confirm the transaction by the second custodian (see [Run contract deployed on the network](https://github.com/tonlabs/tondev#run-contract-deployed-on-the-network) for details).
+    3) The last on-chain call of the [confirmTransaction](https://github.com/tonlabs/ton-labs-contracts/blob/776bc3d614ded58330577167313a9b4f80767f41/solidity/setcodemultisig/SetcodeMultisigWallet.sol#L307) method to confirm the transaction by the second custodian (see [Run contract deployed on the network](https://github.com/tonlabs/tondev#run-contract-deployed-on-the-network) for details).
 
 2. Call contract’s `submitTransaction` method with the first custodian key (k1) to initiate a transaction to some random address. Select function 4 (`submitTransaction`) with the following parameters:
-    - dest (address) – the destination address (wallet address copied from the recipient’s TON Surf application). **Note**: In this example, another Surf walled was created. Its address is used as a recipient address.
+    - dest (address) – the destination address (wallet address copied from the recipient’s TON Surf application). **Note**: In this example, another Surf wallet was created. Its address is used as a recipient address.
     - value – the value in nanotokens (1 token = 1000000000 nanotokens)
     - bounce (bool) – true if tokens are transferred to an existing account; set false to transfer to a non-deployed account
     - allBalance – true if need to transfer all remaining balance
@@ -288,7 +288,7 @@ In this example, you will create a transaction by the first custodian and confir
     tondev contract run SetcodeMultisigWallet -a 0:959f470d3431ec94c7294209d8dcb7b7c5a0b8ed848c1d383e1a1c28b5b415c5 --signer k2
     ```
 
-    **Note:** In this command, we explicitly specify the the second (not default) custodian (K2) and the contract deployment address.
+    **Note:** In this command, we explicitly specify the second (not default) custodian (K2) and the contract deployment address.
 
     ```
     Configuration
@@ -318,4 +318,24 @@ In this example, you will create a transaction by the first custodian and confir
     Running...
     ```
 
-4. Verify that the transaction is completed successfully and the tokens are transferred to the recipient’s account.
+4. Verify that the transaction is completed successfully and the tokens are transferred to the recipient’s account: either search for the recipient's address in the [ton.live](https://net.ton.live/) blockchain explorer, or check recipient's account info with tondev:
+    
+    ```
+    tondev contract info -a <recipient_address>
+    ```
+    
+    Viewing contract info does not require keys, and, if the address is specified with the `-a` option, does not require contract files.
+    
+    ```    
+    tondev contract info -a 0:8a398f150c7eff3927eb23b52af9c5c29a0aca67b49b9ac5e9bdac04e25fefa6
+
+    Configuration
+
+      Network: dev (net.ton.dev, net1.ton.dev, net5.ton.dev)
+      Signer:  None
+
+    Address:   0:8a398f150c7eff3927eb23b52af9c5c29a0aca67b49b9ac5e9bdac04e25fefa6
+    Account:   Active
+    Balance:   142692817630 (≈ 143 tokens)
+    ...
+    ```   
