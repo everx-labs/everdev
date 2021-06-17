@@ -80,6 +80,7 @@ export async function getAccount(terminal: Terminal, args: {
         options.initData = ParamParser.components({
             name: "data",
             type: "tuple",
+            components: abiData
         }, args.data);
     }
     if (address !== "") {

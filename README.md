@@ -9,7 +9,7 @@
 [![Channel on Telegram](https://img.shields.io/badge/chat-on%20telegram-9cf.svg)](https://t.me/ton_sdk)  
 
 # TONDEV - Free TON Development Environment
-Download and install all the core [TON.DEV](https://docs.ton.dev/86757ecb2/p/04a4ba-) components in one click and access them from a single interface.
+Download and install all the core [TON.DEV](https://ton.dev/) components in one click and access them from a single interface.
 
 ## Content Table
 
@@ -125,7 +125,7 @@ TONDEV can be extended with other tools following the [instructions of integrati
 npm i -g tondev
 ```
 
-If you see an EACCES error when you try to install a package globally on Mac or Linux, [please see this instruction](https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally)
+If you see an ACCESS error when you try to install a package globally on Mac or Linux, [please see this instruction](https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally)
 
 ### Download
 
