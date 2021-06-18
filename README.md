@@ -219,6 +219,12 @@ After successful compilation you get .abi.json and .tvc files that you can later
 tondev sol compile Contract.sol
 ```
 
+You can specify the output files location with the `-o` option:
+
+```shell
+tondev sol compile Contract.sol -o path/to/output/file
+```
+
 #### Version
 
 This command shows the currently installed Solidity compiler version.
@@ -720,6 +726,8 @@ Options:
 ```
 **Note:** The default signer and the initial balance value of 10 tokens will be used, unless otherwise specified through options. Also note, that some contracts may require a higher initial balance for successful deployment. DePool contract, for instance, requires a minimun of 21 tokens.
 
+Only one giver can be set for a network. Setting another one will overwrite the current giver.
+To view the current giver settings for all networks, use the `tondev network list` command (for details see the section [below](#list-registered-networks)).
 
 #### List registered networks
 
