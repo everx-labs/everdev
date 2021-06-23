@@ -24,6 +24,7 @@ Download and install all the core [TON.DEV](https://ton.dev/) components in one 
     - [Update](#update)
   - [Use in JS applications](#use-in-js-applications)
   - [Command Line Interface](#command-line-interface)
+    - [Quick start](#quick-start)
     - [General command syntax](#general-command-syntax)
     - [Solidity](#solidity)
       - [Create your first contract](#create-your-first-contract)
@@ -192,6 +193,11 @@ main();
 ```
 
 ## Command Line Interface
+
+### Quick start
+Start testing your contracts without any delay with this guide. It will help you get test tokens in Developer Network, prepare your environment and test your first contract. 
+[Test my first contract!](https://github.com/tonlabs/tondev/blob/main/docs/work_with_contracts.md) 
+
 ### General command syntax
 
 ```shell
