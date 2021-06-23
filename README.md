@@ -195,7 +195,7 @@ main();
 ## Command Line Interface
 
 ### Quick start
-Start testing your contracts without any delay with this guide. It will help you get test tokens in Developer Network, prepare your environment and test your first contract. 
+Start testing your contracts without any delay with this guide. It will help you get test tokens in Developer Network, prepare your environment and test your first contract.   
 [Test my first contract!](https://github.com/tonlabs/tondev/blob/main/docs/work_with_contracts.md) 
 
 ### General command syntax
