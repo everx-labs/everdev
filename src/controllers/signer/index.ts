@@ -14,6 +14,7 @@ import {
     TonClient,
 } from "@tonclient/core";
 import {formatTable} from "../../core/utils";
+import {NetworkRegistry} from "../network/registry";
 
 const nameArg: CommandArg = {
     isArg: true,
@@ -171,12 +172,17 @@ export const signerListCommand: Command = {
     args: [],
     async run(terminal: Terminal, _args: {}) {
         const registry = new SignerRegistry();
-        const rows = [["Signer", "Public Key", "Description"]];
-        registry.items.forEach(x => rows.push([
-            `${x.name}${x.name === registry.default ? " (Default)" : ""}`,
-            x.keys.public,
-            x.description,
-        ]));
+        const networks = new NetworkRegistry();
+        const rows = [["Signer", "Public Key", "Used", "Description"]];
+        registry.items.forEach(x => {
+            const summary = registry.getSignerSummary(x, networks);
+            rows.push([
+                summary.name,
+                summary.public,
+                summary.used,
+                summary.description,
+            ]);
+        });
         const table = formatTable(rows, { headerSeparator: true });
         if (table.trim() !== "") {
             terminal.log(table);

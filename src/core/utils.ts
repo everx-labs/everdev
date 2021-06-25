@@ -199,8 +199,10 @@ export function run(
 ): Promise<string> {
     return new Promise((resolve, reject) => {
         try {
-            const { cwd } = options
-            if (cwd && !fs.existsSync(cwd)) throw Error(`Directory not exists: ${cwd}`)
+            const { cwd } = options;
+            if (cwd && !fs.existsSync(cwd)) {
+                throw Error(`Directory not exists: ${cwd}`);
+            }
             const isWindows = os.platform() === "win32";
             const spawned = isWindows
                 ? spawn("cmd.exe", ["/c", name].concat(args), {
@@ -370,29 +372,54 @@ function toString(value: any): string {
     return value === null || value === undefined ? "" : value.toString();
 }
 
-export function formatTable(rows: any[][], options?: {
-    headerSeparator?: boolean
+export function formatTable(table: any[][], options?: {
+    headerSeparator?: boolean,
+    multilineSeparator?: boolean,
+    multilineIndent?: string,
 }): string {
+    const headerSeparator = options?.headerSeparator ?? false;
+    const multilineSeparator = options?.multilineSeparator ?? false;
+    const multilineIndent = options?.multilineIndent ?? "  ";
+    const rows: string[][][] = table.map(row => row.map(cell => toString(cell).split("\n")));
     const widths: number[] = [];
     const isEmpty: boolean[] = [];
-    const updateWidth = (value: any, i: number, rowIndex: number) => {
-        const width = toString(value).length;
+    const updateWidth = (cell: string[], i: number, rowIndex: number) => {
         while (widths.length <= i) {
             widths.push(0);
             isEmpty.push(true);
         }
-        widths[i] = Math.max(widths[i], width);
-        const isHeader = options?.headerSeparator && rowIndex === 0;
-        if (!isHeader && (width > 0)) {
-            isEmpty[i] = false;
+        for (const line of cell) {
+            const width = line.length;
+            widths[i] = Math.max(widths[i], width);
+            const isHeader = headerSeparator && rowIndex === 0;
+            if (!isHeader && (width > 0)) {
+                isEmpty[i] = false;
+            }
         }
     };
-    rows.forEach((row, ri) => row.forEach((value, vi) => updateWidth(value, vi, ri)));
-    const formatValue = (value: any, i: number) => toString(value).padEnd(widths[i]);
-    const formatRow = (row: any[]) => row.map(formatValue).filter((_, i) => !isEmpty[i]).join("  ").trimEnd();
-    const lines = rows.map(formatRow);
-    if (options?.headerSeparator) {
-        const separator = formatRow(widths.map(x => "-".repeat(x)));
+    rows.forEach((row, ri) => row.forEach((cell, vi) => updateWidth(cell, vi, ri)));
+    const formatValue = (value: string, ci: number) => value.padEnd(widths[ci]);
+    const formatRowLine = (rowLine: string[]) => rowLine.map(formatValue).filter((_, i) => !isEmpty[i]).join("  ").trimEnd();
+    const formatCellLine = (cell: string[], line: number) => {
+        if (line >= cell.length) {
+            return "";
+        }
+        return `${line > 0 ? multilineIndent : ""}${cell[line]}`;
+    };
+    const lines: string[] = [];
+    const hasMultilines = rows.find(r => r.find(c => c.length > 0)) !== undefined;
+    const firstDataRowIndex = headerSeparator ? 1 : 0;
+
+    rows.forEach((row, rowIndex) => {
+        for (let line = 0; row.find(x => line < x.length); line += 1) {
+            if (multilineSeparator && hasMultilines && rowIndex > firstDataRowIndex && line === 0) {
+                lines.push("");
+            }
+            lines.push(formatRowLine(row.map(x => formatCellLine(x, line))));
+        }
+    });
+    if (headerSeparator) {
+        const separator = formatRowLine(widths.map(x => "-".repeat(x)));
         lines.splice(1, 0, separator);
     }
     return lines.join("\n");

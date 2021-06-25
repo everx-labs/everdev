@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.4] - 2021-06-25
+
+### New
+
+- add `signer list` column `used` with references to this (e.g., as a signer for network giver).
+- `network list` column `giver` add information about giver contract and signer.
+- printed tables now supports multiline cell values.
+
+### Fixed
+
+- "Error: Signer not found:" in case when the default signer has upper letters in name.
+- Giver didn't use default signer. From now the giver uses default signer 
+  when the user calls the `network giver` command without `--signer` option. 
+
 ## [0.7.3] - 2021-06-03
 
 ### Fixed

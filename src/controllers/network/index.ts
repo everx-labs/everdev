@@ -5,6 +5,7 @@ import {
     ToolController,
 } from "../../core";
 import {
+    getGiverSummary,
     NetworkRegistry,
 } from "./registry";
 import {
@@ -60,11 +61,12 @@ export const networkListCommand: Command = {
         const registry = new NetworkRegistry();
         const rows = [["Network", "Endpoints", "Giver", "Description"]];
         registry.items.forEach((network) => {
+            const summary = registry.getNetworkSummary(network);
             rows.push([
-                `${network.name}${network.name === registry.default ? " (Default)" : ""}`,
-                NetworkRegistry.getEndpointsSummary(network),
-                network.giver?.address ?? "",
-                network.description ?? "",
+                summary.name,
+                summary.endpoints,
+                summary.giver,
+                summary.description,
             ]);
         });
         const table = formatTable(rows, { headerSeparator: true });
@@ -94,10 +96,7 @@ export const networkInfoCommand: Command = {
         rows.push(["Endpoints", network.endpoints.join(", ")]);
         const giver = network.giver;
         if (giver) {
-            rows.push([
-                "Giver",
-                `${giver.name} at ${giver.address}${giver.signer ? ` signed by ${giver.signer}` : ""}`,
-            ]);
+            rows.push(["Giver", getGiverSummary(giver)]);
         }
         if (network.name === registry.default) {
             rows.push(["Default", "true"]);
