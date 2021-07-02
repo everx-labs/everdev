@@ -16,6 +16,7 @@ import {
     KnownContracts,
 } from "../../core/known-contracts";
 import {NetworkGiverInfo} from "./registry";
+import {SignerRegistry} from "../signer/registry";
 
 async function giverV2Send(giver: Account, address: string, value: number): Promise<void> {
     await giver.run("sendTransaction", {
@@ -63,8 +64,9 @@ export class NetworkGiver implements AccountGiver {
         client: TonClient,
         info: NetworkGiverInfo,
     ): Promise<NetworkGiver> {
-        const signer = info.signer !== ""
-            ? await createSigner(info.signer)
+        const signerName = (info.signer || new SignerRegistry().default) ?? "";
+        const signer = signerName !== ""
+            ? await createSigner(signerName)
             : signerKeys(seGiverKeys);
         const address = info.address !== ""
             ? info.address

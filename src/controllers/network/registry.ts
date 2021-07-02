@@ -31,6 +31,25 @@ export type Network = {
     giver?: NetworkGiverInfo,
 }
 
+type NetworkSummary = {
+    name: string,
+    endpoints: string,
+    giver: string,
+    description: string,
+}
+
+export function getGiverSummary(giver?: NetworkGiverInfo): string {
+    if (!giver) {
+        return "";
+    }
+    const {
+        signer,
+        name,
+        address,
+    } = giver;
+    return `${address}\n${name}${signer ? ` signed by ${signer}` : ""}`;
+}
+
 export class NetworkRegistry {
     readonly items: Network[] = [];
     default?: string;
@@ -172,6 +191,15 @@ export class NetworkRegistry {
             ? network.endpoints
             : [...network.endpoints.slice(0, maxEndpoints), "..."];
         return endpoints.join(", ");
+    }
+
+    getNetworkSummary(network: Network): NetworkSummary {
+        return {
+            name: `${network.name}${network.name === this.default ? " (Default)" : ""}`,
+            endpoints: NetworkRegistry.getEndpointsSummary(network),
+            giver: getGiverSummary(network.giver),
+            description: network.description ?? "",
+        };
     }
 }
 

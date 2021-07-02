@@ -8,6 +8,7 @@ import {
     KeyPair,
     TonClient,
 } from "@tonclient/core";
+import {NetworkRegistry} from "../network/registry";
 
 function signerHome() {
     return path.resolve(tondevHome(), "signer");
@@ -39,6 +40,13 @@ export type SignerRegistryItem = {
     }
 }
 
+export type SignerSummary = {
+    name: string,
+    public: string,
+    description: string,
+    used: string,
+};
+
 export class SignerRegistry {
     items: SignerRegistryItem[] = [];
     default?: string;
@@ -57,7 +65,7 @@ export class SignerRegistry {
 
     save() {
         if (!fs.pathExistsSync(signerHome())) {
-            fs.mkdirSync(signerHome(), {recursive: true});
+            fs.mkdirSync(signerHome(), { recursive: true });
         }
         fs.writeFileSync(registryPath(), JSON.stringify({
             items: this.items,
@@ -83,7 +91,7 @@ export class SignerRegistry {
 
     async addSecretKey(name: string, description: string, secret: string, overwrite: boolean) {
         const keys = {
-            public: (await TonClient.default.crypto.nacl_sign_keypair_from_secret_key({secret})).public,
+            public: (await TonClient.default.crypto.nacl_sign_keypair_from_secret_key({ secret })).public,
             secret,
         };
         this.add({
@@ -99,7 +107,7 @@ export class SignerRegistry {
             dictionary,
         })).secret;
         const keys = {
-            public: (await TonClient.default.crypto.nacl_sign_keypair_from_secret_key({secret})).public,
+            public: (await TonClient.default.crypto.nacl_sign_keypair_from_secret_key({ secret })).public,
             secret,
         };
         this.add({
@@ -118,7 +126,7 @@ export class SignerRegistry {
     }
 
     get(name: string): SignerRegistryItem {
-        let findName = name.toLowerCase().trim();
+        let findName = name.trim();
         if (findName === "") {
             findName = this.default ?? "";
         }
@@ -136,7 +144,7 @@ export class SignerRegistry {
                 );
             }
         }
-        const signer = this.items.find(x => x.name.toLowerCase() === findName);
+        const signer = this.items.find(x => x.name.toLowerCase() === findName.toLowerCase());
         if (signer) {
             return signer;
         }
@@ -156,5 +164,22 @@ export class SignerRegistry {
         this.default = this.get(name).name;
         this.save();
 
+    }
+
+    getSignerSummary(signer: SignerRegistryItem, networks: NetworkRegistry): SignerSummary {
+        const used: string[] = [];
+        networks.items.forEach(network => {
+            if (network.giver) {
+                if (network.giver.signer === signer.name) {
+                    used.push(`${network.name} network giver signer`);
+                }
+            }
+        });
+        return {
+            name: `${signer.name}${signer.name === this.default ? " (Default)" : ""}`,
+            public: signer.keys.public,
+            description: signer.description,
+            used: used.join("\n"),
+        };
     }
 }
