@@ -1,10 +1,17 @@
-# Deploy and call your contracts with TONDev
+**Deploy and call your contracts with TONDev** 
+
 In this article, you will learn how to work with a contact in TONDev. 
 This sample covers such functionality as network configuration, deploy (including giver configuration), on-chain execution, read contract data.
 
 To cover this functionality we will test the following use-case: deploy a multi-signature contract with two custodians, which confirm a transaction to transfer funds from this wallet to another wallet account.
 
-## Preparing the contract deployment environment
+# Content Table
+- [Content Table](#content-table)
+- [Preparing the contract deployment environment](#preparing-the-contract-deployment-environment)
+- [Deploying the contract](#deploying-the-contract)
+- [Calling the Contract](#calling-the-contract)
+
+# Preparing the contract deployment environment
 
 1. To deploy the contract in the Developer network, you need to have a wallet with tokens, that you will use to prepay the initial deploy operation. Surf can help us with that.
 
@@ -119,7 +126,7 @@ To cover this functionality we will test the following use-case: deploy a multi-
     fc911f562450a5cf943fa2ac5d0f6baf3d107ac2daf37dcdc1da72785158ff2a
     ```
 
-## Deploying the contract
+# Deploying the contract
 
 1. To [deploy the contract](https://github.com/tonlabs/tondev#deploy-contract) to blockchain with two custodians, run the following command:
 
@@ -160,7 +167,7 @@ To cover this functionality we will test the following use-case: deploy a multi-
     0:e61e3b688b3c388540ce5116ad9de41cb2927fe4915ddad5bd30b3a713b0f148
     ```
 
-## Calling the Contract
+# Calling the Contract
 
 When the contract is successfully deployed in the blockchain, we can run its methods. 
 
