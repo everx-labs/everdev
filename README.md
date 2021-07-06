@@ -377,9 +377,9 @@ Result:
 
 ```shell
 $ tondev js demo
-Demo   Description
------  -------------------------
-hello  Simple NodeJs Application
+Demo          Description
+------------  -------------------------
+hello-wallet  Simple NodeJs Application
 ```
 
 #### Install demo project
