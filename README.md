@@ -84,9 +84,7 @@ Download and install all the core [TON.DEV](https://ton.dev/) components in one 
       - [Top up contract balance from giver](#top-up-contract-balance-from-giver)
   - [View controller info](#view-controller-info)
   - [TONDEV Extensibility](#tondev-extensibility)
-  - [Backlog](#backlog)
-    - [Debot](#debot)
-    - [Solidity](#solidity-1)
+  - [Troubleshooting](#troubleshooting)
 
 ## What is TONDEV?
 
@@ -126,7 +124,7 @@ TONDEV can be extended with other tools following the [instructions of integrati
 npm i -g tondev
 ```
 
-If you see an ACCESS error when you try to install a package globally on Mac or Linux, [please see this instruction](https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally)
+If you see an EACCESS error when you try to install a package globally on Mac or Linux, [please see this instruction](https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally)
 
 ### Download
 
@@ -1235,11 +1233,6 @@ There are two kind of software connected to TONDev:
 
 Learn more about creating your own controller: [Creating Controller](docs/creating_controller.md)
 
-## Backlog
+## Troubleshooting
 
-### Debot
-- Debot deployment
-
-### Solidity
-
-- Support other compilation and linking options
+If you encountered any problem try to seek the solution in [Troubleshooting Notes](docs/troubleshooting.md). If it didn't help - please, ask in our [telegram channel](https://t.me/ton_sdk).
