@@ -26,7 +26,7 @@ function clangHome() {
 }
 
 export const components = {
-    clang: new (class extends Component {
+    compiler: new (class extends Component {
         getSourceName(version: string): string {
             return `${this.name}/${this.name}-${version.split(".").join("_")}-${ext}`;
         }
