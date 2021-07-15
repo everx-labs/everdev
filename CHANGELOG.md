@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.0] - 2021-07-15
+
+### Fixed
+
+- "tondev clang set --compiler" didn't change installed compiler version https://github.com/tonlabs/tondev/issues/42
+
+
 ## [0.7.4] - 2021-06-25
 
 ### New

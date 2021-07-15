@@ -27,7 +27,7 @@ export const clangCreateCommand: Command = {
         {
             name: "folder",
             type: "folder",
-            title: "Target folder (current is default)",
+            title: "Target folder (should exist, current by default)",
         },
     ],
     async run(terminal: Terminal, args: { name: string; folder: string }) {
@@ -67,7 +67,7 @@ export const clangCompileCommand: Command = {
         const generatedAbiName = changeExt(args.file, ".abi");
         const renamedAbiName = changeExt(args.file, ".abi.json");
 
-        await components.clang.run(
+        await components.compiler.run(
             terminal,
             path.dirname(args.file), // cd to this directory
             [args.file, "-o", tvcName]
