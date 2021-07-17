@@ -9,7 +9,7 @@ import * as https from "https";
 import * as zlib from "zlib";
 import * as unzip from "unzip-stream";
 import request from "request";
-import {Terminal} from "./index";
+import { Terminal } from "./index";
 
 export function executableName(name: string): string {
     return `${name}${os.platform() === "win32" ? ".exe" : ""}`;
@@ -23,6 +23,14 @@ export async function loadBinaryVersions(name: string): Promise<string[]> {
     const info = await httpsGetJson(`https://binaries.tonlabs.io/${name}.json`);
     const versions = info[name].sort(compareVersions).reverse();
     return versions.length < 10 ? versions : [...versions.slice(0, 10), "..."];
+}
+
+export function formatTokens(nanoTokens: string | number | bigint): string {
+    const token = BigInt(1000000000);
+    const bigNano = BigInt(nanoTokens);
+    const tokens = Number(bigNano / token) + Number(bigNano % token) / Number(token);
+    const tokensString = tokens < 1 ? tokens.toString() : `≈ ${Math.round(tokens)}`;
+    return `${tokensString} tokens (${bigNano} nano)`;
 }
 
 async function installGlobally(dstPath: string, version: string, terminal: Terminal): Promise<void> {
@@ -434,6 +442,20 @@ export function parseNumber(s: string | undefined | null): number | undefined {
         throw Error(`Invalid number: ${s}`);
     }
     return n;
+}
+
+export function parseNanoTokens(s: string | undefined | null): number | undefined {
+    if (s === null || s === undefined || s === "") {
+        return undefined;
+    }
+    const nanos = s.endsWith("T") || s.endsWith("t")
+        ? `${s.slice(0, s.length - 1)}000000000`
+        : s;
+    const nanoTokens = Number(nanos);
+    if (Number.isNaN(nanoTokens)) {
+        throw Error(`Invalid token value: ${s}`);
+    }
+    return nanoTokens;
 }
 
 export function reduceBase64String(s: string | undefined): string | undefined {

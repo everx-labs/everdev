@@ -9,8 +9,6 @@ import {
     SignerRegistry,
 } from "./registry";
 import {
-    Signer,
-    signerKeys,
     TonClient,
 } from "@tonclient/core";
 import {formatTable} from "../../core/utils";
@@ -228,10 +226,6 @@ export const signerDefaultCommand: Command = {
         new SignerRegistry().setDefault(args.name);
     },
 };
-
-export async function createSigner(name: string): Promise<Signer> {
-    return signerKeys(new SignerRegistry().get(name).keys);
-}
 
 export const SignerTool: ToolController = {
     name: "signer",

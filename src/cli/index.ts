@@ -13,8 +13,11 @@ import {
     consoleTerminal,
     formatTable,
 } from "../core/utils";
-import {printUsage} from "./help";
-import {printSummaryInfo} from "./summary-info";
+import { printUsage } from "./help";
+import { printSummaryInfo } from "./summary-info";
+import * as process from "process";
+import fs from "fs";
+import path from "path";
 
 function findOptionArg(command: Command, name: string): CommandArg | undefined {
     if (name.startsWith("--")) {
@@ -166,7 +169,7 @@ class CommandLine {
     }
 }
 
-async function missingArgError(arg: CommandArg): Promise<Error> {
+export async function missingArgError(arg: CommandArg): Promise<Error> {
     const variants = await getArgVariants(arg);
     const variantsString = variants
         ? "\n" +
@@ -180,8 +183,21 @@ async function missingArgError(arg: CommandArg): Promise<Error> {
     throw new Error(`Missing required ${arg.name}${variantsString}`);
 }
 
+function isPrintVersionMode(): boolean {
+    if (process.argv.length !== 3) {
+        return false;
+    }
+    const opt = process.argv[2].toLowerCase();
+    return opt === "--version" || opt === "-v";
+}
+
 export async function run() {
     const parser = new CommandLine();
+    if (isPrintVersionMode()) {
+        const pkg = JSON.parse(fs.readFileSync(path.resolve(__dirname, "..", "..", "package.json"), "utf8"));
+        console.log(pkg.version);
+        process.exit(0);
+    }
     await parser.parse(process.argv.slice(2));
     if (parser.printSummaryInfo) {
         await printSummaryInfo();

@@ -6,9 +6,12 @@ import {
 } from "../../core";
 import {
     KeyPair,
+    Signer,
+    signerKeys,
+    signerNone,
     TonClient,
 } from "@tonclient/core";
-import {NetworkRegistry} from "../network/registry";
+import { NetworkRegistry } from "../network/registry";
 
 function signerHome() {
     return path.resolve(tondevHome(), "signer");
@@ -45,6 +48,10 @@ export type SignerSummary = {
     public: string,
     description: string,
     used: string,
+};
+
+export type ResolveSignerOptions = {
+    useNoneForEmptyName: boolean,
 };
 
 export class SignerRegistry {
@@ -164,6 +171,28 @@ export class SignerRegistry {
         this.default = this.get(name).name;
         this.save();
 
+    }
+
+    resolveItem(name: string, options: ResolveSignerOptions): SignerRegistryItem | null {
+        name = name.trim().toLowerCase();
+        if (name === "none") {
+            return null;
+        }
+        if (name === "") {
+            name = this.default ?? "";
+        }
+        if (name === "" && options.useNoneForEmptyName) {
+            return null;
+        }
+        return this.get(name);
+    }
+
+    async createSigner(item: SignerRegistryItem | null): Promise<Signer> {
+        return item !== null ? signerKeys(item.keys) : signerNone();
+    }
+
+    async resolveSigner(name: string, options: ResolveSignerOptions): Promise<Signer> {
+        return await this.createSigner(this.resolveItem(name, options));
     }
 
     getSignerSummary(signer: SignerRegistryItem, networks: NetworkRegistry): SignerSummary {

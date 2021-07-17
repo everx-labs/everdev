@@ -7,7 +7,7 @@ import {
     nullTerminal,
     run,
 } from "./utils";
-import {Terminal} from "./";
+import { Terminal } from "./";
 import fs from "fs";
 
 export type ComponentOptions = {
@@ -170,14 +170,23 @@ export class Component {
 
     static async getInfoAll(components: { [name: string]: Component }): Promise<string> {
         const table = [["Component", "Version", "Available"]];
+        let hasNotInstalledComponents = false;
         for (const [name, component] of Object.entries(components)) {
+            const version = await component.getCurrentVersion();
+            if (version === "") {
+                hasNotInstalledComponents = true;
+            }
             table.push([
                 name,
-                await component.getCurrentVersion(),
+                version !== "" ? version : "not installed",
                 (await component.loadAvailableVersions()).join(", "),
             ]);
         }
-        return formatTable(table, {headerSeparator: true});
+        let info = formatTable(table, { headerSeparator: true });
+        if (hasNotInstalledComponents) {
+            info += "\n\nMissing components will be automatically installed  on first demand.";
+        }
+        return info;
     }
 
 }

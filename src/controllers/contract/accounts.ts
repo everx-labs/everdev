@@ -1,21 +1,18 @@
-import {Terminal} from "../../core";
+import { Terminal } from "../../core";
 import {
     Account,
     AccountOptions,
     ContractPackage,
 } from "@tonclient/appkit";
-import {NetworkRegistry} from "../network/registry";
+import { NetworkRegistry } from "../network/registry";
 import {
-    signerNone,
     TonClient,
 } from "@tonclient/core";
-import {createSigner} from "../signer";
 import fs from "fs";
 import {
     SignerRegistry,
-    SignerRegistryItem,
 } from "../signer/registry";
-import {ParamParser} from "./param-parser";
+import { ParamParser } from "./param-parser";
 
 function findExisting(paths: string[]): string | undefined {
     return paths.find(x => fs.existsSync(x));
@@ -60,19 +57,12 @@ export async function getAccount(terminal: Terminal, args: {
         },
     });
     const contract = args.file !== "" ? loadContract(args.file) : { abi: {} };
-    const signerArg = args.signer.trim().toLowerCase();
     const signers = new SignerRegistry();
-    let signerItem: SignerRegistryItem | undefined;
-    if (signerArg === "none") {
-        signerItem = undefined;
-    } else if (signerArg === "" && !signers.default && address !== "") {
-        signerItem = undefined;
-    } else {
-        signerItem = signers.get(signerArg);
-    }
-    const signer = signerItem ? await createSigner(signerItem.name) : signerNone();
+    const signerItem = await signers.resolveItem(args.signer, {
+        useNoneForEmptyName: address !== "",
+    });
     const options: AccountOptions = {
-        signer,
+        signer: await signers.createSigner(signerItem),
         client,
     };
     const abiData = contract.abi.data ?? [];
@@ -80,7 +70,7 @@ export async function getAccount(terminal: Terminal, args: {
         options.initData = ParamParser.components({
             name: "data",
             type: "tuple",
-            components: abiData
+            components: abiData,
         }, args.data);
     }
     if (address !== "") {
