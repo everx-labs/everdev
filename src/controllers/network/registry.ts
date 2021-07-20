@@ -7,6 +7,7 @@ import {
 import {NetworkGiver} from "./giver";
 import {TonClient} from "@tonclient/core";
 import {KnownContracts} from "../../core/known-contracts";
+import {writeStringToFile} from "../../core/utils";
 
 function networkHome() {
     return path.resolve(tondevHome(), "network");
@@ -93,7 +94,7 @@ export class NetworkRegistry {
         if (!fs.pathExistsSync(networkHome())) {
             fs.mkdirSync(networkHome(), { recursive: true });
         }
-        fs.writeFileSync(registryPath(), JSON.stringify({
+        writeStringToFile(registryPath(), JSON.stringify({
             items: this.items,
             default: this.default,
         }));

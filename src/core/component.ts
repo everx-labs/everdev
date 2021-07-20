@@ -5,7 +5,7 @@ import {
     formatTable,
     loadBinaryVersions,
     nullTerminal,
-    run,
+    run, writeStringToFile,
 } from "./utils";
 import { Terminal } from "./";
 import fs from "fs";
@@ -131,7 +131,7 @@ export class Component {
         const info = {
             version: await this.resolveVersion(version),
         };
-        fs.writeFileSync(`${this.path}.json`, JSON.stringify(info));
+        writeStringToFile(`${this.path}.json`, JSON.stringify(info));
         return true;
     }
 

@@ -5,7 +5,7 @@ import { Terminal, tondevHome } from "../../core";
 import {
     compareVersions,
     httpsGetJson,
-    userIdentifier,
+    userIdentifier, writeStringToFile,
 } from "../../core/utils";
 import { ContainerDef, ContainerStatus, DevDocker } from "./docker";
 import Dockerode from "dockerode";
@@ -96,7 +96,7 @@ export function setConfig(config: SEConfig) {
     if (!fs.existsSync(configDir)) {
         fs.mkdirSync(configDir, { recursive: true });
     }
-    fs.writeFileSync(configPath(), JSON.stringify(config, undefined, "    "), "utf8");
+    writeStringToFile(configPath(), JSON.stringify(config, undefined, "    "));
 }
 
 export function filterInstances(instances: SEInstanceConfig[], filter: string): SEInstanceConfig[] {

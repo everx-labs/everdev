@@ -7,7 +7,7 @@ import {
 import path from "path";
 import {
     changeExt,
-    uniqueFilePath,
+    uniqueFilePath, writeStringToFile,
 } from "../../core/utils";
 import fs from "fs";
 import mv from 'mv';
@@ -39,7 +39,7 @@ export const solidityCreateCommand: Command = {
     async run(terminal: Terminal, args: { name: string, folder: string }) {
         const filePath = uniqueFilePath(args.folder, `${args.name}{}.sol`);
         const text = BasicContract.split("{name}").join(args.name);
-        fs.writeFileSync(filePath, text);
+        writeStringToFile(filePath, text);
         terminal.log(`Solidity contract ${path.basename(filePath)} created.`);
     },
 };

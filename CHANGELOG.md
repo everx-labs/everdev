@@ -19,6 +19,9 @@ All notable changes to this project will be documented in this file.
 - "tondev clang set --compiler" didn't change installed compiler version https://github.com/tonlabs/tondev/issues/42
 - check balance of the account before deploy.
 - tondev does not fill the command args with default values when user ran commands programmatically.  
+- `tondev info` doesn't stop if one of the tool failed.
+- `tondev` commands that produces files (e.g. `sol create`) creates output folders if required,
+- all commands that require abi file (e.g. `js wrap`) accepts any input file name.  
 
 ## [0.7.4] - 2021-06-25
 

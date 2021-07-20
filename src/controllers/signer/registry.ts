@@ -12,6 +12,7 @@ import {
     TonClient,
 } from "@tonclient/core";
 import { NetworkRegistry } from "../network/registry";
+import {writeStringToFile} from "../../core/utils";
 
 function signerHome() {
     return path.resolve(tondevHome(), "signer");
@@ -71,10 +72,7 @@ export class SignerRegistry {
     }
 
     save() {
-        if (!fs.pathExistsSync(signerHome())) {
-            fs.mkdirSync(signerHome(), { recursive: true });
-        }
-        fs.writeFileSync(registryPath(), JSON.stringify({
+        writeStringToFile(registryPath(), JSON.stringify({
             items: this.items,
             default: this.default,
         }));

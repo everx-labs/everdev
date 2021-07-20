@@ -10,6 +10,7 @@ import * as zlib from "zlib";
 import * as unzip from "unzip-stream";
 import request from "request";
 import { Terminal } from "./index";
+import {ContractPackage} from "@tonclient/appkit";
 
 export function executableName(name: string): string {
     return `${name}${os.platform() === "win32" ? ".exe" : ""}`;
@@ -33,11 +34,19 @@ export function formatTokens(nanoTokens: string | number | bigint): string {
     return `${tokensString} tokens (${bigNano} nano)`;
 }
 
+export function writeStringToFile(p: string, s: string) {
+    const folderPath = path.dirname(p);
+    if (!fs.existsSync(folderPath)) {
+        fs.mkdirSync(folderPath, { recursive: true });
+    }
+    fs.writeFileSync(p, s);
+}
+
 async function installGlobally(dstPath: string, version: string, terminal: Terminal): Promise<void> {
     const binDir = path.dirname(dstPath);
     const [name, ext] = path.basename(dstPath).split(".");
     try {
-        fs.writeFileSync(
+        writeStringToFile(
             `${binDir}/package.json`,
             JSON.stringify(
                 {
@@ -496,3 +505,42 @@ export function breakWords(s: string, maxLen: number = 80): string {
     }
     return result;
 }
+
+function findExisting(paths: string[]): string | undefined {
+    return paths.find(x => fs.existsSync(x));
+}
+
+export type ResolvedContractPackage = {
+    package: ContractPackage,
+    abiPath: string,
+    tvcPath?: string,
+};
+
+export function resolveContract(filePath: string): ResolvedContractPackage {
+    filePath = filePath.trim();
+    const lowered = filePath.toLowerCase();
+    let basePath;
+    if (lowered.endsWith(".tvc") || lowered.endsWith(".abi") || lowered.endsWith(".sol")) {
+        basePath = filePath.slice(0, -4);
+    } else if (lowered.endsWith(".abi.json")) {
+        basePath = filePath.slice(0, -9);
+    } else {
+        basePath = filePath;
+    }
+    const tvcPath = findExisting([`${basePath}.tvc`]);
+    const abiPath = findExisting([`${basePath}.abi.json`, `${basePath}.abi`]) ?? "";
+    const tvc = tvcPath ? fs.readFileSync(tvcPath).toString("base64") : undefined;
+    const abi = abiPath !== "" ? JSON.parse(fs.readFileSync(abiPath, "utf8")) : undefined;
+    if (!abi) {
+        throw new Error("ABI file missing.");
+    }
+    return {
+        package: {
+            abi,
+            tvc
+        },
+        abiPath,
+        tvcPath,
+    };
+}
+

@@ -35,7 +35,11 @@ export async function printSummaryInfo() {
             consoleTerminal.log();
             consoleTerminal.log(controller.title);
             consoleTerminal.log();
-            await info.command.run(consoleTerminal, info.args);
+            try {
+                await info.command.run(consoleTerminal, info.args);
+            } catch (error) {
+                consoleTerminal.writeError(`${error}`);
+            }
         }
     }
     consoleTerminal.log();

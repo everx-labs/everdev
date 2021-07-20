@@ -3,9 +3,9 @@ import {
     CommandArgVariant,
     Terminal,
 } from "../../core";
-import * as fs from "fs";
-import * as path from "path";
+import path from "path";
 import {TonClient} from "@tonclient/core";
+import {resolveContract, writeStringToFile} from "../../core/utils";
 
 enum ExportFormat {
     CommonJs = "commonjs",
@@ -82,15 +82,15 @@ export const jsWrapCommand: Command = {
             defaultValue: ExportFormat.CommonJs,
         },
     ],
-    async run(terminal: Terminal, args: {
+    run: async function (terminal: Terminal, args: {
         file: string,
         print: boolean,
         output: string,
         export: string,
     }) {
-        const abiPath = path.resolve(process.cwd(), args.file);
-        const name = path.basename(abiPath).slice(0, -".abi.json".length);
-        const abi = JSON.parse(fs.readFileSync(abiPath, "utf8"));
+        const contract = resolveContract(path.resolve(process.cwd(), args.file));
+        const name = path.basename(contract.abiPath).slice(0, -".abi.json".length);
+        const abi = contract.package.abi;
         const contractName = `${name.substr(0, 1).toUpperCase()}${name.substr(1)}Contract`;
         const code = [`const ${contractName} = {`];
         const abiCode = JSON
@@ -102,16 +102,13 @@ export const jsWrapCommand: Command = {
             .join("\n");
 
         code.push(`    abi: ${abiCode},`);
-        const tvcPath = path.resolve(path.dirname(abiPath), `${name}.tvc`);
-        terminal.log(tvcPath);
-
-        if (fs.existsSync(tvcPath)) {
-            const tvc = fs.readFileSync(tvcPath).toString("base64");
+        const tvc = contract.package.tvc;
+        if (tvc !== undefined) {
             code.push(`    tvc: "${tvc}",`);
             const client = new TonClient();
-            const tvcCode = (await client.boc.get_code_from_tvc({ tvc })).code;
+            const tvcCode = (await client.boc.get_code_from_tvc({tvc})).code;
             code.push(`    code: "${tvcCode}",`);
-            code.push(`    codeHash: "${(await client.boc.get_boc_hash({ boc: tvcCode })).hash}",`);
+            code.push(`    codeHash: "${(await client.boc.get_boc_hash({boc: tvcCode})).hash}",`);
             await client.close();
         }
         code.push("};");
@@ -121,10 +118,10 @@ export const jsWrapCommand: Command = {
             terminal.log(wrapperCode);
         } else {
             const wrapperPath = path.resolve(
-                path.dirname(abiPath),
+                path.dirname(contract.abiPath),
                 args.output !== "" ? args.output : `${contractName}.js`,
             );
-            fs.writeFileSync(wrapperPath, wrapperCode);
+            writeStringToFile(wrapperPath, wrapperCode);
             terminal.log(`Generated wrapper code written to: ${wrapperPath}`);
         }
     },

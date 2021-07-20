@@ -10,7 +10,7 @@ import {
     downloadDemo,
     loadInfo,
 } from "./installer";
-import {formatTable} from "../../core/utils";
+import {formatTable, writeStringToFile} from "../../core/utils";
 import {jsWrapCommand} from "./wrap";
 
 export const jsCreateCommand: Command = {
@@ -29,8 +29,8 @@ export const jsCreateCommand: Command = {
     async run(terminal: Terminal, args: { name: string, folder: string }) {
         const appFolderPath = path.resolve(args.folder, args.name);
         fs.mkdirSync(appFolderPath, {recursive: true});
-        fs.writeFileSync(path.resolve(appFolderPath, "index.js"), BaseApp.index);
-        fs.writeFileSync(path.resolve(appFolderPath, "package.json"), BaseApp.package);
+        writeStringToFile(path.resolve(appFolderPath, "index.js"), BaseApp.index);
+        writeStringToFile(path.resolve(appFolderPath, "package.json"), BaseApp.package);
         terminal.log(`App created in ${appFolderPath}`);
     },
 };

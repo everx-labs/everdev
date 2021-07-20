@@ -2,45 +2,16 @@ import { Terminal } from "../../core";
 import {
     Account,
     AccountOptions,
-    ContractPackage,
 } from "@tonclient/appkit";
 import { NetworkRegistry } from "../network/registry";
 import {
     TonClient,
 } from "@tonclient/core";
-import fs from "fs";
 import {
     SignerRegistry,
 } from "../signer/registry";
 import { ParamParser } from "./param-parser";
-
-function findExisting(paths: string[]): string | undefined {
-    return paths.find(x => fs.existsSync(x));
-}
-
-function loadContract(filePath: string): ContractPackage {
-    filePath = filePath.trim();
-    const lowered = filePath.toLowerCase();
-    let basePath;
-    if (lowered.endsWith(".tvc") || lowered.endsWith(".abi")) {
-        basePath = filePath.slice(0, -4);
-    } else if (lowered.endsWith(".abi.json")) {
-        basePath = filePath.slice(0, -9);
-    } else {
-        basePath = filePath;
-    }
-    const tvcPath = findExisting([`${basePath}.tvc`]);
-    const abiPath = findExisting([`${basePath}.abi.json`, `${basePath}.abi`]);
-    const tvc = tvcPath ? fs.readFileSync(tvcPath).toString("base64") : undefined;
-    const abi = abiPath ? JSON.parse(fs.readFileSync(abiPath, "utf8")) : undefined;
-    if (!abi) {
-        throw new Error("ABI file missing.");
-    }
-    return {
-        abi,
-        tvc,
-    };
-}
+import {resolveContract} from "../../core/utils";
 
 export async function getAccount(terminal: Terminal, args: {
     file: string,
@@ -56,7 +27,7 @@ export async function getAccount(terminal: Terminal, args: {
             endpoints: network.endpoints,
         },
     });
-    const contract = args.file !== "" ? loadContract(args.file) : { abi: {} };
+    const contract = args.file !== "" ? resolveContract(args.file) : { package: {abi: {}}, abiPath: "" };
     const signers = new SignerRegistry();
     const signerItem = await signers.resolveItem(args.signer, {
         useNoneForEmptyName: address !== "",
@@ -65,7 +36,7 @@ export async function getAccount(terminal: Terminal, args: {
         signer: await signers.createSigner(signerItem),
         client,
     };
-    const abiData = contract.abi.data ?? [];
+    const abiData = contract.package.abi.data ?? [];
     if (abiData.length > 0 && args.data !== "") {
         options.initData = ParamParser.components({
             name: "data",
@@ -76,7 +47,7 @@ export async function getAccount(terminal: Terminal, args: {
     if (address !== "") {
         options.address = address;
     }
-    const account = new Account(contract, options);
+    const account = new Account(contract.package, options);
     terminal.log("\nConfiguration\n");
     terminal.log(`  Network: ${network.name} (${NetworkRegistry.getEndpointsSummary(network)})`);
     terminal.log(`  Signer:  ${signerItem ? `${signerItem.name} (public ${signerItem.keys.public})` : "None"}\n`);
