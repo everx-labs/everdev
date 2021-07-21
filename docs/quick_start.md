@@ -1,10 +1,10 @@
 # Get started with Development Tools
-In this guide we will help you get started with such essensial Free TON tools as:
-- Tondev CLI
-- Solidity Compiler
-- Local Blockchain
-- Blockchain Explorer
-- GraphQL Playground
+This guide will help you get started with such essensial Free TON tools as:
+- [Tondev CLI](https://github.com/tonlabs/tondev)
+- [Solidity Compiler](https://github.com/tonlabs/TON-Solidity-Compiler)
+- [Local Blockchain](https://github.com/tonlabs/tonos-se)
+- [Blockchain Explorer TON Live](ton.live)
+- [GraphQL API](https://docs.ton.dev/86757ecb2/p/793337-ton-os-api)
   
 You will learn how to:
 - Deploy your first contract
@@ -19,8 +19,9 @@ You will learn how to:
 ```tondev sol compile helloWorld.sol```
 
 ### Run Local Blockchain 
-```tondev se start```
+**Attention** Docker should be running.
 
+```tondev se start```
 
 ### Configure default network 
 Set Local Blockchain [SE (Startup Edition)](https://github.com/tonlabs/tonos-se) as the default network:
