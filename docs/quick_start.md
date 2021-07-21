@@ -11,6 +11,7 @@ You will learn how to:
 - Run it on-chain
 - Run a getter-function
 - Make a transfer
+- Explore contract data in Explorer and GraphQL playground
 
 ### Create helloWorld contract
 ```tondev sol create helloWorld```
