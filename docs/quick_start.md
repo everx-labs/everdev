@@ -13,6 +13,22 @@ You will learn how to:
 - Make a transfer
 - Explore contract data in Explorer and GraphQL playground
 
+- [Get started with Development Tools](#get-started-with-development-tools)
+    - [Create helloWorld contract](#create-helloworld-contract)
+    - [Compile it](#compile-it)
+    - [Run Local Blockchain](#run-local-blockchain)
+    - [Configure default network](#configure-default-network)
+    - [Configure Giver wallet that will sponsor deploy operation](#configure-giver-wallet-that-will-sponsor-deploy-operation)
+    - [Generate the keys for contract ownership](#generate-the-keys-for-contract-ownership)
+    - [Calculate the contract address](#calculate-the-contract-address)
+    - [Deploy](#deploy)
+    - [View contract information with Explorer](#view-contract-information-with-explorer)
+    - [Explore contract information with GraphQL](#explore-contract-information-with-graphql)
+    - [Run on-chain](#run-on-chain)
+    - [Run a getter function](#run-a-getter-function)
+    - [Transfer some tokens](#transfer-some-tokens)
+  - [What's next?](#whats-next)
+
 ### Create helloWorld contract
 ```$ tondev sol create helloWorld```
 
@@ -37,7 +53,7 @@ $ tondev signer add giver_keys 172af540e43a524763dd53b26a066d472a97c4de37d549817
 $ tondev network giver se 0:b5e9240fc2d2f1ff8cbb1d1dee7fb7cae155e5f6320e585fcc685698994a19a5 --signer giver_keys
 ```
 
-## Generate the keys for contract ownership
+### Generate the keys for contract ownership
 
 ```
 $ tondev signer generate owner_keys
@@ -53,7 +69,7 @@ owner_keys (Default)  3826202b129ea8c041b8d49a655512648fc94377d1958a7a4fc9f4b305
 
 **Don't forget to make the owner key default otherwize giver keys will be used as default. 
 
-## Calculate the contract address
+### Calculate the contract address
 
 ```
 $ tondev c i helloWorld
@@ -69,7 +85,7 @@ Account:   Doesn't exist
 ```
 You can see that the contract does not exist yet (is not deployed) but you can already see its future address.
 
-## Deploy
+### Deploy
 
 ```
 $ tondev contract deploy helloWorld
@@ -85,12 +101,12 @@ Deploying...
 Contract has deployed at address: 0:e74c4258496e79e62e014ca96911acbf5cb0e286fd55dd6f4e3da54e4197ddf5
 ```
 
-## View contract information with Explorer
+### View contract information with Explorer
 Go to [localhost](http://localhost/) and search for your contract address in search bar.
 Open your account page. You will need it later to see its transactions and messages, that we will produce in the next steps. 
 
 
-## Explore contract information with GraphQL
+### Explore contract information with GraphQL
 Go to [localhost/graphql](http://localhost/graphql).
 Enter in the left pane and click Run button
 ```
@@ -109,7 +125,6 @@ query {
     data
   }
 }
-
 ```
 You will see:
 ```
@@ -133,7 +148,7 @@ You can specify any other fields in the result section that are available in Gra
 This is the API of blockchain, to retrieve data from it and to send data into it. 
 You can use this playground later, if you will need need to test some queries.  
 
-## Run on-chain
+### Run on-chain
 Let's move on and run an on-chain method.
 
 ``` 
@@ -173,7 +188,7 @@ You can also execute it inline like this:
 In the result you can see the transaction_id. 
 Search for it on your Contract's page in Explorer and in GraphQL playground (use `transactions` collection instead of `accounts`). 
 
-## Run a getter function
+### Run a getter function
 
 ```
 $ tondev c run-local helloWorld timestamp
@@ -192,7 +207,7 @@ Execution has finished with result: {
     "out_messages": []
 }
 ```
-## Transfer some tokens
+### Transfer some tokens
 
 ```
 $ tondev c run helloWorld sendValue
