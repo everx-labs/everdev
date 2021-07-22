@@ -1,4 +1,5 @@
 # Get started with Development Tools
+## Guide overview
 This guide will help you get started with such essensial Free TON tools as:
 - [Tondev CLI](https://github.com/tonlabs/tondev)
 - [Solidity Compiler](https://github.com/tonlabs/TON-Solidity-Compiler)
@@ -13,7 +14,10 @@ You will learn how to:
 - Make a transfer
 - Explore contract data in Explorer and GraphQL playground
 
+## Table of Contents
 - [Get started with Development Tools](#get-started-with-development-tools)
+  - [Guide overview](#guide-overview)
+  - [Table of Contents](#table-of-contents)
     - [Create helloWorld contract](#create-helloworld-contract)
     - [Compile it](#compile-it)
     - [Run Local Blockchain](#run-local-blockchain)
@@ -182,7 +186,7 @@ Available functions:
         ........................
 ```
 
-You can also execute it inline like this:
+You can also execute it inline like this:  
 ```$ tondev c run helloWorld touch```
 
 In the result you can see the transaction_id. 
