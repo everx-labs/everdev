@@ -14,35 +14,35 @@ You will learn how to:
 - Explore contract data in Explorer and GraphQL playground
 
 ### Create helloWorld contract
-```tondev sol create helloWorld```
+```$ tondev sol create helloWorld```
 
 ### Compile it
-```tondev sol compile helloWorld.sol```
+```$ tondev sol compile helloWorld.sol```
 
 ### Run Local Blockchain 
 **Attention** Docker should be running.
 
-```tondev se start```
+```$ tondev se start```
 
 ### Configure default network 
 Set Local Blockchain [SE (Startup Edition)](https://github.com/tonlabs/tonos-se) as the default network:
 
-```tondev network default se```
+```$ tondev network default se```
 
 ### Configure Giver wallet that will sponsor deploy operation
 Here we use address and private key of [SE High Load Giver](https://github.com/tonlabs/tonos-se/tree/master/contracts/giver_v2).
 
 ```
-tondev signer add giver_keys 172af540e43a524763dd53b26a066d472a97c4de37d5498170564510608250c3
-tondev network giver se 0:b5e9240fc2d2f1ff8cbb1d1dee7fb7cae155e5f6320e585fcc685698994a19a5 --signer giver_keys
+$ tondev signer add giver_keys 172af540e43a524763dd53b26a066d472a97c4de37d5498170564510608250c3
+$ tondev network giver se 0:b5e9240fc2d2f1ff8cbb1d1dee7fb7cae155e5f6320e585fcc685698994a19a5 --signer giver_keys
 ```
 
 ## Generate the keys for contract ownership
 
 ```
-tondev signer generate owner_keys
-tondev signer default owner_keys
-tondev s l 
+$ tondev signer generate owner_keys
+$ tondev signer default owner_keys
+$ tondev s l 
 
 Signer                Public Key                                                        Used
 --------------------  ----------------------------------------------------------------  ---------------------------
@@ -50,12 +50,13 @@ giver_keys            2ada2e65ab8eeab09490e3521415f45b6e42df9c760a639bcf53957550
 owner_keys (Default)  3826202b129ea8c041b8d49a655512648fc94377d1958a7a4fc9f4b3051ecf7b
 ```
 *Note that there are shortcuts for all the commands: s l = signer list :)
+
 **Don't forget to make the owner key default otherwize giver keys will be used as default. 
 
 ## Calculate the contract address
 
 ```
-tondev c i helloWorld
+$ tondev c i helloWorld
 
 Configuration
 
@@ -71,7 +72,7 @@ You can see that the contract does not exist yet (is not deployed) but you can a
 ## Deploy
 
 ```
-tondev contract deploy helloWorld
+$ tondev contract deploy helloWorld
 
 Configuration
 
@@ -134,7 +135,7 @@ You can use this playground later, if you will need need to test some queries.
 Let's move on and run an on-chain method.
 
 ``` 
-tondev c run helloWorld
+$ tondev c run helloWorld
 
 Configuration
 
@@ -165,7 +166,7 @@ Available functions:
 ```
 
 You can also execute it inline like this:
-```tondev c run hello touch```
+```$ tondev c run helloWorld touch```
 
 In the result you can see the transaction_id. 
 Search for it on your Contract's page in Explorer and in GraphQL playground (use `transactions` collection instead of `accounts`). 
@@ -173,7 +174,7 @@ Search for it on your Contract's page in Explorer and in GraphQL playground (use
 ## Run a getter function
 
 ```
-tondev c run-local helloWorld timestamp
+$ tondev c run-local helloWorld timestamp
 
 Configuration
 
@@ -192,7 +193,7 @@ Execution has finished with result: {
 ## Transfer some tokens
 
 ```
-tondev c run helloWorld sendValue
+$ tondev c run helloWorld sendValue
 
 Configuration
 
