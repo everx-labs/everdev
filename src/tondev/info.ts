@@ -1,9 +1,9 @@
 import {controllers} from "../controllers";
 import {
     Command,
+    Terminal,
     ToolController,
 } from "../core";
-import {consoleTerminal} from "../core/utils";
 
 function findInfoCommand(controller: ToolController, name: string): { command: Command, args: any } | undefined {
     if (controller.name === "contract" && name === "info") {
@@ -26,21 +26,21 @@ function findInfoCommand(controller: ToolController, name: string): { command: C
     };
 }
 
-export async function printSummaryInfo() {
+export async function printSummaryInfo(terminal: Terminal) {
     for (const controller of controllers) {
         const info = findInfoCommand(controller, "info") ??
             findInfoCommand(controller, "list") ??
             findInfoCommand(controller, "version");
         if (info) {
-            consoleTerminal.log();
-            consoleTerminal.log(controller.title);
-            consoleTerminal.log();
+            terminal.log();
+            terminal.log(controller.title);
+            terminal.log();
             try {
-                await info.command.run(consoleTerminal, info.args);
+                await info.command.run(terminal, info.args);
             } catch (error) {
-                consoleTerminal.writeError(`${error}`);
+                terminal.writeError(`${error}`);
             }
         }
     }
-    consoleTerminal.log();
+    terminal.log();
 }

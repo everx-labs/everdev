@@ -7,12 +7,13 @@ import {
 import path from "path";
 import {
     changeExt,
-    uniqueFilePath, writeStringToFile,
+    uniqueFilePath,
+    writeTextFile,
 } from "../../core/utils";
 import fs from "fs";
-import mv from 'mv';
-import {BasicContract} from "./snippets";
-import {components} from "./components";
+import mv from "mv";
+import { BasicContract } from "./snippets";
+import { components } from "./components";
 
 export const solidityVersionCommand: Command = {
     name: "version",
@@ -39,7 +40,7 @@ export const solidityCreateCommand: Command = {
     async run(terminal: Terminal, args: { name: string, folder: string }) {
         const filePath = uniqueFilePath(args.folder, `${args.name}{}.sol`);
         const text = BasicContract.split("{name}").join(args.name);
-        writeStringToFile(filePath, text);
+        writeTextFile(filePath, text);
         terminal.log(`Solidity contract ${path.basename(filePath)} created.`);
     },
 };
@@ -57,14 +58,17 @@ export const solidityCompileCommand: Command = {
             nameRegExp: /\.sol$/i,
         },
         {
-            name: 'output-dir',
-            alias: 'o',
-            type: 'folder',
-            title: 'Output folder (current is default)',
-            defaultValue: '',
+            name: "output-dir",
+            alias: "o",
+            type: "folder",
+            title: "Output folder (current is default)",
+            defaultValue: "",
         },
     ],
-    async run(terminal: Terminal, args: { file: string, outputDir: string }): Promise<void> {
+    async run(terminal: Terminal, args: {
+        file: string,
+        outputDir: string,
+    }): Promise<void> {
         const ext = path.extname(args.file);
         if (ext !== ".sol") {
             terminal.log(`Choose solidity source file.`);
@@ -75,15 +79,15 @@ export const solidityCompileCommand: Command = {
         const fileName = path.basename(args.file);
 
         const outputDir = path.resolve(args.outputDir ?? ".");
-        const tvcName = path.resolve( outputDir, changeExt(fileName, ".tvc"));
-        const codeName = path.resolve( outputDir, changeExt(fileName, ".code" ));
+        const tvcName = path.resolve(outputDir, changeExt(fileName, ".tvc"));
+        const codeName = path.resolve(outputDir, changeExt(fileName, ".code"));
 
-        await components.compiler.run(terminal, fileDir, ["-o", outputDir, fileName]);
-        const linkerOut = await components.linker.run(
+        await components.compiler.silentRun(terminal, fileDir, ["-o", outputDir, fileName]);
+        const linkerOut = await components.linker.silentRun(
             terminal,
             fileDir,
-            ["compile", codeName, "--lib", components.stdlib.path]);
-
+            ["compile", codeName, "--lib", components.stdlib.path()],
+        );
         const generatedTvcName = `${/Saved contract to file (.*)$/mg.exec(linkerOut)?.[1]}`;
 
         // fs.renameSync was replaces by this code, because of an error: EXDEV: cross-device link not permitted
@@ -91,9 +95,12 @@ export const solidityCompileCommand: Command = {
             mv(
                 path.resolve(fileDir, generatedTvcName),
                 path.resolve(outputDir, tvcName),
-                { mkdirp: true, clobber: true },
+                {
+                    mkdirp: true,
+                    clobber: true,
+                },
                 (err: Error) => (err ? rej(err) : res(true)),
-            )
+            ),
         );
         fs.unlinkSync(path.resolve(fileDir, codeName));
     },

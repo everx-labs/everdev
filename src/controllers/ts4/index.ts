@@ -1,6 +1,6 @@
 import path from 'path'
 import { Command, Component, Terminal, ToolController } from '../../core'
-import {uniqueFilePath, writeStringToFile} from '../../core/utils'
+import {uniqueFilePath, writeTextFile} from '../../core/utils'
 import { components } from './components'
 import { BasicTest } from './snippets'
 
@@ -56,7 +56,7 @@ export const ts4CreateCommand: Command = {
     async run(terminal: Terminal, args: { name: string, folder: string }) {
         const filePath = uniqueFilePath(args.folder, `${args.name}{}.py`)
         const text = BasicTest.split("{name}").join(args.name)
-        writeStringToFile(filePath, text)
+        writeTextFile(filePath, text)
         terminal.log(`TestSuite4 test script ${path.basename(filePath)} created.`)
     },
 }

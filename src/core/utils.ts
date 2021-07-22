@@ -10,7 +10,7 @@ import * as zlib from "zlib";
 import * as unzip from "unzip-stream";
 import request from "request";
 import { Terminal } from "./index";
-import {ContractPackage} from "@tonclient/appkit";
+import { ContractPackage } from "@tonclient/appkit";
 
 export function executableName(name: string): string {
     return `${name}${os.platform() === "win32" ? ".exe" : ""}`;
@@ -34,7 +34,7 @@ export function formatTokens(nanoTokens: string | number | bigint): string {
     return `${tokensString} tokens (${bigNano} nano)`;
 }
 
-export function writeStringToFile(p: string, s: string) {
+export function writeTextFile(p: string, s: string) {
     const folderPath = path.dirname(p);
     if (!fs.existsSync(folderPath)) {
         fs.mkdirSync(folderPath, { recursive: true });
@@ -42,22 +42,19 @@ export function writeStringToFile(p: string, s: string) {
     fs.writeFileSync(p, s);
 }
 
+export function writeJsonFile(p: string, v: unknown) {
+    writeTextFile(p, JSON.stringify(v, undefined, "    "));
+}
+
 async function installGlobally(dstPath: string, version: string, terminal: Terminal): Promise<void> {
     const binDir = path.dirname(dstPath);
     const [name, ext] = path.basename(dstPath).split(".");
     try {
-        writeStringToFile(
-            `${binDir}/package.json`,
-            JSON.stringify(
-                {
-                    name: name, // ex: tonos-cli
-                    version,
-                    bin: `./${name}${ext ? "." + ext : ""}`,
-                },
-                null,
-                2,
-            ),
-        );
+        writeJsonFile(`${binDir}/package.json`, {
+            name: name, // ex: tonos-cli
+            version,
+            bin: `./${name}${ext ? "." + ext : ""}`,
+        });
         await run("npm", ["install", "-g"], { cwd: binDir }, terminal);
     } catch (err) {
         terminal.writeError(err);
@@ -295,6 +292,25 @@ export const nullTerminal: Terminal = {
     },
 };
 
+export class StringTerminal implements Terminal {
+    stdout: string = "";
+    stderr: string = "";
+
+    log(...args: any[]): void {
+        this.stdout += args.map(x => `${x}`).join(" ");
+        this.stdout += "\r\n";
+    }
+
+    write(text: string): void {
+        this.stdout += text;
+    }
+
+    writeError(text: string): void {
+        this.stderr += text;
+    }
+
+}
+
 export function versionToNumber(s: string): number {
     if (s.toLowerCase() === "latest") {
         return 1_000_000_000;
@@ -313,6 +329,12 @@ export function compareVersions(a: string, b: string): number {
     const an = versionToNumber(a);
     const bn = versionToNumber(b);
     return an < bn ? -1 : (an === bn ? 0 : 1);
+}
+
+export function compareVersionsDescending(a: string, b: string): number {
+    const an = versionToNumber(a);
+    const bn = versionToNumber(b);
+    return an > bn ? -1 : (an === bn ? 0 : 1);
 }
 
 let _progressLine: string = "";
@@ -537,10 +559,24 @@ export function resolveContract(filePath: string): ResolvedContractPackage {
     return {
         package: {
             abi,
-            tvc
+            tvc,
         },
         abiPath,
         tvcPath,
     };
 }
 
+export function isHex(s: string): boolean {
+    for (let i = 0; i < s.length; i += 1) {
+        if (!"0123456789ABCDEFabcdef".includes(s[i])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+export function resolvePath(s: string): string {
+    return s.startsWith("~/")
+        ? `${os.homedir()}${s.substr(1)}`
+        : path.resolve(process.cwd(), s);
+}

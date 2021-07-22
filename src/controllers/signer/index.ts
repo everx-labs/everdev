@@ -11,8 +11,8 @@ import {
 import {
     TonClient,
 } from "@tonclient/core";
-import {formatTable} from "../../core/utils";
-import {NetworkRegistry} from "../network/registry";
+import { formatTable } from "../../core/utils";
+import { NetworkRegistry } from "../network/registry";
 
 const nameArg: CommandArg = {
     isArg: true,
@@ -146,20 +146,13 @@ export const signerAddCommand: Command = {
         dictionaryOpt,
         forceOpt,
     ],
-    async run(_terminal: Terminal, args: {
+    async run(terminal: Terminal, args: {
         name: string,
         secret: string,
         dictionary: string,
         force: boolean
     }) {
-        const words = args.secret.split(" ").filter(x => x !== "");
-        if (words.length > 1) {
-            const dictionary = Number.parseInt(args.dictionary);
-            const phrase = words.join(" ");
-            await new SignerRegistry().addMnemonicKey(args.name, "", phrase, dictionary, args.force);
-        } else {
-            await new SignerRegistry().addSecretKey(args.name, "", args.secret, args.force);
-        }
+        await new SignerRegistry().add(terminal, args);
     },
 };
 

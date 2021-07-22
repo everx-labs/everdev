@@ -1,6 +1,5 @@
 import * as os from "os";
-import path from "path";
-import { Component, tondevHome } from "../../core";
+import { Component } from "../../core";
 
 const p = os.platform();
 let innerPath: string;
@@ -21,9 +20,7 @@ if (p === "linux") {
     ext = p + ".zip";
 }
 
-function clangHome() {
-    return path.resolve(tondevHome(), "clang");
-}
+const TOOL_FOLDER_NAME = "clang";
 
 export const components = {
     compiler: new (class extends Component {
@@ -34,9 +31,9 @@ export const components = {
         async resolveVersion(downloadedVersion: string): Promise<string> {
             return downloadedVersion;
         }
-    })(clangHome(), "clang-for-tvm", {
+    })(TOOL_FOLDER_NAME, "clang-for-tvm", {
         targetName,
         innerPath,
-        executable: true,
+        isExecutable: true,
     }),
 };

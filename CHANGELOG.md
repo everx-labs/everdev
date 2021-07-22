@@ -12,7 +12,12 @@ All notable changes to this project will be documented in this file.
   that there is a giver problem (not in users contract). 
 - Components version table has a text "not installed" if some component is missing.
   If some component is missing then tondev adds a footnote about on demand installation.
-  
+- `tondev signer add` command's `secret` option can accept a path to the keys file.
+- `tondev sol compile` hides linker output in case of success.
+- `tondev se version` prints version from the latest to the eldest order.
+- `tondev se set` options `image` and `container` allow use existing docker 
+  images and containers to register SE instances.
+- `tondev se delete` deletes registered SE instance from `tondev` SE registry.
 
 ### Fixed
 

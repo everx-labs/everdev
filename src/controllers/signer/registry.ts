@@ -2,6 +2,7 @@ import path from "path";
 import fs from "fs-extra";
 
 import {
+    Terminal,
     tondevHome,
 } from "../../core";
 import {
@@ -12,7 +13,11 @@ import {
     TonClient,
 } from "@tonclient/core";
 import { NetworkRegistry } from "../network/registry";
-import {writeStringToFile} from "../../core/utils";
+import {
+    isHex,
+    resolvePath,
+    writeJsonFile,
+} from "../../core/utils";
 
 function signerHome() {
     return path.resolve(tondevHome(), "signer");
@@ -72,13 +77,47 @@ export class SignerRegistry {
     }
 
     save() {
-        writeStringToFile(registryPath(), JSON.stringify({
+        writeJsonFile(registryPath(), {
             items: this.items,
             default: this.default,
-        }));
+        });
     }
 
-    private add(item: SignerRegistryItem, overwrite: boolean) {
+    async add(_terminal: Terminal, args: {
+        name: string,
+        secret: string,
+        dictionary: string,
+        force: boolean
+    }) {
+        const {
+            secret,
+            name,
+            force,
+        } = args;
+        const words = secret.split(" ").filter(x => x !== "");
+        if (words.length > 1) {
+            const dictionary = Number.parseInt(args.dictionary);
+            const phrase = words.join(" ");
+            await this.addMnemonicKey(name, "", phrase, dictionary, force);
+        } else if (isHex(args.secret) && secret.length === 64) {
+            await this.addSecretKey(name, "", secret, force);
+        } else {
+            const keysPath = resolvePath(secret);
+            if (fs.existsSync(keysPath)) {
+                try {
+                    const keys: { secret?: string } = JSON.parse(fs.readFileSync(keysPath, "utf8"));
+                    await this.addSecretKey(name, "", keys.secret ?? "", force);
+                } catch (error) {
+                    throw new Error(`Invalid keys file.\nExpected JSON file with structure: { "public": "...", "secret": "..." }.`);
+                }
+            } else {
+                throw new Error(`Invalid signer secret: ${secret}. You can specify `);
+            }
+        }
+    }
+
+
+    private addItem(item: SignerRegistryItem, overwrite: boolean) {
         const existingIndex = this.items.findIndex(x => x.name.toLowerCase() === item.name.toLowerCase());
         if (existingIndex >= 0 && !overwrite) {
             throw new Error(`Signer with name "${item.name}" already exists.`);
@@ -99,7 +138,7 @@ export class SignerRegistry {
             public: (await TonClient.default.crypto.nacl_sign_keypair_from_secret_key({ secret })).public,
             secret,
         };
-        this.add({
+        this.addItem({
             name,
             description,
             keys,
@@ -115,7 +154,7 @@ export class SignerRegistry {
             public: (await TonClient.default.crypto.nacl_sign_keypair_from_secret_key({ secret })).public,
             secret,
         };
-        this.add({
+        this.addItem({
             name,
             description,
             keys,

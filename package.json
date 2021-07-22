@@ -10,7 +10,8 @@
 	},
 	"scripts": {
 		"prepublishOnly": "npm i && tsc",
-		"tondev": "node ./cli.js"
+		"tondev": "node ./cli.js",
+		"test": "jest -i"
 	},
 	"bin": {
 		"tondev": "./cli.js"
@@ -53,6 +54,11 @@
 		"@types/request": "^2.48.5",
 		"@types/unzip-stream": "^0.3.0",
 		"caxa": "^1.0.0",
-		"typescript": "^4.1.3"
+		"typescript": "^4.1.3",
+		"@babel/preset-env": "^7.14.7",
+		"@babel/preset-typescript": "^7.14.5",
+		"@types/jest": "^26.0.23",
+		"jest": "^27.0.6",
+		"ts-jest": "^27.0.3"
 	}
 }

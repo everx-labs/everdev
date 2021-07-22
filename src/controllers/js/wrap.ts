@@ -5,7 +5,7 @@ import {
 } from "../../core";
 import path from "path";
 import {TonClient} from "@tonclient/core";
-import {resolveContract, writeStringToFile} from "../../core/utils";
+import {resolveContract, writeTextFile} from "../../core/utils";
 
 enum ExportFormat {
     CommonJs = "commonjs",
@@ -121,7 +121,7 @@ export const jsWrapCommand: Command = {
                 path.dirname(contract.abiPath),
                 args.output !== "" ? args.output : `${contractName}.js`,
             );
-            writeStringToFile(wrapperPath, wrapperCode);
+            writeTextFile(wrapperPath, wrapperCode);
             terminal.log(`Generated wrapper code written to: ${wrapperPath}`);
         }
     },

@@ -20,7 +20,7 @@ import Dockerode, {
     ImageInfo,
 } from "dockerode";
 import Docker from "dockerode";
-import {Terminal} from "../../core";
+import { Terminal } from "../../core";
 
 import {
     progress,
@@ -34,7 +34,7 @@ export enum ContainerStatus {
     missing = 0,
     created = 1,
     running = 2,
-};
+}
 
 export interface ContainerDef {
     requiredImage: string,
@@ -188,8 +188,15 @@ class DevDocker {
     }
 
     async startupContainer(terminal: Terminal, def: ContainerDef, upTo: ContainerStatus) {
-        await this.ensureImage(terminal, def.requiredImage);
         let info: ContainerInfo | null = await this.findContainerInfo(def.containerName);
+        let requiredImage = def.requiredImage;
+        if (requiredImage === "") {
+            if (info === null) {
+                throw Error(`Container ${def.containerName} doesn't exists.`);
+            }
+            requiredImage = info.Image;
+        }
+        await this.ensureImage(terminal, requiredImage);
         if (upTo >= ContainerStatus.created && !info) {
             progress(terminal, `Creating ${def.containerName}`);
             await def.createContainer(this);
