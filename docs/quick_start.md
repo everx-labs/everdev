@@ -94,13 +94,14 @@ Open your account page. You will need it later to see its transactions and messa
 Go to [localhost/graphql](http://localhost/graphql).
 Enter in the left pane and click Run button
 ```
-query{
-  accounts(filter: {
-    id: {
-      eq: "0:e74c4258496e79e62e014ca96911acbf5cb0e286fd55dd6f4e3da54e4197ddf5"
+query {
+  accounts(
+    filter: {
+      id: {
+        eq: "0:e74c4258496e79e62e014ca96911acbf5cb0e286fd55dd6f4e3da54e4197ddf5"
+      }
     }
-  })
-  {
+  ) {
     acc_type_name
     balance
     code
@@ -108,6 +109,7 @@ query{
     data
   }
 }
+
 ```
 You will see:
 ```
