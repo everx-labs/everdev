@@ -54,7 +54,8 @@ owner_keys (Default)  3826202b129ea8c041b8d49a655512648fc94377d1958a7a4fc9f4b305
 
 ## Calculate the contract address
 
-```tondev c i hello
+```
+tondev c i helloWorld
 
 Configuration
 
@@ -132,7 +133,8 @@ You can use this playground later, if you will need need to test some queries.
 ## Run on-chain
 Let's move on and run an on-chain method.
 
-``` tondev c run helloWorld
+``` 
+tondev c run helloWorld
 
 Configuration
 
@@ -170,7 +172,8 @@ Search for it on your Contract's page in Explorer and in GraphQL playground (use
 
 ## Run a getter function
 
-```tondev c run-local hello timestamp
+```
+tondev c run-local helloWorld timestamp
 
 Configuration
 
@@ -189,7 +192,7 @@ Execution has finished with result: {
 ## Transfer some tokens
 
 ```
-tondev c run hello sendValue
+tondev c run helloWorld sendValue
 
 Configuration
 
