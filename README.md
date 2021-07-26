@@ -443,7 +443,7 @@ This command installs the latest tonos-cli
 tondev tonos-cli install
 ```
 The installer requires NPM to be installed, so it can install packages globally without using sudo.
-In case of error, manually set environment variable `PATH=$PATH:$HOME./tondev/solidity` 
+In case of error, manually set environment variable `PATH=$PATH:$HOME/.tondev/solidity` 
 
 #### Version
 
