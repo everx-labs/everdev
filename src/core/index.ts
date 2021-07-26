@@ -1,12 +1,16 @@
 import path from "path";
 import os from "os";
-import {TonClient} from "@tonclient/core";
-import {libNode} from "@tonclient/lib-node";
+import { TonClient } from "@tonclient/core";
+import { libNode } from "@tonclient/lib-node";
 
 export {
     ComponentOptions,
     Component,
 } from "./component";
+
+export type TondevOptions = {
+    home?: string,
+};
 
 /**
  * Terminal object is implemented by `tondev` and passed to the controller's command handlers.
@@ -183,8 +187,13 @@ export interface ToolController {
     commands: Command[],
 }
 
-export function tondevInit() {
+const config = {
+    home: path.resolve(os.homedir(), ".tondev")
+};
+
+export function tondevInit(options?: TondevOptions) {
     TonClient.useBinaryLibrary(libNode);
+    config.home = options?.home ?? config.home;
 }
 
 export function tondevDone() {
@@ -195,7 +204,7 @@ export function tondevDone() {
  * Home directory where tool must store all tool related resources.
  */
 export function tondevHome() {
-    return path.resolve(os.homedir(), ".tondev");
+    return config.home;
 }
 
 export async function getArgVariants(arg: CommandArg): Promise<CommandArgVariant[] | undefined> {

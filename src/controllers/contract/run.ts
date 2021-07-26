@@ -1,13 +1,15 @@
-import {Terminal} from "../../core";
+import { Terminal } from "../../core";
 import {
     AbiFunction,
     AbiParam,
     DecodedMessageBody,
     DecodedOutput,
     MessageBodyType,
+    Signer,
 } from "@tonclient/core";
-import {Account} from "@tonclient/appkit";
-import {ParamParser} from "./param-parser";
+import { Account } from "@tonclient/appkit";
+import { ParamParser } from "./param-parser";
+import { SignerRegistry } from "../signer/registry";
 
 export async function resolveFunction(
     terminal: Terminal,
@@ -127,10 +129,14 @@ export async function getRunParams(
         function: string,
         input: string,
         preventUi: boolean,
+        signer: string,
+        address: string,
+        runSigner: string,
     },
 ): Promise<{
     functionName: string,
     functionInput: object,
+    signer: Signer,
 }> {
     const func = await resolveFunction(terminal, account, args.function, args.preventUi);
     const functionInput = await resolveParams(
@@ -140,9 +146,14 @@ export async function getRunParams(
         args.input,
         args.preventUi,
     );
+    const signers = new SignerRegistry();
+    const signer = args.runSigner.trim() !== ""
+        ? await signers.resolveSigner(args.runSigner, { useNoneForEmptyName: false })
+        : account.signer;
     return {
         functionName: func.name,
         functionInput,
+        signer,
     };
 }
 

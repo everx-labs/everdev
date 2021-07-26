@@ -72,7 +72,7 @@ export const components = {
             return versions.length < 10 ? versions : [...versions.slice(0, 10), "..."]
         }
     }('', PYTHON, {
-        executable: true,
-        globally: true,
+        isExecutable: true,
+        runGlobally: true,
     }),
 }

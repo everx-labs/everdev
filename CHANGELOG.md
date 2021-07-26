@@ -4,10 +4,29 @@ All notable changes to this project will be documented in this file.
 
 ## [0.8.0] - 2021-07-15
 
+### New
+
+- `value` option of the `contract` commands can accept values with "t" suffix.
+  Such values will be properly converted to the nano tokens.
+- In case of error with giver the tondev prints new detailed error describing 
+  that there is a giver problem (not in users contract). 
+- Components version table has a text "not installed" if some component is missing.
+  If some component is missing then tondev adds a footnote about on demand installation.
+- `tondev signer add` command's `secret` option can accept a path to the keys file.
+- `tondev sol compile` hides linker output in case of success.
+- `tondev se version` prints version from the latest to the eldest order.
+- `tondev se set` options `image` and `container` allow use existing docker 
+  images and containers to register SE instances.
+- `tondev se delete` deletes registered SE instance from `tondev` SE registry.
+
 ### Fixed
 
 - "tondev clang set --compiler" didn't change installed compiler version https://github.com/tonlabs/tondev/issues/42
-
+- check balance of the account before deploy.
+- tondev does not fill the command args with default values when user ran commands programmatically.  
+- `tondev info` doesn't stop if one of the tool failed.
+- `tondev` commands that produces files (e.g. `sol create`) creates output folders if required,
+- all commands that require abi file (e.g. `js wrap`) accepts any input file name.  
 
 ## [0.7.4] - 2021-06-25
 

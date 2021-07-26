@@ -6,7 +6,8 @@ import {
     seSetCommand,
     seResetCommand,
     seStartCommand,
-    seStopCommand
+    seStopCommand,
+    seDeleteCommand,
 } from "./commands";
 
 export const SE: ToolController = {
@@ -20,5 +21,6 @@ export const SE: ToolController = {
         seStartCommand,
         seStopCommand,
         seResetCommand,
+        seDeleteCommand,
     ],
 };

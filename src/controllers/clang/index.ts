@@ -1,6 +1,6 @@
 import { Command, Component, Terminal, ToolController } from "../../core";
 import path from "path";
-import { changeExt, uniqueFilePath } from "../../core/utils";
+import {changeExt, uniqueFilePath, writeTextFile} from "../../core/utils";
 import fs from "fs";
 import { BasicContractCode, BasicContractHeaders } from "./snippets";
 import { components } from "./components";
@@ -37,8 +37,8 @@ export const clangCreateCommand: Command = {
         const hFilePath = uniqueFilePath(args.folder, `${args.name}{}.hpp`);
         const cFilePath = uniqueFilePath(args.folder, `${args.name}{}.cpp`);
 
-        fs.writeFileSync(hFilePath, BasicContractHeaders);
-        fs.writeFileSync(cFilePath, BasicContractCode.split("{name}").join(hFilePath));
+        writeTextFile(hFilePath, BasicContractHeaders);
+        writeTextFile(cFilePath, BasicContractCode.split("{name}").join(hFilePath));
         terminal.log(`${hFilePath} created.`);
         terminal.log(`${cFilePath} created.`);
     },
