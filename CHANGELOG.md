@@ -2,35 +2,32 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.8.0] - 2021-07-15
+## [0.8.0] - 2021-07-26
 
 ### New
-
 - `value` option of the `contract` commands can accept values with "t" suffix.
-  Such values will be properly converted to the nano tokens.
-- `run-signer` option of the several run commands fo the `contract` tool.
-  Alternative signer used to sing message. If it is not specified then contract's 
-  signer is used.
-- In case of error with giver the tondev prints new detailed error describing 
-  that there is a giver problem (not in users contract). 
-- Components version table has a text "not installed" if some component is missing.
-  If some component is missing then tondev adds a footnote about on demand installation.
+  Such values will be properly converted to nano tokens.
+- `run-signer` option of the the `contract` commands allows to sign messages with alternative keys different from `signer` meanwhile address is still calculated from `signer` parameter (or from default `signer`). It should be useful for `run-local` (with `None` value) so that it is not needed to specify address explicitly any more.
+- `tondev` commands that produce files (e.g. `sol create`) create output folders if required.
 - `tondev signer add` command's `secret` option can accept a path to the keys file.
-- `tondev sol compile` hides linker output in case of success.
-- `tondev se version` prints version from the latest to the eldest order.
 - `tondev se set` options `image` and `container` allow use existing docker 
   images and containers to register SE instances.
 - `tondev se delete` deletes registered SE instance from `tondev` SE registry.
 - `--version` or `-v` or `-V` global option prints current tondev version.
 
 ### Fixed
-
 - "tondev clang set --compiler" didn't change installed compiler version https://github.com/tonlabs/tondev/issues/42
-- check balance of the account before deploy.
-- tondev does not fill the command args with default values when user ran commands programmatically.  
-- `tondev info` doesn't stop if one of the tool failed.
-- `tondev` commands that produces files (e.g. `sol create`) creates output folders if required,
-- all commands that require abi file (e.g. `js wrap`) accepts any input file name.  
+- `tondev` did not not fill the command args with default values when user ran commands programmatically.  
+- `tondev info` stopped if one of the tools failed.
+
+### Improved
+- In case of errors with giver `tondev` prints new detailed errors describing 
+  that there is a giver problem (not in users contract). 
+- Component version table prints "not installed" text if some component is missing. Footnote about on demand installation is added.
+- Account balance check is added before deploy.
+- All commands that require abi file (e.g. `js wrap`) now accepts any input file name. 
+- `tondev se version` now prints version from the latest to the eldest order.
+- `tondev sol compile` now hides linker output in case of success.
 
 ## [0.7.4] - 2021-06-25
 
