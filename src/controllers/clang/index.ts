@@ -1,6 +1,6 @@
 import { Command, Component, Terminal, ToolController } from "../../core";
 import path from "path";
-import { changeExt, uniqueFilePath } from "../../core/utils";
+import {changeExt, uniqueFilePath, writeTextFile} from "../../core/utils";
 import fs from "fs";
 import { BasicContractCode, BasicContractHeaders } from "./snippets";
 import { components } from "./components";
@@ -27,7 +27,7 @@ export const clangCreateCommand: Command = {
         {
             name: "folder",
             type: "folder",
-            title: "Target folder (current is default)",
+            title: "Target folder (should exist, current by default)",
         },
     ],
     async run(terminal: Terminal, args: { name: string; folder: string }) {
@@ -37,8 +37,8 @@ export const clangCreateCommand: Command = {
         const hFilePath = uniqueFilePath(args.folder, `${args.name}{}.hpp`);
         const cFilePath = uniqueFilePath(args.folder, `${args.name}{}.cpp`);
 
-        fs.writeFileSync(hFilePath, BasicContractHeaders);
-        fs.writeFileSync(cFilePath, BasicContractCode.split("{name}").join(hFilePath));
+        writeTextFile(hFilePath, BasicContractHeaders);
+        writeTextFile(cFilePath, BasicContractCode.split("{name}").join(hFilePath));
         terminal.log(`${hFilePath} created.`);
         terminal.log(`${cFilePath} created.`);
     },
@@ -67,7 +67,7 @@ export const clangCompileCommand: Command = {
         const generatedAbiName = changeExt(args.file, ".abi");
         const renamedAbiName = changeExt(args.file, ".abi.json");
 
-        await components.clang.run(
+        await components.compiler.run(
             terminal,
             path.dirname(args.file), // cd to this directory
             [args.file, "-o", tvcName]

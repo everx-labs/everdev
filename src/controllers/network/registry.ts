@@ -4,9 +4,12 @@ import fs from "fs-extra";
 import {
     tondevHome,
 } from "../../core";
-import {NetworkGiver} from "./giver";
-import {TonClient} from "@tonclient/core";
-import {KnownContracts} from "../../core/known-contracts";
+import { NetworkGiver } from "./giver";
+import { TonClient } from "@tonclient/core";
+import { KnownContracts } from "../../core/known-contracts";
+import {
+    writeJsonFile,
+} from "../../core/utils";
 
 function networkHome() {
     return path.resolve(tondevHome(), "network");
@@ -93,10 +96,10 @@ export class NetworkRegistry {
         if (!fs.pathExistsSync(networkHome())) {
             fs.mkdirSync(networkHome(), { recursive: true });
         }
-        fs.writeFileSync(registryPath(), JSON.stringify({
+        writeJsonFile(registryPath(), {
             items: this.items,
             default: this.default,
-        }));
+        });
     }
 
     add(name: string, description: string, endpoints: string[], overwrite: boolean) {

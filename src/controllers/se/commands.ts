@@ -1,16 +1,11 @@
 import {
-    filterConfigInstances,
-    getConfig,
-    getInstanceInfo,
-    getLatestVersion,
-    getVersions,
-    instanceContainerDef,
-    PORT_NONE,
-    SEInstanceConfig,
-    updateConfig
-} from "./installer";
-import { Command, CommandArg, Terminal } from "../../core";
-import { ContainerDef, ContainerStatus, DevDocker } from "./docker";
+    SERegistry,
+} from "./registry";
+import {
+    Command,
+    CommandArg,
+    Terminal,
+} from "../../core";
 import { formatTable } from "../../core/utils";
 
 export const instanceArg: CommandArg = {
@@ -21,21 +16,21 @@ export const instanceArg: CommandArg = {
     title: "SE Instance Filter",
 };
 
-async function controlInstances(
-    instanceFilter: string,
-    control: (docker: DevDocker, defs: ContainerDef[]) => Promise<void>
-): Promise<void> {
-    const defs: ContainerDef[] = (await filterConfigInstances(instanceFilter)).map(instanceContainerDef);
-    await control(new DevDocker(), defs);
-}
+const forceArg: CommandArg = {
+    name: "force",
+    alias: "f",
+    type: "boolean",
+    title: "Delete multiple instances",
+    description: "If you want to delete several instances (e.g. with \"*\") you should set this option.",
+    defaultValue: "false",
+};
 
 export const seInfoCommand: Command = {
     name: "info",
     title: "Show SE Info",
     args: [instanceArg],
     async run(terminal: Terminal, args: { instance: string }): Promise<void> {
-        const docker = new DevDocker();
-        const table: any[][] = [[
+        const table: (string | number | undefined)[][] = [[
             "Instance",
             "State",
             "Version",
@@ -43,20 +38,21 @@ export const seInfoCommand: Command = {
             "ArangoDB Port",
             "Docker Container",
             "Docker Image",
-        ]]
-        for (const instance of await filterConfigInstances(args.instance)) {
-            const info = await getInstanceInfo(docker, instance);
+        ]];
+        const registry = new SERegistry();
+        for (const item of await registry.filter(args.instance, false)) {
+            const info = await registry.getItemInfo(item);
             table.push([
-                instance.name,
+                item.name,
                 info.state,
-                instance.version,
-                instance.port,
-                instance.dbPort,
+                await registry.getSourceInfo(item),
+                item.port,
+                item.dbPort,
                 info.docker.container,
                 info.docker.image,
             ]);
         }
-        terminal.log(formatTable(table, { headerSeparator: true }))
+        terminal.log(formatTable(table, { headerSeparator: true }));
     },
 };
 
@@ -64,10 +60,11 @@ export const seVersionCommand: Command = {
     name: "version",
     title: "Show SE Versions",
     async run(terminal: Terminal, _args: {}): Promise<void> {
-        for (const instance of (await getConfig()).instances) {
-            terminal.log(`${instance.name}: ${instance.version}`);
+        const registry = new SERegistry();
+        for (const item of registry.items) {
+            terminal.log(`${item.name}: ${await registry.getSourceInfo(item)}`);
         }
-        terminal.log(`Available Versions: ${(await getVersions()).join(", ")}`);
+        terminal.log(`Available Versions: ${(await SERegistry.getVersions()).join(", ")}`);
     },
 };
 
@@ -76,9 +73,7 @@ export const seStartCommand: Command = {
     title: "Start SE Instance",
     args: [instanceArg],
     async run(terminal: Terminal, args: { instance: string }): Promise<void> {
-        await controlInstances(args.instance, async (docker, defs) => {
-            await docker.startupContainers(terminal, defs, ContainerStatus.running);
-        });
+        await new SERegistry().start(terminal, args.instance);
     },
 };
 
@@ -87,9 +82,7 @@ export const seStopCommand: Command = {
     title: "Stop SE Instance",
     args: [instanceArg],
     async run(terminal: Terminal, args: { instance: string }): Promise<void> {
-        await controlInstances(args.instance, async (docker, defs) => {
-            await docker.shutdownContainers(terminal, defs, ContainerStatus.created);
-        });
+        await new SERegistry().stop(terminal, args.instance);
     },
 };
 
@@ -98,10 +91,7 @@ export const seResetCommand: Command = {
     title: "Reset SE Instance",
     args: [instanceArg],
     async run(terminal: Terminal, args: { instance: string }): Promise<void> {
-        await controlInstances(args.instance, async (docker, defs) => {
-            await docker.shutdownContainers(terminal, defs, ContainerStatus.missing);
-            await docker.startupContainers(terminal, defs, ContainerStatus.running);
-        });
+        await new SERegistry().reset(terminal, args.instance);
     },
 };
 
@@ -110,9 +100,7 @@ export const seUpdateCommand: Command = {
     title: "Update SE Instance Version",
     args: [instanceArg],
     async run(terminal: Terminal, args: { instance: string }): Promise<void> {
-        await updateConfig(terminal, args.instance, {
-            version: await getLatestVersion(),
-        });
+        await new SERegistry().update(terminal, args.instance);
     },
 };
 
@@ -123,6 +111,20 @@ export const seSetCommand: Command = {
         {
             name: "version",
             title: "SE version (version number or `latest`)",
+            type: "string",
+            defaultValue: "",
+
+        },
+        {
+            name: "image",
+            title: "Custom SE docker image name",
+            type: "string",
+            defaultValue: "",
+
+        },
+        {
+            name: "container",
+            title: "Custom SE docker container name",
             type: "string",
             defaultValue: "",
 
@@ -139,43 +141,27 @@ export const seSetCommand: Command = {
             title: "Port on localhost used to expose ArangoDB API (number or `none`)",
             type: "string",
             defaultValue: "",
-        }
+        },
     ],
     async run(terminal: Terminal, args: {
         version: string,
+        image: string,
+        container: string,
         port: string,
         dbPort: string,
-        instance: string
+        instance: string,
     }): Promise<void> {
-        const updates: Partial<SEInstanceConfig> = {};
-        if (args.version !== "") {
-            if (args.version.toLowerCase() === "latest") {
-                updates.version = await getLatestVersion();
-            } else {
-                if (!(await getVersions()).includes(args.version)) {
-                    throw new Error(`Invalid version: ${args.version}`);
-                }
-                updates.version = args.version;
-            }
-        }
-
-        if (args.port !== "") {
-            updates.port = Number.parseInt(args.port);
-            if (updates.port === undefined) {
-                throw new Error(`Invalid port: ${args.port}`);
-            }
-        }
-
-        if (args.dbPort !== "") {
-            if (args.dbPort.toLowerCase() === "none") {
-                updates.dbPort = PORT_NONE;
-            } else {
-                updates.dbPort = Number.parseInt(args.dbPort);
-                if (updates.dbPort === undefined) {
-                    throw new Error(`Invalid db-port: ${args.dbPort}`);
-                }
-            }
-        }
-        await updateConfig(terminal, args.instance, updates);
+        await new SERegistry().configure(terminal, args);
     },
 };
+
+export const seDeleteCommand: Command = {
+    name: "delete",
+    title: "Delete SE from list",
+    description: "This command doesn't delete any docker container or image.",
+    args: [instanceArg, forceArg],
+    async run(_terminal: Terminal, args: { instance: string, force: boolean }) {
+        new SERegistry().delete(args.instance, args.force);
+    },
+};
+
