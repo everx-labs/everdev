@@ -7,10 +7,7 @@ All notable changes to this project will be documented in this file.
 ### New
 - `value` option of the `contract` commands can accept values with "t" suffix.
   Such values will be properly converted to nano tokens.
-- `run-signer` option of the the `contract` commands allows to sign messages with alternative keys different from `signer` meanwhile address will still be calculated from `signer` parameter (or from default `signer`). It should be useful for `run-local` (with `None` value) so that it is not needed to specify address explicitly any more.
-- In case of errors with giver tondev prints new detailed errors describing 
-  that there is a giver problem (not in users contract). 
-- Component version table prints "not installed" text if some component is missing. Footnote about on demand installation is added.
+- `run-signer` option of the the `contract` commands allows to sign messages with alternative keys different from `signer` meanwhile address is still calculated from `signer` parameter (or from default `signer`). It should be useful for `run-local` (with `None` value) so that it is not needed to specify address explicitly any more.
 - `tondev` commands that produce files (e.g. `sol create`) create output folders if required.
 - `tondev signer add` command's `secret` option can accept a path to the keys file.
 - `tondev se set` options `image` and `container` allow use existing docker 
@@ -23,7 +20,10 @@ All notable changes to this project will be documented in this file.
 - `tondev` did not not fill the command args with default values when user ran commands programmatically.  
 - `tondev info` stopped if one of the tools failed.
 
- ### Improved
+### Improved
+- In case of errors with giver `tondev` prints new detailed errors describing 
+  that there is a giver problem (not in users contract). 
+- Component version table prints "not installed" text if some component is missing. Footnote about on demand installation is added.
 - Account balance check is added before deploy.
 - All commands that require abi file (e.g. `js wrap`) now accepts any input file name. 
 - `tondev se version` now prints version from the latest to the eldest order.
