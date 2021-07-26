@@ -111,7 +111,7 @@ export class SignerRegistry {
                     throw new Error(`Invalid keys file.\nExpected JSON file with structure: { "public": "...", "secret": "..." }.`);
                 }
             } else {
-                throw new Error(`Invalid signer secret: ${secret}. You can specify `);
+                throw new Error(`Invalid secret source: ${secret}. You can specify secret key, seed phrase or file name with the keys.`);
             }
         }
     }
