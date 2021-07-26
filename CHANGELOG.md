@@ -8,6 +8,9 @@ All notable changes to this project will be documented in this file.
 
 - `value` option of the `contract` commands can accept values with "t" suffix.
   Such values will be properly converted to the nano tokens.
+- `run-signer` option of the several run commands fo the `contract` tool.
+  Alternative signer used to sing message. If it is not specified then contract's 
+  signer is used.
 - In case of error with giver the tondev prints new detailed error describing 
   that there is a giver problem (not in users contract). 
 - Components version table has a text "not installed" if some component is missing.
@@ -18,6 +21,7 @@ All notable changes to this project will be documented in this file.
 - `tondev se set` options `image` and `container` allow use existing docker 
   images and containers to register SE instances.
 - `tondev se delete` deletes registered SE instance from `tondev` SE registry.
+- `--version` or `-v` or `-V` global option prints current tondev version.
 
 ### Fixed
 
