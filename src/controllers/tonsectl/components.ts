@@ -1,6 +1,6 @@
 import {
     Component,
-} from "../../core";
+} from "./registry";
 
 const TOOL_FOLDER_NAME = "tonsectl";
 
