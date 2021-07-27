@@ -3,6 +3,7 @@ import { Solidity } from "./solidity";
 // import {TestSuite} from "./ts";
 import { JsApps } from "./js";
 import { SE } from "./se";
+import { TONSECTL } from "./tonsectl";
 import { TONOS } from "./tonos-cli";
 import { TestSuite4 } from "./ts4";
 import {
@@ -26,6 +27,7 @@ export const controllers = [
     JsApps,
     TONOS,
     TestSuite4,
+    TONSECTL,
 ];
 
 export function findControllerAndCommandByAlias(
