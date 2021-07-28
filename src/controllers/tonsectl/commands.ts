@@ -8,14 +8,35 @@ import {
 import {components} from "./components";
 
 
-export const tonsectlInstallCommand: Command = {
-    name: "install",
-    title: "Install TONSECTL dependenciesI",
+export const tonsectlSetCommand: Command = {
+    name: "set",
+    title: "Set TONSECTL version",
     args: [],
     async run(terminal: Terminal) {
         await Component.ensureInstalledAll(terminal, components);
     },
 };
+
+
+
+export const tonsectlInstallCommand: Command = {
+    name: "install",
+    title: "Install TONSECTL dependencies",
+    args: [],
+    async run(terminal: Terminal) {
+        await Component.ensureInstalledAll(terminal, components);
+    },
+};
+
+export const tonsectlUpdateCommand: Command = {
+    name: "update",
+    title: "Update TONSECTL version",
+    args: [],
+    async run(terminal: Terminal) {
+        await Component.ensureInstalledAll(terminal, components);
+    },
+};
+
 
 export const tonsectlApiCommand: Command = {
     name: "api",
