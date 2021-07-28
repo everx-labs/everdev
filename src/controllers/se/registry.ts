@@ -15,7 +15,7 @@ import {
     ContainerDef,
     ContainerStatus,
     DevDocker,
-} from "./docker";
+} from "../../core/docker";
 import Dockerode from "dockerode";
 
 const DEFAULT_INSTANCE_NAME = "default";

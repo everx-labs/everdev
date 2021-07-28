@@ -20,14 +20,14 @@ import Dockerode, {
     ImageInfo,
 } from "dockerode";
 import Docker from "dockerode";
-import { Terminal } from "../../core";
+import { Terminal } from ".";
 
 import {
     progress,
     progressDone,
     progressLine,
     versionToNumber,
-} from "../../core/utils";
+} from "./utils";
 
 
 export enum ContainerStatus {
