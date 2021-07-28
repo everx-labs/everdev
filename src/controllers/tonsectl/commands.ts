@@ -1,14 +1,12 @@
 import {
     Command,
     Terminal,
-} from "../../core";
-
-import {
     Component,
-} from "./registry";
+} from "../../core";
 
 
 import {components} from "./components";
+
 
 export const tonsectlInstallCommand: Command = {
     name: "install",
@@ -31,15 +29,15 @@ export const tonsectlInitCommand: Command = {
     name: "init",
     title: "Start TONSE API service",
     async run(terminal: Terminal, _args: {}): Promise<void> {
-        await Component.ensureInstalledAll(terminal, components);
+        await components.tonsectl.run(terminal,"./", ["init"])
     },
 };
 
 export const tonsectlVersionCommand: Command = {
     name: "version",
     title: "Show version",
-    async run(terminal: Terminal) {
-       terminal.log(await Component.getTonseCurrentVersion(terminal));
+    async run(terminal: Terminal, _args: {}): Promise<void> {
+        await components.tonsectl.run(terminal,"./", ["--version"])
     },
 };
 
@@ -47,7 +45,7 @@ export const tonsectlStartCommand: Command = {
     name: "start",
     title: "Start service",
     async run(terminal: Terminal, _args: {}): Promise<void> {
-        terminal.log(await Component.ensureInstalledAll(terminal, components));
+        await components.tonsectl.run(terminal,"./", ["start"])
     },
 };
 
@@ -55,7 +53,7 @@ export const tonsectlStatusCommand: Command = {
     name: "status",
     title: "Status of the service",
     async run(terminal: Terminal, _args: {}): Promise<void> {
-        terminal.log(await Component.ensureInstalledAll(terminal, components));
+        await components.tonsectl.run(terminal,"./", ["status"])
     },
 };
 
@@ -63,7 +61,7 @@ export const tonsectlStopCommand: Command = {
     name: "stop",
     title: "Stop service",
     async run(terminal: Terminal, _args: {}): Promise<void> {
-        terminal.log(await Component.ensureInstalledAll(terminal, components));
+        await components.tonsectl.run(terminal,"./", ["stop"])
     },
 };
 
@@ -71,6 +69,6 @@ export const tonsectlResetCommand: Command = {
     name: "reset",
     title: "Reset directory with local node",
     async run(terminal: Terminal, _args: {}): Promise<void> {
-        terminal.log(await Component.ensureInstalledAll(terminal, components));
+        await components.tonsectl.run(terminal,"./", ["reset"])
     },
 };
