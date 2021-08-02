@@ -36,6 +36,7 @@
 		"node": ">=6"
 	},
 	"dependencies": {
+		"@ton-actions/tonos-se-package": "^0.28.5-fix.1",
 		"@tonclient/appkit": "^0",
 		"@tonclient/core": "^1",
 		"@tonclient/lib-node": "^1",
@@ -43,6 +44,7 @@
 		"fs-extra": "^9.1.0",
 		"mv": "^2.1.1",
 		"request": "^2.88.2",
+		"tonos-se-tondev": "^1.0.0",
 		"unzip-stream": "^0.3.1"
 	},
 	"devDependencies": {
