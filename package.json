@@ -36,6 +36,7 @@
 		"node": ">=6"
 	},
 	"dependencies": {
+		"@ton-actions/tonos-se-tondev": "^1.2.0",
 		"@tonclient/appkit": "^0",
 		"@tonclient/core": "^1",
 		"@tonclient/lib-node": "^1",
