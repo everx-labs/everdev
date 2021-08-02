@@ -8,6 +8,7 @@ This guide will help you get started with such essensial Free TON tools as:
 - [GraphQL API](https://docs.ton.dev/86757ecb2/p/793337-ton-os-api)
   
 You will learn how to:
+- Create and compile your first Solidity contract
 - Deploy your first contract
 - Run it on-chain
 - Run a getter-function
