@@ -1,7 +1,7 @@
 # Get started with Development Tools
 ## Guide overview
 This guide will help you get started with such essensial Free TON tools as:
-- [Tondev CLI](https://github.com/tonlabs/tondev)
+- [Tondev CLI](https://github.com/tonlabs/tondev) 
 - [Solidity Compiler](https://github.com/tonlabs/TON-Solidity-Compiler)
 - [Local Blockchain](https://github.com/tonlabs/tonos-se)
 - [Blockchain Explorer TON Live](ton.live)
@@ -19,6 +19,7 @@ You will learn how to:
 - [Get started with Development Tools](#get-started-with-development-tools)
   - [Guide overview](#guide-overview)
   - [Table of Contents](#table-of-contents)
+    - [Install tondev - single interface to access all the developer tools](#install-tondev---single-interface-to-access-all-the-developer-tools)
     - [Create helloWorld contract](#create-helloworld-contract)
     - [Compile it](#compile-it)
     - [Run Local Blockchain](#run-local-blockchain)
@@ -33,6 +34,12 @@ You will learn how to:
     - [Run a getter function](#run-a-getter-function)
     - [Transfer some tokens](#transfer-some-tokens)
   - [What's next?](#whats-next)
+
+### Install tondev - single interface to access all the developer tools
+```$ npm install -g tondev```
+
+If you experience any problems with installation, check out our [troubleshooting section](https://github.com/tonlabs/tondev/blob/main/docs/troubleshooting.md). 
+
 
 ### Create helloWorld contract
 ```$ tondev sol create helloWorld```
