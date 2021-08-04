@@ -11,9 +11,18 @@ import {components} from "./components";
 export const tonsectlSetCommand: Command = {
     name: "set",
     title: "Set TONSECTL version",
-    args: [],
-    async run(terminal: Terminal) {
-        await Component.ensureInstalledAll(terminal, components);
+    args: [
+        {
+            name: "version",
+            title: "version to install (e.g. 0.8.1 or latest)",
+            type: "string",
+            defaultValue: "latest",
+        },
+    ],
+    async run(terminal: Terminal, args: { version: string }): Promise<void> {
+        await Component.setVersions(terminal, false, components, {
+            tonsectl: args.version,
+        });
     },
 };
 
@@ -32,11 +41,10 @@ export const tonsectlUpdateCommand: Command = {
     name: "update",
     title: "Update TONSECTL version",
     args: [],
-    async run(terminal: Terminal) {
-        await Component.ensureInstalledAll(terminal, components);
+    async run(terminal: Terminal, _args: {}): Promise<void> {
+        await Component.updateAll(terminal, false, components);
     },
 };
-
 
 export const tonsectlApiCommand: Command = {
     name: "api",
