@@ -31,7 +31,7 @@ export const components = {
     tonsectl: new class extends Component {
     }(TOOL_FOLDER_NAME, "tonsectl", {
         isExecutable: true,
-        runGlobally: true,
+        runGlobally: false,
     }),
 };
 

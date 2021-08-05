@@ -6,15 +6,26 @@ import {
 
 
 import {components} from "./components";
-import {TONSECTLRegistry} from "./registry";
-
+import {downloadBinaryFromGithub, TONSECTLRegistry} from "./registry";
+import {tonsectlHome} from "./registry"
 
 export const tonsectlSetCommand: Command = {
     name: "set",
-    title: "set TONSECTL version",
-    args: [],
-    async run(terminal: Terminal) {
-        await Component.ensureInstalledAll(terminal, components);
+    title: "Set TONSECTL version",
+    args: [
+        {
+            name: "version",
+            title: "TONSECTL version (Look available with version command )",
+            type: "string",
+            defaultValue: "0.28.0",
+
+        }
+    ],
+    async run(terminal: Terminal,  args: {
+        version: string,
+    }): Promise<void> {
+        const registry = new TONSECTLRegistry();
+        await registry.setupConfig(terminal,args.version);
     },
 };
 
@@ -24,9 +35,15 @@ export const tonsectlInstallCommand: Command = {
     name: "install",
     title: "Install TONSECTL dependencies",
     args: [],
-    async run(terminal: Terminal) {
-        await Component.ensureInstalledAll(terminal, components);
-    },
+    async run(terminal: Terminal, _args: {}): Promise<void> {
+    const registry = new TONSECTLRegistry();
+    var tonsectl_version = await registry.getVersion();
+    var os = await registry.getOS();
+    const url = `https://github.com/INTONNATION/tonos-se-installers/releases/download/${tonsectl_version}/tonos-se-${os}`;
+    await downloadBinaryFromGithub(terminal,url,tonsectlHome())
+    await components.tonsectl.run(terminal,"./", ["install"])
+    }
+
 };
 
 export const tonsectlUpdateCommand: Command = {

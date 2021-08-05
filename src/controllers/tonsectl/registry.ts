@@ -1,5 +1,6 @@
 import path from "path";
 import fs from "fs";
+import os from "os";
 
 import {
     Terminal,
@@ -13,16 +14,34 @@ import {
 //     httpsGetJson,
     writeJsonFile,
 } from "../../core/utils";
+import request from "request";
 
 
 const TOOL_FOLDER_NAME = "tonsectl";
 
 
 
-function tonsectlHome() {
+export function tonsectlHome() {
     return path.resolve(tondevHome(), TOOL_FOLDER_NAME);
 }
 
+export async function downloadBinaryFromGithub(terminal: Terminal, srcUrl: string, dstPath: string) {
+    terminal.write(`Downloading from ${srcUrl}`);
+    if (!fs.existsSync(dstPath)) {
+        fs.mkdirSync(dstPath, { recursive: true });
+    }
+    terminal.write("\n");
+    console.log(dstPath);
+    return new Promise((resolve, reject) => {
+        request(srcUrl)
+            .on("data", _ => {
+                terminal.write(".");
+            })
+            .on("error", reject) // http protocol errors
+            .on("response",resolve)
+                terminal.write("\n");
+    });
+}
 
 export type tonsectlRegistryItem = {
     /**
@@ -112,6 +131,8 @@ export class TONSECTLRegistry {
         return version.version;
     }
 
+
+
     async setupConfig(terminal: Terminal, version: string): Promise<void> {
         try {
             writeJsonFile(registryPath(), {
@@ -132,5 +153,18 @@ export class TONSECTLRegistry {
         let obj: { response: latest[] } = response;
         const latest_release = obj.response[0].name
         return latest_release
+    }
+
+
+    async getOS() {
+    const p = os.platform();
+
+    if (p === "linux") {
+        return "linux"
+    } else if (p === "darwin") {
+        return "darwin"
+    } else {
+        return "windows"
+    }
     }
 }
