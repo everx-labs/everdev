@@ -11,19 +11,10 @@ import {TONSECTLRegistry} from "./registry";
 
 export const tonsectlSetCommand: Command = {
     name: "set",
-    title: "Set TONSECTL version",
-    args: [
-        {
-            name: "version",
-            title: "version to install (e.g. 0.8.1 or latest)",
-            type: "string",
-            defaultValue: "latest",
-        },
-    ],
-    async run(terminal: Terminal, args: { version: string }): Promise<void> {
-        await Component.setVersions(terminal, false, components, {
-            tonsectl: args.version,
-        });
+    title: "set TONSECTL version",
+    args: [],
+    async run(terminal: Terminal) {
+        await Component.ensureInstalledAll(terminal, components);
     },
 };
 
@@ -75,13 +66,15 @@ export const tonsectlVersionCommand: Command = {
 
 export const tonsectlTestCommand: Command = {
     name: "test",
-    title: "Show SE Versions",
+    title: "Set TONSECTL version",
     async run(terminal: Terminal, _args: {}): Promise<void> {
         const registry = new TONSECTLRegistry();
-        const versions = await registry.getVersions()
-        terminal.log(`Versions from Github: ${versions}`);
+        const latest_version = await registry.getLatestVersion();
+        await registry.setupConfig(terminal,String(latest_version));
+        terminal.log(latest_version)
     },
 };
+
 
 
 export const tonsectlStartCommand: Command = {
