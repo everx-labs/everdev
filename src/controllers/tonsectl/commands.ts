@@ -6,6 +6,7 @@ import {
 
 
 import {components} from "./components";
+import {TONSECTLRegistry} from "./registry";
 
 
 export const tonsectlSetCommand: Command = {
@@ -64,11 +65,24 @@ export const tonsectlInitCommand: Command = {
 
 export const tonsectlVersionCommand: Command = {
     name: "version",
-    title: "Show version",
+    title: "Show SE Versions",
     async run(terminal: Terminal, _args: {}): Promise<void> {
-        await components.tonsectl.run(terminal,"./", ["--version"])
+        const registry = new TONSECTLRegistry();
+        const versions = await registry.getVersions();
+        terminal.log(`InstalledVersion: ${(await registry.getVersion())}\nVersions from Github: ${versions}`);
     },
 };
+
+export const tonsectlTestCommand: Command = {
+    name: "test",
+    title: "Show SE Versions",
+    async run(terminal: Terminal, _args: {}): Promise<void> {
+        const registry = new TONSECTLRegistry();
+        const versions = await registry.getVersions()
+        terminal.log(`Versions from Github: ${versions}`);
+    },
+};
+
 
 export const tonsectlStartCommand: Command = {
     name: "start",

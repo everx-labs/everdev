@@ -10,6 +10,7 @@ import {
     tonsectlStatusCommand,
     tonsectlStopCommand,
     tonsectlResetCommand,
+    tonsectlTestCommand,
 
 } from "./commands";
 
@@ -28,6 +29,7 @@ export const TONSECTL: ToolController = {
         tonsectlStatusCommand,
         tonsectlStopCommand,
         tonsectlResetCommand,
+        tonsectlTestCommand,
 
 
     ],
