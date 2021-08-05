@@ -4,14 +4,10 @@ import os from "os";
 
 import {
     Terminal,
-    // Terminal,
     tondevHome,
 } from "../../core";
 import https from "https";
 import {
-
-// //     compareVersionsDescending,
-//     httpsGetJson,
     writeJsonFile,
 } from "../../core/utils";
 import request from "request";
