@@ -16,7 +16,7 @@ import request from "request";
 
 const TOOL_FOLDER_NAME = "tonsectl";
 const TOOL_BiNARY_NAME = "tonsectl";
-
+const DEFAULT_PORT = "80";
 
 export function tonsectlHome() {
     return path.resolve(tondevHome(), TOOL_FOLDER_NAME);
@@ -68,13 +68,6 @@ export type SESource = {
     type: SESourceType.TONSECTL_VERSION,
     version: string,
 };
-
-export function seSourceVersion(version: string): SESource {
-    return {
-        type: SESourceType.TONSECTL_VERSION,
-        version,
-    };
-}
 
 function registryPath(): string {
     return path.resolve(tonsectlHome(), "info.json");
@@ -135,17 +128,26 @@ export class TONSECTLRegistry {
         });
     }
 
-    async getVersion(): Promise<string[]> {
+    async getVersion(terminal: Terminal): Promise<string[]> {
+        if (!fs.existsSync(registryPath())) {
+            const filecontent =""
+            fs.writeFile(registryPath(),filecontent,(err) => {
+                if (err) throw err;
+            });
+            const version = await this.getLatestVersion();
+            await this.setupConfig(terminal,String(version))
+        }
         const version = JSON.parse(fs.readFileSync(registryPath(), "utf8"));
         return version.version;
     }
 
 
 
-    async setupConfig(terminal: Terminal, version: string): Promise<void> {
+    async setupConfig(terminal: Terminal, version: string, port = DEFAULT_PORT): Promise<void> {
         try {
             writeJsonFile(registryPath(), {
                 version,
+                port,
             });
         } catch (err) {
             terminal.writeError(err);

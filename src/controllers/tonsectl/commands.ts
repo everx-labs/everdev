@@ -19,13 +19,22 @@ export const tonsectlSetCommand: Command = {
             type: "string",
             defaultValue: "0.28.6",
 
-        }
-    ],
+
+        },
+        {
+            name: "port",
+            title: "TONSECTL version (Look available with version command )",
+            type: "string",
+            defaultValue: "80",
+
+
+        }],
     async run(terminal: Terminal,  args: {
         version: string,
+        port: string,
     }): Promise<void> {
         const registry = new TONSECTLRegistry();
-        await registry.setupConfig(terminal,args.version);
+        await registry.setupConfig(terminal,args.version,args.port);
     },
 };
 
@@ -37,7 +46,7 @@ export const tonsectlInstallCommand: Command = {
     args: [],
     async run(terminal: Terminal, _args: {}): Promise<void> {
     const registry = new TONSECTLRegistry();
-    var tonsectl_version = await registry.getVersion();
+    var tonsectl_version = await registry.getVersion(terminal);
     var os = await registry.getOS();
     const url = `https://github.com/INTONNATION/tonos-se-installers/releases/download/${tonsectl_version}/tonsectl_${os}`;
     await downloadBinaryFromGithub(terminal,url,tonsectlHome())
@@ -52,7 +61,7 @@ export const tonsectlUpdateCommand: Command = {
     args: [],
     async run(terminal: Terminal, _args: {}): Promise<void> {
         const registry = new TONSECTLRegistry();
-        var tonsectl_current_version = await registry.getVersion();
+        var tonsectl_current_version = await registry.getVersion(terminal);
         var tonsectl_latest_version = await registry.getLatestVersion();
         var os = await registry.getOS();
         if (tonsectl_current_version !== tonsectl_latest_version){
@@ -88,7 +97,7 @@ export const tonsectlVersionCommand: Command = {
     async run(terminal: Terminal, _args: {}): Promise<void> {
         const registry = new TONSECTLRegistry();
         const versions = await registry.getVersions();
-        terminal.log(`InstalledVersion: ${(await registry.getVersion())}\nVersions from Github: ${versions}`);
+        terminal.log(`InstalledVersion: ${(await registry.getVersion(terminal))}\nVersions from Github: ${versions}`);
     },
 };
 
