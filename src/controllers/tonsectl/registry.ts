@@ -164,6 +164,6 @@ export class TONSECTLRegistry {
         } else if (p === "darwin") {
             return "darwin"}
         else {
-            return "windows"}
+            return "windows.exe"}
         }
 }

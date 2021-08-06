@@ -69,6 +69,7 @@ export const tonsectlUpdateCommand: Command = {
             await downloadBinaryFromGithub(terminal,url,tonsectlHome())
             await components.tonsectl.run(terminal,"./", ["install"])
             await registry.setupConfig(terminal,String(tonsectl_latest_version))
+            terminal.log("The latest version of TONSECTL was installed")
         }else{
             terminal.log("Your version is latest")
         }
