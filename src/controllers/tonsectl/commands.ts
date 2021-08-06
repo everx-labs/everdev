@@ -17,7 +17,7 @@ export const tonsectlSetCommand: Command = {
             name: "version",
             title: "TONSECTL version (Look available with version command )",
             type: "string",
-            defaultValue: "0.28.0",
+            defaultValue: "0.28.6",
 
         }
     ],
@@ -39,7 +39,7 @@ export const tonsectlInstallCommand: Command = {
     const registry = new TONSECTLRegistry();
     var tonsectl_version = await registry.getVersion();
     var os = await registry.getOS();
-    const url = `https://github.com/INTONNATION/tonos-se-installers/releases/download/${tonsectl_version}/tonos-se-${os}`;
+    const url = `https://github.com/INTONNATION/tonos-se-installers/releases/download/${tonsectl_version}/tonsectl_${os}`;
     await downloadBinaryFromGithub(terminal,url,tonsectlHome())
     await components.tonsectl.run(terminal,"./", ["install"])
     }
@@ -51,8 +51,19 @@ export const tonsectlUpdateCommand: Command = {
     title: "Update TONSECTL version",
     args: [],
     async run(terminal: Terminal, _args: {}): Promise<void> {
-        await Component.updateAll(terminal, false, components);
-    },
+        const registry = new TONSECTLRegistry();
+        var tonsectl_current_version = await registry.getVersion();
+        var tonsectl_latest_version = await registry.getLatestVersion();
+        var os = await registry.getOS();
+        if (tonsectl_current_version !== tonsectl_latest_version){
+            const url = `https://github.com/INTONNATION/tonos-se-installers/releases/download/${tonsectl_latest_version}/tonsectl_${os}`;
+            await downloadBinaryFromGithub(terminal,url,tonsectlHome())
+            await components.tonsectl.run(terminal,"./", ["install"])
+            await registry.setupConfig(terminal,String(tonsectl_latest_version))
+        }else{
+            terminal.log("Your version is latest")
+        }
+    }
 };
 
 export const tonsectlApiCommand: Command = {

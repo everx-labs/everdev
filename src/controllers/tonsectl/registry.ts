@@ -13,12 +13,16 @@ import {
 import request from "request";
 
 
-const TOOL_FOLDER_NAME = "tonsectl";
 
+const TOOL_FOLDER_NAME = "tonsectl";
+const TOOL_BiNARY_NAME = "tonsectl";
 
 
 export function tonsectlHome() {
     return path.resolve(tondevHome(), TOOL_FOLDER_NAME);
+}
+export function tonsectlHomeBinary() {
+    return path.resolve(tonsectlHome(), TOOL_BiNARY_NAME,);
 }
 
 export async function downloadBinaryFromGithub(terminal: Terminal, srcUrl: string, dstPath: string) {
@@ -27,25 +31,34 @@ export async function downloadBinaryFromGithub(terminal: Terminal, srcUrl: strin
         fs.mkdirSync(dstPath, { recursive: true });
     }
     terminal.write("\n");
-    console.log(dstPath);
-    return new Promise((resolve, reject) => {
-        request(srcUrl)
-            .on("data", _ => {
-                terminal.write(".");
+    const file = fs.createWriteStream(tonsectlHomeBinary());
+    await new Promise((resolve, reject) => {
+        request({
+            uri: srcUrl,
+        })
+            .pipe(file)
+            .on('finish', async () => {
+                console.log(`The tonsectl is finished downloading.`);
+                resolve(file);
             })
-            .on("error", reject) // http protocol errors
-            .on("response",resolve)
-                terminal.write("\n");
-    });
-}
+            .on('error', (error: any) => {
+                reject(error);
+            });
+    })
+        .catch((error) => {
+            console.log(`Something happened: ${error}`);
+        });
+    if (os.platform() !== "win32") {
+            fs.readdirSync(dstPath)
+                .map(filename => path.resolve(dstPath, filename))
+                .filter(filename => !fs.lstatSync(filename).isDirectory())
+                .forEach(filename => fs.chmodSync(filename, 0o755));
+        } else {
+            fs.chmodSync(dstPath, 0o755);
+        }
+        await new Promise(resolve => setTimeout(resolve, 100));
 
-export type tonsectlRegistryItem = {
-    /**
-     * Instance name
-     */
-    version: SESource,
-}
-
+};
 
 export enum SESourceType {
     TONSECTL_VERSION = "tonosectl-version",
@@ -153,14 +166,12 @@ export class TONSECTLRegistry {
 
 
     async getOS() {
-    const p = os.platform();
-
-    if (p === "linux") {
-        return "linux"
-    } else if (p === "darwin") {
-        return "darwin"
-    } else {
-        return "windows"
-    }
-    }
+        const p = os.platform();
+        if (p === "linux") {
+            return "linux"
+        } else if (p === "darwin") {
+            return "darwin"}
+        else {
+            return "windows"}
+        }
 }
