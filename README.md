@@ -306,12 +306,20 @@ Use `--force` or `-f` option to force reinstall, if the current version is the s
 
 ### TON OS Startup Edition(SE)
 
+There are two ways to manage TON OS Startup Edition. The first is using Docker images (Docker must be launched). And the second way is using native applications. Please use `se` or `se-nd` in your case. For example: `tondev se start` or `tondev se-nd start`.
+
 #### Start
-This command starts the TON OS SE container (Docker must be launched). When executed for the first time downloads the latest SE image 
+This command starts the TON OS SE container. When executed for the first time downloads the latest SE image 
 from dockerhub.
 
 ```shell
 tondev se start
+```
+
+For non docker version this command downloads necessary latest binary packages.
+
+```shell
+tondev se-nd start
 ```
 
 #### Version
@@ -324,12 +332,35 @@ default: 0.24.12
 Available Versions: 0, 0.24, 0.24.5, 0.24.6, 0.24.8, 0.24.9, 0.24.10, 0.24.11, 0.24.12, latest
 ```
 
+Non docker version:
+
+```shell
+tondev se-nd version
+
+Initialization......* Verifying checksum.. Done
+ ✓
+Current version: 0.28.6
+Available Versions: 0, 0.27, 0.27.0, 0.27.1, 0.27.2, 0.28, 0.28.0, 0.28.1, 0.28.2, 0.28.3, 0.28.4, 0.28.5, 0.28.6, latest
+```
+
 #### Set
 This command switches TON OS SE to the specified version and port and downloads it, if it is missing.   
-**Attention! This command does not start TON OS SE, you need to run `start` command separately.**
+**Attention! This command does not start TON OS SE, you need to run `start` or `restart` command separately.**
+
+
+`version` - SE version (version number or `latest`)
+`port` - Port on localhost used to expose GraphQL API
+`db-port` - Port on localhost used to expose ArangoDB API (number or `none`)
 
 ```shell
 tondev se set --version 0.24.11 --port 2020
+```
+
+Non docker version:
+
+```shell
+tondev se-nd set --version 0.28.4 --port 1111 --db-port 2222
+Updating config......Saving parameters is successful. Use command 'restart' for applying changes
 ```
 
 #### Reset
@@ -338,18 +369,37 @@ This command resets the TON OS SE container (Docker must be launched) - restarts
 ```shell
 tondev se reset
 ```
+
+Non docker version:
+
+```shell
+tondev se-nd reset
+```
+
 #### Update
-This command downloads the latest TON OS SE image (Docker must be launched) and starts it. 
+This command downloads the latest TON OS SE image (Docker must be launched) and starts it. Or download necessary binary files in case non docker version.
 
 ```shell
 tondev se update
 ```
 
+Non docker version:
+
+```shell
+tondev se-nd update
+```
+
 #### Stop
-This command stops TON OS SE container. 
+This command stops TON OS SE container. And stops local programs in case non docker version.
 
 ```shell
 tondev se stop
+```
+
+Non docker version:
+
+```shell
+tondev se-nd stop
 ```
 
 #### Info
@@ -361,6 +411,17 @@ tondev se info
 Instance  State    Version  GraphQL Port  ArangoDB Port  Docker Container            Docker Image
 --------  -------  -------  ------------  -------------  --------------------------  --------------------------
 default   running  0.24.12  2020                         tonlabs-tonos-se-ekaterina  tonlabs/local-node:0.24.12
+```
+
+Non docker version:
+
+```shell
+tondev se-nd info
+Initialization......* Verifying checksum.. Done
+ ✓
+State    Version  GraphQL Port  ArangoDB Port
+-------  -------  ------------  -------------
+running  0.28.4   1111          2222
 ```
 
 ### SDK
