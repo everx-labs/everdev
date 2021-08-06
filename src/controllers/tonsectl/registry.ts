@@ -13,7 +13,6 @@ import {
 import request from "request";
 
 
-
 const TOOL_FOLDER_NAME = "tonsectl";
 const TOOL_BiNARY_NAME = "tonsectl";
 const DEFAULT_PORT = "80";
@@ -58,15 +57,6 @@ export async function downloadBinaryFromGithub(terminal: Terminal, srcUrl: strin
         }
         await new Promise(resolve => setTimeout(resolve, 100));
 
-};
-
-export enum SESourceType {
-    TONSECTL_VERSION = "tonosectl-version",
-}
-
-export type SESource = {
-    type: SESourceType.TONSECTL_VERSION,
-    version: string,
 };
 
 function registryPath(): string {
