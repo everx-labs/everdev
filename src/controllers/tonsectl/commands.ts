@@ -48,9 +48,10 @@ export const tonsectlInstallCommand: Command = {
     const registry = new TONSECTLRegistry();
     var tonsectl_version = await registry.getVersion(terminal);
     var os = await registry.getOS();
+    var port = await registry.getPort()
     const url = `https://github.com/INTONNATION/tonos-se-installers/releases/download/${tonsectl_version}/tonsectl_${os}`;
     await downloadBinaryFromGithub(terminal,url,tonsectlHome())
-    await components.tonsectl.run(terminal,"./", ["install"])
+    await components.tonsectl.run(terminal,"./", [`install`,`${port}`])
     }
 
 };
@@ -64,10 +65,11 @@ export const tonsectlUpdateCommand: Command = {
         var tonsectl_current_version = await registry.getVersion(terminal);
         var tonsectl_latest_version = await registry.getLatestVersion();
         var os = await registry.getOS();
+        var port = await registry.getPort()
         if (tonsectl_current_version !== tonsectl_latest_version){
             const url = `https://github.com/INTONNATION/tonos-se-installers/releases/download/${tonsectl_latest_version}/tonsectl_${os}`;
             await downloadBinaryFromGithub(terminal,url,tonsectlHome())
-            await components.tonsectl.run(terminal,"./", ["install"])
+            await components.tonsectl.run(terminal,"./", ["install",`${port}`])
             await registry.setupConfig(terminal,String(tonsectl_latest_version))
             terminal.log("The latest version of TONSECTL was installed")
         }else{

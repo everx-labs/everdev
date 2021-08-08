@@ -131,6 +131,10 @@ export class TONSECTLRegistry {
         return version.version;
     }
 
+    async getPort(): Promise<string[]> {
+        const version = JSON.parse(fs.readFileSync(registryPath(), "utf8"));
+        return version.port;
+    }
 
 
     async setupConfig(terminal: Terminal, version: string, port = DEFAULT_PORT): Promise<void> {
