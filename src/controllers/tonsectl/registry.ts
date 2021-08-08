@@ -119,6 +119,9 @@ export class TONSECTLRegistry {
     }
 
     async getVersion(terminal: Terminal): Promise<string[]> {
+        if (!fs.existsSync(tonsectlHome())) {
+            fs.mkdirSync(tonsectlHome(), { recursive: true });
+        }
         if (!fs.existsSync(registryPath())) {
             const filecontent =""
             fs.writeFile(registryPath(),filecontent,(err) => {

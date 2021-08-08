@@ -49,6 +49,7 @@ export const tonsectlInstallCommand: Command = {
     var tonsectl_version = await registry.getVersion(terminal);
     var os = await registry.getOS();
     var port = await registry.getPort()
+
     const url = `https://github.com/INTONNATION/tonos-se-installers/releases/download/${tonsectl_version}/tonsectl_${os}`;
     await downloadBinaryFromGithub(terminal,url,tonsectlHome())
     await components.tonsectl.run(terminal,"./", [`install`,`${port}`])
