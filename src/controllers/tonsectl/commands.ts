@@ -105,19 +105,6 @@ export const tonsectlVersionCommand: Command = {
     },
 };
 
-export const tonsectlTestCommand: Command = {
-    name: "test",
-    title: "Set TONSECTL version",
-    async run(terminal: Terminal, _args: {}): Promise<void> {
-        const registry = new TONSECTLRegistry();
-        const latest_version = await registry.getLatestVersion();
-        await registry.setupConfig(terminal,String(latest_version));
-        terminal.log(latest_version)
-    },
-};
-
-
-
 export const tonsectlStartCommand: Command = {
     name: "start",
     title: "Start service",
