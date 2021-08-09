@@ -13,8 +13,20 @@ import {
 import request from "request";
 
 
+const p = os.platform();
+let TOOL_BiNARY_NAME: string;
+
+if (p === "linux") {
+    TOOL_BiNARY_NAME = "tonsectl";
+
+} else if (p === "darwin") {
+    TOOL_BiNARY_NAME = "tonsectl";
+
+} else {
+    TOOL_BiNARY_NAME = "tonsectl.exe";
+
+}
 const TOOL_FOLDER_NAME = "tonsectl";
-const TOOL_BiNARY_NAME = "tonsectl";
 const DEFAULT_PORT = "80";
 
 export function tonsectlHome() {
