@@ -361,6 +361,61 @@ Instance  State    Version  GraphQL Port  ArangoDB Port  Docker Container       
 default   running  0.24.12  2020                         tonlabs-tonos-se-ekaterina  tonlabs/local-node:0.24.12
 ```
 
+### TON OS Startup Edition(SE) non-docker
+
+#### Start
+This command starts the TON OS SE container. When executed for the first time downloads the latest SE binaries from GitHub.
+
+```shell
+tondev se-nd start
+```
+
+#### Version
+This command shows the default TON OS SE version and list of other available versions. 
+
+```shell
+tondev se-nd version
+
+InstalledVersion: 0.28.6
+Versions from Github: 0.28.6| |0.28.4| |0.28.3| |0.28.1| |0.28.2| |0.28.0| |0.27.2| |0.27.1| |0.27.0| |0.26.1| |0.26.0| |0.25.0
+```
+
+#### Set
+This command switches TON OS SE to the specified version and port, downloads it, if it is missing and do restart.   
+**Attention! This command does not start TON OS SE, you need to run `start` command separately.**
+
+```shell
+tondev se-nd set --version 0.28.6 --port 2020
+```
+
+#### Reset
+This command resets the TON OS SE container - restarts it from scratch with a clean database. 
+
+```shell
+tondev se-nd reset
+```
+#### Update
+This command downloads the latest TON OS SE binaries and starts it. 
+
+```shell
+tondev se-nd update
+```
+
+#### Stop
+This command stops TON OS SE. 
+
+```shell
+tondev se-nd stop
+```
+
+#### Info
+This command shows info about the downloaded versions. 
+
+```shell
+Current port: 80
+Current version: 0.28.6
+```
+
 ### SDK
 
 #### See the list of available demo projects
