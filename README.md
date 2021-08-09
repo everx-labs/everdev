@@ -46,6 +46,14 @@ Download and install all the core [TON.DEV](https://ton.dev/) components in one 
       - [Update](#update-3)
       - [Stop](#stop)
       - [Info](#info)
+    - [TON OS Startup Edition(SE-ND) non-docker](#ton-os-startup-editionse-nd-non-docker)
+      - [Start](#start-1)
+      - [Version](#version-3)
+      - [Set](#set-3)
+      - [Reset](#reset-1)
+      - [Update](#update-4)
+      - [Stop](#stop-1)
+      - [Info](#info-1)
     - [SDK](#sdk)
       - [See the list of available demo projects](#see-the-list-of-available-demo-projects)
       - [Install demo project](#install-demo-project)
@@ -361,10 +369,10 @@ Instance  State    Version  GraphQL Port  ArangoDB Port  Docker Container       
 default   running  0.24.12  2020                         tonlabs-tonos-se-ekaterina  tonlabs/local-node:0.24.12
 ```
 
-### TON OS Startup Edition(SE) non-docker
+### TON OS Startup Edition(SE-ND) non-docker
 
 #### Start
-This command starts the TON OS SE container. When executed for the first time downloads the latest SE binaries from GitHub.
+This command starts the TON OS SE. When executed for the first time downloads the latest SE binaries from GitHub and install SE.
 
 ```shell
 tondev se-nd start
@@ -381,21 +389,20 @@ Versions from Github: 0.28.6| |0.28.4| |0.28.3| |0.28.1| |0.28.2| |0.28.0| |0.27
 ```
 
 #### Set
-This command switches TON OS SE to the specified version and port, downloads it, if it is missing and do restart.   
-**Attention! This command does not start TON OS SE, you need to run `start` command separately.**
+This command switches TON OS SE to the specified version and port, downloads it, if it is missing and do install and restart.
 
 ```shell
-tondev se-nd set --version 0.28.6 --port 2020
+tondev se-nd set --version 0.28.6 --port 2020 --db_port 5555
 ```
 
 #### Reset
-This command resets the TON OS SE container - restarts it from scratch with a clean database. 
+This command resets the TON OS SE - restarts it from scratch with a clean database. 
 
 ```shell
 tondev se-nd reset
 ```
 #### Update
-This command downloads the latest TON OS SE binaries and starts it. 
+This command downloads the latest TON OS SE binaries, update and starts it. 
 
 ```shell
 tondev se-nd update
@@ -413,6 +420,7 @@ This command shows info about the downloaded versions.
 
 ```shell
 Current port: 80
+Current db_port: 8529
 Current version: 0.28.6
 ```
 
