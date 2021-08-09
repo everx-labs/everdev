@@ -11,7 +11,7 @@ import {tonsectlHome} from "./registry"
 
 export const tonsectlSetCommand: Command = {
     name: "set",
-    title: "Set TONSECTL version",
+    title: "Set TONSECTL version and port",
     args: [
         {
             name: "version",
@@ -45,7 +45,7 @@ export const tonsectlSetCommand: Command = {
 
 export const tonsectlInstallCommand: Command = {
     name: "install",
-    title: "Install TONSECTL dependencies",
+    title: "Install TONSECTL binary and dependencies",
     args: [],
     async run(terminal: Terminal, _args: {}): Promise<void> {
     const registry = new TONSECTLRegistry();
@@ -100,7 +100,7 @@ export const tonsectlInitCommand: Command = {
 
 export const tonsectlVersionCommand: Command = {
     name: "version",
-    title: "Show SE Versions",
+    title: "Show TONSECTL Versions",
     async run(terminal: Terminal, _args: {}): Promise<void> {
         const registry = new TONSECTLRegistry();
         const versions = await registry.getVersions();
@@ -137,7 +137,7 @@ export const tonsectlStopCommand: Command = {
 
 export const tonsectlResetCommand: Command = {
     name: "reset",
-    title: "Reset directory with local node",
+    title: "Clear blockchain data",
     async run(terminal: Terminal, _args: {}): Promise<void> {
         await components.tonsectl.run(terminal,"./", ["reset"])
     },
