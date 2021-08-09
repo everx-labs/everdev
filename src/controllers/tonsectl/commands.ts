@@ -1,7 +1,6 @@
 import {
     Command,
     Terminal,
-    Component,
 } from "../../core";
 
 
@@ -12,7 +11,7 @@ import fs from "fs";
 
 export const tonsectlSetCommand: Command = {
     name: "set",
-    title: "Set TONSECTL version and port",
+    title: "Update SE Config",
     args: [
         {
             name: "version",
@@ -50,7 +49,7 @@ export const tonsectlSetCommand: Command = {
 
 export const tonsectlUpdateCommand: Command = {
     name: "update",
-    title: "Update TONSECTL version",
+    title: "Update SE version",
     args: [],
     async run(terminal: Terminal, _args: {}): Promise<void> {
         await components.tonsectl.run(terminal,"./", ["stop"])
@@ -72,25 +71,9 @@ export const tonsectlUpdateCommand: Command = {
     }
 };
 
-export const tonsectlApiCommand: Command = {
-    name: "api",
-    title: "Start TONSECTL API without detach",
-    async run(terminal: Terminal, _args: {}): Promise<void> {
-        terminal.log(await Component.ensureInstalledAll(terminal, components));
-    },
-};
-
-export const tonsectlInitCommand: Command = {
-    name: "init",
-    title: "Start TONSE API service",
-    async run(terminal: Terminal, _args: {}): Promise<void> {
-        await components.tonsectl.run(terminal,"./", ["init"])
-    },
-};
-
 export const tonsectlVersionCommand: Command = {
     name: "version",
-    title: "Show TONSECTL Versions",
+    title: "Show SE Versions",
     async run(terminal: Terminal, _args: {}): Promise<void> {
         const registry = new TONSECTLRegistry();
         const versions = await registry.getVersions();
@@ -100,7 +83,7 @@ export const tonsectlVersionCommand: Command = {
 
 export const tonsectlStartCommand: Command = {
     name: "start",
-    title: "Start service",
+    title: "Start SE",
     async run(terminal: Terminal, _args: {}): Promise<void> {
         const registry = new TONSECTLRegistry();
         var version = await registry.getVersion(terminal)
@@ -124,7 +107,7 @@ export const tonsectlStartCommand: Command = {
 
 export const tonsectlinfoCommand: Command = {
     name: "info",
-    title: "Info of the service",
+    title: "Show SE Info",
     async run(terminal: Terminal, _args: {}): Promise<void> {
         const registry = new TONSECTLRegistry();
         const tonsectl_version = await registry.getVersion(terminal);
@@ -135,7 +118,7 @@ export const tonsectlinfoCommand: Command = {
 
 export const tonsectlStopCommand: Command = {
     name: "stop",
-    title: "Stop service",
+    title: "Stop SE",
     async run(terminal: Terminal, _args: {}): Promise<void> {
         await components.tonsectl.run(terminal,"./", ["stop"])
     },
@@ -143,7 +126,7 @@ export const tonsectlStopCommand: Command = {
 
 export const tonsectlResetCommand: Command = {
     name: "reset",
-    title: "Clear blockchain data",
+    title: "Reset SE, clear blockchain data",
     async run(terminal: Terminal, _args: {}): Promise<void> {
         await components.tonsectl.run(terminal,"./", ["reset"])
     },
