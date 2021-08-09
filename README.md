@@ -46,7 +46,7 @@ Download and install all the core [TON.DEV](https://ton.dev/) components in one 
       - [Update](#update-3)
       - [Stop](#stop)
       - [Info](#info)
-    - [TON OS Startup Edition(SE-ND) non-docker](#ton-os-startup-editionse)
+    - [TON OS Startup Edition(SE-ND) non-docker](#ton-os-startup-editionse-nd-non-docker)
       - [Start](#start)
       - [Version](#version-2)
       - [Set](#set-2)
