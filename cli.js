@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 
+const { consoleTerminal } = require("./dist");
 const cli = require("./dist/cli/index");
 const { tondevInit, tondevDone } = require("./dist/core");
 
 (async () => {
     try {
         tondevInit()
-        await cli.run();
+        await cli.run(consoleTerminal);
         tondevDone();
     } catch (err) {
         if (!(err instanceof Error)) {

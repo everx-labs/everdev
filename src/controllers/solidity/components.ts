@@ -1,20 +1,16 @@
-import path from "path";
 import {
     Component,
-    tondevHome,
 } from "../../core";
 
-function solidityHome() {
-    return path.resolve(tondevHome(), "solidity");
-}
+const TOOL_FOLDER_NAME = "solidity";
 
 export const components = {
-    compiler: new Component(solidityHome(), "solc", {
-        executable: true,
+    compiler: new Component(TOOL_FOLDER_NAME, "solc", {
+        isExecutable: true,
     }),
 
-    linker: new Component(solidityHome(), "tvm_linker", {
-        executable: true,
+    linker: new Component(TOOL_FOLDER_NAME, "tvm_linker", {
+        isExecutable: true,
         resolveVersionRegExp: /[^0-9]*([0-9.]+)/,
     }),
 
@@ -30,7 +26,7 @@ export const components = {
         async loadAvailableVersions(): Promise<string[]> {
             return components.compiler.loadAvailableVersions();
         }
-    }(solidityHome(), "stdlib_sol", {
+    }(TOOL_FOLDER_NAME, "stdlib_sol", {
         targetName: "stdlib_sol.tvm",
     }),
 };

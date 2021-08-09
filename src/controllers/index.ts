@@ -1,20 +1,21 @@
-import {Clang} from "./clang";
-import {Solidity} from "./solidity";
+import { Clang } from "./clang";
+import { Solidity } from "./solidity";
 // import {TestSuite} from "./ts";
-import {JsApps} from "./js";
-import {SE} from "./se";
-import {SENonDocker} from "./se-nd";
-import {TONOS} from "./tonos-cli";
-import {TestSuite4} from "./ts4";
+import { JsApps } from "./js";
+import { SE } from "./se";
+import { TONOS } from "./tonos-cli";
+import { TestSuite4 } from "./ts4";
+import { SENonDocker } from "./se-nd";
 import {
     Command,
     matchName,
     Terminal,
     ToolController,
 } from "../core";
-import {SignerTool} from "./signer";
-import {NetworkTool} from "./network";
-import {Contract} from "./contract";
+import { SignerTool } from "./signer";
+import { NetworkTool } from "./network";
+import { Contract } from "./contract";
+import { missingArgError } from "../cli";
 
 export const controllers = [
     Clang,
@@ -62,5 +63,23 @@ export async function runCommand(terminal: Terminal, name: string, args: any): P
     if (!command) {
         throw new Error(`Command ${commandName} not found in controller ${controllerName}`);
     }
-    await command.run(terminal, args);
+
+    const resolvedArgs: any = Object.assign({}, args);
+    for (const arg of command.args ?? []) {
+        const name = arg.name
+            .split("-")
+            .map((x, i) => i > 0 ? (x.substr(0, 1).toUpperCase() + x.substr(1)) : x)
+            .join("");
+        if (resolvedArgs[name] === undefined) {
+            if (arg.defaultValue !== undefined) {
+                resolvedArgs[name] = arg.type === "boolean" ? arg.defaultValue === "true" : arg.defaultValue;
+            } else if (arg.type === "folder") {
+                resolvedArgs[name] = process.cwd();
+            } else {
+                throw await missingArgError(arg);
+            }
+        }
+    }
+
+    await command.run(terminal, resolvedArgs);
 }

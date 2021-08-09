@@ -9,14 +9,14 @@ import {
     signerKeys,
     TonClient,
 } from "@tonclient/core";
-import {createSigner} from "../signer";
 import {
     KnownContract,
     knownContractFromAddress,
     KnownContracts,
 } from "../../core/known-contracts";
-import {NetworkGiverInfo} from "./registry";
-import {SignerRegistry} from "../signer/registry";
+import { NetworkGiverInfo } from "./registry";
+import { SignerRegistry } from "../signer/registry";
+import { formatTokens } from "../../core/utils";
 
 async function giverV2Send(giver: Account, address: string, value: number): Promise<void> {
     await giver.run("sendTransaction", {
@@ -44,15 +44,17 @@ const seGiverKeysTvc = "te6ccgECGgEAA9sAAgE0BgEBAcACAgPPIAUDAQHeBAAD0CAAQdgAAAAA
 
 export class NetworkGiver implements AccountGiver {
     account: Account;
+    value: number | undefined;
 
     constructor(
         public contract: KnownContract,
         client: TonClient,
         public address: string,
         signer: Signer,
-        public value: number | undefined,
+        public info: NetworkGiverInfo,
         private send: (giver: Account, address: string, value: number) => Promise<void>,
     ) {
+        this.value = info.value;
         this.account = new Account(contract, {
             client,
             address,
@@ -66,7 +68,7 @@ export class NetworkGiver implements AccountGiver {
     ): Promise<NetworkGiver> {
         const signerName = (info.signer || new SignerRegistry().default) ?? "";
         const signer = signerName !== ""
-            ? await createSigner(signerName)
+            ? await new SignerRegistry().resolveSigner(signerName, { useNoneForEmptyName: true })
             : signerKeys(seGiverKeys);
         const address = info.address !== ""
             ? info.address
@@ -77,7 +79,7 @@ export class NetworkGiver implements AccountGiver {
                 },
                 signer,
             })).address;
-        const contract = await knownContractFromAddress(client, address);
+        const contract = await knownContractFromAddress(client, "Giver", address);
         let send: (giver: Account, address: string, value: number) => Promise<void>;
         if (contract === KnownContracts.GiverV2) {
             send = giverV2Send;
@@ -92,12 +94,19 @@ export class NetworkGiver implements AccountGiver {
             client,
             address,
             signer,
-            info.value,
+            info,
             send,
         );
     }
 
     async sendTo(address: string, value: number): Promise<void> {
-        return this.send(this.account, address, this.value ?? value);
+        const valueToSend = this.value ?? value;
+        try {
+            await this.send(this.account, address, valueToSend);
+        } catch (error) {
+            const message = `Giver can't send ${formatTokens(valueToSend)} to the ${address}`;
+            const giver = `Contract: ${this.info.name}\nAddress:  ${this.address}\nSigner:   ${this.info.signer}`;
+            throw new Error(`${message}: ${error.message}\n\nPlease check giver configuration:\n${giver}`);
+        }
     }
 }

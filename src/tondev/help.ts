@@ -3,6 +3,7 @@ import {
     CommandArg,
     getArgVariants,
     nameInfo,
+    Terminal,
     ToolController,
 } from "../core";
 import {
@@ -13,7 +14,7 @@ import fs from "fs";
 import path from "path";
 import {controllers} from "../controllers";
 
-async function printCommandUsage(controller: ToolController, command: Command) {
+async function printCommandUsage(terminal: Terminal, controller: ToolController, command: Command) {
     let usageArgs = "";
     const options: CommandArg[] = [];
     const args: CommandArg[] = [];
@@ -28,12 +29,12 @@ async function printCommandUsage(controller: ToolController, command: Command) {
     if (options.length > 0) {
         usageArgs += ` [options]`;
     }
-    console.log(`Use: tondev ${controller.name} ${command.name}${usageArgs}`);
+    terminal.log(`Use: tondev ${controller.name} ${command.name}${usageArgs}`);
     if (args.length > 0) {
-        console.log("Args:");
-        console.log(formatTable(args.map(x => ["  ", x.name, x.title])));
+        terminal.log("Args:");
+        terminal.log(formatTable(args.map(x => ["  ", x.name, x.title])));
     }
-    console.log("Options:");
+    terminal.log("Options:");
     const optionsTable = [["  ", "--help, -h", "Show command usage"]];
     for (const option of options) {
         optionsTable.push([
@@ -54,32 +55,32 @@ async function printCommandUsage(controller: ToolController, command: Command) {
             });
         }
     }
-    console.log(formatTable(optionsTable));
+    terminal.log(formatTable(optionsTable));
 }
 
-function printControllerUsage(controller: ToolController) {
-    console.log(formatTable(controller.commands.map(x => ["  ", nameInfo(x), x.title])));
+function printControllerUsage(terminal: Terminal, controller: ToolController) {
+    terminal.log(formatTable(controller.commands.map(x => ["  ", nameInfo(x), x.title])));
 }
 
-export async function printUsage(controller?: ToolController, command?: Command) {
+export async function printUsage(terminal: Terminal, controller?: ToolController, command?: Command) {
     const pkg = JSON.parse(fs.readFileSync(path.resolve(__dirname, "..", "..", "package.json"), "utf8"));
-    console.log(`TONDev Version: ${pkg.version}`);
+    terminal.log(`TONDev Version: ${pkg.version}`);
     if (controller && command) {
-        await printCommandUsage(controller, command);
+        await printCommandUsage(terminal, controller, command);
         return;
     }
-    console.log(`Use: tondev ${controller?.name ?? "tool"} ${command?.name ?? "command"} args [options]`);
-    console.log(`Options:`);
-    console.log(`    --help, -h  Show command usage`);
+    terminal.log(`Use: tondev ${controller?.name ?? "tool"} ${command?.name ?? "command"} args [options]`);
+    terminal.log(`Options:`);
+    terminal.log(`    --help, -h  Show command usage`);
     if (controller) {
-        console.log("Commands:");
-        printControllerUsage(controller);
+        terminal.log("Commands:");
+        printControllerUsage(terminal, controller);
         return;
     }
-    console.log("Tools:");
+    terminal.log("Tools:");
     const rows: string[][] = [];
     controllers.forEach((controller) => {
         rows.push(["  ", nameInfo(controller), controller.title ?? ""]);
     });
-    console.log(formatTable(rows));
+    terminal.log(formatTable(rows));
 }

@@ -8,17 +8,18 @@ import {
     Account,
     AccountType,
 } from "@tonclient/appkit";
-import {TonClient} from "@tonclient/core";
-import {getAccount} from "./accounts";
+import { TonClient } from "@tonclient/core";
+import { getAccount } from "./accounts";
 import {
     getRunParams,
     logRunResult,
     resolveParams,
 } from "./run";
-import {NetworkGiver} from "../network/giver";
-import {NetworkRegistry} from "../network/registry";
+import { NetworkGiver } from "../network/giver";
+import { NetworkRegistry } from "../network/registry";
 import {
-    parseNumber,
+    formatTokens,
+    parseNanoTokens,
     reduceBase64String,
 } from "../../core/utils";
 
@@ -47,6 +48,15 @@ const signerOpt: CommandArg = {
     name: "signer",
     alias: "s",
     title: "Signer key name",
+    type: "string",
+    defaultValue: "",
+};
+
+const runSignerOpt: CommandArg = {
+    name: "run-signer",
+    title: "Signer key name",
+    description: "This signer will be used to sing message. " +
+        "If run signer is not specified then contract's signer is used",
     type: "string",
     defaultValue: "",
 };
@@ -150,12 +160,8 @@ export const contractInfoCommand: Command = {
         if (accType === AccountType.nonExist) {
             terminal.log("Account:   Doesn't exist");
         } else {
-            const token = BigInt(1000000000);
-            const balance = BigInt(parsed.balance);
-            let tokens = Number(balance / token) + Number(balance % token) / Number(token);
-            const tokensString = tokens < 1 ? tokens.toString() : `≈ ${Math.round(tokens)}`;
             terminal.log(`Account:   ${parsed.acc_type_name}`);
-            terminal.log(`Balance:   ${balance} (${tokensString} tokens)`);
+            terminal.log(`Balance:   ${formatTokens(parsed.balance)}`);
             parsed.boc = reduceBase64String(parsed.boc);
             parsed.code = reduceBase64String(parsed.code);
             parsed.data = reduceBase64String(parsed.data);
@@ -198,7 +204,7 @@ export const contractDeployCommand: Command = {
         }
         const network = new NetworkRegistry().get(args.network);
         const currentBalance = BigInt(info.balance ?? 0);
-        const requiredBalance = parseNumber(args.value) ?? network.giver?.value ?? DEFAULT_TOPUP_VALUE;
+        const requiredBalance = parseNanoTokens(args.value) ?? network.giver?.value ?? DEFAULT_TOPUP_VALUE;
 
         if (currentBalance < BigInt(requiredBalance)) {
             const giverInfo = new NetworkRegistry().get(args.network).giver;
@@ -291,10 +297,10 @@ export const contractTopUpCommand: Command = {
             );
         }
         const giver = await NetworkGiver.get(account.client, networkGiverInfo);
-        const value = parseNumber(args.value) ?? giver.value ?? 1000000000;
+        const value = parseNanoTokens(args.value) ?? giver.value ?? 1000000000;
         giver.value = value;
         await giver.sendTo(await account.getAddress(), value);
-        terminal.log(`${giver.value} were sent to address ${await account.getAddress()}`);
+        terminal.log(`${formatTokens(giver.value)} were sent to address ${await account.getAddress()}`);
         await giver.account.free();
         await account.free();
         account.client.close();
@@ -312,6 +318,7 @@ export const contractRunCommand: Command = {
         fileArg,
         networkOpt,
         signerOpt,
+        runSignerOpt,
         dataOpt,
         addressOpt,
         functionArg,
@@ -322,6 +329,7 @@ export const contractRunCommand: Command = {
         file: string,
         network: string,
         signer: string,
+        runSigner: string,
         data: string,
         address: string,
         function: string,
@@ -332,9 +340,12 @@ export const contractRunCommand: Command = {
         const {
             functionName,
             functionInput,
+            signer,
         } = await getRunParams(terminal, account, args);
         terminal.log("\nRunning...");
-        const result = await account.run(functionName, functionInput);
+        const result = await account.run(functionName, functionInput, {
+            signer
+        });
         await logRunResult(terminal, result.decoded, result.transaction);
         await account.free();
         account.client.close();
@@ -352,6 +363,7 @@ export const contractRunLocalCommand: Command = {
         fileArg,
         networkOpt,
         signerOpt,
+        runSignerOpt,
         dataOpt,
         addressOpt,
         functionArg,
@@ -362,6 +374,7 @@ export const contractRunLocalCommand: Command = {
         file: string,
         network: string,
         signer: string,
+        runSigner: string,
         data: string,
         address: string,
         function: string,
@@ -377,7 +390,8 @@ export const contractRunLocalCommand: Command = {
             client: account.client,
             address: await account.getAddress(),
         });
-        const result = await accountWithoutSigner.runLocal(functionName, functionInput);
+        const result = await accountWithoutSigner.runLocal(functionName, functionInput, {
+        });
         await logRunResult(terminal, result.decoded, result.transaction);
         await account.free();
         await accountWithoutSigner.free();
@@ -395,6 +409,7 @@ export const contractRunExecutorCommand: Command = {
         fileArg,
         networkOpt,
         signerOpt,
+        runSignerOpt,
         dataOpt,
         addressOpt,
         functionArg,
@@ -405,6 +420,7 @@ export const contractRunExecutorCommand: Command = {
         file: string,
         network: string,
         signer: string,
+        runSigner: string,
         data: string,
         address: string,
         function: string,

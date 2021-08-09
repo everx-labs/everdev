@@ -1,10 +1,17 @@
-# Deploy and call your contracts with TONDev
+**Deploy and call your contracts with TONDev** 
+
 In this article, you will learn how to work with a contact in TONDev. 
 This sample covers such functionality as network configuration, deploy (including giver configuration), on-chain execution, read contract data.
 
 To cover this functionality we will test the following use-case: deploy a multi-signature contract with two custodians, which confirm a transaction to transfer funds from this wallet to another wallet account.
 
-## Preparing the contract deployment environment
+# Content Table
+- [Content Table](#content-table)
+- [Preparing the contract deployment environment](#preparing-the-contract-deployment-environment)
+- [Deploying the contract](#deploying-the-contract)
+- [Calling the Contract (on-chain and off-chain)](#calling-the-contract-on-chain-and-off-chain)
+
+# Preparing the contract deployment environment
 
 1. To deploy the contract in the Developer network, you need to have a wallet with tokens, that you will use to prepay the initial deploy operation. Surf can help us with that.
 
@@ -65,16 +72,24 @@ To cover this functionality we will test the following use-case: deploy a multi-
 
     **Note:** The default value sponsored by the a giver is 1 token. The sponsored value can be changed with the `-value`  option. The `-value`  parameter is specified in nanotokens (1 token = 1000000000 nanotokens).
 
-9.	Create a directory that you will use as a work folder for your contract testing (`multisig` folder in this example) and enter it. 
+
+# Deploying the contract
+
+1.	Create a directory that you will use as a work folder for your contract testing and enter it. 
+We create `multisig` folder in this example.
 
     ```jsx
     mkdir multisig
     cd multisig
     ```
 
-10.	Download the abi and .tvc files  from the [multisig contract directory](https://github.com/tonlabs/ton-labs-contracts/tree/master/solidity/setcodemultisig) and copy them into your working directory (`multisig`). 
+2.	Download the abi and .tvc files of your contract and copy them into your working directory.
+Here we will use Setcode multisig contract from the [multisig contract directory](https://github.com/tonlabs/ton-labs-contracts/tree/master/solidity/setcodemultisig) and copy them into  `multisig` folder. 
 
-12.	Add two signers with [randomly generated keys](https://github.com/tonlabs/tondev/blob/main/README.md):
+3.	Now you need to add keys that will be used to sign transactions. 
+    We want to deploy multisig wallet with 2 custodians, so we will generate 2 key pairs.
+
+    Add two signers with randomly generated keys:
 
     ```
     tondev signer generate <signer_name1>
@@ -94,13 +109,13 @@ To cover this functionality we will test the following use-case: deploy a multi-
     tondev signer generate k2
     ```
 
-13.	Specify the first key pair (k1) as a default:
+4.	Specify the first key pair (k1) as a default. It will be used if Signer parameter is not specified. 
 
     ```
     tondev signer default k1
     ```
 
-14.	To view public keys, execute the following command:
+5.	To view public keys, execute the following command:
 
     ```
     tondev signer info
@@ -119,9 +134,7 @@ To cover this functionality we will test the following use-case: deploy a multi-
     fc911f562450a5cf943fa2ac5d0f6baf3d107ac2daf37dcdc1da72785158ff2a
     ```
 
-## Deploying the contract
-
-1. To [deploy the contract](https://github.com/tonlabs/tondev#deploy-contract) to blockchain with two custodians, run the following command:
+1. To [deploy the contract](https://github.com/tonlabs/tondev#deploy-contract) to blockchain, run the following command:
 
     ```
     tondev contract deploy <contract_name>
@@ -160,9 +173,18 @@ To cover this functionality we will test the following use-case: deploy a multi-
     0:e61e3b688b3c388540ce5116ad9de41cb2927fe4915ddad5bd30b3a713b0f148
     ```
 
-## Calling the Contract
+# Calling the Contract (on-chain and off-chain)
 
 When the contract is successfully deployed in the blockchain, we can run its methods. 
+Methods can be called on-chain with this command:
+```
+tondev contract run <Contract>
+```
+
+Methods can be called off-chain (to read some data) with this command:
+```
+tondev contract run-local <Contract>
+```
 
 In this example, you will create a transaction by the first custodian and confirm it by the second custodian. 
 

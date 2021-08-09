@@ -84,9 +84,7 @@ Download and install all the core [TON.DEV](https://ton.dev/) components in one 
       - [Top up contract balance from giver](#top-up-contract-balance-from-giver)
   - [View controller info](#view-controller-info)
   - [TONDEV Extensibility](#tondev-extensibility)
-  - [Backlog](#backlog)
-    - [Debot](#debot)
-    - [Solidity](#solidity-1)
+  - [Troubleshooting](#troubleshooting)
 
 ## What is TONDEV?
 
@@ -126,7 +124,7 @@ TONDEV can be extended with other tools following the [instructions of integrati
 npm i -g tondev
 ```
 
-If you see an ACCESS error when you try to install a package globally on Mac or Linux, [please see this instruction](https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally)
+If you see an EACCESS error when you try to install a package globally on Mac or Linux, [please see this instruction](https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally)
 
 ### Download
 
@@ -438,9 +436,9 @@ Result:
 
 ```shell
 $ tondev js demo
-Demo   Description
------  -------------------------
-hello  Simple NodeJs Application
+Demo          Description
+------------  -------------------------
+hello-wallet  Simple NodeJs Application
 ```
 
 #### Install demo project
@@ -448,7 +446,7 @@ hello  Simple NodeJs Application
 This command installs the specified demo project to the current directory. Proceed the instructions in the terminal to run it.
 
 ```shell
-tondev js demo hello
+tondev js demo hello-wallet
 ```
 
 #### Create an empty project
@@ -506,7 +504,7 @@ This command installs the latest tonos-cli
 tondev tonos-cli install
 ```
 The installer requires NPM to be installed, so it can install packages globally without using sudo.
-In case of error, manually set environment variable `PATH=$PATH:$HOME./tondev/solidity` 
+In case of error, manually set environment variable `PATH=$PATH:$HOME/.tondev/solidity` 
 
 #### Version
 
@@ -1035,7 +1033,7 @@ Options:
                       parameters (or fails if prevent-ui option is specified).
 ```
 
-Example of creating a transaction and cnfirming it in a multisig wallet:
+Example of creating a transaction and confirming it in a multisig wallet:
 
 ```
 tondev contract run SetcodeMultisigWallet.abi.json submitTransaction -n dev -s sign1 -i dest:255a3ad9dfa8aa4f3481856aafc7d79f47d50205190bd56147138740e9b177f3,value:500000000,bounce:true,allBalance:false,payload:""
@@ -1043,6 +1041,29 @@ tondev contract run SetcodeMultisigWallet.abi.json submitTransaction -n dev -s s
 
 ```
 tondev contract run SetcodeMultisigWallet.abi.json confirmTransaction -n dev -a 0:04dee1edc3f3d6b23529dcf5a6133627d06a39826bb14cc6334ffea272b15d50 -s sign2 -i transactionId:6954030467099431873
+```
+
+To **execute a contract without signing**, use `signer none` option:
+
+```
+tondev contract run --signer none --address <address>
+```
+
+or
+
+```
+tondev contract run -s none -a <address>
+```
+In this case you have to explicitly specify address in run function because otherwise tondev may calculate a wrong address from empty pubkey.
+
+
+To **execute a smart contract function with bytes argument**, the argument needs to be in hex format.
+
+Example:
+
+```
+cat bytes | xxd -p | tr -d '\n' > bytes.hex
+tondev contract run contract.abi.json fucntion_name -i value:$(cat bytes.hex)
 ```
 
 #### Run contract locally on TVM
@@ -1055,7 +1076,7 @@ tondev contract run-local abi_filename
 
 Command displays available functions and asks to select one. Result example:
 
-```jsx
+```bash
 $ tondev contract run-local Contract.abi.json
 Configuration
 
@@ -1195,6 +1216,17 @@ Options:
     --value, -v    Deploying balance value in nano tokens
 ```
 
+To **top up any known address** without providing keys or contract files, use the following command:
+
+```
+tondev contract topup --address <address>
+```
+
+or
+
+```
+tondev ct -a <addrress>
+```
 
 ## View controller info
 
@@ -1262,11 +1294,6 @@ There are two kind of software connected to TONDev:
 
 Learn more about creating your own controller: [Creating Controller](docs/creating_controller.md)
 
-## Backlog
+## Troubleshooting
 
-### Debot
-- Debot deployment
-
-### Solidity
-
-- Support other compilation and linking options
+If you encountered any problem try to seek the solution in [Troubleshooting Notes](docs/troubleshooting.md). If it didn't help - please, ask in our [telegram channel](https://t.me/ton_sdk).
