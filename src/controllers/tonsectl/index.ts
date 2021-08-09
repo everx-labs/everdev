@@ -2,12 +2,11 @@ import { ToolController } from "../../core";
 import {
     tonsectlUpdateCommand,
     tonsectlSetCommand,
-    tonsectlInstallCommand,
     tonsectlVersionCommand,
     tonsectlApiCommand,
     tonsectlInitCommand,
     tonsectlStartCommand,
-    tonsectlStatusCommand,
+    tonsectlinfoCommand,
     tonsectlStopCommand,
     tonsectlResetCommand,
 
@@ -20,12 +19,11 @@ export const TONSECTL: ToolController = {
         tonsectlSetCommand,
         tonsectlUpdateCommand,
         tonsectlVersionCommand,
-        tonsectlInstallCommand,
         tonsectlApiCommand,
         tonsectlInitCommand,
         tonsectlVersionCommand,
         tonsectlStartCommand,
-        tonsectlStatusCommand,
+        tonsectlinfoCommand,
         tonsectlStopCommand,
         tonsectlResetCommand,
 

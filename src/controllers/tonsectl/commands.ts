@@ -6,8 +6,9 @@ import {
 
 
 import {components} from "./components";
-import {downloadBinaryFromGithub, TONSECTLRegistry} from "./registry";
+import {downloadBinaryFromGithub, tonsectlHomeBinary, TONSECTLRegistry} from "./registry";
 import {tonsectlHome} from "./registry"
+import fs from "fs";
 
 export const tonsectlSetCommand: Command = {
     name: "set",
@@ -35,28 +36,15 @@ export const tonsectlSetCommand: Command = {
     }): Promise<void> {
         const registry = new TONSECTLRegistry();
         await registry.setupConfig(terminal,args.version,args.port);
-        var new_version = await registry.getVersion(terminal)
-        var new_port = await registry.getPort()
-        terminal.log(`New version: ${new_version}\nNew port: ${new_port}\nFor applying new version and port please run install command`)
+        await components.tonsectl.run(terminal,"./", ["stop"])
+        var version = await registry.getVersion(terminal)
+        var os = await registry.getOS();
+        var port = await registry.getPort()
+        const url = `https://github.com/INTONNATION/tonos-se-installers/releases/download/${version}/tonsectl_${os}`;
+        await downloadBinaryFromGithub(terminal,url,tonsectlHome())
+        await components.tonsectl.run(terminal,"./", [`install`,`${port}`])
+        await components.tonsectl.run(terminal,"./", ["start"])
     },
-};
-
-
-
-export const tonsectlInstallCommand: Command = {
-    name: "install",
-    title: "Install TONSECTL binary and dependencies",
-    args: [],
-    async run(terminal: Terminal, _args: {}): Promise<void> {
-    const registry = new TONSECTLRegistry();
-    var tonsectl_version = await registry.getVersion(terminal);
-    var os = await registry.getOS();
-    var port = await registry.getPort()
-
-    const url = `https://github.com/INTONNATION/tonos-se-installers/releases/download/${tonsectl_version}/tonsectl_${os}`;
-    await downloadBinaryFromGithub(terminal,url,tonsectlHome())
-    await components.tonsectl.run(terminal,"./", [`install`,`${port}`])
-    }
 
 };
 
@@ -65,6 +53,7 @@ export const tonsectlUpdateCommand: Command = {
     title: "Update TONSECTL version",
     args: [],
     async run(terminal: Terminal, _args: {}): Promise<void> {
+        await components.tonsectl.run(terminal,"./", ["stop"])
         const registry = new TONSECTLRegistry();
         var tonsectl_current_version = await registry.getVersion(terminal);
         var tonsectl_latest_version = await registry.getLatestVersion();
@@ -76,6 +65,7 @@ export const tonsectlUpdateCommand: Command = {
             await components.tonsectl.run(terminal,"./", ["install",`${port}`])
             await registry.setupConfig(terminal,String(tonsectl_latest_version))
             terminal.log("The latest version of TONSECTL was installed")
+            await components.tonsectl.run(terminal,"./", ["stop"])
         }else{
             terminal.log("Your version is latest")
         }
@@ -112,13 +102,29 @@ export const tonsectlStartCommand: Command = {
     name: "start",
     title: "Start service",
     async run(terminal: Terminal, _args: {}): Promise<void> {
+        const registry = new TONSECTLRegistry();
+        var version = await registry.getVersion(terminal)
+        if (!fs.existsSync(tonsectlHomeBinary())) {
+            var port = await registry.getPort()
+            var os = await registry.getOS();
+            const url = `https://github.com/INTONNATION/tonos-se-installers/releases/download/${version}/tonsectl_${os}`;
+            await downloadBinaryFromGithub(terminal, url, tonsectlHome())
+        }
+        var tonsectl_version = await components.tonsectl.run(terminal, "./", ["version"])
+        if (String(version) !== String(tonsectl_version)) {
+                         var port = await registry.getPort()
+                         var os = await registry.getOS();
+                         const url = `https://github.com/INTONNATION/tonos-se-installers/releases/download/${version}/tonsectl_${os}`;
+                         await downloadBinaryFromGithub(terminal, url, tonsectlHome())
+                         await components.tonsectl.run(terminal, "./", [`install`, `${port}`])
+            }
         await components.tonsectl.run(terminal,"./", ["start"])
     },
 };
 
-export const tonsectlStatusCommand: Command = {
-    name: "status",
-    title: "Status of the service",
+export const tonsectlinfoCommand: Command = {
+    name: "info",
+    title: "Info of the service",
     async run(terminal: Terminal, _args: {}): Promise<void> {
         const registry = new TONSECTLRegistry();
         const tonsectl_version = await registry.getVersion(terminal);

@@ -36,6 +36,9 @@ export function tonsectlHomeBinary() {
     return path.resolve(tonsectlHome(), TOOL_BiNARY_NAME,);
 }
 
+
+
+
 export async function downloadBinaryFromGithub(terminal: Terminal, srcUrl: string, dstPath: string) {
     terminal.write(`Downloading from ${srcUrl}`);
     if (!fs.existsSync(dstPath)) {
