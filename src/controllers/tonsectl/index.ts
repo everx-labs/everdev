@@ -14,7 +14,7 @@ import {
 } from "./commands";
 
 export const TONSECTL: ToolController = {
-    name: "tonsectl",
+    name: "se-nd",
     title: "TONSECTL",
     commands: [
         tonsectlSetCommand,
