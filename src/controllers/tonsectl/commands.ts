@@ -44,7 +44,7 @@ export const tonsectlSetCommand: Command = {
         db_port: string,
     }): Promise<void> {
         const registry = new TONSECTLRegistry();
-        await registry.setupConfig(terminal,args.version,args.port);
+        await registry.setupConfig(terminal,args.version,args.port,args.db_port);
         var version = await registry.getVersion(terminal)
         var os = await registry.getOS();
         var port = await registry.getPort()
