@@ -52,7 +52,7 @@ export const tonsectlSetCommand: Command = {
         const url = `https://github.com/INTONNATION/tonos-se-installers/releases/download/${version}/tonsectl_${os}`;
         await downloadBinaryFromGithub(terminal,url,tonsectlHome())
         await components.tonsectl.run(terminal,"./", ["stop"])
-        await components.tonsectl.run(terminal,"./", [`install`,`${port}`,`${db_port}`])
+        await components.tonsectl.silentRun(terminal,"./", [`install`,`${port}`,`${db_port}`])
         await components.tonsectl.run(terminal,"./", ["start"])
     },
 
@@ -97,22 +97,31 @@ export const tonsectlStartCommand: Command = {
     title: "Start SE",
     async run(terminal: Terminal, _args: {}): Promise<void> {
         const registry = new TONSECTLRegistry();
-        var version = await registry.getVersion(terminal)
+        await registry.getVersion(terminal)
         if (!fs.existsSync(tonsectlHomeBinary())) {
+            var latest_version = await registry.getLatestVersion()
+            var os = await registry.getOS();
+            const url = `https://github.com/INTONNATION/tonos-se-installers/releases/download/${latest_version}/tonsectl_${os}`;
             var port = await registry.getPort()
+            var db_port = await registry.getDBPort()
+            await downloadBinaryFromGithub(terminal, url, tonsectlHome())
+            await components.tonsectl.run(terminal, "./", [`install`, `${port}`,`${db_port}`])
+            var tonsectl_version = await components.tonsectl.run(terminal, "./", ["version"])
+            await registry.setupConfig(terminal,String(latest_version),String(port),String(db_port), String(tonsectl_version));
+        }
+        var tonsectl = await registry.getToolversion()
+        var version = await registry.getVersion(terminal)
+        if (String(tonsectl).localeCompare(String(version)) ){
+            await components.tonsectl.run(terminal,"./", ["start"])
+            }
+        else{
+            var port = await registry.getPort()
+            var db_port = await registry.getDBPort()
             var os = await registry.getOS();
             const url = `https://github.com/INTONNATION/tonos-se-installers/releases/download/${version}/tonsectl_${os}`;
             await downloadBinaryFromGithub(terminal, url, tonsectlHome())
+            await components.tonsectl.run(terminal, "./", [`install`, `${port}`,`${db_port}`])
         }
-        var tonsectl_version = await components.tonsectl.run(terminal, "./", ["version"])
-        if (String(version) !== String(tonsectl_version)) {
-                         var port = await registry.getPort()
-                         var os = await registry.getOS();
-                         const url = `https://github.com/INTONNATION/tonos-se-installers/releases/download/${version}/tonsectl_${os}`;
-                         await downloadBinaryFromGithub(terminal, url, tonsectlHome())
-                         await components.tonsectl.run(terminal, "./", [`install`, `${port}`])
-            }
-        await components.tonsectl.run(terminal,"./", ["start"])
     },
 };
 
@@ -122,7 +131,8 @@ export const tonsectlinfoCommand: Command = {
     async run(terminal: Terminal, _args: {}): Promise<void> {
         const registry = new TONSECTLRegistry();
         const tonsectl_version = await registry.getVersion(terminal);
-        terminal.log(`Current port: ${(await registry.getPort())}\nCurrent version: ${tonsectl_version}`);
+        const arangodb_port = await registry.getDBPort()
+        terminal.log(`Current port: ${(await registry.getPort())}\nArongoDB port: ${arangodb_port}\nCurrent version: ${tonsectl_version}`);
         await components.tonsectl.run(terminal,"./", ["status"])
     },
 };
