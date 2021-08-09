@@ -1,4 +1,4 @@
-import {compareVersions, httpsGetJson} from "../../core/utils";
+import {compareVersionsDescending, httpsGetJson} from "../../core/utils";
 import {ContainerDef, DevDocker} from "../../core/docker";
 import Dockerode from "dockerode";
 
@@ -7,7 +7,7 @@ const DOCKER_CONTAINER_NAME = "extraton-debrowser";
 
 export async function getAvailableVersions(): Promise<string[]> {
     const url = `https://registry.hub.docker.com/v2/repositories/${DOCKER_IMAGE_NAME}/tags/`;
-    return (await httpsGetJson(url)).results.map((x: any) => x.name).sort(compareVersions);
+    return (await httpsGetJson(url)).results.map((x: any) => x.name).sort(compareVersionsDescending);
 }
 
 function instanceContainerDef(version?: string): ContainerDef {
@@ -39,6 +39,9 @@ export async function controlInstances(
     control: (docker: DevDocker, def: ContainerDef) => Promise<void>,
     version?: string
 ): Promise<void> {
+    if (version === 'latest') {
+        version = (await getAvailableVersions())[0];
+    }
     const def: ContainerDef = instanceContainerDef(version);
     await control(new DevDocker(), def);
 }

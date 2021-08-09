@@ -12,12 +12,13 @@ async function writeEnterMessage(docker: DevDocker, terminal: Terminal, containe
 
 export const startCommand: Command = {
     name: "start",
-    title: "Start ExtraTON DeBrowser",
+    title: "Start ExtraTON DeBrowser, default is 'latest'",
     args: [{
         isArg: true,
         name: 'version',
         type: 'string',
         title: 'ExtraTON DeBrowser version (semver compatible)',
+        defaultValue: 'latest',
     }],
     async run(terminal: Terminal, args: { version: string }): Promise<void> {
         await controlInstances(async (docker, def) => {

@@ -84,6 +84,7 @@ Download and install all the core [TON.DEV](https://ton.dev/) components in one 
       - [Top up contract balance from giver](#top-up-contract-balance-from-giver)
     - [DeBrowser](#debrowser)
       - [Version](#version-5)
+      - [Interfaces](#interfaces)
       - [Start](#start-1)
       - [Stop](#stop-1)
   - [View controller info](#view-controller-info)
@@ -1182,6 +1183,25 @@ This command shows the list of available versions.
 tondev debrowser version
 
 Available Versions: 1.1.0, 1.2.0, 1.2.1, 1.3.1
+```
+
+#### Interfaces
+This command shows the list of realised interfaces.
+
+```shell
+tondev debrowser interfaces
+
+Realised interfaces:
+ - Address Input
+ - Amount Input
+ - Confirm Input
+ - Menu
+ - Network
+ - Number Input
+ - QR Code
+ - Signing Box Input
+ - Terminal
+ - User Info
 ```
 
 #### Start
