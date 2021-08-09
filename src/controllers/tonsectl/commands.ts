@@ -35,6 +35,9 @@ export const tonsectlSetCommand: Command = {
     }): Promise<void> {
         const registry = new TONSECTLRegistry();
         await registry.setupConfig(terminal,args.version,args.port);
+        var new_version = await registry.getVersion(terminal)
+        var new_port = await registry.getPort()
+        terminal.log(`New version: ${new_version}\nNew port: ${new_port}\nFor applying new version and port please run install command`)
     },
 };
 
