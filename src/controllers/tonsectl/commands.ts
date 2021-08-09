@@ -28,10 +28,20 @@ export const tonsectlSetCommand: Command = {
             defaultValue: "80",
 
 
-        }],
+        },
+        {
+            name: "db_port",
+            title: "ArangoDB port",
+            type: "string",
+            defaultValue: "8529",
+
+
+        },
+        ],
     async run(terminal: Terminal,  args: {
         version: string,
         port: string,
+        db_port: string,
     }): Promise<void> {
         const registry = new TONSECTLRegistry();
         await registry.setupConfig(terminal,args.version,args.port);
@@ -39,9 +49,10 @@ export const tonsectlSetCommand: Command = {
         var version = await registry.getVersion(terminal)
         var os = await registry.getOS();
         var port = await registry.getPort()
+        var db_port = await registry.getDBPort()
         const url = `https://github.com/INTONNATION/tonos-se-installers/releases/download/${version}/tonsectl_${os}`;
         await downloadBinaryFromGithub(terminal,url,tonsectlHome())
-        await components.tonsectl.run(terminal,"./", [`install`,`${port}`])
+        await components.tonsectl.run(terminal,"./", [`install`,`${port}`,`${db_port}`])
         await components.tonsectl.run(terminal,"./", ["start"])
     },
 

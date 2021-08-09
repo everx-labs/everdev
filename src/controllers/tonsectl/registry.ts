@@ -28,6 +28,7 @@ if (p === "linux") {
 }
 const TOOL_FOLDER_NAME = "tonsectl";
 const DEFAULT_PORT = "80";
+const ARANGO_DB_PORT ="8529"
 
 export function tonsectlHome() {
     return path.resolve(tondevHome(), TOOL_FOLDER_NAME);
@@ -153,13 +154,17 @@ export class TONSECTLRegistry {
         const version = JSON.parse(fs.readFileSync(registryPath(), "utf8"));
         return version.port;
     }
+    async getDBPort(): Promise<string[]> {
+        const version = JSON.parse(fs.readFileSync(registryPath(), "utf8"));
+        return version.db_port;
+    }
 
-
-    async setupConfig(terminal: Terminal, version: string, port = DEFAULT_PORT): Promise<void> {
+    async setupConfig(terminal: Terminal, version: string, port = DEFAULT_PORT, db_port = ARANGO_DB_PORT): Promise<void> {
         try {
             writeJsonFile(registryPath(), {
                 version,
                 port,
+                db_port
             });
         } catch (err) {
             terminal.writeError(err);
