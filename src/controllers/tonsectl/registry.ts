@@ -43,26 +43,30 @@ export function tonsectlHomeBinary() {
 export async function downloadBinaryFromGithub(terminal: Terminal, srcUrl: string, dstPath: string) {
     terminal.write(`Downloading from ${srcUrl}`);
     if (!fs.existsSync(dstPath)) {
-        fs.mkdirSync(dstPath, { recursive: true });
+       fs.mkdirSync(dstPath, { recursive: true });
+    }
+    if (fs.existsSync(tonsectlHomeBinary())){
+        await fs.unlinkSync(tonsectlHomeBinary());
     }
     terminal.write("\n");
     const file = fs.createWriteStream(tonsectlHomeBinary());
-    await new Promise((resolve, reject) => {
-        request({
-            uri: srcUrl,
+    await new Promise((resolve,reject) => {
+        request(srcUrl,function (error, response) {
+            if (!error && response.statusCode !== 200) {
+            }
         })
+            .on("error", reject)
+            .on("data", _ => {
+                terminal.write(".");
+            })
             .pipe(file)
+            .on("error", reject)
             .on('finish', async () => {
                 console.log(`The tonsectl is finished downloading.`);
                 resolve(file);
             })
-            .on('error', (error: any) => {
-                reject(error);
-            });
+
     })
-        .catch((error) => {
-            console.log(`Something happened: ${error}`);
-        });
     if (os.platform() !== "win32") {
             fs.readdirSync(dstPath)
                 .map(filename => path.resolve(dstPath, filename))

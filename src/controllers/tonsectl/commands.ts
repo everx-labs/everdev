@@ -45,13 +45,13 @@ export const tonsectlSetCommand: Command = {
     }): Promise<void> {
         const registry = new TONSECTLRegistry();
         await registry.setupConfig(terminal,args.version,args.port);
-        await components.tonsectl.run(terminal,"./", ["stop"])
         var version = await registry.getVersion(terminal)
         var os = await registry.getOS();
         var port = await registry.getPort()
         var db_port = await registry.getDBPort()
         const url = `https://github.com/INTONNATION/tonos-se-installers/releases/download/${version}/tonsectl_${os}`;
         await downloadBinaryFromGithub(terminal,url,tonsectlHome())
+        await components.tonsectl.run(terminal,"./", ["stop"])
         await components.tonsectl.run(terminal,"./", [`install`,`${port}`,`${db_port}`])
         await components.tonsectl.run(terminal,"./", ["start"])
     },
