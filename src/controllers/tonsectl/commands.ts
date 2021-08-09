@@ -117,6 +117,9 @@ export const tonsectlStatusCommand: Command = {
     name: "status",
     title: "Status of the service",
     async run(terminal: Terminal, _args: {}): Promise<void> {
+        const registry = new TONSECTLRegistry();
+        const tonsectl_version = await registry.getVersion(terminal);
+        terminal.log(`Current port: ${(await registry.getPort())}\nCurrent version: ${tonsectl_version}`);
         await components.tonsectl.run(terminal,"./", ["status"])
     },
 };
