@@ -114,7 +114,7 @@ TONDEV can be extended with other tools following the [instructions of integrati
 
 ### Prerequisites
 
-- [`Node.js`](https://nodejs.org/) >= 10.x installed
+- [`Node.js`](https://nodejs.org/) >= 14.x installed
 - (optional) [`Docker`](https://www.docker.com/)  >= 19.x installed
 - Solidity compiler requires VC++ Runtime on Windows. You can install it from [the latest supported Visual C++ downloads](https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0).
 
