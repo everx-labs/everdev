@@ -4,7 +4,7 @@ This guide will help you get started with such essensial Free TON tools as:
 - [Tondev CLI](https://github.com/tonlabs/tondev) 
 - [Solidity Compiler](https://github.com/tonlabs/TON-Solidity-Compiler)
 - [Local Blockchain](https://github.com/tonlabs/tonos-se)
-- [Blockchain Explorer TON Live](ton.live)
+- [Blockchain Explorer TON Live](https://ton.live)
 - [GraphQL API](https://docs.ton.dev/86757ecb2/p/793337-ton-os-api)
   
 You will learn how to:
