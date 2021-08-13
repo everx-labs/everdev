@@ -6,7 +6,7 @@ import request from "request";
 
 export const interfacesCommand: Command = {
     name: "interfaces",
-    title: "Show list of realised interfaces",
+    title: "Show list of implemented interfaces",
     args: [],
     async run(terminal: Terminal): Promise<void> {
         await controlInstances(async (docker, def) => {
@@ -15,7 +15,7 @@ export const interfacesCommand: Command = {
                 const url = `http://localhost:${containerInfo.Ports[0].PublicPort}/interfaces.json`;
                 request({url, json: true}, function (error, response) {
                     if (null === error) {
-                        terminal.log('Realised interfaces:');
+                        terminal.log('Implemented interfaces:');
                         for (const ifc of response.body) {
                             terminal.log(` - ${ifc.name}`);
                         }

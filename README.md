@@ -1186,7 +1186,7 @@ Available Versions: 1.1.0, 1.2.0, 1.2.1, 1.3.1
 ```
 
 #### Interfaces
-This command shows the list of realised interfaces.
+This command shows the list of implemented interfaces.
 
 ```shell
 tondev debrowser interfaces
