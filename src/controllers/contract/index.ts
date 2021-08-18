@@ -199,26 +199,29 @@ export const contractDeployCommand: Command = {
     }) {
         let account = await getAccount(terminal, args);
         const info = await account.getAccount();
+        const accountAddress = await account.getAddress()
         if (info.acc_type === AccountType.active) {
-            throw new Error(`Account ${await account.getAddress()} already deployed.`);
+            throw new Error(`Account ${accountAddress} already deployed.`);
         }
-        const network = new NetworkRegistry().get(args.network);
+        const { giver: giverInfo, name: networkName } = new NetworkRegistry().get(args.network);
         const currentBalance = BigInt(info.balance ?? 0);
-        const requiredBalance = parseNanoTokens(args.value) ?? network.giver?.value ?? DEFAULT_TOPUP_VALUE;
+        const explicitTopUp = parseNanoTokens(args.value)
+        const implicitTopUp = currentBalance === BigInt(0) ? giverInfo?.value || DEFAULT_TOPUP_VALUE : 0
 
-        if (currentBalance < BigInt(requiredBalance)) {
-            const giverInfo = new NetworkRegistry().get(args.network).giver;
-            if (!giverInfo) {
-                throw new Error(`Account ${await account.getAddress()} has low balance to deploy.\n` +
-                    `You have to create an enough balance before deploying in two ways: \n` +
-                    `sending some value to this address\n` +
-                    `or setting up a giver for the network with \`tondev network giver\` command.`,
-                );
-            }
-            const giver = await NetworkGiver.get(account.client, giverInfo);
-            giver.value = requiredBalance;
-            await giver.sendTo(await account.getAddress(), requiredBalance);
-            await giver.account.free();
+        if (explicitTopUp && !giverInfo) {
+            throw new Error(
+                `A top-up was requested, but no giver for the network ${networkName} was found.\n` +
+                    `You have to set up a giver for this network with \`tondev network giver\` command.`,
+            )
+        }
+
+        const topUp = explicitTopUp || implicitTopUp
+
+        if (giverInfo && topUp) {
+            const giver = await NetworkGiver.get(account.client, giverInfo)
+            giver.value = topUp
+            await giver.sendTo(accountAddress, topUp)
+            await giver.account.free()
         }
 
         const dataParams = account.contract.abi.data ?? [];
@@ -233,7 +236,7 @@ export const contractDeployCommand: Command = {
             await account.free();
             account = new Account(account.contract, {
                 client: account.client,
-                address: await account.getAddress(),
+                address: await accountAddress,
                 signer: account.signer,
                 initData,
             });
@@ -253,8 +256,22 @@ export const contractDeployCommand: Command = {
             initFunctionName: initFunction?.name,
             initInput,
 
-        });
-        terminal.log(`Contract has deployed at address: ${await account.getAddress()}`);
+        }).catch((err) => {
+            throw [407, 409].includes(err?.data?.local_error?.code)
+                ? new Error(
+                      `Account ${accountAddress} has low balance to deploy.\n` +
+                          (explicitTopUp
+                              ? `You sent amount which is too small`
+                              : giverInfo
+                              ? `You can use \`tondev contract deploy <file> -v <value>\` command to top it up`
+                              : `You have to create an enough balance before deploying in two ways: \n` +
+                                `sending some value to this address\n` +
+                                `or setting up a giver for the network with \`tondev network giver\` command.`),
+                  )
+                : err
+        })
+
+        terminal.log(`Contract has deployed at address: ${accountAddress}`);
         await account.free();
         account.client.close();
         TonClient.default.close();
