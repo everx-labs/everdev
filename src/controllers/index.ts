@@ -5,6 +5,7 @@ import { JsApps } from "./js";
 import { SE } from "./se";
 import { TONOS } from "./tonos-cli";
 import { TestSuite4 } from "./ts4";
+import { DeBrowser } from "./debrowser";
 import {
     Command,
     matchName,
@@ -26,6 +27,7 @@ export const controllers = [
     JsApps,
     TONOS,
     TestSuite4,
+    DeBrowser,
 ];
 
 export function findControllerAndCommandByAlias(

@@ -82,6 +82,11 @@ Download and install all the core [TON.DEV](https://ton.dev/) components in one 
       - [Run contract locally on TVM](#run-contract-locally-on-tvm)
       - [Emulate transaction executor locally on TVM](#emulate-transaction-executor-locally-on-tvm)
       - [Top up contract balance from giver](#top-up-contract-balance-from-giver)
+    - [DeBrowser](#debrowser)
+      - [Version](#version-5)
+      - [Interfaces](#interfaces)
+      - [Start](#start-1)
+      - [Stop](#stop-1)
   - [View controller info](#view-controller-info)
   - [TONDEV Extensibility](#tondev-extensibility)
   - [Troubleshooting](#troubleshooting)
@@ -1166,6 +1171,53 @@ or
 ```
 tondev ct -a <addrress>
 ```
+
+
+### DeBrowser
+The ExtraTON DeBot Browser.
+
+#### Version
+This command shows the list of available versions.
+
+```shell
+tondev debrowser version
+
+Available Versions: 1.1.0, 1.2.0, 1.2.1, 1.3.1
+```
+
+#### Interfaces
+This command shows the list of implemented interfaces.
+
+```shell
+tondev debrowser interfaces
+
+Realised interfaces:
+ - Address Input
+ - Amount Input
+ - Confirm Input
+ - Menu
+ - Network
+ - Number Input
+ - QR Code
+ - Signing Box Input
+ - Terminal
+ - User Info
+```
+
+#### Start
+This command downloads image and starts DeBrowser container (Docker must be launched).
+
+```shell
+tondev debrowser start 1.3.1
+```
+
+#### Stop
+This command stops DeBrowser container.
+
+```shell
+tondev debrowser stop
+```
+
 
 ## View controller info
 
