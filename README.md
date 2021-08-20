@@ -1,6 +1,10 @@
 <p align="center"><a href="https://www.npmjs.com/package/tondev"><img src="assets/tondev.png" height="60"/></a></p> 
 <h1 align="center">TONDev</h1>
 <p align="center">Free TON Development Environment</p>
+<h1 align="center"><a href="docs/quick_start">Quick Start</a>
+
+Get your hands dirrty with our great tools:)
+Follow the [Quick Start](docs/quick_start.md) to get on board of Free TON Development ASAP!
 </p>
 
 
