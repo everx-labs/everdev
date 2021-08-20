@@ -1,5 +1,5 @@
 <p align="center"><a href="https://www.npmjs.com/package/tondev"><img src="assets/tondev.png" height="60"/></a></p> 
-<h1 align="center">TONDEV</h1>
+<h1 align="center">TONDev</h1>
 <p align="center">Free TON Development Environment</p>
 </p>
 
@@ -8,11 +8,11 @@
 
 [![Channel on Telegram](https://img.shields.io/badge/chat-on%20telegram-9cf.svg)](https://t.me/ton_sdk)  
 
-# TONDEV - Free TON Development Environment
-Download and install all the core [TON.DEV](https://ton.dev/) components in one click and access them from a single interface.
+# TONDev - Free TON Development Environment
+Set up all the core [TON.DEV](https://ton.dev/) Developer tools and work with Free TON blockchain from a single interface.
 
 ## Content Table
-  - [What is TONDEV?](#what-is-tondev)
+  - [What is TONDev?](#what-is-tondev)
     - [What components does it support?](#what-components-does-it-support)
   - [Installation](#installation)
     - [Prerequisites](#prerequisites)
@@ -85,23 +85,29 @@ Download and install all the core [TON.DEV](https://ton.dev/) components in one 
       - [Start](#start-1)
       - [Stop](#stop-1)
   - [View controller info](#view-controller-info)
-  - [TONDEV Extensibility](#tondev-extensibility)
+  - [TONDev Extensibility](#tondev-extensibility)
   - [Troubleshooting](#troubleshooting)
 
-## What is TONDEV?
+## What is TONDev?
 
-TONDEV is a Node.js package with CLI interface that allows to easily download and install all the core TON.DEV components in background and use them from a single interface.
-Also, this project serves as a backend for [TONDEV VS Code extension](https://github.com/tonlabs/tondev-vscode).
+TONDev is a Node.js package with CLI interface that allows to perform the following use-cases from the single interface for Developer:
 
-### What components does it support?
+- Easily manage all the core [TON.DEV]https://ton.dev/) Developer Tools for Free TON;   
+- Configure networks (including Local Blockchain, Developer Network, Free TON(main) network): add, configure giver;   
+- Manage keys: add, remove
+- Work with Free TON blockchain from CLI 
+   
+Also, this project serves as a backend for [TONDev VS Code extension](https://github.com/tonlabs/tondev-vscode).
 
-Each component is downloaded and installed automatically for the target platform upon the first request.
+### What tools does it support?
+
+Components are downloaded and installed automatically for the target platform upon the first request.
 
 - [Solidity Compiler](https://github.com/tonlabs/TON-Solidity-Compiler)
   
 - [C/C++ Compiler](https://github.com/tonlabs/TON-Compiler)
   
-- [Contract Management Tool](#contract-management) - Work with your contracts from CLI. Deploy and run your contracts with easy CLI commands  
+- [Contract Management Tool](#contract-management) - Work with your contracts from CLI. Deploy and run your contracts with convenient CLI commands  
   
 - [Network Tool](#network-tool) - manage your networks: add, remove, configure givers  
   
@@ -110,15 +116,15 @@ Each component is downloaded and installed automatically for the target platform
 - [TON OS Startup Edition](https://github.com/tonlabs/tonos-se) – 
   Local blockchain for development and testing
 
-- [Debot Browser](https://github.com/tonlabs/debots) - For now, Extraton Debot Browser is supported. Support of Surf Debot Browser is coming.
+- [Debot Browser](https://github.com/tonlabs/debots) - Web debot browser. For now, Extraton Debot Browser is supported. Support of Surf Debot Browser is coming.
   
 - [TestSuite4](https://github.com/tonlabs/TestSuite4) – 
-  Python lightweight framework for contract testing
+  Python lightweight framework for contract testing.
 
 - [tonos-cli](https://github.com/tonlabs/tonos-cli) – 
-  Command line tool for multisigwallet management and staking. TONDEV helps with installation and version management. 
+  Command line tool for multisigwallet management and staking, includes CLI Debot Browser. TONDev helps with installation and version management. 
 
-TONDEV can be extended with other tools following the [instructions of integration](#tondev-extensibility). 
+TONDev can be extended with other tools following the [instructions of integration](#tondev-extensibility). 
 
 ## Installation
 
@@ -437,7 +443,7 @@ Options:
 
 ### tonos-cli
 
-TONDEV installs tonos-cli globally, so after the installation is complete, you can access the functionality via command:
+TONDev installs tonos-cli globally, so after the installation is complete, you can access the functionality via command:
 
 ```shell
 tonos-cli <command> <args> 
@@ -1279,7 +1285,7 @@ Component  Version  Available
 tonoscli   0.11.3   0.11.4, 0.11.3, 0.11.2, 0.11.1, 0.11.0, 0.10.1, 0.10.0, 0.9.2, 0.9.1, 0.9.0, ...
 ```
 
-## TONDEV Extensibility
+## TONDev Extensibility
 
 TON Dev Environment is an integration point for development tools related to Free TON Blockchain.
 

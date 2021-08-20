@@ -1,4 +1,4 @@
-# TONDEV Troubleshooting
+# TONDev Troubleshooting
 
 Here are some solutions to frequently encountered problems.
 
