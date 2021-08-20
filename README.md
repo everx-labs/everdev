@@ -12,9 +12,6 @@
 Download and install all the core [TON.DEV](https://ton.dev/) components in one click and access them from a single interface.
 
 ## Content Table
-
-- [TONDEV - Free TON Development Environment](#tondev---free-ton-development-environment)
-  - [Content Table](#content-table)
   - [What is TONDEV?](#what-is-tondev)
     - [What components does it support?](#what-components-does-it-support)
   - [Installation](#installation)
@@ -98,20 +95,28 @@ Also, this project serves as a backend for [TONDEV VS Code extension](https://gi
 
 ### What components does it support?
 
-These components are supported or will be supported soon.  
 Each component is downloaded and installed automatically for the target platform upon the first request.
 
-- [Debot](https://github.com/tonlabs/debots) - **soon as part of tondev**  
 - [Solidity Compiler](https://github.com/tonlabs/TON-Solidity-Compiler)
+  
 - [C/C++ Compiler](https://github.com/tonlabs/TON-Compiler)
+  
+- [Contract Management Tool](#contract-management) - Work with your contracts from CLI. Deploy and run your contracts with easy CLI commands  
+  
+- [Network Tool](#network-tool) - manage your networks: add, remove, configure givers  
+  
+- [Signer Tool](#signer-tool) - manage your keys and seedphrases: create your secret once and use it via alias with Contract Management Tool. Really easy.  
+  
 - [TON OS Startup Edition](https://github.com/tonlabs/tonos-se) – 
   Local blockchain for development and testing
+
+- [Debot Browser](https://github.com/tonlabs/debots) - For now, Extraton Debot Browser is supported. Support of Surf Debot Browser is coming.
+  
 - [TestSuite4](https://github.com/tonlabs/TestSuite4) – 
-  Python lightweight framework for contract testing 
+  Python lightweight framework for contract testing
+
 - [tonos-cli](https://github.com/tonlabs/tonos-cli) – 
-  Command line tool for TON OS. TONDEV helps with installation and version management. 
-- [TON-SDK](https://github.com/tonlabs/TON-SDK) - 
-  Core SDK Library features: deploy and execute contracts, run get methods and so on.
+  Command line tool for multisigwallet management and staking. TONDEV helps with installation and version management. 
 
 TONDEV can be extended with other tools following the [instructions of integration](#tondev-extensibility). 
 
