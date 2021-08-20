@@ -62,7 +62,7 @@ export class NetworkGiver implements AccountGiver {
         });
     }
 
-    static async get(
+    static async create(
         client: TonClient,
         info: NetworkGiverInfo,
     ): Promise<NetworkGiver> {

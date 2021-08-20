@@ -124,8 +124,6 @@ const preventUiOpt: CommandArg = {
     defaultValue: "false",
 };
 
-const DEFAULT_TOPUP_VALUE = 10_000_000_000;
-
 export const contractInfoCommand: Command = {
     name: "info",
     alias: "i",
@@ -204,26 +202,21 @@ export const contractDeployCommand: Command = {
             throw new Error(`Account ${accountAddress} already deployed.`);
         }
         const { giver: giverInfo, name: networkName } = new NetworkRegistry().get(args.network);
-        const currentBalance = BigInt(info.balance ?? 0);
-        const explicitTopUp = parseNanoTokens(args.value)
-        const implicitTopUp = currentBalance === BigInt(0) ? giverInfo?.value || DEFAULT_TOPUP_VALUE : 0
+        const topUpValue = parseNanoTokens(args.value);
 
-        if (explicitTopUp && !giverInfo) {
-            throw new Error(
-                `A top-up was requested, but no giver for the network ${networkName} was found.\n` +
+        if (topUpValue) {
+            if (giverInfo) {
+                const giver = await NetworkGiver.create(account.client, giverInfo)
+                giver.value = topUpValue
+                await giver.sendTo(accountAddress, topUpValue)
+                await giver.account.free()
+            } else {
+                throw new Error(
+                    `A top-up was requested, but no giver for the network ${networkName} was found.\n` +
                     `You have to set up a giver for this network with \`tondev network giver\` command.`,
-            )
+                )
+            }
         }
-
-        const topUp = explicitTopUp || implicitTopUp
-
-        if (giverInfo && topUp) {
-            const giver = await NetworkGiver.get(account.client, giverInfo)
-            giver.value = topUp
-            await giver.sendTo(accountAddress, topUp)
-            await giver.account.free()
-        }
-
         const dataParams = account.contract.abi.data ?? [];
         if (dataParams.length > 0) {
             const initData = await resolveParams(
@@ -252,15 +245,18 @@ export const contractDeployCommand: Command = {
             args.preventUi,
         );
         terminal.log("\nDeploying...");
-        await account.deploy({
-            initFunctionName: initFunction?.name,
-            initInput,
+       
+        try { 
+            await account.deploy({
+                initFunctionName: initFunction?.name,
+                initInput,
 
-        }).catch((err) => {
+            })
+        } catch(err) {
             throw [407, 409].includes(err?.data?.local_error?.code)
                 ? new Error(
                       `Account ${accountAddress} has low balance to deploy.\n` +
-                          (explicitTopUp
+                          (topUpValue
                               ? `You sent amount which is too small`
                               : giverInfo
                               ? `You can use \`tondev contract deploy <file> -v <value>\` command to top it up`
@@ -269,7 +265,7 @@ export const contractDeployCommand: Command = {
                                 `or setting up a giver for the network with \`tondev network giver\` command.`),
                   )
                 : err
-        })
+        }
 
         terminal.log(`Contract has deployed at address: ${accountAddress}`);
         await account.free();
@@ -313,8 +309,15 @@ export const contractTopUpCommand: Command = {
                 `You have to set up a giver for this network with \`tondev network giver\` command.`,
             );
         }
-        const giver = await NetworkGiver.get(account.client, networkGiverInfo);
-        const value = parseNanoTokens(args.value) ?? giver.value ?? 1000000000;
+        const giver = await NetworkGiver.create(account.client, networkGiverInfo)
+        const value = parseNanoTokens(args.value) ?? giver.value
+        if (!value) {
+            throw new Error(
+                `Missing top-up value.\n` +
+                `You must specify a value with the option \`-v\` or\n` +
+                `set the default value for the giver with \`tondev network giver\` command.`,
+            )
+        }
         giver.value = value;
         await giver.sendTo(await account.getAddress(), value);
         terminal.log(`${formatTokens(giver.value)} were sent to address ${await account.getAddress()}`);
