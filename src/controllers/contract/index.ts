@@ -212,7 +212,7 @@ export const contractDeployCommand: Command = {
                 await giver.account.free()
             } else {
                 throw new Error(
-                    `A top-up was requested, but no giver for the network ${networkName} was found.\n` +
+                    `A top-up was requested, but giver is not configured for the network ${networkName} was found.\n` +
                     `You have to set up a giver for this network with \`tondev network giver\` command.`,
                 )
             }
@@ -267,7 +267,7 @@ export const contractDeployCommand: Command = {
                 : err
         }
 
-        terminal.log(`Contract has deployed at address: ${accountAddress}`);
+        terminal.log(`Contract is deployed at address: ${accountAddress}`);
         await account.free();
         account.client.close();
         TonClient.default.close();
