@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.2] - 2021-08-20
+
+### Fixed
+- an error that occurred when a contract was deployed to an account with a positive balance less than the default (10 tokens) and Giver was not set properly.
+
+For contract deployment, the following logic was implemented:
+
+Giver will top-up an account if:
+ - User has explicitly requested this by specifying the `-v <VALUE>` option
+   or
+ - Account balance is zero. In this case, the default amount (10 tokens) is sent
+
 ## [0.8.1] - 2021-07-26
 
 ### Fixed
