@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.9.0] - 2021-08-20
+
+### New
+- [Extraton Debot Browser](https://github.com/extraton/debrowser) supported! Now you can test your debots in web with ease - even offline. Just run SE and Extraton Debot Browser together. They perfectly fit! 
+
+### Improved
+- We changed the prepay logic of deploy operation. Account is not prepaid automatically from the giver any more. Now you need to specify -v <VALUE> explicitly. Get predictible behaviour and results!
+- Error messages in case of insufficiant balance were improved. 
+  
+### Fixed
+- An error that occurred when a contract was deployed to an account with a positive balance less than the default (10 tokens) and Giver was not set properly.
+
 ## [0.8.1] - 2021-07-26
 
 ### Fixed

@@ -1,21 +1,92 @@
 <p align="center"><a href="https://www.npmjs.com/package/tondev"><img src="assets/tondev.png" height="60"/></a></p> 
-<h1 align="center">TONDEV</h1>
+<h1 align="center">TONDev</h1>
 <p align="center">Free TON Development Environment</p>
-</p>
-
+<h1 align="center"><a href="docs/quick_start.md">Quick Start</a></h1>
 
 **Get quick help in our telegram channel:**
 
 [![Channel on Telegram](https://img.shields.io/badge/chat-on%20telegram-9cf.svg)](https://t.me/ton_sdk)  
 
-# TONDEV - Free TON Development Environment
-Download and install all the core [TON.DEV](https://ton.dev/) components in one click and access them from a single interface.
-
+- [Content Table](#content-table)
+- [What is TONDev?](#what-is-tondev)
+  - [Use-cases](#use-cases)
+  - [What tools does it support?](#what-tools-does-it-support)
+- [Quick Start](#quick-start)
+- [Installation](#installation)
+  - [Prerequisites](#prerequisites)
+  - [Install](#install)
+  - [Download](#download)
+  - [Update](#update)
+- [Use in JS applications](#use-in-js-applications)
+- [Command Line Interface](#command-line-interface)
+  - [Quick start](#quick-start-1)
+  - [General command syntax](#general-command-syntax)
+  - [Solidity](#solidity)
+    - [Create your first contract](#create-your-first-contract)
+    - [Compile](#compile)
+    - [Version](#version)
+    - [Update](#update-1)
+    - [Set](#set)
+  - [C++](#c)
+    - [Create your first contract](#create-your-first-contract-1)
+    - [Compile](#compile-1)
+    - [Version](#version-1)
+    - [Update](#update-2)
+    - [Set](#set-1)
+  - [TON OS Startup Edition(SE)](#ton-os-startup-editionse)
+    - [Start](#start)
+    - [Version](#version-2)
+    - [Set](#set-2)
+    - [Reset](#reset)
+    - [Update](#update-3)
+    - [Stop](#stop)
+    - [Info](#info)
+  - [SDK](#sdk)
+    - [See the list of available demo projects](#see-the-list-of-available-demo-projects)
+    - [Install demo project](#install-demo-project)
+    - [Create an empty project](#create-an-empty-project)
+    - [Create contract JS wrapper](#create-contract-js-wrapper)
+  - [tonos-cli](#tonos-cli)
+    - [Install](#install-1)
+    - [Version](#version-3)
+    - [Set](#set-3)
+    - [Update](#update-4)
+  - [TestSuite4](#testsuite4)
+    - [Version](#version-4)
+    - [Install](#install-2)
+    - [Update](#update-5)
+    - [Create](#create)
+    - [Run](#run)
+  - [Signer Tool](#signer-tool)
+    - [Add a signer with randomly generated keys](#add-a-signer-with-randomly-generated-keys)
+    - [Add a signer with specific keys](#add-a-signer-with-specific-keys)
+    - [List registered signers](#list-registered-signers)
+    - [Get signer details](#get-signer-details)
+    - [Set default signer](#set-default-signer)
+    - [Delete a signer](#delete-a-signer)
+  - [Network Tool](#network-tool)
+    - [Add a network](#add-a-network)
+    - [Set a giver for a network](#set-a-giver-for-a-network)
+    - [List registered networks](#list-registered-networks)
+    - [Set default network](#set-default-network)
+    - [Delete a network](#delete-a-network)
+  - [Contract Management](#contract-management)
+    - [View contract info](#view-contract-info)
+    - [Deploy contract](#deploy-contract)
+    - [Run contract deployed on the network](#run-contract-deployed-on-the-network)
+    - [Run contract locally on TVM](#run-contract-locally-on-tvm)
+    - [Emulate transaction executor locally on TVM](#emulate-transaction-executor-locally-on-tvm)
+    - [Top up contract balance from giver](#top-up-contract-balance-from-giver)
+  - [DeBrowser](#debrowser)
+    - [Version](#version-5)
+    - [Interfaces](#interfaces)
+    - [Start](#start-1)
+    - [Stop](#stop-1)
+- [View controller info](#view-controller-info)
+- [TONDev Extensibility](#tondev-extensibility)
+- [Troubleshooting](#troubleshooting)
 ## Content Table
-
-- [TONDEV - Free TON Development Environment](#tondev---free-ton-development-environment)
-  - [Content Table](#content-table)
-  - [What is TONDEV?](#what-is-tondev)
+  - [What is TONDev?](#what-is-tondev)
     - [What components does it support?](#what-components-does-it-support)
   - [Installation](#installation)
     - [Prerequisites](#prerequisites)
@@ -82,33 +153,59 @@ Download and install all the core [TON.DEV](https://ton.dev/) components in one 
       - [Run contract locally on TVM](#run-contract-locally-on-tvm)
       - [Emulate transaction executor locally on TVM](#emulate-transaction-executor-locally-on-tvm)
       - [Top up contract balance from giver](#top-up-contract-balance-from-giver)
+    - [DeBrowser](#debrowser)
+      - [Version](#version-5)
+      - [Interfaces](#interfaces)
+      - [Start](#start-1)
+      - [Stop](#stop-1)
   - [View controller info](#view-controller-info)
-  - [TONDEV Extensibility](#tondev-extensibility)
+  - [TONDev Extensibility](#tondev-extensibility)
   - [Troubleshooting](#troubleshooting)
 
-## What is TONDEV?
+## What is TONDev?
 
-TONDEV is a Node.js package with CLI interface that allows to easily download and install all the core TON.DEV components in background and use them from a single interface.
-Also, this project serves as a backend for [TONDEV VS Code extension](https://github.com/tonlabs/tondev-vscode).
+TONDev is a Node.js package with CLI interface that allows to perform the following use-cases from the single interface for Developer:
 
-### What components does it support?
+### Use-cases
 
-These components are supported or will be supported soon.  
-Each component is downloaded and installed automatically for the target platform upon the first request.
+- Easily manage all the core [Free TON Developer Tools](https://ton.dev/)
+- Configure networks (including Local Blockchain, Developer Network, Free TON(main) network): add, configure giver;   
+- Manage keys: add, remove
+- Work with Free TON blockchain from CLI 
+   
+Also, this project serves as a backend for [TONDev VS Code extension](https://github.com/tonlabs/tondev-vscode).
 
-- [Debot](https://github.com/tonlabs/debots) - **soon as part of tondev**  
+### What tools does it support?
+
+Components are downloaded and installed automatically for the target platform upon the first request.
+
 - [Solidity Compiler](https://github.com/tonlabs/TON-Solidity-Compiler)
+  
 - [C/C++ Compiler](https://github.com/tonlabs/TON-Compiler)
+  
+- [Contract Management Tool](#contract-management) - Work with your contracts from CLI. Deploy and run your contracts with convenient CLI commands  
+  
+- [Network Tool](#network-tool) - manage your networks: add, remove, configure givers  
+  
+- [Signer Tool](#signer-tool) - manage your keys and seedphrases: create your secret once and use it via alias with Contract Management Tool. Really easy.  
+  
 - [TON OS Startup Edition](https://github.com/tonlabs/tonos-se) – 
   Local blockchain for development and testing
-- [TestSuite4](https://github.com/tonlabs/TestSuite4) – 
-  Python lightweight framework for contract testing 
-- [tonos-cli](https://github.com/tonlabs/tonos-cli) – 
-  Command line tool for TON OS. TONDEV helps with installation and version management. 
-- [TON-SDK](https://github.com/tonlabs/TON-SDK) - 
-  Core SDK Library features: deploy and execute contracts, run get methods and so on.
 
-TONDEV can be extended with other tools following the [instructions of integration](#tondev-extensibility). 
+- [Debot Browser](https://github.com/tonlabs/debots) - Web debot browser. For now, Extraton Debot Browser is supported. Support of Surf Debot Browser is coming.
+  
+- [TestSuite4](https://github.com/tonlabs/TestSuite4) – 
+  Python lightweight framework for contract testing.
+
+- [tonos-cli](https://github.com/tonlabs/tonos-cli) – 
+  Command line tool for multisigwallet management and staking, includes CLI Debot Browser. TONDev helps with installation and version management. 
+
+TONDev can be extended with other tools following the [instructions of integration](#tondev-extensibility). 
+
+## Quick Start
+
+Get your hands dirrty with our great tools:)
+Follow the [Quick Start](docs/quick_start.md) to get on board of Free TON Development ASAP!
 
 ## Installation
 
@@ -427,7 +524,7 @@ Options:
 
 ### tonos-cli
 
-TONDEV installs tonos-cli globally, so after the installation is complete, you can access the functionality via command:
+TONDev installs tonos-cli globally, so after the installation is complete, you can access the functionality via command:
 
 ```shell
 tonos-cli <command> <args> 
@@ -1167,6 +1264,53 @@ or
 tondev ct -a <addrress>
 ```
 
+
+### DeBrowser
+The ExtraTON DeBot Browser.
+
+#### Version
+This command shows the list of available versions.
+
+```shell
+tondev debrowser version
+
+Available Versions: 1.1.0, 1.2.0, 1.2.1, 1.3.1
+```
+
+#### Interfaces
+This command shows the list of implemented interfaces.
+
+```shell
+tondev debrowser interfaces
+
+Realised interfaces:
+ - Address Input
+ - Amount Input
+ - Confirm Input
+ - Menu
+ - Network
+ - Number Input
+ - QR Code
+ - Signing Box Input
+ - Terminal
+ - User Info
+```
+
+#### Start
+This command downloads image and starts DeBrowser container (Docker must be launched).
+
+```shell
+tondev debrowser start 1.3.1
+```
+
+#### Stop
+This command stops DeBrowser container.
+
+```shell
+tondev debrowser stop
+```
+
+
 ## View controller info
 
 This command displays a summary of all controller configurations.
@@ -1222,7 +1366,7 @@ Component  Version  Available
 tonoscli   0.11.3   0.11.4, 0.11.3, 0.11.2, 0.11.1, 0.11.0, 0.10.1, 0.10.0, 0.9.2, 0.9.1, 0.9.0, ...
 ```
 
-## TONDEV Extensibility
+## TONDev Extensibility
 
 TON Dev Environment is an integration point for development tools related to Free TON Blockchain.
 

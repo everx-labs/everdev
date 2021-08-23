@@ -124,8 +124,6 @@ const preventUiOpt: CommandArg = {
     defaultValue: "false",
 };
 
-const DEFAULT_TOPUP_VALUE = 10_000_000_000;
-
 export const contractInfoCommand: Command = {
     name: "info",
     alias: "i",
@@ -199,28 +197,26 @@ export const contractDeployCommand: Command = {
     }) {
         let account = await getAccount(terminal, args);
         const info = await account.getAccount();
+        const accountAddress = await account.getAddress()
         if (info.acc_type === AccountType.active) {
-            throw new Error(`Account ${await account.getAddress()} already deployed.`);
+            throw new Error(`Account ${accountAddress} already deployed.`);
         }
-        const network = new NetworkRegistry().get(args.network);
-        const currentBalance = BigInt(info.balance ?? 0);
-        const requiredBalance = parseNanoTokens(args.value) ?? network.giver?.value ?? DEFAULT_TOPUP_VALUE;
+        const { giver: giverInfo, name: networkName } = new NetworkRegistry().get(args.network);
+        const topUpValue = parseNanoTokens(args.value);
 
-        if (currentBalance < BigInt(requiredBalance)) {
-            const giverInfo = new NetworkRegistry().get(args.network).giver;
-            if (!giverInfo) {
-                throw new Error(`Account ${await account.getAddress()} has low balance to deploy.\n` +
-                    `You have to create an enough balance before deploying in two ways: \n` +
-                    `sending some value to this address\n` +
-                    `or setting up a giver for the network with \`tondev network giver\` command.`,
-                );
+        if (topUpValue) {
+            if (giverInfo) {
+                const giver = await NetworkGiver.create(account.client, giverInfo)
+                giver.value = topUpValue
+                await giver.sendTo(accountAddress, topUpValue)
+                await giver.account.free()
+            } else {
+                throw new Error(
+                    `A top-up was requested, but giver is not configured for the network ${networkName} was found.\n` +
+                    `You have to set up a giver for this network with \`tondev network giver\` command.`,
+                )
             }
-            const giver = await NetworkGiver.get(account.client, giverInfo);
-            giver.value = requiredBalance;
-            await giver.sendTo(await account.getAddress(), requiredBalance);
-            await giver.account.free();
         }
-
         const dataParams = account.contract.abi.data ?? [];
         if (dataParams.length > 0) {
             const initData = await resolveParams(
@@ -233,7 +229,7 @@ export const contractDeployCommand: Command = {
             await account.free();
             account = new Account(account.contract, {
                 client: account.client,
-                address: await account.getAddress(),
+                address: await accountAddress,
                 signer: account.signer,
                 initData,
             });
@@ -249,12 +245,33 @@ export const contractDeployCommand: Command = {
             args.preventUi,
         );
         terminal.log("\nDeploying...");
-        await account.deploy({
-            initFunctionName: initFunction?.name,
-            initInput,
+       
+        try { 
+            await account.deploy({
+                initFunctionName: initFunction?.name,
+                initInput,
 
-        });
-        terminal.log(`Contract has deployed at address: ${await account.getAddress()}`);
+            })
+        } catch(err) {
+            const isLowBalance =
+                ([407, 409].includes(err?.data?.local_error?.code)) /* low balance on real network */ ||
+                ([407, 409].includes(err.code) && err.data?.local_error === undefined) /* low balance on node se */
+
+            throw isLowBalance
+                ? new Error(
+                      `Account ${accountAddress} has low balance to deploy.\n` +
+                          (topUpValue
+                              ? `You sent amount which is too small`
+                              : giverInfo?.signer 
+                              ? `You can use \`tondev contract deploy <file> -v <value>\` command to top it up`
+                              : `You have to provide enough balance before deploying in two ways: \n` +
+                                `sending some value to this address\n` +
+                                `or setting up a giver for the network with \`tondev network giver\` command.`),
+                  )
+                : err
+        }
+
+        terminal.log(`Contract is deployed at address: ${accountAddress}`);
         await account.free();
         account.client.close();
         TonClient.default.close();
@@ -296,8 +313,15 @@ export const contractTopUpCommand: Command = {
                 `You have to set up a giver for this network with \`tondev network giver\` command.`,
             );
         }
-        const giver = await NetworkGiver.get(account.client, networkGiverInfo);
-        const value = parseNanoTokens(args.value) ?? giver.value ?? 1000000000;
+        const giver = await NetworkGiver.create(account.client, networkGiverInfo)
+        const value = parseNanoTokens(args.value) ?? giver.value
+        if (!value) {
+            throw new Error(
+                `Missing top-up value.\n` +
+                `You must specify a value with the option \`-v\` or\n` +
+                `set the default value for the giver with \`tondev network giver\` command.`,
+            )
+        }
         giver.value = value;
         await giver.sendTo(await account.getAddress(), value);
         terminal.log(`${formatTokens(giver.value)} were sent to address ${await account.getAddress()}`);
