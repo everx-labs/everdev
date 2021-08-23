@@ -260,7 +260,7 @@ export const contractDeployCommand: Command = {
                               ? `You sent amount which is too small`
                               : giverInfo
                               ? `You can use \`tondev contract deploy <file> -v <value>\` command to top it up`
-                              : `You have to create an enough balance before deploying in two ways: \n` +
+                              : `You have to provide enough balance before deploying in two ways: \n` +
                                 `sending some value to this address\n` +
                                 `or setting up a giver for the network with \`tondev network giver\` command.`),
                   )
