@@ -253,12 +253,16 @@ export const contractDeployCommand: Command = {
 
             })
         } catch(err) {
-            throw [407, 409].includes(err?.data?.local_error?.code)
+            const isLowBalance =
+                ([407, 409].includes(err?.data?.local_error?.code)) /* low balance on real network */ ||
+                ([407, 409].includes(err.code) && err.data?.local_error === undefined) /* low balance on node se */
+
+            throw isLowBalance
                 ? new Error(
                       `Account ${accountAddress} has low balance to deploy.\n` +
                           (topUpValue
                               ? `You sent amount which is too small`
-                              : giverInfo
+                              : giverInfo?.signer 
                               ? `You can use \`tondev contract deploy <file> -v <value>\` command to top it up`
                               : `You have to provide enough balance before deploying in two ways: \n` +
                                 `sending some value to this address\n` +
