@@ -58,6 +58,13 @@ export const solidityCompileCommand: Command = {
             nameRegExp: /\.sol$/i,
         },
         {
+            name: "code",
+            alias: "c",
+            title: "Save .code file (false is default)",
+            type: "boolean",
+            defaultValue: "false",
+        },
+        {
             name: "output-dir",
             alias: "o",
             type: "folder",
@@ -68,6 +75,7 @@ export const solidityCompileCommand: Command = {
     async run(terminal: Terminal, args: {
         file: string,
         outputDir: string,
+        code: boolean,
     }): Promise<void> {
         const ext = path.extname(args.file);
         if (ext !== ".sol") {
@@ -79,6 +87,7 @@ export const solidityCompileCommand: Command = {
         const fileName = path.basename(args.file);
 
         const outputDir = path.resolve(args.outputDir ?? ".");
+        const preserveCode = args.code;
         const tvcName = path.resolve(outputDir, changeExt(fileName, ".tvc"));
         const codeName = path.resolve(outputDir, changeExt(fileName, ".code"));
 
@@ -102,7 +111,7 @@ export const solidityCompileCommand: Command = {
                 (err: Error) => (err ? rej(err) : res(true)),
             ),
         );
-        fs.unlinkSync(path.resolve(fileDir, codeName));
+        if (!preserveCode) fs.unlinkSync(path.resolve(fileDir, codeName));
     },
 };
 

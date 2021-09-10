@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.10.0] - 2021-09-10
+
+### New
+- Added new option `--code, -c` for solidity compiler to save `*.code` file.
+   Example: `tondev sol compile --code hello.sol`
+
 ## [0.9.0] - 2021-08-20
 
 ### New

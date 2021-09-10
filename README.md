@@ -320,6 +320,14 @@ After successful compilation you get .abi.json and .tvc files that you can later
 tondev sol compile Contract.sol
 ```
 
+To save generated assembler code use `-c` option (default is false)
+
+```shell
+tondev sol compile Contract.sol -c path/to/output/file
+```
+Assembler code will be saved in path/to/output/file with the extension `code`
+
+
 You can specify the output files location with the `-o` option:
 
 ```shell
