@@ -103,7 +103,7 @@ export class NetworkGiver implements AccountGiver {
         const valueToSend = this.value ?? value;
         try {
             await this.send(this.account, address, valueToSend);
-        } catch (error) {
+        } catch (error: any) {
             const message = `Giver can't send ${formatTokens(valueToSend)} to the ${address}`;
             const giver = `Contract: ${this.info.name}\nAddress:  ${this.address}\nSigner:   ${this.info.signer}`;
             throw new Error(`${message}: ${error.message}\n\nPlease check giver configuration:\n${giver}`);

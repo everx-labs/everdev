@@ -59,7 +59,7 @@ async function inputScalar(terminal: Terminal, param: AbiParam): Promise<any> {
         const value = await inputLine(terminal, `${param.name} (${param.type})`);
         try {
             return ParamParser.scalar(param, `"${value}"`);
-        } catch (err) {
+        } catch (err: any) {
             terminal.log(err.toString());
         }
     }

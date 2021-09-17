@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.10.1] - 2021-09-17
+
+### Fixed
+- Build with new typescript version 
+- lib-node's bridge crashed on `client.close()`
+
 ## [0.10.0] - 2021-09-10
 
 ### New

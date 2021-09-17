@@ -56,7 +56,7 @@ async function installGlobally(dstPath: string, version: string, terminal: Termi
             bin: `./${name}${ext ? "." + ext : ""}`,
         });
         await run("npm", ["install", "-g"], { cwd: binDir }, terminal);
-    } catch (err) {
+    } catch (err: any) {
         terminal.writeError(err);
         throw Error(`An error occurred while trying to install ${name} globally.
 Make sure you can execute 'npm i <package> -g' without using sudo and try again`,
