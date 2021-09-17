@@ -252,7 +252,7 @@ export const contractDeployCommand: Command = {
                 initInput,
 
             })
-        } catch(err) {
+        } catch(err: any) {
             const isLowBalance =
                 ([407, 409].includes(err?.data?.local_error?.code)) /* low balance on real network */ ||
                 ([407, 409].includes(err.code) && err.data?.local_error === undefined) /* low balance on node se */
