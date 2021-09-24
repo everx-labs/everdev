@@ -2,15 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.10.2] - 2021-09-24
+
+### Fixed
+
+- `tondev signed add <seed-phase>` didn't store seed phrase in signer registry.
+
 ## [0.10.1] - 2021-09-17
 
 ### Fixed
+
 - Build with new typescript version 
 - lib-node's bridge crashed on `client.close()`
 
 ## [0.10.0] - 2021-09-10
 
 ### New
+
 - Added new option `--code, -c` for solidity compiler to save `*.code` file.
    Example: `tondev sol compile --code hello.sol`
 

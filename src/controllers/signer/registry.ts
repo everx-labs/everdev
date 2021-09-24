@@ -158,6 +158,10 @@ export class SignerRegistry {
             name,
             description,
             keys,
+            mnemonic: {
+                dictionary,
+                phrase,
+            }
         }, overwrite);
     }
 
