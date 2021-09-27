@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.10.3] - 2021-09-27
+
+### Fixed
+
+- Dependabot cannot update ssh2 to a non-vulnerable version
+
 ## [0.10.2] - 2021-09-24
 
 ### Fixed
