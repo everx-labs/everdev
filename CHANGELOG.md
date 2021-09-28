@@ -8,6 +8,8 @@ All notable changes to this project will be documented in this file.
 
 - Dependabot cannot update ssh2 to a non-vulnerable version
 
+- `tondev sol set` can now install any existing binaries by version number, not just one of the last ten
+
 ## [0.10.2] - 2021-09-24
 
 ### Fixed
