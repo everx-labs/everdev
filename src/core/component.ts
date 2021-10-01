@@ -1,6 +1,7 @@
 import path from "path";
 import {
     downloadFromBinaries,
+    ellipsisString,
     executableName,
     formatTable,
     loadBinaryVersions,
@@ -201,10 +202,11 @@ export class Component {
             if (version === "") {
                 hasNotInstalledComponents = true;
             }
+            const allVersions = await component.loadAvailableVersions()
             table.push([
                 name,
                 version !== "" ? version : "not installed",
-                (await component.loadAvailableVersions()).join(", "),
+                ellipsisString(allVersions)
             ]);
         }
         let info = formatTable(table, { headerSeparator: true });

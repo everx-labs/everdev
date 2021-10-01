@@ -20,10 +20,14 @@ export function changeExt(path: string, newExt: string): string {
     return path.replace(/\.[^/.]+$/, newExt);
 }
 
+export function ellipsisString(xs: string[]): string {
+    return (xs.length < 10 ? xs : [...xs.slice(0, 10), '...']).join(', ')
+}
+
 export async function loadBinaryVersions(name: string): Promise<string[]> {
     const info = await httpsGetJson(`https://binaries.tonlabs.io/${name}.json`);
     const versions = info[name].sort(compareVersions).reverse();
-    return versions.length < 10 ? versions : [...versions.slice(0, 10), "..."];
+    return versions
 }
 
 export function formatTokens(nanoTokens: string | number | bigint): string {

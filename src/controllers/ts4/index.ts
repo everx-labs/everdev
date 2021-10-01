@@ -14,7 +14,7 @@ export const ts4VersionCommand: Command = {
 
 export const ts4InstallCommand: Command = {
     name: "install",
-    title: "Install latest release of TestSuite4",
+    title: "Install a specific release of TestSuite4",
     args: [{
         isArg: true,
         name: 'version',
