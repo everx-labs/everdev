@@ -69,7 +69,7 @@ export const components = {
                 .filter(v => (/^(\d+\.){2}\d+$/).test(v))
                 .sort(compareVersions)
                 .reverse()
-            return versions.length < 10 ? versions : [...versions.slice(0, 10), "..."]
+            return versions
         }
     }('', PYTHON, {
         isExecutable: true,

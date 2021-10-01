@@ -1,6 +1,6 @@
 {
 	"name": "tondev",
-	"version": "0.10.2",
+	"version": "0.10.3",
 	"description": "TON Dev Environment",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -40,7 +40,7 @@
 		"@tonclient/appkit": "^0",
 		"@tonclient/core": "^1",
 		"@tonclient/lib-node": "^1",
-		"dockerode": "3.2.1",
+		"dockerode": "^3.2.1",
 		"fs-extra": "^9.1.0",
 		"mv": "^2.1.1",
 		"request": "^2.88.2",
