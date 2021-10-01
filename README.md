@@ -179,26 +179,23 @@ Also, this project serves as a backend for [TONDev VS Code extension](https://gi
 
 Components are downloaded and installed automatically for the target platform upon the first request.
 
-- [Solidity Compiler](https://github.com/tonlabs/TON-Solidity-Compiler)
+- [Solidity Compiler](#solidity)
   
-- [C/C++ Compiler](https://github.com/tonlabs/TON-Compiler)
+- [C/C++ Compiler](#c)
   
-- [Contract Management Tool](#contract-management) - Work with your contracts from CLI. Deploy and run your contracts with convenient CLI commands  
+- [Contract Management Tool](#contract-management) - Work with your contracts from CLI. Deploy and run your contracts with convenient CLI commands.  
   
-- [Network Tool](#network-tool) - manage your networks: add, remove, configure givers  
+- [Network Tool](#network-tool) - manage your networks: add, remove, configure givers.
   
 - [Signer Tool](#signer-tool) - manage your keys and seedphrases: create your secret once and use it via alias with Contract Management Tool. Really easy.  
   
-- [TON OS Startup Edition](https://github.com/tonlabs/tonos-se) – 
-  Local blockchain for development and testing
+- [TON OS Startup Edition](#ton-os-startup-editionse) – Local blockchain for development and testing
 
-- [Debot Browser](https://github.com/tonlabs/debots) - Web debot browser. For now, Extraton Debot Browser is supported. Support of Surf Debot Browser is coming.
+- [Debot Browser](#debrowser) - Web debot browser. For now, Extraton Debot Browser is supported. Support of Surf Debot Browser is coming.
   
-- [TestSuite4](https://github.com/tonlabs/TestSuite4) – 
-  Python lightweight framework for contract testing.
+- [TestSuite4](#testsuite4) – Python lightweight framework for contract testing.
 
-- [tonos-cli](https://github.com/tonlabs/tonos-cli) – 
-  Command line tool for multisigwallet management and staking, includes CLI Debot Browser. TONDev helps with installation and version management. 
+- [tonos-cli](https://github.com/tonlabs/tonos-cli) – Command line tool for multisigwallet management and staking, includes CLI Debot Browser. TONDev helps with installation and version management. 
 
 TONDev can be extended with other tools following the [instructions of integration](#tondev-extensibility). 
 
