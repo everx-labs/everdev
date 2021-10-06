@@ -406,6 +406,9 @@ export const contractRunLocalCommand: Command = {
         preventUi: boolean,
     }) {
         const account = await getAccount(terminal, args);
+
+        await guardAccountIsActive(account)
+
         const {
             functionName,
             functionInput,
@@ -467,6 +470,18 @@ export const contractRunExecutorCommand: Command = {
     },
 };
 
+const guardAccountIsActive = async (acc: Account) => {
+    const { active, uninit, frozen } = AccountType
+    const { acc_type: accType } = await acc.getAccount()
+    if (accType === active) return
+    const status =
+        accType === uninit
+            ? 'is not initialized'
+            : accType === frozen
+            ? 'is frozen'
+            : 'does not exist'
+    throw Error(`Account ${await acc.getAddress()} ${status}`)
+}
 
 export const Contract: ToolController = {
     name: "contract",
