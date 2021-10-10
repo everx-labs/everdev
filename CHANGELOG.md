@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.10.4] - 2021-09-27
+
+- `tondev contract run-local` now checks the contract state before execution and generates user friendly error, if contract does not exist or is in uninit or frozen state.
+
+### Improved
+
+- Dependabot cannot update ssh2 to a non-vulnerable version
+
 ## [0.10.3] - 2021-09-27
 
 ### Fixed
