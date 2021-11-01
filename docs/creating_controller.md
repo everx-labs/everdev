@@ -17,7 +17,7 @@ To create a new controller:
 - Create a folder under `src/controllers`.
 - Implement the controller code.
 - Include the new controller in file `src/controllers/index.js`.
-- Create pool request.
+- Create pull request.
 
 ## What a controller should and what it shouldn't to do
 
