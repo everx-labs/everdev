@@ -115,6 +115,57 @@ export const solidityCompileCommand: Command = {
     },
 };
 
+export const solidityAstCommand: Command = {
+    name: "ast",
+    title: "AST of all source files in a JSON or compact-JSON format.",
+    args: [
+        {
+            isArg: true,
+            name: "file",
+            type: "file",
+            title: "Source file",
+            nameRegExp: /\.sol$/i,
+        },
+        {           
+            name: "format",
+            alias: "f",
+            type: "string",
+            title: "-f, --format <json | compact-json>",
+            defaultValue: "compact-json",
+        },
+        {          
+            name: "output-dir",
+            alias: "o",
+            type: "folder",
+            title: "Output folder (current is default)",
+            defaultValue: "",
+        }
+    ],
+    async run(terminal: Terminal, args: {
+        file: string,
+        format: string,
+        outputDir?: string
+    }): Promise<void> {
+        const ext = path.extname(args.file);
+        if (ext !== ".sol") {
+            terminal.log(`Choose solidity source file.`);
+            return;
+        }
+        if(args.format.match(/^(compact-json|json)$/i) == null){
+            terminal.log(`Wrong ast format.`);
+            return;
+        }
+        await Component.ensureInstalledAll(terminal, components);
+        const fileDir = path.dirname(args.file);
+        const fileName = path.basename(args.file);
+        const outputDir = path.resolve(args.outputDir ?? ".");
+        delete args.outputDir;
+        const astName = path.resolve(outputDir, changeExt(fileName, ".ast.json"));
+        let astJson = await components.compiler.silentRun(terminal, fileDir, [`--ast-${args.format}`, fileName]);
+        writeTextFile(astName, astJson);
+    },
+};
+
 export const solidityUpdateCommand: Command = {
     name: "update",
     title: "Update Solidity Compiler",
@@ -196,7 +247,8 @@ export const Solidity: ToolController = {
     title: "Solidity Compiler",
     commands: [
         solidityCreateCommand,
-        solidityCompileCommand,
+        solidityCompileCommand,        
+        solidityAstCommand,
         solidityVersionCommand,
         soliditySetCommand,
         solidityUpdateCommand,
