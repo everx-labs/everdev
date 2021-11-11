@@ -92,11 +92,11 @@ export const solidityCompileCommand: Command = {
         const abiName = path.resolve(outputDir, changeExt(fileName, ".abi.json"));
         const codeName = path.resolve(outputDir, changeExt(fileName, ".code"));
 
-        const isDepricatedVersion = (await components.compiler.getCurrentVersion()) <= '0.21.0'
+        const isDeprecatedVersion = (await components.compiler.getCurrentVersion()) <= '0.21.0'
 
         let linkerOut: string;
 
-        if (isDepricatedVersion) {
+        if (isDeprecatedVersion) {
             terminal.log("You use an obsolete version of the compiler.\nThe output files are saved in the current directory");
 
             await components.compiler.silentRun(terminal, fileDir, [ fileName]);

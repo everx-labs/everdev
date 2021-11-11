@@ -103,9 +103,9 @@ export class Component {
 
     async resolveVersion(_downloadedVersion: string): Promise<string> {
         if (fs.existsSync(this.path())) {
-            const isDepricatedVersion = !!(_downloadedVersion.match(/^0.21.0$|^0.1.21$/))
+            const isDeprecatedVersion = !!(_downloadedVersion.match(/^0.21.0$|^0.1.21$/))
             const compilerOut = await this.run(nullTerminal, process.cwd(), ["--version"]);
-            return isDepricatedVersion
+            return isDeprecatedVersion
                 ? _downloadedVersion
                 : compilerOut.match(this.resolveVersionRegExp)?.[1] ?? ''
         }
