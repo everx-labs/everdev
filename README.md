@@ -1,6 +1,6 @@
 <p align="center"><a href="https://www.npmjs.com/package/tondev"><img src="assets/tondev.png" height="60"/></a></p> 
 <h1 align="center">TONDev</h1>
-<p align="center">Free TON Development Environment</p>
+<p align="center">Everscale (Free TON) Development Environment</p>
 <h1 align="center"><a href="docs/quick_start.md">Quick Start</a></h1>
 
 **Get quick help in our telegram channel:**
