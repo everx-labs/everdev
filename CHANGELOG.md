@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.10.5] - 2021-11-11
+### NEW
+- Added the ability to compile [SafeMultisigWallet](https://github.com/tonlabs/ton-labs-contracts/tree/master/solidity/safemultisig) for Linux platform. The size of the compiled contract will be different from the original due to a different linker, but the compiler is the same
+
+Install the appropriate compiler, linker, and stdlib versions:
+```
+tondev sol set -c 0.21.0
+tondev sol set -s 0.21.0
+tondev sol set -l 0.1.21
+```
+Now you can compile SafeMultisigWallet contract:
+```
+tondev sol compile SafeMultisigWallet.sol
+ls -l SafeMultisigWallet.tvc
+-rw-rw-r--. 1 4430 Nov 11 22:16 SafeMultisigWallet.tvc
+```
+
 ## [0.10.4] - 2021-09-27
 
 - `tondev contract run-local` now checks the contract state before execution and generates user friendly error, if contract does not exist or is in uninit or frozen state.

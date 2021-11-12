@@ -89,14 +89,31 @@ export const solidityCompileCommand: Command = {
         const outputDir = path.resolve(args.outputDir ?? ".");
         const preserveCode = args.code;
         const tvcName = path.resolve(outputDir, changeExt(fileName, ".tvc"));
+        const abiName = path.resolve(outputDir, changeExt(fileName, ".abi.json"));
         const codeName = path.resolve(outputDir, changeExt(fileName, ".code"));
 
-        await components.compiler.silentRun(terminal, fileDir, ["-o", outputDir, fileName]);
-        const linkerOut = await components.linker.silentRun(
-            terminal,
-            fileDir,
-            ["compile", codeName, "--lib", components.stdlib.path()],
-        );
+        const isDeprecatedVersion = (await components.compiler.getCurrentVersion()) <= '0.21.0'
+
+        let linkerOut: string;
+
+        if (isDeprecatedVersion) {
+            terminal.log("You use an obsolete version of the compiler.\nThe output files are saved in the current directory");
+
+            await components.compiler.silentRun(terminal, fileDir, [ fileName]);
+            linkerOut = await components.linker.silentRun(
+                terminal,
+                fileDir,
+                ["compile", codeName, "-a", abiName,  "--lib", components.stdlib.path()],
+            );
+        } else {
+            await components.compiler.silentRun(terminal, fileDir, ["-o", outputDir, fileName]);
+            linkerOut = await components.linker.silentRun(
+                terminal,
+                fileDir,
+                ["compile", codeName, "--lib", components.stdlib.path()],
+            );
+        }
+
         const generatedTvcName = `${/Saved contract to file (.*)$/mg.exec(linkerOut)?.[1]}`;
 
         // fs.renameSync was replaces by this code, because of an error: EXDEV: cross-device link not permitted
