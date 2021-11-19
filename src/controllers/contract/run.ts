@@ -54,6 +54,18 @@ function inputLine(terminal: Terminal, prompt: string): Promise<string> {
     });
 }
 
+async function inputTuple(terminal: Terminal, param: AbiParam): Promise<any> {
+    while (true) {
+        const value = await inputLine(terminal, `${param.name} (${param.type})`)
+        try {
+            return JSON.parse(value) //ParamParser.scalar(param, `"${value}"`)
+            return ParamParser.scalar(param, `"${value}"`)
+        } catch (err) {
+            terminal.log(err.toString())
+        }
+    }
+}
+
 async function inputScalar(terminal: Terminal, param: AbiParam): Promise<any> {
     while (true) {
         const value = await inputLine(terminal, `${param.name} (${param.type})`);
@@ -82,6 +94,8 @@ async function inputArray(terminal: Terminal, param: AbiParam): Promise<any[]> {
 async function inputParam(terminal: Terminal, param: AbiParam): Promise<any> {
     if (param.type.endsWith("[]")) {
         return inputArray(terminal, param);
+    } else if ( param.type.endsWith("tuple")) {
+        return inputTuple(terminal, param);
     } else {
         return inputScalar(terminal, param);
     }
@@ -94,6 +108,16 @@ export async function resolveParams(
     paramsString: string,
     preventUi: boolean,
 ): Promise<object> {
+    if (paramsString.match(/{.+}/)) {
+        let jsonArgs: any;
+        try {
+            jsonArgs = JSON.parse(paramsString);
+        } catch (err: any) {
+            throw new Error(`Malformed JSON object has been passed`);
+        }
+        terminal.log(`Skip ABI validation step because a JSON object has been passed as an argument.`);
+        return jsonArgs
+    }
     const values: { [name: string]: any } = ParamParser.components({
         name: "params",
         type: "tuple",
