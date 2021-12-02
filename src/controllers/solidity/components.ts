@@ -28,5 +28,6 @@ export const components = {
         }
     }(TOOL_FOLDER_NAME, "stdlib_sol", {
         targetName: "stdlib_sol.tvm",
+        hidden: true,
     }),
 };

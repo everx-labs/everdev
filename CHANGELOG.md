@@ -10,6 +10,10 @@ tondev contract run shapes.tvc \
     --address 0:540c1837656674d548c934258ddec9b5fd11b543da977b0016c14b5650bc7eb5 \
     --input '{ "point": { "color": "red", "center": { "x": 1, "y": 2 } } }'
 ```
+### Improved
+- Information about the installed version of stdlib has been removed from the output of the `tondev sol version` command.
+Now its version is always the same as that of the compiler.
+
 
 ## [0.10.5] - 2021-11-11
 ### NEW

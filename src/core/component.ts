@@ -38,6 +38,10 @@ export type ComponentOptions = {
      * Path to executable file name inside targetName (when targetName is a directory)
      */
     innerPath?: string;
+    /**
+     * Do not include this component in the displayed list
+     */
+    hidden?: boolean;
 }
 
 export class Component {
@@ -46,6 +50,7 @@ export class Component {
     resolveVersionRegExp: RegExp;
     targetName: string;
     innerPath?: string;
+    hidden?: boolean;
 
     constructor(public toolFolderName: string, public name: string, options?: ComponentOptions) {
         this.isExecutable = options?.isExecutable ?? false;
@@ -57,6 +62,7 @@ export class Component {
         }
 
         this.innerPath = options?.innerPath;
+        this.hidden = options?.hidden ?? false;
     }
 
     home(): string {
@@ -206,11 +212,13 @@ export class Component {
                 hasNotInstalledComponents = true;
             }
             const allVersions = await component.loadAvailableVersions()
-            table.push([
-                name,
-                version !== "" ? version : "not installed",
-                ellipsisString(allVersions)
-            ]);
+            if (!component.hidden) {
+                table.push([
+                    name,
+                    version !== '' ? version : 'not installed',
+                    ellipsisString(allVersions),
+                ])
+            }
         }
         let info = formatTable(table, { headerSeparator: true });
         if (hasNotInstalledComponents) {

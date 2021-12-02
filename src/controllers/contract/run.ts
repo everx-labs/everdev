@@ -58,9 +58,8 @@ async function inputTuple(terminal: Terminal, param: AbiParam): Promise<any> {
     while (true) {
         const value = await inputLine(terminal, `${param.name} (${param.type})`)
         try {
-            return JSON.parse(value) //ParamParser.scalar(param, `"${value}"`)
-            return ParamParser.scalar(param, `"${value}"`)
-        } catch (err) {
+            return JSON.parse(value) 
+        } catch (err: any) {
             terminal.log(err.toString())
         }
     }
