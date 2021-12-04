@@ -2,9 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.10.6] - 2021-12-03
+## [0.11.0] - 2021-12-03
 ### NEW
-- Any structure can be passed as an argument to the called function, for example:
+- Structure can be passed as an argument of a function call, for example:
 ```
 tondev contract run shapes.tvc \
     --address 0:540c1837656674d548c934258ddec9b5fd11b543da977b0016c14b5650bc7eb5 \
@@ -12,7 +12,7 @@ tondev contract run shapes.tvc \
 ```
 ### Improved
 - Information about the installed version of stdlib has been removed from the output of the `tondev sol version` command.
-Now its version is always the same as that of the compiler.
+Now its version is always equal to the compiler's version.
 
 
 ## [0.10.5] - 2021-11-11
