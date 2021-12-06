@@ -77,11 +77,6 @@ export const solidityCompileCommand: Command = {
         outputDir: string,
         code: boolean,
     }): Promise<void> {
-        const ext = path.extname(args.file);
-        if (ext !== ".sol") {
-            terminal.log(`Choose solidity source file.`);
-            return;
-        }
         await Component.ensureInstalledAll(terminal, components);
         const fileDir = path.dirname(args.file);
         const fileName = path.basename(args.file);
@@ -168,14 +163,6 @@ export const soliditySetCommand: Command = {
 
         },
         {
-            name: "stdlib",
-            alias: "s",
-            title: "Stdlib version (version number or `latest`)",
-            type: "string",
-            defaultValue: "",
-
-        },
-        {
             name: "force",
             alias: "f",
             title: "Force reinstall even if up to date",
@@ -196,12 +183,10 @@ export const soliditySetCommand: Command = {
         } = {};
         if (args.compiler !== "") {
             versions.compiler = args.compiler;
+            versions.stdlib = args.compiler;
         }
         if (args.linker !== "") {
             versions.linker = args.linker;
-        }
-        if (args.stdlib !== "") {
-            versions.stdlib = args.stdlib;
         }
         await Component.setVersions(terminal, args.force, components, versions);
     },
