@@ -77,11 +77,6 @@ export const solidityCompileCommand: Command = {
         outputDir: string,
         code: boolean,
     }): Promise<void> {
-        const ext = path.extname(args.file);
-        if (ext !== ".sol") {
-            terminal.log(`Choose solidity source file.`);
-            return;
-        }
         await Component.ensureInstalledAll(terminal, components);
         const fileDir = path.dirname(args.file);
         const fileName = path.basename(args.file);
