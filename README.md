@@ -1,11 +1,11 @@
-<p align="center"><a href="https://www.npmjs.com/package/tondev"><img src="assets/tondev.png" height="60"/></a></p> 
+<p align="center"><a href="https://www.npmjs.com/package/tondev"><img src="assets/tondev.png" height="60"/></a></p>
 <h1 align="center">TONDev</h1>
 <p align="center">Everscale (Free TON) Development Environment</p>
 <h1 align="center"><a href="docs/quick_start.md">Quick Start</a></h1>
 
 **Get quick help in our telegram channel:**
 
-[![Channel on Telegram](https://img.shields.io/badge/chat-on%20telegram-9cf.svg)](https://t.me/ton_sdk)  
+[![Channel on Telegram](https://img.shields.io/badge/chat-on%20telegram-9cf.svg)](https://t.me/ton_sdk)
 
 - [Content Table](#content-table)
 - [What is TONDev?](#what-is-tondev)
@@ -24,6 +24,7 @@
   - [Solidity](#solidity)
     - [Create your first contract](#create-your-first-contract)
     - [Compile](#compile)
+    - [Ast](#ast)
     - [Version](#version)
     - [Update](#update-1)
     - [Set](#set)
@@ -169,10 +170,10 @@ TONDev is a Node.js package with CLI interface that allows to perform the follow
 ### Use-cases
 
 - Easily manage all the core [Free TON Developer Tools](https://ton.dev/)
-- Configure networks (including Local Blockchain, Developer Network, Free TON(main) network): add, configure giver;   
+- Configure networks (including Local Blockchain, Developer Network, Free TON(main) network): add, configure giver;
 - Manage keys: add, remove
-- Work with Free TON blockchain from CLI 
-   
+- Work with Free TON blockchain from CLI
+
 Also, this project serves as a backend for [TONDev VS Code extension](https://github.com/tonlabs/tondev-vscode).
 
 ### What tools does it support?
@@ -180,24 +181,24 @@ Also, this project serves as a backend for [TONDev VS Code extension](https://gi
 Components are downloaded and installed automatically for the target platform upon the first request.
 
 - [Solidity Compiler](#solidity)
-  
+
 - [C/C++ Compiler](#c)
-  
-- [Contract Management Tool](#contract-management) - Work with your contracts from CLI. Deploy and run your contracts with convenient CLI commands.  
-  
+
+- [Contract Management Tool](#contract-management) - Work with your contracts from CLI. Deploy and run your contracts with convenient CLI commands.
+
 - [Network Tool](#network-tool) - manage your networks: add, remove, configure givers.
-  
-- [Signer Tool](#signer-tool) - manage your keys and seedphrases: create your secret once and use it via alias with Contract Management Tool. Really easy.  
-  
+
+- [Signer Tool](#signer-tool) - manage your keys and seedphrases: create your secret once and use it via alias with Contract Management Tool. Really easy.
+
 - [TON OS Startup Edition](#ton-os-startup-editionse) – Local blockchain for development and testing
 
 - [Debot Browser](#debrowser) - Web debot browser. For now, Extraton Debot Browser is supported. Support of Surf Debot Browser is coming.
-  
+
 - [TestSuite4](#testsuite4) – Python lightweight framework for contract testing.
 
-- [tonos-cli](https://github.com/tonlabs/tonos-cli) – Command line tool for multisigwallet management and staking, includes CLI Debot Browser. TONDev helps with installation and version management. 
+- [tonos-cli](https://github.com/tonlabs/tonos-cli) – Command line tool for multisigwallet management and staking, includes CLI Debot Browser. TONDev helps with installation and version management.
 
-TONDev can be extended with other tools following the [instructions of integration](#tondev-extensibility). 
+TONDev can be extended with other tools following the [instructions of integration](#tondev-extensibility).
 
 ## Quick Start
 
@@ -255,7 +256,7 @@ For windows run PowerShell and execute this line:
 ### Update
 
 ```shell
-npm r -g tondev  
+npm r -g tondev
 npm i -g tondev
 ```
 
@@ -287,8 +288,8 @@ main();
 ## Command Line Interface
 
 ### Quick start
-Start testing your contracts without any delay with this guide. It will help you get test tokens in Developer Network, prepare your environment and test your first contract.   
-[Test my first contract!](https://github.com/tonlabs/tondev/blob/main/docs/work_with_contracts.md) 
+Start testing your contracts without any delay with this guide. It will help you get test tokens in Developer Network, prepare your environment and test your first contract.
+[Test my first contract!](https://github.com/tonlabs/tondev/blob/main/docs/work_with_contracts.md)
 
 ### General command syntax
 
@@ -310,7 +311,7 @@ tondev sol create Contract
 
 #### Compile
 
-This command compiles and links a selected Solidity contract. 
+This command compiles and links a selected Solidity contract.
 After successful compilation you get .abi.json and .tvc files that you can later [use in your DApps to deploy and run contract methods](https://docs.ton.dev/86757ecb2/p/07f1a5-add-contract-to-your-app-/b/462f33).
 
 ```shell
@@ -331,6 +332,26 @@ You can specify the output files location with the `-o` option:
 tondev sol compile Contract.sol -o path/to/output/file
 ```
 
+#### Ast
+
+This command parses a ton-solidity file and creates an abstract syntax tree (AST) to the output directory.
+
+```shell
+tondev sol ast Contract.sol
+```
+
+To specify the ast format type, use `-f` or `--format` option:
+
+```shell
+tondev sol ast-json Contract.sol -f <json | compact-json>
+```
+
+To point the location of the output folder, use the `-o` or `--output-dir` option:
+
+```shell
+tondev sol ast-json Contract.sol -f <json | compact-json> -o path/to/output/file
+```
+
 #### Version
 
 This command shows the currently installed Solidity compiler version.
@@ -346,7 +367,8 @@ This command updates the compiler and linker to the latest version.
 ```shell
 tondev sol update
 ```
-**Attention!** At the moment linker does not support versioning, so dispite the fact that its functionality changes over time, version stays the same (0.1.0).Use --force option to force update of it as well.
+**Attention!**
+Use --force option to force update of components that do not update their version.
 
 #### Set
 
@@ -355,7 +377,8 @@ This command sets the compiler and linker versions and downloads them if needed.
 ```shell
 tondev sol set --compiler 0.38.0 --linker 0.23.54
 ```
-**Attention!** At the moment linker does not support versioning, so dispite the fact that its functionality changes over time, version stays the same (0.1.0).Use --force option to force update of it as well.
+**Attention!**
+Use --force option to force update of components that do not update their version.
 
 ### C++
 
@@ -407,15 +430,14 @@ Use `--force` or `-f` option to force reinstall, if the current version is the s
 ### TON OS Startup Edition(SE)
 
 #### Start
-This command starts the TON OS SE container (Docker must be launched). When executed for the first time downloads the latest SE image 
-from dockerhub.
+This command starts the TON OS SE container (Docker must be launched). When executed for the first time downloads the latest SE image from dockerhub.
 
 ```shell
 tondev se start
 ```
 
 #### Version
-This command shows the default TON OS SE version and list of other available versions. 
+This command shows the default TON OS SE version and list of other available versions.
 
 ```shell
 tondev se version
@@ -425,7 +447,7 @@ Available Versions: 0, 0.24, 0.24.5, 0.24.6, 0.24.8, 0.24.9, 0.24.10, 0.24.11, 0
 ```
 
 #### Set
-This command switches TON OS SE to the specified version and port and downloads it, if it is missing.   
+This command switches TON OS SE to the specified version and port and downloads it, if it is missing.
 **Attention! This command does not start TON OS SE, you need to run `start` command separately.**
 
 ```shell
@@ -433,27 +455,27 @@ tondev se set --version 0.24.11 --port 2020
 ```
 
 #### Reset
-This command resets the TON OS SE container (Docker must be launched) - restarts it from scratch with a clean database. 
+This command resets the TON OS SE container (Docker must be launched) - restarts it from scratch with a clean database.
 
 ```shell
 tondev se reset
 ```
 #### Update
-This command downloads the latest TON OS SE image (Docker must be launched) and starts it. 
+This command downloads the latest TON OS SE image (Docker must be launched) and starts it.
 
 ```shell
 tondev se update
 ```
 
 #### Stop
-This command stops TON OS SE container. 
+This command stops TON OS SE container.
 
 ```shell
 tondev se stop
 ```
 
 #### Info
-This command shows info about the downloaded versions. 
+This command shows info about the downloaded versions.
 
 ```shell
 tondev se info
@@ -470,7 +492,7 @@ default   running  0.24.12  2020                         tonlabs-tonos-se-ekater
 This command shows the list of available demo projects
 
 ```shell
-tondev js demo 
+tondev js demo
 ```
 
 Result:
@@ -501,7 +523,7 @@ tondev js create test_project
 #### Create contract JS wrapper
 
 This command takes abi and, optionally, tvc file and generates a JS wrapper with abi and tvc converted into base64 that can be used further in SDK.
-tvc file must have the same name as abi. 
+tvc file must have the same name as abi.
 
 ```shell
 tondev js wrap contractName.abi.json
@@ -510,7 +532,7 @@ The result name of the wrapper will be "ContractName||"Contract".js".
 
 See other available generation options with help command:
 
-```shell 
+```shell
 tondev js wrap -h
 TONDev Version: 0.4.0
 Use: tondev js wrap file [options]
@@ -532,20 +554,20 @@ Options:
 TONDev installs tonos-cli globally, so after the installation is complete, you can access the functionality via command:
 
 ```shell
-tonos-cli <command> <args> 
+tonos-cli <command> <args>
 ```
-[See the tonos-cli usage documentation](https://github.com/tonlabs/tonos-cli#how-to-use).   
+[See the tonos-cli usage documentation](https://github.com/tonlabs/tonos-cli#how-to-use).
 [See tonos-cli guides](https://docs.ton.dev/86757ecb2/p/8080e6-tonos-cli/t/44972c).
 
 #### Install
 
-This command installs the latest tonos-cli 
+This command installs the latest tonos-cli
 
 ```shell
 tondev tonos-cli install
 ```
 The installer requires NPM to be installed, so it can install packages globally without using sudo.
-In case of error, manually set environment variable `PATH=$PATH:$HOME/.tondev/solidity` 
+In case of error, manually set environment variable `PATH=$PATH:$HOME/.tondev/solidity`
 
 #### Version
 
@@ -634,11 +656,11 @@ tondev ts4 run TestName
 
 Signer registry is a centralized place where you can store your development keys.
 
-Each signer in registry has an unique user defined name. All tondev commands 
+Each signer in registry has an unique user defined name. All tondev commands
 that require signing or encryption refer to the signer by name.
 
 You can mark one of the signers as a default.
-It can be used in signing commands without providing signer option. 
+It can be used in signing commands without providing signer option.
 
 Signer repository management in tondev is accessible through the `signer` tool.
 
@@ -774,11 +796,11 @@ tondev signer delete signer_name
 
 Network tool is a convenient way to organize all of your network configurations in one place.
 
-You can register several blockchains (networks) under short names 
-and then use these names as a target blockchain when working with contracts.  
+You can register several blockchains (networks) under short names
+and then use these names as a target blockchain when working with contracts.
 
 You can mark one of the networks as a default.
-It can be used in network commands without providing net name. 
+It can be used in network commands without providing net name.
 
 #### Add a network
 
@@ -873,7 +895,7 @@ tondev network delete network_name
 
 ### Contract Management
 
-Contract management in tondev gives you the ability to easily deploy and run 
+Contract management in tondev gives you the ability to easily deploy and run
 your smart contracts on blockchain network(s).
 
 #### View contract info
@@ -1105,6 +1127,14 @@ Example:
 ```
 cat bytes | xxd -p | tr -d '\n' > bytes.hex
 tondev contract run contract.abi.json fucntion_name -i value:$(cat bytes.hex)
+```
+
+
+**Execute a smart contract function with structure argument**:
+```
+tondev contract run shapes.tvc \
+    --address 0:540c1837656674d548c934258ddec9b5fd11b543da977b0016c14b5650bc7eb5 \
+    --input '{ "point": { "color": "red", "center": { "x": 1, "y": 2 } } }'
 ```
 
 #### Run contract locally on TVM
