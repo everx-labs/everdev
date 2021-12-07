@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.1] - 2021-12-07
+### NEW
+- `sol ast` command that parses a ton-solidity file and creates an abstract syntax tree (AST) to the output directory
+
+### Fixed
+- ssh2 transitive dependency on dockerode
+
 ## [0.11.0] - 2021-12-03
 ### NEW
 - Structure can be passed as an argument of a function call, for example:
@@ -10,7 +17,6 @@ tondev contract run shapes.tvc \
     --address 0:540c1837656674d548c934258ddec9b5fd11b543da977b0016c14b5650bc7eb5 \
     --input '{ "point": { "color": "red", "center": { "x": 1, "y": 2 } } }'
 ```
-- `sol ast` command that parses a ton-solidity file and creates an abstract syntax tree (AST) to the output directory
 
 ### Improved
 - Information about the installed version of stdlib has been removed from the output of the `tondev sol version` command.

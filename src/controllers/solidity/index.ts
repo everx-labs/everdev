@@ -138,14 +138,14 @@ export const solidityAstCommand: Command = {
             title: "Source file",
             nameRegExp: /\.sol$/i,
         },
-        {           
+        {
             name: "format",
             alias: "f",
             type: "string",
             title: "-f, --format <json | compact-json>",
             defaultValue: "compact-json",
         },
-        {          
+        {
             name: "output-dir",
             alias: "o",
             type: "folder",
@@ -249,7 +249,7 @@ export const Solidity: ToolController = {
     title: "Solidity Compiler",
     commands: [
         solidityCreateCommand,
-        solidityCompileCommand,        
+        solidityCompileCommand,
         solidityAstCommand,
         solidityVersionCommand,
         soliditySetCommand,
