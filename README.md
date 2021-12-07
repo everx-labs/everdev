@@ -24,6 +24,7 @@
   - [Solidity](#solidity)
     - [Create your first contract](#create-your-first-contract)
     - [Compile](#compile)
+    - [Ast](#ast)
     - [Version](#version)
     - [Update](#update-1)
     - [Set](#set)
@@ -366,7 +367,8 @@ This command updates the compiler and linker to the latest version.
 ```shell
 tondev sol update
 ```
-**Attention!** At the moment linker does not support versioning, so dispite the fact that its functionality changes over time, version stays the same (0.1.0).Use --force option to force update of it as well.
+**Attention!** 
+Use --force option to force update of components that do not update their version.
 
 #### Set
 
@@ -375,7 +377,8 @@ This command sets the compiler and linker versions and downloads them if needed.
 ```shell
 tondev sol set --compiler 0.38.0 --linker 0.23.54
 ```
-**Attention!** At the moment linker does not support versioning, so dispite the fact that its functionality changes over time, version stays the same (0.1.0).Use --force option to force update of it as well.
+**Attention!** 
+Use --force option to force update of components that do not update their version.
 
 ### C++
 
@@ -1125,6 +1128,14 @@ Example:
 ```
 cat bytes | xxd -p | tr -d '\n' > bytes.hex
 tondev contract run contract.abi.json fucntion_name -i value:$(cat bytes.hex)
+```
+
+
+**Execute a smart contract function with structure argument**:
+```
+tondev contract run shapes.tvc \
+    --address 0:540c1837656674d548c934258ddec9b5fd11b543da977b0016c14b5650bc7eb5 \
+    --input '{ "point": { "color": "red", "center": { "x": 1, "y": 2 } } }'
 ```
 
 #### Run contract locally on TVM
