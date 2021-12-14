@@ -139,6 +139,7 @@ export const solidityAstCommand: Command = {
             nameRegExp: /\.sol$/i,
         },
         {
+            isArg: false,
             name: "format",
             alias: "f",
             type: "string",
@@ -146,6 +147,7 @@ export const solidityAstCommand: Command = {
             defaultValue: "compact-json",
         },
         {
+            isArg: false,
             name: "output-dir",
             alias: "o",
             type: "folder",
@@ -172,9 +174,7 @@ export const solidityAstCommand: Command = {
         const fileName = path.basename(args.file);
         const outputDir = path.resolve(args.outputDir ?? ".");
         delete args.outputDir;
-        const astName = path.resolve(outputDir, changeExt(fileName, ".ast.json"));
-        let astJson = await components.compiler.silentRun(terminal, fileDir, [`--ast-${args.format}`, fileName]);
-        writeTextFile(astName, astJson);
+        await components.compiler.silentRun(terminal, fileDir, [`--ast-${args.format}`, '-o', outputDir, fileName]);        
     },
 };
 
