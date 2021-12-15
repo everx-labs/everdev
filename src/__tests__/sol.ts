@@ -32,6 +32,8 @@ test("AST of all source files in a JSON", async () => {
     await runCommand(terminal, "sol ast --format json", {
         file: solPath,
     });
-    expect(fs.readFileSync(astPath, 'utf-8').length).toEqual(50387);
+    const ast = fs.readFileSync(astPath, 'utf-8')
+    expect(ast.length).toBeGreaterThan(0);
+    expect(typeof JSON.parse(ast)).toEqual('object')
 });
 
