@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.2] - 2021-12-15
+### Fixed
+- `sol ast` command options
+
 ## [0.11.1] - 2021-12-07
 ### NEW
 - `sol ast` command that parses a ton-solidity file and creates an abstract syntax tree (AST) to the output directory
