@@ -170,11 +170,19 @@ export const solidityAstCommand: Command = {
         await Component.ensureInstalledAll(terminal, components);
         const fileDir = path.dirname(args.file);
         const fileName = path.basename(args.file);
-        const outputDir = path.resolve(args.outputDir ?? ".");
-        delete args.outputDir;
-        const astName = path.resolve(outputDir, changeExt(fileName, ".ast.json"));
-        let astJson = await components.compiler.silentRun(terminal, fileDir, [`--ast-${args.format}`, fileName]);
-        writeTextFile(astName, astJson);
+        args.outputDir = path.resolve(args.outputDir ?? ".");
+        await components.compiler.silentRun(terminal, fileDir, [
+            `--ast-${args.format}`,
+            '--output-dir',
+            args.outputDir,
+            fileName,
+        ]);
+        const astPath = path.join(args.outputDir, `${path.parse(fileName).name}.ast.json`)
+        let ast = fs.readFileSync(astPath, 'utf-8')
+        if (ast[0] !== '{') { // This is necessary because the original result may not be in JSON format
+            ast = ast.split('\n').slice(4).join('\n')
+        }
+        writeTextFile(astPath, ast)
     },
 };
 
