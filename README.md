@@ -7,6 +7,8 @@
 
 [![Channel on Telegram](https://img.shields.io/badge/chat-on%20telegram-9cf.svg)](https://t.me/ton_sdk)
 
+## Content Table
+
 - [Content Table](#content-table)
 - [What is TONDev?](#what-is-tondev)
   - [Use-cases](#use-cases)
@@ -84,84 +86,9 @@
     - [Start](#start-1)
     - [Stop](#stop-1)
 - [View controller info](#view-controller-info)
+- [Working with DevNet](#working-with-devnet)
 - [TONDev Extensibility](#tondev-extensibility)
 - [Troubleshooting](#troubleshooting)
-## Content Table
-  - [What is TONDev?](#what-is-tondev)
-    - [What components does it support?](#what-components-does-it-support)
-  - [Installation](#installation)
-    - [Prerequisites](#prerequisites)
-    - [Install](#install)
-    - [Download](#download)
-    - [Update](#update)
-  - [Use in JS applications](#use-in-js-applications)
-  - [Command Line Interface](#command-line-interface)
-    - [Quick start](#quick-start)
-    - [General command syntax](#general-command-syntax)
-    - [Solidity](#solidity)
-      - [Create your first contract](#create-your-first-contract)
-      - [Compile](#compile)
-      - [Version](#version)
-      - [Update](#update-1)
-      - [Set](#set)
-    - [C++](#c)
-      - [Create your first contract](#create-your-first-contract-1)
-      - [Compile](#compile-1)
-      - [Version](#version-1)
-      - [Update](#update-2)
-      - [Set](#set-1)
-    - [TON OS Startup Edition(SE)](#ton-os-startup-editionse)
-      - [Start](#start)
-      - [Version](#version-2)
-      - [Set](#set-2)
-      - [Reset](#reset)
-      - [Update](#update-3)
-      - [Stop](#stop)
-      - [Info](#info)
-    - [SDK](#sdk)
-      - [See the list of available demo projects](#see-the-list-of-available-demo-projects)
-      - [Install demo project](#install-demo-project)
-      - [Create an empty project](#create-an-empty-project)
-      - [Create contract JS wrapper](#create-contract-js-wrapper)
-    - [tonos-cli](#tonos-cli)
-      - [Install](#install-1)
-      - [Version](#version-3)
-      - [Set](#set-3)
-      - [Update](#update-4)
-    - [TestSuite4](#testsuite4)
-      - [Version](#version-4)
-      - [Install](#install-2)
-      - [Update](#update-5)
-      - [Create](#create)
-      - [Run](#run)
-    - [Signer Tool](#signer-tool)
-      - [Add a signer with randomly generated keys](#add-a-signer-with-randomly-generated-keys)
-      - [Add a signer with specific keys](#add-a-signer-with-specific-keys)
-      - [List registered signers](#list-registered-signers)
-      - [Get signer details](#get-signer-details)
-      - [Set default signer](#set-default-signer)
-      - [Delete a signer](#delete-a-signer)
-    - [Network Tool](#network-tool)
-      - [Add a network](#add-a-network)
-      - [Set a giver for a network](#set-a-giver-for-a-network)
-      - [List registered networks](#list-registered-networks)
-      - [Set default network](#set-default-network)
-      - [Delete a network](#delete-a-network)
-    - [Contract Management](#contract-management)
-      - [View contract info](#view-contract-info)
-      - [Deploy contract](#deploy-contract)
-      - [Run contract deployed on the network](#run-contract-deployed-on-the-network)
-      - [Run contract locally on TVM](#run-contract-locally-on-tvm)
-      - [Emulate transaction executor locally on TVM](#emulate-transaction-executor-locally-on-tvm)
-      - [Top up contract balance from giver](#top-up-contract-balance-from-giver)
-    - [DeBrowser](#debrowser)
-      - [Version](#version-5)
-      - [Interfaces](#interfaces)
-      - [Start](#start-1)
-      - [Stop](#stop-1)
-  - [View controller info](#view-controller-info)
-  - [TONDev Extensibility](#tondev-extensibility)
-  - [Troubleshooting](#troubleshooting)
 
 ## What is TONDev?
 
@@ -169,10 +96,10 @@ TONDev is a Node.js package with CLI interface that allows to perform the follow
 
 ### Use-cases
 
-- Easily manage all the core [Free TON Developer Tools](https://ton.dev/)
-- Configure networks (including Local Blockchain, Developer Network, Free TON(main) network): add, configure giver;
+- Easily manage all the core [Ever OS Developer Tools](https://ton.dev/)
+- Configure networks (including Local Blockchain, Developer Network, Everscale (main) network): add, configure giver;
 - Manage keys: add, remove
-- Work with Free TON blockchain from CLI
+- Work with Everscale blockchain from CLI
 
 Also, this project serves as a backend for [TONDev VS Code extension](https://github.com/tonlabs/tondev-vscode).
 
@@ -202,8 +129,8 @@ TONDev can be extended with other tools following the [instructions of integrati
 
 ## Quick Start
 
-Get your hands dirrty with our great tools:)
-Follow the [Quick Start](docs/quick_start.md) to get on board of Free TON Development ASAP!
+Get your hands dirty with our great tools:)
+Follow the [Quick Start](docs/quick_start.md) to get on board of Ever OS Development ASAP!
 
 ## Installation
 
@@ -1401,9 +1328,13 @@ Component  Version  Available
 tonoscli   0.11.3   0.11.4, 0.11.3, 0.11.2, 0.11.1, 0.11.0, 0.10.1, 0.10.0, 0.9.2, 0.9.1, 0.9.0, ...
 ```
 
+## Working with DevNet
+
+Read how to deploy and configure your own Giver in DevNet in a separated guide: [Working with DevNet](docs/work_with_devnet.md).
+
 ## TONDev Extensibility
 
-TON Dev Environment is an integration point for development tools related to Free TON Blockchain.
+TON Dev Environment is an integration point for development tools related to Everscale Blockchain.
 
 There are two kind of software connected to TONDev:
 

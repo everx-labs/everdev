@@ -51,7 +51,7 @@ To cover this functionality we will test the following use-case: deploy a multi-
     tondev signer add <signer_name> <seed_phrase_in_quotes>
     ```
 
-    **Note:** The seed is enclosed in quotes and consists of 12 words, separated by space (see [TONDev Free TON Development Environment](https://github.com/tonlabs/tondev#add-a-signer-with-specific-keys)).
+    **Note:** The seed is enclosed in quotes and consists of 12 words, separated by space (see [TONDev Everscale Development Environment](https://github.com/tonlabs/tondev#add-a-signer-with-specific-keys)).
 
     For example:
 
