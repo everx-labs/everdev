@@ -63,9 +63,9 @@ Account:   Doesn't exist
 
 ### Sponsor Giver with public faucet
 
-On the next step, you need to sponsor your Giver's address, which you have obtained on the previous step, with funds in order to be able to deploy contract. The easiest way to do it in DevNet is to use [GiverTON Telegram bot](https://t.me/giverton_bot). It can give you 111 rubies maximum per address. If you need more, or in a case of different test network, you can contact an owner of particular network (for DevNet it is TON Labs).
+On the next step, you need to sponsor your Giver's address, which you have obtained on the previous step, with funds in order to be able to deploy contract. The easiest way to do it in DevNet is to use [EverGiver[DevNet] Telegram bot](https://t.me/giverton_bot). It can give you 111 rubies maximum per address. If you need more, or in a case of different test network, you can contact an owner of particular network (for DevNet it is TON Labs).
 
-In GiverTON Telegram bot type (change Giver's address to the address obtained at previous step):
+In EverGiver Telegram bot type (change Giver's address to the address obtained at previous step):
 
 ```
 /give 111 0:93139197f2f58d674bee4ee71a42d8f1e7b6a3c3e041ded7a54d330bcc44f3b3
@@ -75,7 +75,7 @@ Wait for operation completion. Check address balance in [Blockchain Explorer](ht
 
 ### Deploy Giver contract
 
-For contract deployment you need compiled contract files (`GiverV2.tvc` and `GiverV2.abi.json`) and giver keys. To deploy contract execute next command:
+For contract deployment you need to have compiled contract files (`GiverV2.tvc` and `GiverV2.abi.json`) and giver keys. To deploy contract execute next command:
 
 ```
 $ tondev contract deploy -n dev -s devnet_giver_keys GiverV2.tvc

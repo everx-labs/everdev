@@ -255,10 +255,12 @@ Again, now you can find this transaction in Explorer or GraphQL API.
 
 ## What's next? 
 
-1. Also take a look at our [blockchain basics page](https://ton.dev/faq/blockchain-basic) that will help you understand the core concepts of Everscale:)
+1. If you want to migrate to Dev Network, read [`Work with DevNet` guide](./work_with_devnet.md).
 
-2. If you want to integrate your application with Everscale - dive into our [SDK Quick Start](https://docs.ton.dev/86757ecb2/p/33b76d-quick-start)!
+2. Also take a look at our [blockchain basics page](https://ton.dev/faq/blockchain-basic) that will help you understand the core concepts of Everscale:)
 
-3. If you are an exchange - check out our [exchange guide](https://docs.ton.dev/86757ecb2/p/10aec9-add-ton-crystal-to-your-exchange)!
+3. If you want to integrate your application with Everscale - dive into our [SDK Quick Start](https://docs.ton.dev/86757ecb2/p/33b76d-quick-start)!
+
+4. If you are an exchange - check out our [exchange guide](https://docs.ton.dev/86757ecb2/p/10aec9-add-ton-crystal-to-your-exchange)!
 
 We hope this guide was helpful to you! If you have any difficulties/questions/suggestions/etc. please write to out telegram channel https://t.me/ton_sdk. 
