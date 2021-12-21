@@ -86,6 +86,7 @@
     - [Start](#start-1)
     - [Stop](#stop-1)
 - [View controller info](#view-controller-info)
+- [Working with DevNet](#working-with-devnet)
 - [TONDev Extensibility](#tondev-extensibility)
 - [Troubleshooting](#troubleshooting)
 
@@ -1326,6 +1327,10 @@ Component  Version  Available
 ---------  -------  --------------------------------------------------------------------------------
 tonoscli   0.11.3   0.11.4, 0.11.3, 0.11.2, 0.11.1, 0.11.0, 0.10.1, 0.10.0, 0.9.2, 0.9.1, 0.9.0, ...
 ```
+
+## Working with DevNet
+
+Read how to deploy and configure your own Giver in DevNet in a separated guide: [Working with DevNet](docs/work_with_devnet.md).
 
 ## TONDev Extensibility
 
