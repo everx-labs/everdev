@@ -1053,7 +1053,7 @@ Example:
 
 ```
 cat bytes | xxd -p | tr -d '\n' > bytes.hex
-everdev contract run contract.abi.json fucntion_name -i value:$(cat bytes.hex)
+everdev contract run contract.abi.json function_name -i value:$(cat bytes.hex)
 ```
 
 
