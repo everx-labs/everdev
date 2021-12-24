@@ -1,28 +1,31 @@
 {
-	"name": "tondev",
+	"name": "everdev",
 	"version": "0.11.2",
-	"description": "TON Dev Environment",
+	"description": "Everscale Dev Environment",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/tonlabs/tondev.git"
+		"url": "https://github.com/tonlabs/everdev.git"
 	},
 	"scripts": {
 		"prepublishOnly": "npm i && tsc",
-		"tondev": "node ./cli.js",
+		"everdev": "node ./cli.js",
 		"test": "jest -i"
 	},
 	"bin": {
-		"tondev": "./cli.js"
+		"everdev": "./cli.js"
 	},
 	"keywords": [
 		"Free",
 		"TON",
+		"Ever",
+		"EverScale",
 		"Freeton",
 		"Dev",
 		"Development",
-		"TONOS"
+		"TONOS",
+		"EVEROS"
 	],
 	"author": "TON DEV SOLUTIONS LTD.",
 	"license": "Apache-2.0",

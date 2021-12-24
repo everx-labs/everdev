@@ -1,7 +1,7 @@
 import {
-    tondevInit,
-    tondevDone,
-    tondevHome,
+    everdevInit,
+    everdevDone,
+    everdevHome,
     writeTextFile,
 } from "..";
 import path from "path";
@@ -14,7 +14,7 @@ test("init", () => {
 });
 
 export function tempFolder(): string {
-    const temp = path.resolve(tondevHome(), "_temp");
+    const temp = path.resolve(everdevHome(), "_temp");
     if (!fs.existsSync(temp)) {
         fs.mkdirSync(temp, { recursive: true });
     }
@@ -46,8 +46,8 @@ function deleteFiles(files: string[]) {
 }
 
 export function initTests() {
-    const home = path.resolve(os.homedir(), ".tondev_test");
-    tondevInit({
+    const home = path.resolve(os.homedir(), ".everdev_test");
+    everdevInit({
         home,
     });
     deleteFolderRecursive(path.resolve(home, "_temp"));
@@ -59,7 +59,7 @@ export function initTests() {
 }
 
 export function doneTests() {
-    tondevDone();
+    everdevDone();
 }
 
 function deleteFolderRecursive(directoryPath: string) {

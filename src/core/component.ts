@@ -12,7 +12,7 @@ import {
 } from "./utils";
 import {
     Terminal,
-    tondevHome,
+    everdevHome,
 } from "./";
 import fs from "fs";
 
@@ -66,7 +66,7 @@ export class Component {
     }
 
     home(): string {
-        return this.toolFolderName !== "" ? path.resolve(tondevHome(), this.toolFolderName) : "";
+        return this.toolFolderName !== "" ? path.resolve(everdevHome(), this.toolFolderName) : "";
     }
 
     path(): string {

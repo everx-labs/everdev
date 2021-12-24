@@ -8,12 +8,12 @@ export {
     Component,
 } from "./component";
 
-export type TondevOptions = {
+export type EverdevOptions = {
     home?: string,
 };
 
 /**
- * Terminal object is implemented by `tondev` and passed to the controller's command handlers.
+ * Terminal object is implemented by `everdev` and passed to the controller's command handlers.
  * Command handler uses terminal to output some human readable information related to command execution.
  */
 export interface Terminal {
@@ -139,7 +139,7 @@ export interface Command {
 
     /**
      * Command handler.
-     * @param terminal Terminal object provided by `tondev`.
+     * @param terminal Terminal object provided by `everdev`.
      *   Handler must print all human readable output using this terminal.
      * @param args Actual command arguments provided by user according to argument definitions.
      */
@@ -188,22 +188,22 @@ export interface ToolController {
 }
 
 const config = {
-    home: path.resolve(os.homedir(), ".tondev")
+    home: path.resolve(os.homedir(), ".everdev")
 };
 
-export function tondevInit(options?: TondevOptions) {
+export function everdevInit(options?: EverdevOptions) {
     TonClient.useBinaryLibrary(libNode);
     config.home = options?.home ?? config.home;
 }
 
-export function tondevDone() {
+export function everdevDone() {
     TonClient.default.close();
 }
 
 /**
  * Home directory where tool must store all tool related resources.
  */
-export function tondevHome() {
+export function everdevHome() {
     return config.home;
 }
 

@@ -11,18 +11,18 @@ jobs:
         os: [windows, macos, ubuntu]
         include:
           - os: windows
-            build: npx caxa --directory . --command "{{caxa}}/node_modules/.bin/node" "{{caxa}}/cli.js" --output "tondev-windows.exe"
-            artifact: "tondev-windows.exe"
+            build: npx caxa --directory . --command "{{caxa}}/node_modules/.bin/node" "{{caxa}}/cli.js" --output "everdev-windows.exe"
+            artifact: "everdev-windows.exe"
           - os: macos
             build: |
-              npx caxa --directory . --command "{{caxa}}/node_modules/.bin/node" "{{caxa}}/cli.js" --output "tondev"
-              tar -czf "tondev-macos.tgz" "tondev"
-            artifact: tondev-macos.tgz
+              npx caxa --directory . --command "{{caxa}}/node_modules/.bin/node" "{{caxa}}/cli.js" --output "everdev"
+              tar -czf "everdev-macos.tgz" "everdev"
+            artifact: everdev-macos.tgz
           - os: ubuntu
             build: |
-              npx caxa --directory . --command "{{caxa}}/node_modules/.bin/node" "{{caxa}}/cli.js" --output "tondev"
-              tar -czf "tondev-linux.tgz" "tondev"
-            artifact: tondev-linux.tgz
+              npx caxa --directory . --command "{{caxa}}/node_modules/.bin/node" "{{caxa}}/cli.js" --output "everdev"
+              tar -czf "everdev-linux.tgz" "everdev"
+            artifact: everdev-linux.tgz
     runs-on: ${{ matrix.os }}-latest
     steps:
       - uses: actions/checkout@v2

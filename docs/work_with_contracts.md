@@ -1,6 +1,6 @@
-**Deploy and call your contracts with TONDev** 
+**Deploy and call your contracts with EverDev** 
 
-In this article, you will learn how to work with a contact in TONDev. 
+In this article, you will learn how to work with a contact in EverDev. 
 This sample covers such functionality as network configuration, deploy (including giver configuration), on-chain execution, read contract data.
 
 To cover this functionality we will test the following use-case: deploy a multi-signature contract with two custodians, which confirm a transaction to transfer funds from this wallet to another wallet account.
@@ -25,38 +25,38 @@ To cover this functionality we will test the following use-case: deploy a multi-
         3. Go back to the main screen and click Chain Rider > Get Rubies.   
         4. Verify that the Rubies you received are displayed in the Developer balance.   
 
-2. To configure the environment required for contract development, you should install the TONDev tool by running the following command:
+2. To configure the environment required for contract development, you should install the EverDev tool by running the following command:
 
     ```
-    npm i -g tondev
+    npm i -g everdev
     ```
 
-3. Add a Developer Network to the TONDev registry with two endpoints (for details, see [Networks](https://docs.ton.dev/86757ecb2/p/85c869-networks/t/660e33)):
+3. Add a Developer Network to the EverDev registry with two endpoints (for details, see [Networks](https://docs.ton.dev/86757ecb2/p/85c869-networks/t/660e33)):
 
     ```
-    tondev network add devnet net1.ton.dev,net5.ton.dev
+    everdev network add devnet net1.ton.dev,net5.ton.dev
     ```
 
-4.	Specify the developer’s network devnet as a default network for contract development (see the [TONDev documentation](https://github.com/tonlabs/TONDev#network-tool)) by running the following command:
+4.	Specify the developer’s network devnet as a default network for contract development (see the [EverDev documentation](https://github.com/tonlabs/EverDev#network-tool)) by running the following command:
 
     ```
-    tondev network default devnet
+    everdev network default devnet
     ```
 
-5.	To enable using your wallet as a giver, you need to import the seed phrase from Surf to TONDev. In Surf, select: Settings > Safety protection > Master password. The system will ask you to enter your PIN. After successful PIN validation, it will display the master password, consisting of 12 words (seed phrase). Copy and save your seed phrase.
+5.	To enable using your wallet as a giver, you need to import the seed phrase from Surf to EverDev. In Surf, select: Settings > Safety protection > Master password. The system will ask you to enter your PIN. After successful PIN validation, it will display the master password, consisting of 12 words (seed phrase). Copy and save your seed phrase.
 
 6.	Add a signer with previously generated keys (seed phrase):
 
     ```
-    tondev signer add <signer_name> <seed_phrase_in_quotes>
+    everdev signer add <signer_name> <seed_phrase_in_quotes>
     ```
 
-    **Note:** The seed is enclosed in quotes and consists of 12 words, separated by space (see [TONDev Everscale Development Environment](https://github.com/tonlabs/tondev#add-a-signer-with-specific-keys)).
+    **Note:** The seed is enclosed in quotes and consists of 12 words, separated by space (see [EverDev Everscale Development Environment](https://github.com/tonlabs/everdev#add-a-signer-with-specific-keys)).
 
     For example:
 
     ```
-    tondev signer add signer1 "word1 word2 word3 word4 word5 word6 word7 word8 word9 word10 word11 word12"
+    everdev signer add signer1 "word1 word2 word3 word4 word5 word6 word7 word8 word9 word10 word11 word12"
     ```
 
 7. Copy and save the wallet address from Surf by selecting: Chain Rider > Share wallet address.
@@ -66,7 +66,7 @@ To cover this functionality we will test the following use-case: deploy a multi-
 8.	Configure the Surf wallet as a giver for the network (devnet) with the wallet address and signer (created in step 6) as shown in the below command example:
 
     ```
-    tondev network giver devnet 0:4a367a6beade23b7b5b98a6b018f797787986b3fad3704550ac87655abe5643e
+    everdev network giver devnet 0:4a367a6beade23b7b5b98a6b018f797787986b3fad3704550ac87655abe5643e
     -s signer1
     ```
 
@@ -92,33 +92,33 @@ Here we will use Setcode multisig contract from the [multisig contract directory
     Add two signers with randomly generated keys:
 
     ```
-    tondev signer generate <signer_name1>
+    everdev signer generate <signer_name1>
     ```
 
     ```
-    tondev signer generate <signer_name2>
+    everdev signer generate <signer_name2>
     ```
 
     Refer to the example below:
 
     ```
-    tondev signer generate k1
+    everdev signer generate k1
     ```
 
     ```
-    tondev signer generate k2
+    everdev signer generate k2
     ```
 
 4.	Specify the first key pair (k1) as a default. It will be used if Signer parameter is not specified. 
 
     ```
-    tondev signer default k1
+    everdev signer default k1
     ```
 
 5.	To view public keys, execute the following command:
 
     ```
-    tondev signer info
+    everdev signer info
     ```
 
     The example of signer information is provided below:
@@ -134,16 +134,16 @@ Here we will use Setcode multisig contract from the [multisig contract directory
     fc911f562450a5cf943fa2ac5d0f6baf3d107ac2daf37dcdc1da72785158ff2a
     ```
 
-1. To [deploy the contract](https://github.com/tonlabs/tondev#deploy-contract) to blockchain, run the following command:
+1. To [deploy the contract](https://github.com/tonlabs/everdev#deploy-contract) to blockchain, run the following command:
 
     ```
-    tondev contract deploy <contract_name>
+    everdev contract deploy <contract_name>
     ```
 
     Note that in this example, the contract name is SetcodeMultisigWallet (the abi file name), as shown in the command below:
 
     ```
-    tondev contract deploy SetcodeMultisigWallet
+    everdev contract deploy SetcodeMultisigWallet
     ```
 
     **Note:** In this command, the key is not defined explicitly (k1 is used by default).
@@ -178,12 +178,12 @@ Here we will use Setcode multisig contract from the [multisig contract directory
 When the contract is successfully deployed in the blockchain, we can run its methods. 
 Methods can be called on-chain with this command:
 ```
-tondev contract run <Contract>
+everdev contract run <Contract>
 ```
 
 Methods can be called off-chain (to read some data) with this command:
 ```
-tondev contract run-local <Contract>
+everdev contract run-local <Contract>
 ```
 
 In this example, you will create a transaction by the first custodian and confirm it by the second custodian. 
@@ -194,7 +194,7 @@ In this example, you will create a transaction by the first custodian and confir
 
     2) Off-chain call of the [getTransaction](https://github.com/tonlabs/ton-labs-contracts/blob/776bc3d614ded58330577167313a9b4f80767f41/solidity/setcodemultisig/SetcodeMultisigWallet.sol#L398) method to get the created transaction ID
 
-    3) The last on-chain call of the [confirmTransaction](https://github.com/tonlabs/ton-labs-contracts/blob/776bc3d614ded58330577167313a9b4f80767f41/solidity/setcodemultisig/SetcodeMultisigWallet.sol#L307) method to confirm the transaction by the second custodian (see [Run contract deployed on the network](https://github.com/tonlabs/tondev#run-contract-deployed-on-the-network) for details).
+    3) The last on-chain call of the [confirmTransaction](https://github.com/tonlabs/ton-labs-contracts/blob/776bc3d614ded58330577167313a9b4f80767f41/solidity/setcodemultisig/SetcodeMultisigWallet.sol#L307) method to confirm the transaction by the second custodian (see [Run contract deployed on the network](https://github.com/tonlabs/everdev#run-contract-deployed-on-the-network) for details).
 
 2. Call contract’s `submitTransaction` method with the first custodian key (k1) to initiate a transaction to some random address. Select function 4 (`submitTransaction`) with the following parameters:
     - dest (address) – the destination address (wallet address copied from the recipient’s TON Surf application). **Note**: In this example, another Surf wallet was created. Its address is used as a recipient address.
@@ -206,7 +206,7 @@ In this example, you will create a transaction by the first custodian and confir
     The example of the command to run the contract with the `submitTransaction` function is shown below:
 
     ```
-    tondev contract run SetcodeMultisigWallet --signer k1
+    everdev contract run SetcodeMultisigWallet --signer k1
     ```
 
     ```
@@ -258,7 +258,7 @@ In this example, you will create a transaction by the first custodian and confir
 3.	Execute the command to run the contract locally and call the get`getTransaction` method.
 
     ```
-    tondev contract run-local <contract_name>
+    everdev contract run-local <contract_name>
     ```
 
     Select function 8 (`getTransaction`) and enter the transaction ID parameter value.
@@ -266,7 +266,7 @@ In this example, you will create a transaction by the first custodian and confir
     Refer to the example below:
 
     ```
-    tondev contract run-local SetcodeMultisigWallet
+    everdev contract run-local SetcodeMultisigWallet
     Configuration
     Network: devnet (net1.ton.dev, net5.ton.dev)
     Signer:
@@ -298,7 +298,7 @@ In this example, you will create a transaction by the first custodian and confir
 4. Run the contract and call the [confirmTransaction](https://github.com/tonlabs/ton-labs-contracts/blob/776bc3d614ded58330577167313a9b4f80767f41/solidity/setcodemultisig/SetcodeMultisigWallet.sol#L307) method with the second custodian key to confirm the transaction:
 
     ```
-    tondev contract run <contract_name> -a <contract_address> --signer (second_signer name)
+    everdev contract run <contract_name> -a <contract_address> --signer (second_signer name)
     ```
 
     - Choose function 5: (`confirmTransaction`).
@@ -307,7 +307,7 @@ In this example, you will create a transaction by the first custodian and confir
     In the below example, we execute the following command:
 
     ```
-    tondev contract run SetcodeMultisigWallet -a 0:959f470d3431ec94c7294209d8dcb7b7c5a0b8ed848c1d383e1a1c28b5b415c5 --signer k2
+    everdev contract run SetcodeMultisigWallet -a 0:959f470d3431ec94c7294209d8dcb7b7c5a0b8ed848c1d383e1a1c28b5b415c5 --signer k2
     ```
 
     **Note:** In this command, we explicitly specify the second (not default) custodian (K2) and the contract deployment address.
@@ -340,16 +340,16 @@ In this example, you will create a transaction by the first custodian and confir
     Running...
     ```
 
-4. Verify that the transaction is completed successfully and the tokens are transferred to the recipient’s account: either search for the recipient's address in the [ton.live](https://net.ton.live/) blockchain explorer, or check recipient's account info with tondev:
+4. Verify that the transaction is completed successfully and the tokens are transferred to the recipient’s account: either search for the recipient's address in the [ton.live](https://net.ton.live/) blockchain explorer, or check recipient's account info with everdev:
     
     ```
-    tondev contract info -a <recipient_address>
+    everdev contract info -a <recipient_address>
     ```
     
     Viewing contract info does not require keys, and, if the address is specified with the `-a` option, does not require contract files.
     
     ```    
-    tondev contract info -a 0:8a398f150c7eff3927eb23b52af9c5c29a0aca67b49b9ac5e9bdac04e25fefa6
+    everdev contract info -a 0:8a398f150c7eff3927eb23b52af9c5c29a0aca67b49b9ac5e9bdac04e25fefa6
 
     Configuration
 

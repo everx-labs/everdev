@@ -17,13 +17,13 @@ All notable changes to this project will be documented in this file.
 ### NEW
 - Structure can be passed as an argument of a function call, for example:
 ```
-tondev contract run shapes.tvc \
+everdev contract run shapes.tvc \
     --address 0:540c1837656674d548c934258ddec9b5fd11b543da977b0016c14b5650bc7eb5 \
     --input '{ "point": { "color": "red", "center": { "x": 1, "y": 2 } } }'
 ```
 
 ### Improved
-- Information about the installed version of stdlib has been removed from the output of the `tondev sol version` command.
+- Information about the installed version of stdlib has been removed from the output of the `everdev sol version` command.
 Now its version is always equal to the compiler's version.
 - Remove checking of .sol extension in `compile` command. Any extension can be used now. 
 
@@ -34,20 +34,20 @@ Now its version is always equal to the compiler's version.
 
 Install the appropriate compiler, linker, and stdlib versions:
 ```
-tondev sol set -c 0.21.0
-tondev sol set -s 0.21.0
-tondev sol set -l 0.1.21
+everdev sol set -c 0.21.0
+everdev sol set -s 0.21.0
+everdev sol set -l 0.1.21
 ```
 Now you can compile SafeMultisigWallet contract:
 ```
-tondev sol compile SafeMultisigWallet.sol
+everdev sol compile SafeMultisigWallet.sol
 ls -l SafeMultisigWallet.tvc
 -rw-rw-r--. 1 4430 Nov 11 22:16 SafeMultisigWallet.tvc
 ```
 
 ## [0.10.4] - 2021-09-27
 
-- `tondev contract run-local` now checks the contract state before execution and generates user friendly error, if contract does not exist or is in uninit or frozen state.
+- `everdev contract run-local` now checks the contract state before execution and generates user friendly error, if contract does not exist or is in uninit or frozen state.
 
 ### Improved
 
@@ -59,13 +59,13 @@ ls -l SafeMultisigWallet.tvc
 
 - Dependabot cannot update ssh2 to a non-vulnerable version
 
-- `tondev sol set` can now install any existing binaries by version number, not just one of the last ten
+- `everdev sol set` can now install any existing binaries by version number, not just one of the last ten
 
 ## [0.10.2] - 2021-09-24
 
 ### Fixed
 
-- `tondev signed add <seed-phase>` didn't store seed phrase in signer registry.
+- `everdev signed add <seed-phase>` didn't store seed phrase in signer registry.
 
 ## [0.10.1] - 2021-09-17
 
@@ -79,7 +79,7 @@ ls -l SafeMultisigWallet.tvc
 ### New
 
 - Added new option `--code, -c` for solidity compiler to save `*.code` file.
-   Example: `tondev sol compile --code hello.sol`
+   Example: `everdev sol compile --code hello.sol`
 
 ## [0.9.0] - 2021-08-20
 
@@ -104,26 +104,26 @@ ls -l SafeMultisigWallet.tvc
 - `value` option of the `contract` commands can accept values with "t" suffix.
   Such values will be properly converted to nano tokens.
 - `run-signer` option of the the `contract` commands allows to sign messages with alternative keys different from `signer` meanwhile address is still calculated from `signer` parameter (or from default `signer`). It should be useful for `run-local` (with `None` value) so that it is not needed to specify address explicitly any more.
-- `tondev` commands that produce files (e.g. `sol create`) create output folders if required.
-- `tondev signer add` command's `secret` option can accept a path to the keys file.
-- `tondev se set` options `image` and `container` allow use existing docker 
+- `everdev` commands that produce files (e.g. `sol create`) create output folders if required.
+- `everdev signer add` command's `secret` option can accept a path to the keys file.
+- `everdev se set` options `image` and `container` allow use existing docker 
   images and containers to register SE instances.
-- `tondev se delete` deletes registered SE instance from `tondev` SE registry.
-- `--version` or `-v` or `-V` global option prints current tondev version.
+- `everdev se delete` deletes registered SE instance from `everdev` SE registry.
+- `--version` or `-v` or `-V` global option prints current everdev version.
 
 ### Fixed
-- "tondev clang set --compiler" didn't change installed compiler version https://github.com/tonlabs/tondev/issues/42
-- `tondev` did not not fill the command args with default values when user ran commands programmatically.  
-- `tondev info` stopped if one of the tools failed.
+- "everdev clang set --compiler" didn't change installed compiler version https://github.com/tonlabs/everdev/issues/42
+- `everdev` did not not fill the command args with default values when user ran commands programmatically.  
+- `everdev info` stopped if one of the tools failed.
 
 ### Improved
-- In case of errors with giver `tondev` prints new detailed errors describing 
+- In case of errors with giver `everdev` prints new detailed errors describing 
   that there is a giver problem (not in users contract). 
 - Component version table prints "not installed" text if some component is missing. Footnote about on demand installation is added.
 - Account balance check is added before deploy.
 - All commands that require abi file (e.g. `js wrap`) now accepts any input file name. 
-- `tondev se version` now prints version from the latest to the eldest order.
-- `tondev sol compile` now hides linker output in case of success.
+- `everdev se version` now prints version from the latest to the eldest order.
+- `everdev sol compile` now hides linker output in case of success.
 
 ## [0.7.4] - 2021-06-25
 
@@ -146,7 +146,7 @@ ls -l SafeMultisigWallet.tvc
 ## [0.7.2] - 2021-06-02
 
 ### Fixed
-- Update README with information about how to install tondev after download binaries
+- Update README with information about how to install everdev after download binaries
 
 ## [0.7.1] - 2021-06-01
 
@@ -157,7 +157,7 @@ ls -l SafeMultisigWallet.tvc
 
 ### New
 - Added new option `--output-dir, -o` for solidity compiler to store `*.abi.json` and `*.tvc` files in a separate directory.
-   Example: `tondev sol compile hello.sol -o ~/assets`
+   Example: `everdev sol compile hello.sol -o ~/assets`
 - Created standalone portable binaries for windows, macos, linux
 
 ## [0.6.0] - 2021-04-28
@@ -176,12 +176,12 @@ ls -l SafeMultisigWallet.tvc
   add networks, configure network giver, specify default network, etc.   
 - `contract` controller for contract management:   
 - get contract info summary, top up balance, deploy, run, run-local, run-executor   
-- `tondev js wrap` generates `code` and `codeHash` fields in addition to `tvc`.   
-- `tondev contract info` prints code hash.   
-- `tondev info` command prints a summary information from all controllers.   
+- `everdev js wrap` generates `code` and `codeHash` fields in addition to `tvc`.   
+- `everdev contract info` prints code hash.   
+- `everdev info` command prints a summary information from all controllers.   
 - short aliases for controllers, commands and options.   
-  For example instead of using `tondev network list`    
-  you can use `tondev n l` and even shorter `tondev nl`.   
+  For example instead of using `everdev network list`    
+  you can use `everdev n l` and even shorter `everdev nl`.   
 
 ### Fixed
 
@@ -221,7 +221,7 @@ ls -l SafeMultisigWallet.tvc
 ## [0.2.0] - 2021-02-26
 
 ### New
-- [TON OS Startup Edition(SE) functionality](https://github.com/tonlabs/tondev#ton-os-startup-editionse):
+- [TON OS Startup Edition(SE) functionality](https://github.com/tonlabs/everdev#ton-os-startup-editionse):
   - Start
   - Version
   - Set

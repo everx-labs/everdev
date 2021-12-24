@@ -2,7 +2,7 @@ import path from "path";
 import fs from "fs-extra";
 
 import {
-    tondevHome,
+    everdevHome,
 } from "../../core";
 import { NetworkGiver } from "./giver";
 import { TonClient } from "@tonclient/core";
@@ -12,7 +12,7 @@ import {
 } from "../../core/utils";
 
 function networkHome() {
-    return path.resolve(tondevHome(), "network");
+    return path.resolve(everdevHome(), "network");
 }
 
 function registryPath() {
@@ -133,12 +133,12 @@ export class NetworkRegistry {
             if (this.items.length === 0) {
                 throw new Error(
                     "There are no networks defined. " +
-                    "Use \"tondev network add\" command to register a network.",
+                    "Use \"everdev network add\" command to register a network.",
                 );
             } else {
                 throw new Error(
                     "There is no default network. " +
-                    "Use \"tondev network default\" command to set the default network. " +
+                    "Use \"everdev network default\" command to set the default network. " +
                     "Or explicitly specify the network with \"--network\" option.",
                 );
             }

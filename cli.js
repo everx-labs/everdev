@@ -2,13 +2,13 @@
 
 const { consoleTerminal } = require("./dist");
 const cli = require("./dist/cli/index");
-const { tondevInit, tondevDone } = require("./dist/core");
+const { everdevInit, everdevDone } = require("./dist/core");
 
 (async () => {
     try {
-        tondevInit()
+        everdevInit()
         await cli.run(consoleTerminal);
-        tondevDone();
+        everdevDone();
     } catch (err) {
         if (!(err instanceof Error)) {
             const {data, code} = err;
