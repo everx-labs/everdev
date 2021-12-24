@@ -3,9 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [1.0.0] - 2021-12-24
-### Info
-The utility has a new name!
-Starting with this release, we stabilize `tondev` and rename it to `everdev`.
+### New
+The utility has a new name `everdev`!
 
 Install it with `npm i -g everdev`
 
