@@ -116,7 +116,7 @@ const preventUiOpt: CommandArg = {
     description:
         "Useful in shell scripting e.g. on server or in some automating to disable " +
         "waiting for the user input.\n" +
-        "Instead tondev will abort with error.\n" +
+        "Instead everdev will abort with error.\n" +
         "For example when some parameters are missing in command line " +
         "then ton dev will prompt user to input values for missing parameters " +
         "(or fails if prevent-ui option is specified).",
@@ -213,7 +213,7 @@ export const contractDeployCommand: Command = {
             } else {
                 throw new Error(
                     `A top-up was requested, but giver is not configured for the network ${networkName} was found.\n` +
-                    `You have to set up a giver for this network with \`tondev network giver\` command.`,
+                    `You have to set up a giver for this network with \`everdev network giver\` command.`,
                 )
             }
         }
@@ -245,8 +245,8 @@ export const contractDeployCommand: Command = {
             args.preventUi,
         );
         terminal.log("\nDeploying...");
-       
-        try { 
+
+        try {
             await account.deploy({
                 initFunctionName: initFunction?.name,
                 initInput,
@@ -262,11 +262,11 @@ export const contractDeployCommand: Command = {
                       `Account ${accountAddress} has low balance to deploy.\n` +
                           (topUpValue
                               ? `You sent amount which is too small`
-                              : giverInfo?.signer 
-                              ? `You can use \`tondev contract deploy <file> -v <value>\` command to top it up`
+                              : giverInfo?.signer
+                              ? `You can use \`everdev contract deploy <file> -v <value>\` command to top it up`
                               : `You have to provide enough balance before deploying in two ways: \n` +
                                 `sending some value to this address\n` +
-                                `or setting up a giver for the network with \`tondev network giver\` command.`),
+                                `or setting up a giver for the network with \`everdev network giver\` command.`),
                   )
                 : err
         }
@@ -310,7 +310,7 @@ export const contractTopUpCommand: Command = {
         if (!networkGiverInfo) {
             throw new Error(
                 `Missing giver for the network ${network.name}.\n` +
-                `You have to set up a giver for this network with \`tondev network giver\` command.`,
+                `You have to set up a giver for this network with \`everdev network giver\` command.`,
             );
         }
         const giver = await NetworkGiver.create(account.client, networkGiverInfo)
@@ -319,7 +319,7 @@ export const contractTopUpCommand: Command = {
             throw new Error(
                 `Missing top-up value.\n` +
                 `You must specify a value with the option \`-v\` or\n` +
-                `set the default value for the giver with \`tondev network giver\` command.`,
+                `set the default value for the giver with \`everdev network giver\` command.`,
             )
         }
         giver.value = value;

@@ -2,7 +2,7 @@ import path from "path";
 import fs from "fs-extra";
 import {
     Terminal,
-    tondevHome,
+    everdevHome,
 } from "../../core";
 import {
     downloadFromGithub,
@@ -15,7 +15,7 @@ const demoArchiveURL = `https://github.com/tonlabs/sdk-samples/archive/${demoBra
 const demoFolder = `sdk-samples-${demoBranch}`;
 
 function jsHome() {
-    return path.resolve(tondevHome(), "js");
+    return path.resolve(everdevHome(), "js");
 }
 
 function demoHome() {

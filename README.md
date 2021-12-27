@@ -1,5 +1,5 @@
-<p align="center"><a href="https://www.npmjs.com/package/tondev"><img src="assets/tondev.png" height="60"/></a></p>
-<h1 align="center">everdev</h1>
+<p align="center"><a href="https://www.npmjs.com/package/everdev"><img src="assets/everdev.png" height="60"/></a></p>
+<h1 align="center">EverDev</h1>
 <p align="center">Everscale Development Environment</p>
 <h1 align="center"><a href="docs/quick_start.md">Quick Start</a></h1>
 
@@ -10,7 +10,7 @@
 ## Content Table
 
 - [Content Table](#content-table)
-- [What is TONDev?](#what-is-tondev)
+- [What is EverDev?](#what-is-everdev)
   - [Use-cases](#use-cases)
   - [What tools does it support?](#what-tools-does-it-support)
 - [Quick Start](#quick-start)
@@ -87,12 +87,12 @@
     - [Stop](#stop-1)
 - [View controller info](#view-controller-info)
 - [Working with DevNet](#working-with-devnet)
-- [TONDev Extensibility](#tondev-extensibility)
+- [EverDev Extensibility](#everdev-extensibility)
 - [Troubleshooting](#troubleshooting)
 
-## What is TONDev?
+## What is EverDev?
 
-TONDev is a Node.js package with CLI interface that allows to perform the following use-cases from the single interface for Developer:
+EverDev is a Node.js package with CLI interface that allows to perform the following use-cases from the single interface for Developer:
 
 ### Use-cases
 
@@ -101,7 +101,7 @@ TONDev is a Node.js package with CLI interface that allows to perform the follow
 - Manage keys: add, remove
 - Work with Everscale blockchain from CLI
 
-Also, this project serves as a backend for [TONDev VS Code extension](https://github.com/tonlabs/tondev-vscode).
+Also, this project serves as a backend for [EverDev VS Code extension](https://github.com/tonlabs/everdev-vscode).
 
 ### What tools does it support?
 
@@ -123,9 +123,9 @@ Components are downloaded and installed automatically for the target platform up
 
 - [TestSuite4](#testsuite4) – Python lightweight framework for contract testing.
 
-- [tonos-cli](https://github.com/tonlabs/tonos-cli) – Command line tool for multisigwallet management and staking, includes CLI Debot Browser. TONDev helps with installation and version management.
+- [tonos-cli](https://github.com/tonlabs/tonos-cli) – Command line tool for multisigwallet management and staking, includes CLI Debot Browser. EverDev helps with installation and version management.
 
-TONDev can be extended with other tools following the [instructions of integration](#tondev-extensibility).
+EverDev can be extended with other tools following the [instructions of integration](#everdev-extensibility).
 
 ## Quick Start
 
@@ -143,64 +143,64 @@ Follow the [Quick Start](docs/quick_start.md) to get on board of Ever OS Develop
 ### Install
 
 ```shell
-npm i -g tondev
+npm i -g everdev
 ```
 
 If you see an EACCESS error when you try to install a package globally on Mac or Linux, [please see this instruction](https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally)
 
 ### Download
 
-You can download precompiled binaries for your platform from [the latest release](https://github.com/tonlabs/tondev/releases/latest).
+You can download precompiled binaries for your platform from [the latest release](https://github.com/tonlabs/everdev/releases/latest).
 After download you need to create directory if it does not exists.
 
 For linux/macos:
 > ```shell
-> mkdir -p ~/.tondev/bin
+> mkdir -p ~/.everdev/bin
 > ```
-> Then unpack `tondev` from archive into this folder.
+> Then unpack `everdev` from archive into this folder.
 
 For windows:
 > ```shell
-> md $env:HOMEDRIVE$env:HOMEPATH\.tondev\bin
+> md $env:HOMEDRIVE$env:HOMEPATH\.everdev\bin
 > ```
-> Then move downloaded binary as `tondev.exe` into this folder.
+> Then move downloaded binary as `everdev.exe` into this folder.
 
-To make it possible to run `tondev` from any folder, you need to update the system PATH environment variable.
+To make it possible to run `everdev` from any folder, you need to update the system PATH environment variable.
 
 For linux/macos:
 > ```shell
-> echo 'export PATH=~/.tondev/bin:$PATH' >> ~/.profile && source ~/.profile
+> echo 'export PATH=~/.everdev/bin:$PATH' >> ~/.profile && source ~/.profile
 > ```
 
 For windows run PowerShell and execute this line:
 > ```powershell
-> [System.Environment]::SetEnvironmentVariable("PATH", "$env:HOMEDRIVE$env:HOMEPATH\.tondev\bin;$([System.Environment]::GetEnvironmentVariable("PATH", [System.EnvironmentVariableTarget]::User))", [System.EnvironmentVariableTarget]::User)
+> [System.Environment]::SetEnvironmentVariable("PATH", "$env:HOMEDRIVE$env:HOMEPATH\.everdev\bin;$([System.Environment]::GetEnvironmentVariable("PATH", [System.EnvironmentVariableTarget]::User))", [System.EnvironmentVariableTarget]::User)
 > ```
 
-*After trying to run `tondev` on macos you can see the error: "tondev" cannot be opened because the developer cannot be verified. Open your computer System Preferences > Security & Privacy > Privacy. Here, you should see an option to click "Allow Anyway" next to the "tondev" application in question.*
+*After trying to run `everdev` on macos you can see the error: "everdev" cannot be opened because the developer cannot be verified. Open your computer System Preferences > Security & Privacy > Privacy. Here, you should see an option to click "Allow Anyway" next to the "everdev" application in question.*
 
 
 ### Update
 
 ```shell
-npm r -g tondev
-npm i -g tondev
+npm r -g everdev
+npm i -g everdev
 ```
 
 ## Use in JS applications
 
-You can easily use tondev as a regular npm package in your JS applications.
+You can easily use everdev as a regular npm package in your JS applications.
 
 Just add dependency into you `package.json`:
 
 ```shell
-npm i -s tondev
+npm i -s everdev
 ```
 
-And then run any command from tondev:
+And then run any command from everdev:
 
 ```js
-const { consoleTerminal, runCommand } = require("tondev");
+const { consoleTerminal, runCommand } = require("everdev");
 const path = require("path");
 
 async function main() {
@@ -216,14 +216,14 @@ main();
 
 ### Quick start
 Start testing your contracts without any delay with this guide. It will help you get test tokens in Developer Network, prepare your environment and test your first contract.
-[Test my first contract!](https://github.com/tonlabs/tondev/blob/main/docs/work_with_contracts.md)
+[Test my first contract!](https://github.com/tonlabs/everdev/blob/main/docs/work_with_contracts.md)
 
 ### General command syntax
 
 ```shell
-tondev <tool> <command> ...args
+everdev <tool> <command> ...args
 ```
-Some tools (network, signer, contract, js) and commands have short aliases. For example instead of using `tondev network list` you can use `tondev n l` and even shorter `tondev nl`.
+Some tools (network, signer, contract, js) and commands have short aliases. For example instead of using `everdev network list` you can use `everdev n l` and even shorter `everdev nl`.
 
 
 ### Solidity
@@ -233,7 +233,7 @@ Some tools (network, signer, contract, js) and commands have short aliases. For 
 This command creates a hello-world Solidity contract with comments that you can observe and compile.
 
 ```shell
-tondev sol create Contract
+everdev sol create Contract
 ```
 
 #### Compile
@@ -242,13 +242,13 @@ This command compiles and links a selected Solidity contract.
 After successful compilation you get .abi.json and .tvc files that you can later [use in your DApps to deploy and run contract methods](https://docs.ton.dev/86757ecb2/p/07f1a5-add-contract-to-your-app-/b/462f33).
 
 ```shell
-tondev sol compile Contract.sol
+everdev sol compile Contract.sol
 ```
 
 To save generated assembler code use `-c` option (default is false)
 
 ```shell
-tondev sol compile Contract.sol -c path/to/output/file
+everdev sol compile Contract.sol -c path/to/output/file
 ```
 Assembler code will be saved in path/to/output/file with the extension `code`
 
@@ -256,7 +256,7 @@ Assembler code will be saved in path/to/output/file with the extension `code`
 You can specify the output files location with the `-o` option:
 
 ```shell
-tondev sol compile Contract.sol -o path/to/output/file
+everdev sol compile Contract.sol -o path/to/output/file
 ```
 
 #### Ast
@@ -264,19 +264,19 @@ tondev sol compile Contract.sol -o path/to/output/file
 This command parses a ton-solidity file and creates an abstract syntax tree (AST) to the output directory.
 
 ```shell
-tondev sol ast Contract.sol
+everdev sol ast Contract.sol
 ```
 
 To specify the ast format type, use `-f` or `--format` option:
 
 ```shell
-tondev sol ast-json Contract.sol -f <json | compact-json>
+everdev sol ast-json Contract.sol -f <json | compact-json>
 ```
 
 To point the location of the output folder, use the `-o` or `--output-dir` option:
 
 ```shell
-tondev sol ast-json Contract.sol -f <json | compact-json> -o path/to/output/file
+everdev sol ast-json Contract.sol -f <json | compact-json> -o path/to/output/file
 ```
 
 #### Version
@@ -284,7 +284,7 @@ tondev sol ast-json Contract.sol -f <json | compact-json> -o path/to/output/file
 This command shows the currently installed Solidity compiler version.
 
 ```shell
-tondev sol version
+everdev sol version
 ```
 
 #### Update
@@ -292,7 +292,7 @@ tondev sol version
 This command updates the compiler and linker to the latest version.
 
 ```shell
-tondev sol update
+everdev sol update
 ```
 **Attention!**
 Use --force option to force update of components that do not update their version.
@@ -302,7 +302,7 @@ Use --force option to force update of components that do not update their versio
 This command sets the compiler and linker versions and downloads them if needed.
 
 ```shell
-tondev sol set --compiler 0.38.0 --linker 0.23.54
+everdev sol set --compiler 0.38.0 --linker 0.23.54
 ```
 **Attention!**
 Use --force option to force update of components that do not update their version.
@@ -314,7 +314,7 @@ Use --force option to force update of components that do not update their versio
 This command creates a basic C++ contract with comments that you can observe and compile.
 
 ```shell
-tondev clang create Contract
+everdev clang create Contract
 ```
 
 #### Compile
@@ -323,7 +323,7 @@ This command compiles and links a selected C++ contract.
 After successful compilation you get .abi.json and .tvc files that you can later [use in your DApps to deploy and run contract methods](https://docs.ton.dev/86757ecb2/p/07f1a5-add-contract-to-your-app-/b/462f33).
 
 ```shell
-tondev clang compile Contract.cpp
+everdev clang compile Contract.cpp
 ```
 
 #### Version
@@ -331,7 +331,7 @@ tondev clang compile Contract.cpp
 This command shows the currently installed C++ compiler version.
 
 ```shell
-tondev clang version
+everdev clang version
 ```
 
 #### Update
@@ -339,7 +339,7 @@ tondev clang version
 This command updates the compiler to the latest version.
 
 ```shell
-tondev clang update
+everdev clang update
 ```
 
 Use `--force` or `-f` option to force reinstall, if the compiler is already up to date.
@@ -349,7 +349,7 @@ Use `--force` or `-f` option to force reinstall, if the compiler is already up t
 This command sets the compiler version and downloads it if needed.
 
 ```shell
-tondev clang set --compiler 7.0.0
+everdev clang set --compiler 7.0.0
 ```
 
 Use `--force` or `-f` option to force reinstall, if the current version is the same as the requested version.
@@ -360,14 +360,14 @@ Use `--force` or `-f` option to force reinstall, if the current version is the s
 This command starts the TON OS SE container (Docker must be launched). When executed for the first time downloads the latest SE image from dockerhub.
 
 ```shell
-tondev se start
+everdev se start
 ```
 
 #### Version
 This command shows the default TON OS SE version and list of other available versions.
 
 ```shell
-tondev se version
+everdev se version
 
 default: 0.24.12
 Available Versions: 0, 0.24, 0.24.5, 0.24.6, 0.24.8, 0.24.9, 0.24.10, 0.24.11, 0.24.12, latest
@@ -378,34 +378,34 @@ This command switches TON OS SE to the specified version and port and downloads 
 **Attention! This command does not start TON OS SE, you need to run `start` command separately.**
 
 ```shell
-tondev se set --version 0.24.11 --port 2020
+everdev se set --version 0.24.11 --port 2020
 ```
 
 #### Reset
 This command resets the TON OS SE container (Docker must be launched) - restarts it from scratch with a clean database.
 
 ```shell
-tondev se reset
+everdev se reset
 ```
 #### Update
 This command downloads the latest TON OS SE image (Docker must be launched) and starts it.
 
 ```shell
-tondev se update
+everdev se update
 ```
 
 #### Stop
 This command stops TON OS SE container.
 
 ```shell
-tondev se stop
+everdev se stop
 ```
 
 #### Info
 This command shows info about the downloaded versions.
 
 ```shell
-tondev se info
+everdev se info
 
 Instance  State    Version  GraphQL Port  ArangoDB Port  Docker Container            Docker Image
 --------  -------  -------  ------------  -------------  --------------------------  --------------------------
@@ -419,13 +419,13 @@ default   running  0.24.12  2020                         tonlabs-tonos-se-ekater
 This command shows the list of available demo projects
 
 ```shell
-tondev js demo
+everdev js demo
 ```
 
 Result:
 
 ```shell
-$ tondev js demo
+$ everdev js demo
 Demo          Description
 ------------  -------------------------
 hello-wallet  Simple NodeJs Application
@@ -436,7 +436,7 @@ hello-wallet  Simple NodeJs Application
 This command installs the specified demo project to the current directory. Proceed the instructions in the terminal to run it.
 
 ```shell
-tondev js demo hello-wallet
+everdev js demo hello-wallet
 ```
 
 #### Create an empty project
@@ -444,7 +444,7 @@ tondev js demo hello-wallet
 This command creates a Node.js project with SDK latest dependencies and index.js file with main Client object creation.
 
 ```shell
-tondev js create test_project
+everdev js create test_project
 ```
 
 #### Create contract JS wrapper
@@ -453,16 +453,16 @@ This command takes abi and, optionally, tvc file and generates a JS wrapper with
 tvc file must have the same name as abi.
 
 ```shell
-tondev js wrap contractName.abi.json
+everdev js wrap contractName.abi.json
 ```
 The result name of the wrapper will be "ContractName||"Contract".js".
 
 See other available generation options with help command:
 
 ```shell
-tondev js wrap -h
-TONDev Version: 0.4.0
-Use: tondev js wrap file [options]
+everdev js wrap -h
+EverDev Version: 0.4.0
+Use: everdev js wrap file [options]
 Args:
     file  ABI file
 Options:
@@ -478,7 +478,7 @@ Options:
 
 ### tonos-cli
 
-TONDev installs tonos-cli globally, so after the installation is complete, you can access the functionality via command:
+EverDev installs tonos-cli globally, so after the installation is complete, you can access the functionality via command:
 
 ```shell
 tonos-cli <command> <args>
@@ -491,17 +491,17 @@ tonos-cli <command> <args>
 This command installs the latest tonos-cli
 
 ```shell
-tondev tonos-cli install
+everdev tonos-cli install
 ```
 The installer requires NPM to be installed, so it can install packages globally without using sudo.
-In case of error, manually set environment variable `PATH=$PATH:$HOME/.tondev/solidity`
+In case of error, manually set environment variable `PATH=$PATH:$HOME/.everdev/solidity`
 
 #### Version
 
 This command shows the used tonos-cli version and list of available for download versions
 
 ```shell
-tondev tonos-cli version
+everdev tonos-cli version
 
 Version    Available
 ---------  ------------------------------------------------------
@@ -513,7 +513,7 @@ Version    Available
 This command specifies tonos-cli version to use and downloads it if needed.
 
 ```shell
-tondev tonos-cli set --version 0.8.0
+everdev tonos-cli set --version 0.8.0
 ```
 
 
@@ -522,7 +522,7 @@ tondev tonos-cli set --version 0.8.0
 This command updates tonos-cli version to the latest
 
 ```shell
-tondev tonos-cli update
+everdev tonos-cli update
 ```
 
 
@@ -539,7 +539,7 @@ For more information, visit [TestSuite4's documentation](https://tonlabs.github.
 This command shows the currently installed and available TestSuite4 framework versions.
 
 ```
-tondev ts4 version
+everdev ts4 version
 ```
 
 #### Install
@@ -547,9 +547,9 @@ tondev ts4 version
 This command installs (using `pip`) TestSuite4's latest or selected version and downloads them if needed.
 
 ```bash
-tondev ts4 install # install latest version
+everdev ts4 install # install latest version
 
-tondev ts4 install 0.2.0 # install version 0.2.0
+everdev ts4 install 0.2.0 # install version 0.2.0
 ```
 
 #### Update
@@ -557,7 +557,7 @@ tondev ts4 install 0.2.0 # install version 0.2.0
 This command updates TestSuite4 to the latest version.
 
 ```
-tondev ts4 update
+everdev ts4 update
 ```
 
 #### Create
@@ -565,9 +565,9 @@ tondev ts4 update
 This command creates a TestSuite4's template of the test (`TestName.py`).
 
 ```bash
-tondev ts4 create TestName
+everdev ts4 create TestName
 
-tondev ts4 create TestName --folder tests # creates tests/TestName.py (folder must exist)
+everdev ts4 create TestName --folder tests # creates tests/TestName.py (folder must exist)
 ```
 
 #### Run
@@ -575,7 +575,7 @@ tondev ts4 create TestName --folder tests # creates tests/TestName.py (folder mu
 This command runs selected test (`TestName.py`).
 
 ```
-tondev ts4 run TestName
+everdev ts4 run TestName
 ```
 
 
@@ -583,13 +583,13 @@ tondev ts4 run TestName
 
 Signer registry is a centralized place where you can store your development keys.
 
-Each signer in registry has an unique user defined name. All tondev commands
+Each signer in registry has an unique user defined name. All everdev commands
 that require signing or encryption refer to the signer by name.
 
 You can mark one of the signers as a default.
 It can be used in signing commands without providing signer option.
 
-Signer repository management in tondev is accessible through the `signer` tool.
+Signer repository management in everdev is accessible through the `signer` tool.
 
 **Note:** If you need to generate an unsigned message, you may use the option `--signer none` in any relevant commands in other controllers. Omitting the signer option altogether always means using the default signer.
 
@@ -600,15 +600,15 @@ Signer repository management in tondev is accessible through the `signer` tool.
 This command adds a signer with randomly generated keys.
 
 ```bash
-tondev signer generate signer_name
+everdev signer generate signer_name
 ```
 
 See other available generation options with help command:
 
 ```bash
-tondev signer generate -h
-TONDev Version: 0.5.0
-Use: tondev signer generate name [options]
+everdev signer generate -h
+EverDev Version: 0.5.0
+Use: everdev signer generate name [options]
 Args:
     name  Signer name
 Options:
@@ -633,15 +633,15 @@ Options:
 This command adds a signer with previously generated (e.g. with tonos-cli) keys.
 
 ```bash
-tondev signer add signer_name signer_secret_key_or_seed_phrase_in_quotes
+everdev signer add signer_name signer_secret_key_or_seed_phrase_in_quotes
 ```
 
 See other available signer addition options with help command:
 
 ```bash
-tondev signer add -h
-TONDev Version: 0.5.0
-Use: tondev signer add name secret [options]
+everdev signer add -h
+EverDev Version: 0.5.0
+Use: everdev signer add name secret [options]
 Args:
     name    Signer name
     secret  Secret key or seed phrase
@@ -667,13 +667,13 @@ Options:
 This command lists all registered signers with their public keys.
 
 ```bash
-tondev signer list
+everdev signer list
 ```
 
 Result:
 
 ```bash
-$ tondev signer list
+$ everdev signer list
 
 Signer           Public Key
 ---------------  ----------------------------------------------------------------
@@ -686,13 +686,13 @@ sign2            0fc4e781720d80f76257db333c6b6934090562418652cf30352878c87707aa9
 This command lists all information (including secret data) for a specified signer.
 
 ```bash
-tondev signer info signer_name
+everdev signer info signer_name
 ```
 
 Result:
 
 ```bash
-$ tondev signer info sign2
+$ everdev signer info sign2
 {
     "name": "sign2",
     "description": "",
@@ -708,7 +708,7 @@ $ tondev signer info sign2
 This command sets a previously added signer as default (initially the first added signer is used by default).
 
 ```bash
-tondev signer default signer_name
+everdev signer default signer_name
 ```
 
 #### Delete a signer
@@ -716,7 +716,7 @@ tondev signer default signer_name
 This command deletes a previously added signer from signer registry.
 
 ```bash
-tondev signer delete signer_name
+everdev signer delete signer_name
 ```
 
 ### Network Tool
@@ -731,18 +731,18 @@ It can be used in network commands without providing net name.
 
 #### Add a network
 
-This command adds a network to the tondev registry.
+This command adds a network to the everdev registry.
 
 ```bash
-tondev network add network_name network_endpoints
+everdev network add network_name network_endpoints
 ```
 
 See other available network addition options with help command:
 
 ```bash
-$ tondev network add -h
-TONDev Version: 0.5.0
-Use: tondev network add name endpoints [options]
+$ everdev network add -h
+EverDev Version: 0.5.0
+Use: everdev network add name endpoints [options]
 Args:
     name
     endpoints  Comma separated endpoints
@@ -754,7 +754,7 @@ Options:
 Example with all [main.ton.dev endpoints](https://docs.ton.dev/86757ecb2/p/85c869-networks):
 
 ```bash
-tondev network add main main.ton.dev,main2.ton.dev,main3.ton.dev,main4.ton.dev
+everdev network add main main.ton.dev,main2.ton.dev,main3.ton.dev,main4.ton.dev
 ```
 
 #### Set a giver for a network
@@ -762,15 +762,15 @@ tondev network add main main.ton.dev,main2.ton.dev,main3.ton.dev,main4.ton.dev
 This command sets a giver account for a network. Giver will be used to top up your account balances on the network, including during deployment.
 
 ```bash
-tondev network giver network_name giver_address
+everdev network giver network_name giver_address
 ```
 
 See other available network addition options with help command:
 
 ```bash
-$ tondev network giver -h
-TONDev Version: 0.5.0
-Use: tondev network giver name address [options]
+$ everdev network giver -h
+EverDev Version: 0.5.0
+Use: everdev network giver name address [options]
 Args:
     name     Network name
     address  Giver address
@@ -782,20 +782,20 @@ Options:
 **Note:** The default signer and the initial balance value of 10 tokens will be used, unless otherwise specified through options. Also note, that some contracts may require a higher initial balance for successful deployment. DePool contract, for instance, requires a minimun of 21 tokens.
 
 Only one giver can be set for a network. Setting another one will overwrite the current giver.
-To view the current giver settings for all networks, use the `tondev network list` command (for details see the section [below](#list-registered-networks)).
+To view the current giver settings for all networks, use the `everdev network list` command (for details see the section [below](#list-registered-networks)).
 
 #### List registered networks
 
 This command lists all registered networks, their public endpoints, and their giver addresses, if any.
 
 ```bash
-tondev network list
+everdev network list
 ```
 
 Result:
 
 ```bash
-$ tondev network list
+$ everdev network list
 Network        Endpoints                                        Giver
 -------------  -----------------------------------------------  ------------------------------------------------------------------
 se             http://localhost                                 0:b5e9240fc2d2f1ff8cbb1d1dee7fb7cae155e5f6320e585fcc685698994a19a5
@@ -808,21 +808,21 @@ main           main.ton.dev, main2.ton.dev, main3.ton.dev, ...
 This command sets a previously added network as default (initially the mainnet is used by default).
 
 ```bash
-tondev network default network_name
+everdev network default network_name
 ```
 
 #### Delete a network
 
-This command deletes a network from tondev registry.
+This command deletes a network from everdev registry.
 
 ```bash
-tondev network delete network_name
+everdev network delete network_name
 ```
 
 
 ### Contract Management
 
-Contract management in tondev gives you the ability to easily deploy and run
+Contract management in everdev gives you the ability to easily deploy and run
 your smart contracts on blockchain network(s).
 
 #### View contract info
@@ -830,13 +830,13 @@ your smart contracts on blockchain network(s).
 This command displays a detailed summary for a contract. Contract ABI and TVC files are required to run it. Account address on the network is calculated from TVC and signer.
 
 ```bash
-tondev contract info abi_filename
+everdev contract info abi_filename
 ```
 
 Result example:
 
 ```bash
-$ tondev contract info SetcodeMultisigWallet.abi.json
+$ everdev contract info SetcodeMultisigWallet.abi.json
 
 Configuration
 
@@ -871,9 +871,9 @@ Details:   {
 Network, signer, data and account address parameters can be overridden with the following options:
 
 ```bash
-$ tondev contract info -h
-TONDev Version: 0.5.0
-Use: tondev contract info file [options]
+$ everdev contract info -h
+EverDev Version: 0.5.0
+Use: everdev contract info file [options]
 Args:
     file  ABI file
 Options:
@@ -894,13 +894,13 @@ Options:
 This command deploys a contract to the blockchain. Contract ABI and TVC files are required to run it.
 
 ```bash
-tondev contract deploy abi_filename
+everdev contract deploy abi_filename
 ```
 
 Command displays deployment summary and requests constructor function parameters. Result example:
 
 ```bash
-$ tondev contract deploy Contract.abi.json
+$ everdev contract deploy Contract.abi.json
 
 Configuration
 
@@ -923,9 +923,9 @@ Deploying...
 Deploy parameters can be specified in the deploy command with the following options:
 
 ```bash
-$ tondev contract deploy -h
-TONDev Version: 0.5.0
-Use: tondev contract deploy file function [options]
+$ everdev contract deploy -h
+EverDev Version: 0.5.0
+Use: everdev contract deploy file function [options]
 Args:
     file      ABI file
     function  Function name
@@ -947,7 +947,7 @@ Options:
     --prevent-ui, -p  Prevent user interaction
                       Useful in shell scripting e.g. on server or in some
                       automating to disable waiting for the user input.
-                      Instead tondev will abort with error.
+                      Instead everdev will abort with error.
                       For example when some parameters are missing in command line
                       then ton dev will prompt user to input values for missing
                       parameters (or fails if prevent-ui option is specified).
@@ -957,7 +957,7 @@ Options:
 Example of a 2/3 multisig wallet deployment command:
 
 ```bash
-tondev contract deploy SetcodeMultisigWallet.abi.json constructor -n dev -s sign1 -i owners:[0xad4bf7bd8da244932c52127a943bfa9217b6e215c1b3307272283c4d64f34486,0x5c2e348c5caeb420a863dc5e972f897ebe5ee899a6ef2a8299aac352eca4380a,0x8534c46f7a135058773fa1298cb3a299a5ddd40dafe41cb06c64f274da360bfb],reqConfirms:2
+everdev contract deploy SetcodeMultisigWallet.abi.json constructor -n dev -s sign1 -i owners:[0xad4bf7bd8da244932c52127a943bfa9217b6e215c1b3307272283c4d64f34486,0x5c2e348c5caeb420a863dc5e972f897ebe5ee899a6ef2a8299aac352eca4380a,0x8534c46f7a135058773fa1298cb3a299a5ddd40dafe41cb06c64f274da360bfb],reqConfirms:2
 ```
 
 #### Run contract deployed on the network
@@ -965,13 +965,13 @@ tondev contract deploy SetcodeMultisigWallet.abi.json constructor -n dev -s sign
 This command runs any function of a contract deployed on the blockchain. Contract ABI and TVC files are required to run it.
 
 ```bash
-tondev contract run abi_filename
+everdev contract run abi_filename
 ```
 
 Command displays available functions and asks to select one. Result example:
 
 ```bash
-$ tondev contract run Contract.abi.json
+$ everdev contract run Contract.abi.json
 
 Configuration
 
@@ -993,9 +993,9 @@ Running...
 Network, signer and account address parameters can be overridden and function parameters specified in the command with the following options:
 
 ```bash
-$ tondev contract run -h
-TONDev Version: 0.5.0
-Use: tondev contract run file function [options]
+$ everdev contract run -h
+EverDev Version: 0.5.0
+Use: everdev contract run file function [options]
 Args:
     file      ABI file
     function  Function name
@@ -1017,7 +1017,7 @@ Options:
     --prevent-ui, -p  Prevent user interaction
                       Useful in shell scripting e.g. on server or in some
                       automating to disable waiting for the user input.
-                      Instead tondev will abort with error.
+                      Instead everdev will abort with error.
                       For example when some parameters are missing in command line
                       then ton dev will prompt user to input values for missing
                       parameters (or fails if prevent-ui option is specified).
@@ -1026,25 +1026,25 @@ Options:
 Example of creating a transaction and confirming it in a multisig wallet:
 
 ```
-tondev contract run SetcodeMultisigWallet.abi.json submitTransaction -n dev -s sign1 -i dest:255a3ad9dfa8aa4f3481856aafc7d79f47d50205190bd56147138740e9b177f3,value:500000000,bounce:true,allBalance:false,payload:""
+everdev contract run SetcodeMultisigWallet.abi.json submitTransaction -n dev -s sign1 -i dest:255a3ad9dfa8aa4f3481856aafc7d79f47d50205190bd56147138740e9b177f3,value:500000000,bounce:true,allBalance:false,payload:""
 ```
 
 ```
-tondev contract run SetcodeMultisigWallet.abi.json confirmTransaction -n dev -a 0:04dee1edc3f3d6b23529dcf5a6133627d06a39826bb14cc6334ffea272b15d50 -s sign2 -i transactionId:6954030467099431873
+everdev contract run SetcodeMultisigWallet.abi.json confirmTransaction -n dev -a 0:04dee1edc3f3d6b23529dcf5a6133627d06a39826bb14cc6334ffea272b15d50 -s sign2 -i transactionId:6954030467099431873
 ```
 
 To **execute a contract without signing**, use `signer none` option:
 
 ```
-tondev contract run --signer none --address <address>
+everdev contract run --signer none --address <address>
 ```
 
 or
 
 ```
-tondev contract run -s none -a <address>
+everdev contract run -s none -a <address>
 ```
-In this case you have to explicitly specify address in run function because otherwise tondev may calculate a wrong address from empty pubkey.
+In this case you have to explicitly specify address in run function because otherwise everdev may calculate a wrong address from empty pubkey.
 
 
 To **execute a smart contract function with bytes argument**, the argument needs to be in hex format.
@@ -1053,13 +1053,13 @@ Example:
 
 ```
 cat bytes | xxd -p | tr -d '\n' > bytes.hex
-tondev contract run contract.abi.json fucntion_name -i value:$(cat bytes.hex)
+everdev contract run contract.abi.json function_name -i value:$(cat bytes.hex)
 ```
 
 
 **Execute a smart contract function with structure argument**:
 ```
-tondev contract run shapes.tvc \
+everdev contract run shapes.tvc \
     --address 0:540c1837656674d548c934258ddec9b5fd11b543da977b0016c14b5650bc7eb5 \
     --input '{ "point": { "color": "red", "center": { "x": 1, "y": 2 } } }'
 ```
@@ -1069,13 +1069,13 @@ tondev contract run shapes.tvc \
 This command downloads a contract and runs it locally on TVM. Contract ABI and TVC files are required to run it.
 
 ```bash
-tondev contract run-local abi_filename
+everdev contract run-local abi_filename
 ```
 
 Command displays available functions and asks to select one. Result example:
 
 ```bash
-$ tondev contract run-local Contract.abi.json
+$ everdev contract run-local Contract.abi.json
 Configuration
 
   Network: dev
@@ -1094,9 +1094,9 @@ Available functions:
 Network, signer and account address parameters can be overridden and function parameters specified in the command with the following options:
 
 ```bash
-$ tondev contract run-local -h
-TONDev Version: 0.5.0
-Use: tondev contract run-local file function [options]
+$ everdev contract run-local -h
+EverDev Version: 0.5.0
+Use: everdev contract run-local file function [options]
 Args:
     file      ABI file
     function  Function name
@@ -1118,7 +1118,7 @@ Options:
     --prevent-ui, -p  Prevent user interaction
                       Useful in shell scripting e.g. on server or in some
                       automating to disable waiting for the user input.
-                      Instead tondev will abort with error.
+                      Instead everdev will abort with error.
                       For example when some parameters are missing in command line
                       then ton dev will prompt user to input values for missing
                       parameters (or fails if prevent-ui option is specified).
@@ -1129,13 +1129,13 @@ Options:
 This command downloads a contract and emulates transaction execution locally on TVM. Contract ABI and TVC files are required to run it.
 
 ```bash
-tondev contract run-executor abi_filename
+everdev contract run-executor abi_filename
 ```
 
 Command displays available functions and asks to select one. Result:
 
 ```bash
-$ tondev contract run-executor Contract.abi.json
+$ everdev contract run-executor Contract.abi.json
 
 Configuration
 
@@ -1155,9 +1155,9 @@ Available functions:
 Network, signer and account address parameters can be overridden and function parameters specified in the command with the following options:
 
 ```bash
-$ tondev contract run-executor -h
-TONDev Version: 0.5.0
-Use: tondev contract run-executor file function [options]
+$ everdev contract run-executor -h
+EverDev Version: 0.5.0
+Use: everdev contract run-executor file function [options]
 Args:
     file      ABI file
     function  Function name
@@ -1179,7 +1179,7 @@ Options:
     --prevent-ui, -p  Prevent user interaction
                       Useful in shell scripting e.g. on server or in some
                       automating to disable waiting for the user input.
-                      Instead tondev will abort with error.
+                      Instead everdev will abort with error.
                       For example when some parameters are missing in command line
                       then ton dev will prompt user to input values for missing
                       parameters (or fails if prevent-ui option is specified).
@@ -1189,15 +1189,15 @@ Options:
 If you have set a giver for a network, you can top up contract balances on it with the following command.
 
 ```
-tondev contract topup abi_filename
+everdev contract topup abi_filename
 ```
 
 Defalt signer and giver parameters will be used, unless otherwise specified through the following options:
 
 ```
-$ tondev contract topup -h
-TONDev Version: 0.5.0
-Use: tondev contract topup file [options]
+$ everdev contract topup -h
+EverDev Version: 0.5.0
+Use: everdev contract topup file [options]
 Args:
     file  ABI file
 Options:
@@ -1217,13 +1217,13 @@ Options:
 To **top up any known address** without providing keys or contract files, use the following command:
 
 ```
-tondev contract topup --address <address>
+everdev contract topup --address <address>
 ```
 
 or
 
 ```
-tondev ct -a <addrress>
+everdev ct -a <addrress>
 ```
 
 
@@ -1234,7 +1234,7 @@ The ExtraTON DeBot Browser.
 This command shows the list of available versions.
 
 ```shell
-tondev debrowser version
+everdev debrowser version
 
 Available Versions: 1.1.0, 1.2.0, 1.2.1, 1.3.1
 ```
@@ -1243,7 +1243,7 @@ Available Versions: 1.1.0, 1.2.0, 1.2.1, 1.3.1
 This command shows the list of implemented interfaces.
 
 ```shell
-tondev debrowser interfaces
+everdev debrowser interfaces
 
 Realised interfaces:
  - Address Input
@@ -1262,14 +1262,14 @@ Realised interfaces:
 This command downloads image and starts DeBrowser container (Docker must be launched).
 
 ```shell
-tondev debrowser start 1.3.1
+everdev debrowser start 1.3.1
 ```
 
 #### Stop
 This command stops DeBrowser container.
 
 ```shell
-tondev debrowser stop
+everdev debrowser stop
 ```
 
 
@@ -1278,11 +1278,11 @@ tondev debrowser stop
 This command displays a summary of all controller configurations.
 
 ```
-tondev info
+everdev info
 ```
 Output example:
 
-$ tondev info
+$ everdev info
 
 ```
 C++ compiler
@@ -1332,11 +1332,11 @@ tonoscli   0.11.3   0.11.4, 0.11.3, 0.11.2, 0.11.1, 0.11.0, 0.10.1, 0.10.0, 0.9.
 
 Read how to deploy and configure your own Giver in DevNet in a separated guide: [Working with DevNet](docs/work_with_devnet.md).
 
-## TONDev Extensibility
+## EverDev Extensibility
 
 TON Dev Environment is an integration point for development tools related to Everscale Blockchain.
 
-There are two kind of software connected to TONDev:
+There are two kind of software connected to EverDev:
 
 - Development tools such as a compilers, networks, debuggers and so on.
 - User Interaction services such as an IDE plugins, CLI, GUI applications etc.

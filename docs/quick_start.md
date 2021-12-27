@@ -1,7 +1,7 @@
 # Get started with Development Tools
 ## Guide overview
 This guide will help you get started with such essensial Everscale tools as:
-- [Tondev CLI](https://github.com/tonlabs/tondev) 
+- [Everdev CLI](https://github.com/tonlabs/everdev) 
 - [Solidity Compiler](https://github.com/tonlabs/TON-Solidity-Compiler)
 - [Local Blockchain](https://github.com/tonlabs/tonos-se)
 - [Everscale Blockchain Explorer](https://ton.live)
@@ -20,7 +20,7 @@ You will learn how to:
 - [Get started with Development Tools](#get-started-with-development-tools)
   - [Guide overview](#guide-overview)
   - [Table of Contents](#table-of-contents)
-    - [Install tondev - single interface to access all the developer tools](#install-tondev---single-interface-to-access-all-the-developer-tools)
+    - [Install everdev - single interface to access all the developer tools](#install-everdev---single-interface-to-access-all-the-developer-tools)
     - [Create helloWorld contract](#create-helloworld-contract)
     - [Compile it](#compile-it)
     - [Run Local Blockchain](#run-local-blockchain)
@@ -36,42 +36,42 @@ You will learn how to:
     - [Transfer some tokens](#transfer-some-tokens)
   - [What's next?](#whats-next)
 
-### Install tondev - single interface to access all the developer tools
-```$ npm install -g tondev```
+### Install everdev - single interface to access all the developer tools
+```$ npm install -g everdev```
 
-If you experience any problems with installation, check out our [troubleshooting section](https://github.com/tonlabs/tondev/blob/main/docs/troubleshooting.md). 
+If you experience any problems with installation, check out our [troubleshooting section](https://github.com/tonlabs/everdev/blob/main/docs/troubleshooting.md). 
 
 
 ### Create helloWorld contract
-```$ tondev sol create helloWorld```
+```$ everdev sol create helloWorld```
 
 ### Compile it
-```$ tondev sol compile helloWorld.sol```
+```$ everdev sol compile helloWorld.sol```
 
 ### Run Local Blockchain 
 **Attention** Docker should be running.
 
-```$ tondev se start```
+```$ everdev se start```
 
 ### Configure default network 
 Set Local Blockchain [SE (Startup Edition)](https://github.com/tonlabs/tonos-se) as the default network:
 
-```$ tondev network default se```
+```$ everdev network default se```
 
 ### Configure Giver wallet that will sponsor deploy operation
 Here we use address and private key of [SE High Load Giver](https://github.com/tonlabs/tonos-se/tree/master/contracts/giver_v2).
 
 ```
-$ tondev signer add giver_keys 172af540e43a524763dd53b26a066d472a97c4de37d5498170564510608250c3
-$ tondev network giver se 0:b5e9240fc2d2f1ff8cbb1d1dee7fb7cae155e5f6320e585fcc685698994a19a5 --signer giver_keys
+$ everdev signer add giver_keys 172af540e43a524763dd53b26a066d472a97c4de37d5498170564510608250c3
+$ everdev network giver se 0:b5e9240fc2d2f1ff8cbb1d1dee7fb7cae155e5f6320e585fcc685698994a19a5 --signer giver_keys
 ```
 
 ### Generate the keys for contract ownership
 
 ```
-$ tondev signer generate owner_keys
-$ tondev signer default owner_keys
-$ tondev s l 
+$ everdev signer generate owner_keys
+$ everdev signer default owner_keys
+$ everdev s l 
 
 Signer                Public Key                                                        Used
 --------------------  ----------------------------------------------------------------  ---------------------------
@@ -85,7 +85,7 @@ owner_keys (Default)  3826202b129ea8c041b8d49a655512648fc94377d1958a7a4fc9f4b305
 ### Calculate the contract address
 
 ```
-$ tondev c i helloWorld
+$ everdev c i helloWorld
 
 Configuration
 
@@ -101,7 +101,7 @@ You can see that the contract does not exist yet (is not deployed) but you can a
 ### Deploy
 
 ```
-$ tondev contract deploy helloWorld
+$ everdev contract deploy helloWorld
 
 Configuration
 
@@ -165,7 +165,7 @@ You can use this playground later, if you will need need to test some queries.
 Let's move on and run an on-chain method.
 
 ``` 
-$ tondev c run helloWorld
+$ everdev c run helloWorld
 
 Configuration
 
@@ -196,7 +196,7 @@ Available functions:
 ```
 
 You can also execute it inline like this:  
-```$ tondev c run helloWorld touch```
+```$ everdev c run helloWorld touch```
 
 In the result you can see the transaction_id. 
 Search for it on your Contract's page in Explorer and in GraphQL playground (use `transactions` collection instead of `accounts`). 
@@ -204,7 +204,7 @@ Search for it on your Contract's page in Explorer and in GraphQL playground (use
 ### Run a getter function
 
 ```
-$ tondev c run-local helloWorld timestamp
+$ everdev c run-local helloWorld timestamp
 
 Configuration
 
@@ -223,7 +223,7 @@ Execution has finished with result: {
 ### Transfer some tokens
 
 ```
-$ tondev c run helloWorld sendValue
+$ everdev c run helloWorld sendValue
 
 Configuration
 

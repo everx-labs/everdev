@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.0] - 2021-12-24
+### New
+The utility has a new name `everdev`!
+
+Install it with `npm i -g everdev`
+
+If you already have `tondev` installed and want to clone its configuration, copy `$HOME/.tondev` into the `$HOME/.everdev` directory.
+
+
 ## [0.11.2] - 2021-12-15
 ### Fixed
 - `sol ast` command options

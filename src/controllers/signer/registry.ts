@@ -3,7 +3,7 @@ import fs from "fs-extra";
 
 import {
     Terminal,
-    tondevHome,
+    everdevHome,
 } from "../../core";
 import {
     KeyPair,
@@ -20,7 +20,7 @@ import {
 } from "../../core/utils";
 
 function signerHome() {
-    return path.resolve(tondevHome(), "signer");
+    return path.resolve(everdevHome(), "signer");
 }
 
 function registryPath() {
@@ -182,12 +182,12 @@ export class SignerRegistry {
             if (this.items.length === 0) {
                 throw new Error(
                     "There are no signers defined. " +
-                    "Use \"tondev signer add\" command to register a signer.",
+                    "Use \"everdev signer add\" command to register a signer.",
                 );
             } else {
                 throw new Error(
                     "There is no default signer. " +
-                    "Use \"tondev signer default\" command to set the default signer. " +
+                    "Use \"everdev signer default\" command to set the default signer. " +
                     "Or explicitly specify the signer with \"--signer\" option.",
                 );
             }

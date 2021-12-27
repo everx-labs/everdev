@@ -1,5 +1,5 @@
 {
     "dependencies": {
-        "tondev": "file:../../"
+        "everdev": "file:../../"
     }
 }

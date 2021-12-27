@@ -1,8 +1,8 @@
 type Query {
-    " Returns TONDev home folder"
+    " Returns EverDev home folder"
     home: String
 
-    " Returns TONDev tool list"
+    " Returns EverDev tool list"
     tools: [Tool]
 
     " Returns variants for command arg"
@@ -157,7 +157,7 @@ type Command {
     args: [CommandArg]
 }
 
-" TONDev tool"
+" EverDev tool"
 type Tool {
     " Tool name. This is an identifier. Used only in configs."
     name: String

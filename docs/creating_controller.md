@@ -8,11 +8,11 @@
 
 # Creating Controller
 
-Currently all the controllers must be implemented inside of the `tondev` package.
+Currently all the controllers must be implemented inside of the `everdev` package.
 
 To create a new controller:
 
-- Clone `git@github.com:tonlabs/tondev.git`.
+- Clone `git@github.com:tonlabs/everdev.git`.
 - Create and checkout branch for the new controller.
 - Create a folder under `src/controllers`.
 - Implement the controller code.
@@ -34,7 +34,7 @@ Controller should:
 Controller shouldn't:
 
 - Implement tool functionality itself. Controller is a connector between the user and the existing development tool.
-- Implement user interaction itself. All user interaction must be implemented exactly in the terms of tondev extensibility.
+- Implement user interaction itself. All user interaction must be implemented exactly in the terms of everdev extensibility.
 
 ## How to implement a Controller
 
@@ -69,10 +69,10 @@ Create `installer.ts` to implement all the code related to the tool installation
 ```ts
 import path from "path";
 import fs from "fs";
-import { Terminal, tondevHome } from "../../core";
+import { Terminal, everdevHome } from "../../core";
 
 function fooHome() {
-    return path.resolve(tondevHome(), "foo");
+    return path.resolve(everdevHome(), "foo");
 }
 
 async function ensureInstalled(terminal: Terminal) {

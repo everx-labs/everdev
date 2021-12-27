@@ -1,4 +1,4 @@
-const { consoleTerminal, runCommand } = require("tondev");
+const { consoleTerminal, runCommand } = require("everdev");
 const path = require("path");
 
 async function main() {

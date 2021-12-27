@@ -29,7 +29,7 @@ async function printCommandUsage(terminal: Terminal, controller: ToolController,
     if (options.length > 0) {
         usageArgs += ` [options]`;
     }
-    terminal.log(`Use: tondev ${controller.name} ${command.name}${usageArgs}`);
+    terminal.log(`Use: everdev ${controller.name} ${command.name}${usageArgs}`);
     if (args.length > 0) {
         terminal.log("Args:");
         terminal.log(formatTable(args.map(x => ["  ", x.name, x.title])));
@@ -64,12 +64,12 @@ function printControllerUsage(terminal: Terminal, controller: ToolController) {
 
 export async function printUsage(terminal: Terminal, controller?: ToolController, command?: Command) {
     const pkg = JSON.parse(fs.readFileSync(path.resolve(__dirname, "..", "..", "package.json"), "utf8"));
-    terminal.log(`TONDev Version: ${pkg.version}`);
+    terminal.log(`EverDev Version: ${pkg.version}`);
     if (controller && command) {
         await printCommandUsage(terminal, controller, command);
         return;
     }
-    terminal.log(`Use: tondev ${controller?.name ?? "tool"} ${command?.name ?? "command"} args [options]`);
+    terminal.log(`Use: everdev ${controller?.name ?? "tool"} ${command?.name ?? "command"} args [options]`);
     terminal.log(`Options:`);
     terminal.log(`    --help, -h  Show command usage`);
     if (controller) {

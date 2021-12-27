@@ -3,7 +3,7 @@ import fs from "fs";
 
 import {
     Terminal,
-    tondevHome,
+    everdevHome,
 } from "../../core";
 import {
     compareVersionsDescending,
@@ -27,7 +27,7 @@ export const PORT_NONE = -1;
 const TOOL_FOLDER_NAME = "se";
 
 function seHome() {
-    return path.resolve(tondevHome(), TOOL_FOLDER_NAME);
+    return path.resolve(everdevHome(), TOOL_FOLDER_NAME);
 }
 
 export enum SESourceType {

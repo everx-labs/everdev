@@ -13,8 +13,8 @@ import {
 import {
     formatTable,
 } from "../core/utils";
-import { printUsage } from "../tondev/help";
-import { printSummaryInfo } from "../tondev/info";
+import { printUsage } from "../everdev/help";
+import { printSummaryInfo } from "../everdev/info";
 import * as process from "process";
 import fs from "fs";
 import path from "path";

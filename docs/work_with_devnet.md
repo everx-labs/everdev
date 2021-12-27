@@ -10,7 +10,7 @@
     - [Calculate Giver address](#calculate-giver-address)
     - [Sponsor Giver with public faucet](#sponsor-giver-with-public-faucet)
     - [Deploy Giver contract](#deploy-giver-contract)
-  - [Configure tondev to use your Giver](#configure-tondev-to-use-your-giver)
+  - [Configure everdev to use your Giver](#configure-everdev-to-use-your-giver)
   - [Testing your new Giver](#testing-your-new-giver)
 
 Working with DevNet is similar to working with SE except you usually don't have any predeployed giver in DevNet. So you need to fund your contracts manually or deploy your own giver, which you will be able to use the same way as in SE. Deploying your own giver can be useful, if you need to deploy many contracts or need to frequently redeploy and test contract after subsequent midification.
@@ -22,8 +22,8 @@ In order to deploy the Giver, do the following steps, like for an ordinary contr
 ### Generate Giver keys
 
 ```
-$ tondev signer generate devnet_giver_keys
-$ tondev s l
+$ everdev signer generate devnet_giver_keys
+$ everdev s l
 
 Signer             Public Key
 -----------------  ----------------------------------------------------------------
@@ -40,7 +40,7 @@ The code in repo is not compatible with the latest Solidity compilers, so if you
 
 After modifying code, compile it:
 ```
-$ tondev sol compile GiverV2.sol
+$ everdev sol compile GiverV2.sol
 ```
 In a case of success, compiler will generate two files: compiled code (`GiverV2.tvc`) and ABI (`GiverV2.abi.json`). You need these files for the next steps.
 
@@ -49,7 +49,7 @@ In a case of success, compiler will generate two files: compiled code (`GiverV2.
 In order to deploy contract, you need to know its address:
 
 ```
-$ tondev contract info -n dev -s devnet_giver_keys GiverV2.tvc
+$ everdev contract info -n dev -s devnet_giver_keys GiverV2.tvc
 
 Configuration
 
@@ -78,7 +78,7 @@ Wait for operation completion. Check address balance in [Blockchain Explorer](ht
 For contract deployment you need to have compiled contract files (`GiverV2.tvc` and `GiverV2.abi.json`) and giver keys. To deploy contract execute next command:
 
 ```
-$ tondev contract deploy -n dev -s devnet_giver_keys GiverV2.tvc
+$ everdev contract deploy -n dev -s devnet_giver_keys GiverV2.tvc
 
 Configuration
 
@@ -91,20 +91,20 @@ Deploying...
 Contract has deployed at address: 0:93139197f2f58d674bee4ee71a42d8f1e7b6a3c3e041ded7a54d330bcc44f3b3
 ```
 
-Done, now you have your own Giver, deployed to the DevNet! Let's configure `tondev` to use your Giver by default.
+Done, now you have your own Giver, deployed to the DevNet! Let's configure `everdev` to use your Giver by default.
 
-## Configure tondev to use your Giver
+## Configure everdev to use your Giver
 
-For convenience you might need to configure `tondev` in order to use your Giver as default. To do it, execute the next command (change address to your Giver's address, obtained on previous steps):
+For convenience, you might need to configure `everdev` in order to use your Giver as default. To do it, execute the next command (change address to your Giver's address, obtained on previous steps):
 
 ```
-$ tondev network giver dev 0:93139197f2f58d674bee4ee71a42d8f1e7b6a3c3e041ded7a54d330bcc44f3b3 --signer devnet_giver_keys
+$ everdev network giver dev 0:93139197f2f58d674bee4ee71a42d8f1e7b6a3c3e041ded7a54d330bcc44f3b3 --signer devnet_giver_keys
 ```
 
 Check:
 
 ```
-$ tondev n l
+$ everdev n l
 Network       Endpoints                                        Giver
 ------------  -----------------------------------------------  ------------------------------------------------------------------
 se (Default)  http://localhost                                 0:b5e9240fc2d2f1ff8cbb1d1dee7fb7cae155e5f6320e585fcc685698994a19a5
@@ -121,7 +121,7 @@ If Giver is set, you will see you Giver's address and keypair name for the `dev`
 For testing your new Giver, try to topup any address, for example, one of the contract's address, which you need to deploy:
 
 ```
-$ tondev contract topup --network dev --address <address> --value 10000
+$ everdev contract topup --network dev --address <address> --value 10000
 
 Configuration
 
