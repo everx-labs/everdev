@@ -1,4 +1,4 @@
-# Working with DevNet
+# Working with DevNet: deploy and start using your own giver in Developer Network
 
 ## Contents
 
