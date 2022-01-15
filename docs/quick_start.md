@@ -100,7 +100,7 @@ You can see that the contract does not exist yet (is not deployed) but you can a
 
 ### Deploy
 
-Here we deploy contract, sponsoring it with 10 Tokens (Everscale native currency has 9 decimals). The money for deploy are taken from the giver we configured in the previous steps. 
+Here we deploy the contract, sponsoring it with 10 Tokens (Everscale native currency has 9 decimals). The money for deploy are taken from the giver we configured in the previous steps. 
 
 ```
 $ everdev contract deploy -v 10000000000 helloWorld
