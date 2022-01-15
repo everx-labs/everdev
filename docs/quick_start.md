@@ -123,7 +123,7 @@ Open your account page. You will need it later to see its transactions and messa
 
 ### Explore contract information with GraphQL
 Go to [localhost/graphql](http://localhost/graphql).
-Enter in the left pane and click Run button
+Enter in the left pane and click Run button (replace the contract's address with the one you got in the previous steps).
 ```
 query {
   accounts(
