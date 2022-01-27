@@ -1228,7 +1228,7 @@ everdev ct -a <addrress>
 
 
 ### DeBrowser
-The ExtraTON DeBot Browser.
+[The ExtraTON DeBot Browser](https://github.com/extraton/debrowser/).
 
 #### Version
 This command shows the list of available versions.
