@@ -15,9 +15,11 @@ import {
 } from "../core/utils";
 import { printUsage } from "../everdev/help";
 import { printSummaryInfo } from "../everdev/info";
+import { motd } from "../everdev/motd"; 
 import * as process from "process";
 import fs from "fs";
 import path from "path";
+import chalk from "chalk";
 
 function findOptionArg(command: Command, name: string): CommandArg | undefined {
     if (name.startsWith("--")) {
@@ -193,8 +195,15 @@ function isPrintVersionMode(): boolean {
 
 export async function run(terminal: Terminal) {
     const parser = new CommandLine();
+    const pkg = JSON.parse(fs.readFileSync(path.resolve(__dirname, "..", "..", "package.json"), "utf8"));
+   
+    // Notify the user once a day that a new version is available
+    // Completely asynchronously
+    motd(pkg.name, pkg.version)
+      .then((msg) => msg && terminal.log(chalk.yellow(msg)))
+      .catch( _ => {} )
+
     if (isPrintVersionMode()) {
-        const pkg = JSON.parse(fs.readFileSync(path.resolve(__dirname, "..", "..", "package.json"), "utf8"));
         terminal.log(pkg.version);
         process.exit(0);
     }

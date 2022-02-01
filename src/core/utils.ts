@@ -12,6 +12,24 @@ import request from "request";
 import { Terminal } from "./index";
 import { ContractPackage } from "@tonclient/appkit";
 
+/*
+ * Touches file and returns its previous modification time
+ */
+export function touch(file: string): Date | undefined {
+    let mtime;
+    try {
+        mtime = fs.statSync(file).mtime;
+    } catch (_) {}
+    const time = new Date();
+    try {
+        fs.utimesSync(file, time, time);
+    } catch (err) {
+        fs.closeSync(fs.openSync(file, "w"));
+    }
+    return mtime;
+}
+
+
 export function executableName(name: string): string {
     return `${name}${os.platform() === "win32" ? ".exe" : ""}`;
 }
