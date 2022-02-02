@@ -23,9 +23,8 @@ export async function motd(pkgName: string, pkgVer: string): Promise<string> {
                       ? [
                             '',
                             sep,
-                            'MESSAGE OF THE DAY',
-                            sep,
                             `A new version of ${pkgName} ${thatVer} is available!`,
+                            sep,
                             `Installed version is ${pkgVer}`,
                             `Update it with "npm update ${pkgName}"`,
                             '',
