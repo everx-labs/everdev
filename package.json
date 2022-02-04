@@ -43,6 +43,7 @@
 		"@tonclient/appkit": "^0",
 		"@tonclient/core": "^1",
 		"@tonclient/lib-node": "^1",
+		"chalk": "^2.4.2",
 		"dockerode": "^3.3.1",
 		"fs-extra": "^9.1.0",
 		"mv": "^2.1.1",

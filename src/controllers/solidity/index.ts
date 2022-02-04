@@ -177,12 +177,6 @@ export const solidityAstCommand: Command = {
             args.outputDir,
             fileName,
         ]);
-        const astPath = path.join(args.outputDir, `${path.parse(fileName).name}.ast.json`)
-        let ast = fs.readFileSync(astPath, 'utf-8')
-        if (ast[0] !== '{') { // This is necessary because the original result may not be in JSON format
-            ast = ast.split('\n').slice(4).join('\n')
-        }
-        writeTextFile(astPath, ast)
     },
 };
 
