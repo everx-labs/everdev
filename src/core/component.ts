@@ -87,7 +87,13 @@ export class Component {
     async silentRun(terminal: Terminal, workDir: string, args: string[]): Promise<string> {
         const runTerminal = new StringTerminal();
         try {
-            return await this.run(runTerminal, workDir, args);
+            const result = await this.run(runTerminal, workDir, args)
+            // Solidity compiler successfully compiles code despite outputting 
+            // warnings to stderr, so we have to print them:
+            if (runTerminal.stderr !== "") {
+                terminal.log(runTerminal.stderr);
+            }
+            return result
         } catch (error) {
             if (runTerminal.stdout !== "") {
                 terminal.write(runTerminal.stdout);
