@@ -90,7 +90,9 @@ export class Component {
             const result = await this.run(runTerminal, workDir, args)
             // Solidity compiler successfully compiles code despite outputting 
             // warnings to stderr, so we have to print them:
-            if (runTerminal.stderr !== "") terminal.log(runTerminal.stderr)
+            if (runTerminal.stderr !== "") {
+                terminal.log(runTerminal.stderr);
+            }
             return result
         } catch (error) {
             if (runTerminal.stdout !== "") {
