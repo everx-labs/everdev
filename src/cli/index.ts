@@ -15,7 +15,7 @@ import {
 } from "../core/utils";
 import { printUsage } from "../everdev/help";
 import { printSummaryInfo } from "../everdev/info";
-import { motd } from "../everdev/motd"; 
+import { checkNewVersion } from "../everdev/checkNewVersion"; 
 import * as process from "process";
 import fs from "fs";
 import path from "path";
@@ -199,7 +199,7 @@ export async function run(terminal: Terminal) {
    
     // Notify the user once a day that a new version is available
     // Completely asynchronously
-    motd(pkg.name, pkg.version)
+    checkNewVersion(pkg.name, pkg.version)
       .then((msg) => msg && terminal.log(chalk.yellow(msg)))
       .catch( _ => {} )
 
