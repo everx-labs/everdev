@@ -602,3 +602,28 @@ export function resolvePath(s: string): string {
         ? `${os.homedir()}${s.substr(1)}`
         : path.resolve(process.cwd(), s);
 }
+
+export function readTextFileSyncOnce(filename: string): string {
+    try {
+        if (fs.existsSync(filename)) {
+            const data = fs.readFileSync(filename, 'utf8');
+            fs.unlinkSync(filename);
+            return data;
+        } else {
+            return '';
+        }
+    } catch (err) {
+        return '';
+    }
+}
+
+export async function getLatestFromNmp(pkgName: string): Promise<string> {
+    const latestVer: string = await run(
+        'npm',
+        ['view', pkgName, 'dist-tags.latest'],
+        {},
+        new StringTerminal(),
+    )
+    return latestVer.trim();
+}
+
