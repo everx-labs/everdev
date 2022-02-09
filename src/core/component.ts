@@ -227,7 +227,9 @@ export class Component {
                 ])
                 if (version !== '') {
                     const filename = component.adjustedPath() ?? component.path();
-                    if (filename) files.push(filename);
+                    if (filename) {
+                        files.push(filename);
+                    }
                 }
             }
         }
