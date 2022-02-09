@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2022-02-09
+### New
+ - If a new version of everdev is available, then the user who executes any `everdev` command will be
+   informed about it (no more than once a day)
+
+### New
+ - `sol info` command shows the file path for installed components
+
+### Fixed
+- `sol compile` command no longer suppresses warnings
+
+
 ## [1.0.0] - 2021-12-24
 ### New
 The utility has a new name `everdev`!

@@ -12,6 +12,24 @@ import request from "request";
 import { Terminal } from "./index";
 import { ContractPackage } from "@tonclient/appkit";
 
+/*
+ * Touches file and returns its previous modification time
+ */
+export function touch(file: string): Date | undefined {
+    let mtime;
+    try {
+        mtime = fs.statSync(file).mtime;
+    } catch (_) {}
+    const time = new Date();
+    try {
+        fs.utimesSync(file, time, time);
+    } catch (err) {
+        fs.closeSync(fs.openSync(file, "w"));
+    }
+    return mtime;
+}
+
+
 export function executableName(name: string): string {
     return `${name}${os.platform() === "win32" ? ".exe" : ""}`;
 }
@@ -584,3 +602,28 @@ export function resolvePath(s: string): string {
         ? `${os.homedir()}${s.substr(1)}`
         : path.resolve(process.cwd(), s);
 }
+
+export function readTextFileSyncOnce(filename: string): string {
+    try {
+        if (fs.existsSync(filename)) {
+            const data = fs.readFileSync(filename, 'utf8');
+            fs.unlinkSync(filename);
+            return data;
+        } else {
+            return '';
+        }
+    } catch (err) {
+        return '';
+    }
+}
+
+export async function getLatestFromNmp(pkgName: string): Promise<string> {
+    const latestVer: string = await run(
+        'npm',
+        ['view', pkgName, 'dist-tags.latest'],
+        {},
+        new StringTerminal(),
+    )
+    return latestVer.trim();
+}
+

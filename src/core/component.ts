@@ -87,7 +87,13 @@ export class Component {
     async silentRun(terminal: Terminal, workDir: string, args: string[]): Promise<string> {
         const runTerminal = new StringTerminal();
         try {
-            return await this.run(runTerminal, workDir, args);
+            const result = await this.run(runTerminal, workDir, args)
+            // Solidity compiler successfully compiles code despite outputting 
+            // warnings to stderr, so we have to print them:
+            if (runTerminal.stderr !== "") {
+                terminal.log(runTerminal.stderr);
+            }
+            return result
         } catch (error) {
             if (runTerminal.stdout !== "") {
                 terminal.write(runTerminal.stdout);
@@ -205,6 +211,7 @@ export class Component {
 
     static async getInfoAll(components: { [name: string]: Component }): Promise<string> {
         const table = [["Component", "Version", "Available"]];
+        const files  = [];
         let hasNotInstalledComponents = false;
         for (const [name, component] of Object.entries(components)) {
             const version = await component.getCurrentVersion();
@@ -218,11 +225,19 @@ export class Component {
                     version !== '' ? version : 'not installed',
                     ellipsisString(allVersions),
                 ])
+                if (version !== '') {
+                    const filename = component.adjustedPath() ?? component.path();
+                    if (filename) {
+                        files.push(filename);
+                    }
+                }
             }
         }
         let info = formatTable(table, { headerSeparator: true });
         if (hasNotInstalledComponents) {
             info += "\n\nMissing components will be automatically installed  on first demand.";
+        } else if (files.length !== 0) {  
+            info += "\n\nFile path: " + files.join("; ");
         }
         return info;
     }

@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import {controllers} from "../controllers";
 import {
     Command,
@@ -27,6 +29,9 @@ function findInfoCommand(controller: ToolController, name: string): { command: C
 }
 
 export async function printSummaryInfo(terminal: Terminal) {
+    const pkg = JSON.parse(fs.readFileSync(path.resolve(__dirname, "..", "..", "package.json"), "utf8"));
+    terminal.log();
+    terminal.log(`${pkg.name} version: ${pkg.version}`);
     for (const controller of controllers) {
         const info = findInfoCommand(controller, "info") ??
             findInfoCommand(controller, "list") ??

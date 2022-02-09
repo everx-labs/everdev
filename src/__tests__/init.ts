@@ -55,6 +55,8 @@ export function initTests() {
         path.resolve(home, "signer", "registry.json"),
         path.resolve(home, "network", "registry.json"),
         path.resolve(home, "se", "config.json"),
+        path.resolve(home, ".lastrun"),
+        path.resolve(home, ".latest"),
     ]);
 }
 

@@ -15,9 +15,11 @@ import {
 } from "../core/utils";
 import { printUsage } from "../everdev/help";
 import { printSummaryInfo } from "../everdev/info";
+import { createLatestVerFile, getUpdateIsAvailableMsg } from "../everdev/checkNewVersion"; 
 import * as process from "process";
 import fs from "fs";
 import path from "path";
+import chalk from "chalk";
 
 function findOptionArg(command: Command, name: string): CommandArg | undefined {
     if (name.startsWith("--")) {
@@ -193,8 +195,18 @@ function isPrintVersionMode(): boolean {
 
 export async function run(terminal: Terminal) {
     const parser = new CommandLine();
+    const pkg = JSON.parse(fs.readFileSync(path.resolve(__dirname, "..", "..", "package.json"), "utf8"));
+   
+    // Once a day, create a file containing the latest version number of `everdev`
+    // Ignoring any (network, concurent access to file, etc) errors
+    createLatestVerFile(pkg.name).catch( _ => {} );
+
+    const msg = getUpdateIsAvailableMsg(pkg.name, pkg.version);
+    if (msg !== "") {
+        terminal.log(chalk.yellow(msg));
+    }
+
     if (isPrintVersionMode()) {
-        const pkg = JSON.parse(fs.readFileSync(path.resolve(__dirname, "..", "..", "package.json"), "utf8"));
         terminal.log(pkg.version);
         process.exit(0);
     }
