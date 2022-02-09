@@ -211,6 +211,7 @@ export class Component {
 
     static async getInfoAll(components: { [name: string]: Component }): Promise<string> {
         const table = [["Component", "Version", "Available"]];
+        const files  = [];
         let hasNotInstalledComponents = false;
         for (const [name, component] of Object.entries(components)) {
             const version = await component.getCurrentVersion();
@@ -224,11 +225,19 @@ export class Component {
                     version !== '' ? version : 'not installed',
                     ellipsisString(allVersions),
                 ])
+                if (version !== '') {
+                    const filename = component.adjustedPath() ?? component.path();
+                    if (filename) {
+                        files.push(filename);
+                    }
+                }
             }
         }
         let info = formatTable(table, { headerSeparator: true });
         if (hasNotInstalledComponents) {
             info += "\n\nMissing components will be automatically installed  on first demand.";
+        } else if (files.length !== 0) {  
+            info += "\n\nFile path: " + files.join("; ");
         }
         return info;
     }
