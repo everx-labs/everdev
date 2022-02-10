@@ -65,6 +65,8 @@ export async function runCommand(terminal: Terminal, name: string, args: any): P
     }
 
     const resolvedArgs: any = Object.assign({}, args);
+    let checkedArgs = Object.keys(resolvedArgs);
+
     for (const arg of command.args ?? []) {
         const name = arg.name
             .split("-")
@@ -78,8 +80,20 @@ export async function runCommand(terminal: Terminal, name: string, args: any): P
             } else {
                 throw await missingArgError(arg);
             }
+        } else {
+            // remove matched element from array 
+            checkedArgs = checkedArgs.filter(k => k !== name);
         }
     }
 
+    if (checkedArgs.length > 0) {
+        const msg = [`Unknow option: ${checkedArgs[0]}`]
+        if (checkedArgs[0].includes('-')) {
+            msg.push(
+                `You must convert parameters to camelcase, for example "output-dir" to "outputDir"`,
+            )
+        }
+        throw Error(msg.join('\n'))
+    }
     await command.run(terminal, resolvedArgs);
 }
