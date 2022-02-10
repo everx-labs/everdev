@@ -6,6 +6,9 @@ import {
 import path from "path";
 import {TonClient} from "@tonclient/core";
 import {resolveContract, writeTextFile} from "../../core/utils";
+const {libNode} = require("@tonclient/lib-node");
+
+TonClient.useBinaryLibrary(libNode);
 
 enum ExportFormat {
     CommonJs = "commonjs",
