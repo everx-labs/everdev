@@ -37,7 +37,7 @@ export function writeTempJson(name: string, json: unknown): string {
     return writeTempText(name, JSON.stringify(json, undefined, "    "));
 }
 
-function deleteFiles(files: string[]) {
+export function deleteFiles(files: string[]) {
     files.forEach((file) => {
         if (fs.existsSync(file)) {
             fs.unlinkSync(file);
