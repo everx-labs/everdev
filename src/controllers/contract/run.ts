@@ -58,7 +58,7 @@ async function inputTuple(terminal: Terminal, param: AbiParam): Promise<any> {
     while (true) {
         const value = await inputLine(terminal, `${param.name} (${param.type})`)
         try {
-            return JSON.parse(value) 
+            return JSON.parse(value)
         } catch (err: any) {
             terminal.log(err.toString())
         }
@@ -192,5 +192,6 @@ export async function logRunResult(
         out_messages: outMessages.filter(x => x?.body_type !== MessageBodyType.Output),
     };
     terminal.log();
-    terminal.log(`Execution has finished with result: ${JSON.stringify(details, undefined, "    ")}`);
+    terminal.log('Execution has finished with result:');
+    terminal.log(JSON.stringify(details, undefined, "    "));
 }
