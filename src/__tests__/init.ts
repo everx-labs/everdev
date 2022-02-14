@@ -37,7 +37,7 @@ export function writeTempJson(name: string, json: unknown): string {
     return writeTempText(name, JSON.stringify(json, undefined, "    "));
 }
 
-function deleteFiles(files: string[]) {
+export function deleteFiles(files: string[]) {
     files.forEach((file) => {
         if (fs.existsSync(file)) {
             fs.unlinkSync(file);
@@ -64,7 +64,7 @@ export function doneTests() {
     everdevDone();
 }
 
-function deleteFolderRecursive(directoryPath: string) {
+export function deleteFolderRecursive(directoryPath: string) {
     if (fs.existsSync(directoryPath)) {
         fs.readdirSync(directoryPath).forEach((file) => {
             const curPath = path.join(directoryPath, file);
