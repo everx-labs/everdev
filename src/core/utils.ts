@@ -9,8 +9,9 @@ import * as https from "https";
 import * as zlib from "zlib";
 import * as unzip from "unzip-stream";
 import request from "request";
-import { Terminal } from "./index";
 import { ContractPackage } from "@tonclient/appkit";
+import mv from 'mv'
+import { Terminal, everdevHome } from './index'
 
 /*
  * Touches file and returns its previous modification time
@@ -85,9 +86,13 @@ Make sure you can execute 'npm i <package> -g' without using sudo and try again`
         );
     }
 }
-
-function downloadAndUnzip(dst: string, url: string, terminal: Terminal): Promise<void> {
-    return new Promise((resolve, reject) => {
+/*
+ * This function downloads and unzip files into tmp/subdirectory,
+ * then moves them into dstDir and removes tmp/subdirectory
+ */
+function downloadAndUnzip(dstDir: string, url: string, terminal: Terminal): Promise<void> {
+    const tmpDir = path.resolve(everdevHome(), 'tmp', Date.now().toString(16));
+    return new Promise<void>((resolve, reject) => {
         request(url)
             .on("data", _ => {
                 terminal.write(".");
@@ -95,11 +100,42 @@ function downloadAndUnzip(dst: string, url: string, terminal: Terminal): Promise
             .on("error", reject) // http protocol errors
             .pipe(
                 unzip
-                    .Extract({ path: dst })
+                    .Extract({ path: tmpDir })
                     .on("error", reject) // unzip errors
-                    .on("close", resolve),
-            );
-    });
+                    .on("close", () => {
+                        fs.readdir(tmpDir, (err, files) => {
+                            if (err) {
+                                reject(err);
+                            } else {
+                                // Move all unzipped files from temp to destination
+                                Promise.all(
+                                    files.map((file) =>
+                                        mvFileAsync(
+                                            path.resolve(tmpDir, file),
+                                            path.resolve(dstDir, file),
+                                        ),
+                                    ),
+                                )
+                                    .then(()=> resolve())
+                                    .catch(reject)
+                            }
+                        })
+                    }),
+            )
+    }).finally(() => {
+       fs.rmdir(tmpDir, () => {}); // Remove temp directory
+    })
+}
+
+/*
+ * This function is a replacement for `fs.rename`, which throws the error: EXDEV: cross-device link not permitted
+ */
+export function mvFileAsync(from: string, to: string): Promise<void> {
+    return new Promise((res, rej) => {
+        mv(from, to, { mkdirp: true, clobber: true }, (err: any) => {
+            err ? rej(err) : res();
+        })
+    })
 }
 
 export async function downloadFromGithub(terminal: Terminal, srcUrl: string, dstPath: string) {
