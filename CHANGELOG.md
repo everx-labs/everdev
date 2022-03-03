@@ -4,8 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [1.1.2] - 2022-03-01
 ### Fixed
- - An error occurred when trying to run an executable whose download was interrupted or corrupted.
-   Now uploaded files are extracted to temporary directory and moved to destination directory only if successful.
+ - An error occurred when trying to run an executable which download was interrupted or corrupted.
+   Now uploaded files are extracted to temporary directory and moved to destination directory only if download is successful.
 
 ## [1.1.1] - 2022-02-11
 ### Fixed
