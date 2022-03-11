@@ -54,12 +54,16 @@ If you experience any problems with installation, check out our [troubleshooting
 ```$ everdev se start```
 
 ### Configure default network 
-Set Local Blockchain [SE (Startup Edition)](https://github.com/tonlabs/tonos-se) as the default network:
+Set Local Blockchain [SE (Simple Emulator)](https://github.com/tonlabs/evernode-se) as the default network:
 
 ```$ everdev network default se```
 
 ### Configure Giver wallet that will sponsor deploy operation
-Here we use address and private key of [SE High Load Giver](https://github.com/tonlabs/tonos-se/tree/master/contracts/giver_v2).
+Here we use address and private key of [SE High Load Giver](https://github.com/tonlabs/evernode-se/tree/master/contracts/giver_v2).
+
+**Attention! This giver is available only in SE. If you work in DevNet or MainNet, you need to deploy your own giver.
+[Check how to do it in this guide](https://github.com/tonlabs/everdev/blob/main/docs/work_with_devnet.md).**
+
 
 ```
 $ everdev signer add giver_keys 172af540e43a524763dd53b26a066d472a97c4de37d5498170564510608250c3
@@ -261,8 +265,8 @@ Again, now you can find this transaction in Explorer or GraphQL API.
 
 2. Also take a look at our [blockchain basics page](https://everos.dev/faq/blockchain-basic) that will help you understand the core concepts of Everscale:)
 
-3. If you want to integrate your application with Everscale - dive into our [SDK Quick Start](https://docs.ton.dev/86757ecb2/p/33b76d-quick-start)!
+3. If you want to integrate your application with Everscale - dive into our [SDK Quick Start](https://tonlabs.gitbook.io/ton-sdk/quick_start)!
 
 4. If you are an exchange - check out our [exchange guide](https://docs.ton.dev/86757ecb2/p/10aec9-add-ton-crystal-to-your-exchange)!
 
-We hope this guide was helpful to you! If you have any difficulties/questions/suggestions/etc. please write to out telegram channel https://t.me/ton_sdk. 
+We hope this guide was helpful to you! If you have any difficulties/questions/suggestions/etc. please write to out telegram channel https://t.me/ever_sdk. 
