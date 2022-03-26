@@ -3,9 +3,9 @@
 This guide will help you get started with such essensial Everscale tools as:
 - [Everdev CLI](https://github.com/tonlabs/everdev) 
 - [Solidity Compiler](https://github.com/tonlabs/TON-Solidity-Compiler)
-- [Local Blockchain](https://github.com/tonlabs/tonos-se)
-- [Everscale Blockchain Explorer](https://ton.live)
-- [GraphQL API](https://docs.ton.dev/86757ecb2/p/793337-ton-os-api)
+- [Local Blockchain](https://github.com/tonlabs/evernode-se)
+- [Everscale Blockchain Explorer](https://ever.live)
+- [GraphQL API](https://tonlabs.gitbook.io/ton-sdk/reference/ton-os-api)
   
 You will learn how to:
 - Create and compile your first Solidity contract
@@ -39,7 +39,7 @@ You will learn how to:
 ### Install everdev - single interface to access all the developer tools
 ```$ npm install -g everdev```
 
-If you experience any problems with installation, check out our [troubleshooting section](https://github.com/tonlabs/everdev/blob/main/docs/troubleshooting.md). 
+If you experience any problems with installation, check out our [troubleshooting section](../troubleshooting.md). 
 
 
 ### Create helloWorld contract
@@ -62,7 +62,7 @@ Set Local Blockchain [SE (Simple Emulator)](https://github.com/tonlabs/evernode-
 Here we use address and private key of [SE High Load Giver](https://github.com/tonlabs/evernode-se/tree/master/contracts/giver_v2).
 
 **Attention! This giver is available only in SE. If you work in DevNet or MainNet, you need to deploy your own giver.
-[Check how to do it in this guide](https://github.com/tonlabs/everdev/blob/main/docs/work_with_devnet.md).**
+[Check how to do it in this guide](work-with-devnet.md).**
 
 
 ```
@@ -261,7 +261,7 @@ Again, now you can find this transaction in Explorer or GraphQL API.
 
 ## What's next? 
 
-1. If you want to migrate to Dev Network, read [Working with DevNet guide](./work_with_devnet.md).
+1. If you want to migrate to Dev Network, read [Working with DevNet guide](work-with-devnet.md).
 
 2. Also take a look at our [blockchain basics page](https://everos.dev/faq/blockchain-basic) that will help you understand the core concepts of Everscale:)
 
