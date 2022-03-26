@@ -63,7 +63,21 @@ EverDev can be extended with other tools following the [instructions of integrat
 Get your hands dirty with our great tools:)
 Follow the [Quick Start](docs/guides/quick-start.md) to get on board of Ever OS Development ASAP!
 
+## Command Line Interface
+### Quick start
 
+Start testing your contracts without any delay with this guide. It will help you get test tokens in Developer Network, prepare your environment and test your first contract. [Test my first contract!](docs/guides/work-with-contracts.md)
+
+### General command syntax
+
+```shell
+everdev <tool> <command> ...args
+```
+
+Some tools (network, signer, contract, js) and commands have short aliases. For example instead of using `everdev network list` you can use `everdev n l` and even shorter `everdev nl`.
+  
+Explore the detailed description of command line interface in the corresponding [section](docs/command-line-interface).
+  
 ## Working with DevNet
 
 Read how to deploy and configure your own Giver in DevNet in a separated guide: [Working with DevNet](docs/guides/work-with-devnet.md).
