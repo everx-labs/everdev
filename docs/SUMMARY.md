@@ -7,17 +7,16 @@
 
 ## Command line interface
 
-* [Command line interface](command-line-interface.md)
-  * [Solidity](command-line-interface/solidity.md)
-  * [C++](command-line-interface/c.md)
-  * [Evernode SE](command-line-interface/evernode-platform-startup-edition-se.md)
-  * [SDK](command-line-interface/sdk.md)
-  * [tonos-cli](command-line-interface/tonos-cli.md)
-  * [TestSuite4](command-line-interface/testsuite4.md)
-  * [Signer Tool](command-line-interface/signer-tool.md)
-  * [Network Tool](command-line-interface/network-tool.md)
-  * [Contract management](command-line-interface/contract-management.md)
-  * [DeBrowser](command-line-interface/debrowser.md)
+* [Solidity](command-line-interface/solidity.md)
+* [C++](command-line-interface/c.md)
+* [Evernode SE](command-line-interface/evernode-platform-startup-edition-se.md)
+* [SDK](command-line-interface/sdk.md)
+* [tonos-cli](command-line-interface/tonos-cli.md)
+* [TestSuite4](command-line-interface/testsuite4.md)
+* [Signer Tool](command-line-interface/signer-tool.md)
+* [Network Tool](command-line-interface/network-tool.md)
+* [Contract management](command-line-interface/contract-management.md)
+* [DeBrowser](command-line-interface/debrowser.md)
 
 ## Guides
 
