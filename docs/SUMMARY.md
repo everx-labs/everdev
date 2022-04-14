@@ -23,7 +23,7 @@
 * [Quick Start](guides/quick-start.md)
 * [Work with contracts](guides/work-with-contracts.md)
 * [Work with Devnet](guides/work-with-devnet.md)
-* [Create controller](guides/creating-controller.md)criptions/subscribe\_to\_updates.md)
+* [Create controller](guides/creating-controller.md)
 
 
 * [View controller info](view-controller-info.md)
