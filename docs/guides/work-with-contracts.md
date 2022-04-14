@@ -15,9 +15,9 @@ To cover this functionality we will test the following use-case: deploy a multi-
 
 1. To deploy the contract in the Developer network, you need to have a wallet with tokens, that you will use to prepay the initial deploy operation. Surf can help us with that.
 
-    Proceed to [ton.surf](https://ton.surf/) and install the TON Surf application on your mobile device. 
+    Proceed to [ever.surf](https://ever.surf/) and install the Ever Surf application on your mobile device. 
 
-    **Attention!** Only the mobile version of TON Surf enables you to get Rubies. After installing TON Surf on your mobile device and receiving Rubies, you can access your TON Surf account via the web (URL: [https://web.ton.surf/](https://web.ton.surf/)).
+    **Attention!** Only the mobile version of TON Surf enables you to get Rubies. After installing TON Surf on your mobile device and receiving Rubies, you can access your Ever Surf account via the web (URL: [https://web.ever.surf/](https://web.ever.surf/)).
 
     To get Rubies:   
         1. Click the Settings icon in the upper left corner and select Advanced settings.    
@@ -31,13 +31,13 @@ To cover this functionality we will test the following use-case: deploy a multi-
     npm i -g everdev
     ```
 
-3. Add a Developer Network to the EverDev registry with two endpoints (for details, see [Networks](https://docs.ton.dev/86757ecb2/p/85c869-networks/t/660e33)):
+3. Add a Developer Network to the EverDev registry with two endpoints (for details, see [Networks](https://tonlabs.gitbook.io/ton-sdk/reference/ton-os-api/networks)):
 
     ```
-    everdev network add devnet net1.ton.dev,net5.ton.dev
+    everdev network add devnet eri01.net.everos.dev,rbx01.net.everos.dev,gra01.net.everos.dev
     ```
 
-4.	Specify the developer’s network devnet as a default network for contract development (see the [EverDev documentation](https://github.com/tonlabs/EverDev#network-tool)) by running the following command:
+4.	Specify the developer’s network devnet as a default network for contract development (see the [EverDev documentation](../command-line-interface/network-tool.md)) by running the following command:
 
     ```
     everdev network default devnet
@@ -51,7 +51,7 @@ To cover this functionality we will test the following use-case: deploy a multi-
     everdev signer add <signer_name> <seed_phrase_in_quotes>
     ```
 
-    **Note:** The seed is enclosed in quotes and consists of 12 words, separated by space (see [EverDev Everscale Development Environment](https://github.com/tonlabs/everdev#add-a-signer-with-specific-keys)).
+    **Note:** The seed is enclosed in quotes and consists of 12 words, separated by space (see [EverDev Everscale Development Environment](../command-line-interface/signer-tool.md#add-a-signer-with-specific-keys)).
 
     For example:
 
@@ -59,7 +59,7 @@ To cover this functionality we will test the following use-case: deploy a multi-
     everdev signer add signer1 "word1 word2 word3 word4 word5 word6 word7 word8 word9 word10 word11 word12"
     ```
 
-7. Copy and save the wallet address from Surf by selecting: Chain Rider > Share wallet address.
+1. Copy and save the wallet address from Surf by selecting: Chain Rider > Share wallet address.
 
     **Note:** Alternatively, you can access the wallet address from Settings > Safety Protection > Address and keys, or you can click Receive and then click on the address (will be copied automatically). 
 
@@ -134,7 +134,7 @@ Here we will use Setcode multisig contract from the [multisig contract directory
     fc911f562450a5cf943fa2ac5d0f6baf3d107ac2daf37dcdc1da72785158ff2a
     ```
 
-1. To [deploy the contract](https://github.com/tonlabs/everdev#deploy-contract) to blockchain, run the following command:
+1. To [deploy the contract](../command-line-interface/contract-management.md#deploy-contract) to blockchain, run the following command:
 
     ```
     everdev contract deploy <contract_name>
@@ -194,7 +194,7 @@ In this example, you will create a transaction by the first custodian and confir
 
     2) Off-chain call of the [getTransaction](https://github.com/tonlabs/ton-labs-contracts/blob/776bc3d614ded58330577167313a9b4f80767f41/solidity/setcodemultisig/SetcodeMultisigWallet.sol#L398) method to get the created transaction ID
 
-    3) The last on-chain call of the [confirmTransaction](https://github.com/tonlabs/ton-labs-contracts/blob/776bc3d614ded58330577167313a9b4f80767f41/solidity/setcodemultisig/SetcodeMultisigWallet.sol#L307) method to confirm the transaction by the second custodian (see [Run contract deployed on the network](https://github.com/tonlabs/everdev#run-contract-deployed-on-the-network) for details).
+    3) The last on-chain call of the [confirmTransaction](https://github.com/tonlabs/ton-labs-contracts/blob/776bc3d614ded58330577167313a9b4f80767f41/solidity/setcodemultisig/SetcodeMultisigWallet.sol#L307) method to confirm the transaction by the second custodian (see [Run contract deployed on the network](../command-line-interface/contract-management.md#run-contract-deployed-on-the-network) for details).
 
 2. Call contract’s `submitTransaction` method with the first custodian key (k1) to initiate a transaction to some random address. Select function 4 (`submitTransaction`) with the following parameters:
     - dest (address) – the destination address (wallet address copied from the recipient’s TON Surf application). **Note**: In this example, another Surf wallet was created. Its address is used as a recipient address.
@@ -211,7 +211,7 @@ In this example, you will create a transaction by the first custodian and confir
 
     ```
     Configuration
-    Network: devnet (net1.ton.dev, net5.ton.dev)
+    Network: devnet (eri01.net.everos.dev, rbx01.net.everos.dev, gra01.net.everos.dev)
     Signer:
     k1 (public aa1787d058eafdf4453274b063e4ddfb05492ddc1b01e91d06681466f35475ed)
     Address:
@@ -268,7 +268,7 @@ In this example, you will create a transaction by the first custodian and confir
     ```
     everdev contract run-local SetcodeMultisigWallet
     Configuration
-    Network: devnet (net1.ton.dev, net5.ton.dev)
+    Network: devnet (eri01.net.everos.dev, rbx01.net.everos.dev, gra01.net.everos.dev)
     Signer:
     k1 (public aa1787d058eafdf4453274b063e4ddfb05492ddc1b01e91d06681466f35475ed)
     Address:
@@ -314,7 +314,7 @@ In this example, you will create a transaction by the first custodian and confir
 
     ```
     Configuration
-    Network: devnet (net1.ton.dev, net5.ton.dev)
+    Network: devnet (eri01.net.everos.dev, rbx01.net.everos.dev, gra01.net.everos.dev)
     Signer: k2 (public fc911f562450a5cf943fa2ac5d0f6baf3d107ac2daf37dcdc1da72785158ff2a)
     Address:
     0:959f470d3431ec94c7294209d8dcb7b7c5a0b8ed848c1d383e1a1c28b5b415c5
@@ -340,7 +340,7 @@ In this example, you will create a transaction by the first custodian and confir
     Running...
     ```
 
-4. Verify that the transaction is completed successfully and the tokens are transferred to the recipient’s account: either search for the recipient's address in the [ton.live](https://net.ton.live/) blockchain explorer, or check recipient's account info with everdev:
+4. Verify that the transaction is completed successfully and the tokens are transferred to the recipient’s account: either search for the recipient's address in the [ton.live](https://net.ever.live/) blockchain explorer, or check recipient's account info with everdev:
     
     ```
     everdev contract info -a <recipient_address>
@@ -353,7 +353,7 @@ In this example, you will create a transaction by the first custodian and confir
 
     Configuration
 
-      Network: dev (net.ton.dev, net1.ton.dev, net5.ton.dev)
+      Network: dev (eri01.net.everos.dev, rbx01.net.everos.dev, gra01.net.everos.dev)
       Signer:  None
 
     Address:   0:8a398f150c7eff3927eb23b52af9c5c29a0aca67b49b9ac5e9bdac04e25fefa6

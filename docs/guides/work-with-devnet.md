@@ -2,7 +2,7 @@
 
 ## Contents
 
-- [Working with DevNet](#working-with-devnet)
+- [Working with DevNet: deploy and start using your own giver in Developer Network](#working-with-devnet-deploy-and-start-using-your-own-giver-in-developer-network)
   - [Contents](#contents)
   - [Deploying your own Giver](#deploying-your-own-giver)
     - [Generate Giver keys](#generate-giver-keys)
@@ -33,7 +33,7 @@ devnet_giver_keys  5a343ccbd62c15e3df1076bc34957ad2717469d84e4d6b3ef26112db80ac8
 
 ### Compile Giver code
 
-You can find compiled giver v2 contract with code [here](https://github.com/tonlabs/tonos-se/tree/master/contracts/giver_v2). You need to recompile code only if you want to change its code, so you can use compiled `GiverV2.tvc` file and move to the next step.
+You can find compiled giver v2 contract with code [here](https://github.com/tonlabs/evernode-se/tree/master/contracts/giver_v2). You need to recompile code only if you want to change its code, so you can use compiled `GiverV2.tvc` file and move to the next step.
 
 **Attention!**
 The code in repo is not compatible with the latest Solidity compilers, so if you would like to compile it yourself, you would need to migrate code to the latest Solidity version first.
@@ -71,7 +71,7 @@ In EverGiver Telegram bot type (change Giver's address to the address obtained a
 /give 111 0:93139197f2f58d674bee4ee71a42d8f1e7b6a3c3e041ded7a54d330bcc44f3b3
 ```
 
-Wait for operation completion. Check address balance in [Blockchain Explorer](https://net.ton.live).
+Wait for operation completion. Check address balance in [Blockchain Explorer](https://net.ever.live).
 
 ### Deploy Giver contract
 
@@ -82,7 +82,7 @@ $ everdev contract deploy -n dev -s devnet_giver_keys GiverV2.tvc
 
 Configuration
 
-  Network: dev (net.ton.dev, net1.ton.dev, net5.ton.dev)
+  Network: dev (eri01.net.everos.dev, rbx01.net.everos.dev, gra01.net.everos.dev)
   Signer:  devnet_giver_keys (public 5a343ccbd62c15e3df1076bc34957ad2717469d84e4d6b3ef26112db80ac8e1b)
 
 Address:   0:93139197f2f58d674bee4ee71a42d8f1e7b6a3c3e041ded7a54d330bcc44f3b3 (calculated from TVC and signer public)
@@ -109,9 +109,9 @@ Network       Endpoints                                        Giver
 ------------  -----------------------------------------------  ------------------------------------------------------------------
 se (Default)  http://localhost                                 0:b5e9240fc2d2f1ff8cbb1d1dee7fb7cae155e5f6320e585fcc685698994a19a5
                                                                  GiverV2
-dev           net.ton.dev, net1.ton.dev, net5.ton.dev          0:93139197f2f58d674bee4ee71a42d8f1e7b6a3c3e041ded7a54d330bcc44f3b3
+dev           eri01.net.everos.dev, rbx01.net.everos.dev, gra01.net.everos.dev          0:93139197f2f58d674bee4ee71a42d8f1e7b6a3c3e041ded7a54d330bcc44f3b3
                                                                  GiverV2 signed by devnet_giver_keys
-main          main.ton.dev, main2.ton.dev, main3.ton.dev, ...
+main          eri01.main.everos.dev, gra01.main.everos.dev, gra02.main.everos.dev ...
 ```
 
 If Giver is set, you will see you Giver's address and keypair name for the `dev` network.
@@ -125,7 +125,7 @@ $ everdev contract topup --network dev --address <address> --value 10000
 
 Configuration
 
-  Network: dev (net.ton.dev, net1.ton.dev, net5.ton.dev)
+  Network: dev (eri01.net.everos.dev, rbx01.net.everos.dev, gra01.net.everos.dev)
   Signer:  test (public de101cde5c94540926fe862e965cf109b1b803989e7048657cf7c4caaa2a257d)
 
 Address:   <address>
