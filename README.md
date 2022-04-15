@@ -3,7 +3,7 @@
 
 [NPM package](https://www.npmjs.com/package/everdev)
 
-[Quick Start](docs/guides/quick_start.md)
+[Quick Start](docs/guides/quick-start.md)
 
 **Get quick help in our telegram channel:**
 
