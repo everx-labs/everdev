@@ -24,11 +24,9 @@
 * [Work with contracts](guides/work-with-contracts.md)
 * [Work with Devnet](guides/work-with-devnet.md)
 * [Create controller](guides/creating-controller.md)
-
-
 * [View controller info](view-controller-info.md)
 
 ## Links
 
 * [EverDev repository](https://github.com/tonlabs/everdev)
-* [TON SDK repository](https://github.com/tonlabs/TON-SDK)
+* [EVER SDK repository](https://github.com/tonlabs/ever-sdk)
