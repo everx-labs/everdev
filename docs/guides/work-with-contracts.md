@@ -1,51 +1,48 @@
-**Deploy and call your contracts with EverDev** 
+# Work with contracts
 
-In this article, you will learn how to work with a contact in EverDev. 
-This sample covers such functionality as network configuration, deploy (including giver configuration), on-chain execution, read contract data.
+**Deploy and call your contracts with EverDev**
+
+In this article, you will learn how to work with a contact in EverDev. This sample covers such functionality as network configuration, deploy (including giver configuration), on-chain execution, read contract data.
 
 To cover this functionality we will test the following use-case: deploy a multi-signature contract with two custodians, which confirm a transaction to transfer funds from this wallet to another wallet account.
 
-# Content Table
-- [Content Table](#content-table)
-- [Preparing the contract deployment environment](#preparing-the-contract-deployment-environment)
-- [Deploying the contract](#deploying-the-contract)
-- [Calling the Contract (on-chain and off-chain)](#calling-the-contract-on-chain-and-off-chain)
+## Content Table
 
-# Preparing the contract deployment environment
+* [Content Table](work-with-contracts.md#content-table)
+* [Preparing the contract deployment environment](work-with-contracts.md#preparing-the-contract-deployment-environment)
+* [Deploying the contract](work-with-contracts.md#deploying-the-contract)
+* [Calling the Contract (on-chain and off-chain)](work-with-contracts.md#calling-the-contract-on-chain-and-off-chain)
 
-1. To deploy the contract in the Developer network, you need to have a wallet with tokens, that you will use to prepay the initial deploy operation. Surf can help us with that.
+## Preparing the contract deployment environment
 
-    Proceed to [ever.surf](https://ever.surf/) and install the Ever Surf application on your mobile device. 
+1.  To deploy the contract in the Developer network, you need to have a wallet with tokens, that you will use to prepay the initial deploy operation. Surf can help us with that.
 
-    **Attention!** Only the mobile version of TON Surf enables you to get Rubies. After installing TON Surf on your mobile device and receiving Rubies, you can access your Ever Surf account via the web (URL: [https://web.ever.surf/](https://web.ever.surf/)).
+    Proceed to [ever.surf](https://ever.surf) and install the Ever Surf application on your mobile device.
 
-    To get Rubies:   
-        1. Click the Settings icon in the upper left corner and select Advanced settings.    
-        2. Click Network. Choose Devnet.   
-        3. Go back to the main screen and click Chain Rider > Get Rubies.   
-        4. Verify that the Rubies you received are displayed in the Developer balance.   
+    **Attention!** Only the mobile version of TON Surf enables you to get Rubies. After installing TON Surf on your mobile device and receiving Rubies, you can access your Ever Surf account via the web (URL: [https://web.ever.surf/](https://web.ever.surf)).
 
-2. To configure the environment required for contract development, you should install the EverDev tool by running the following command:
+    To get Rubies:\
+    1\. Click the Settings icon in the upper left corner and select Advanced settings.\
+    2\. Click Network. Choose Devnet.\
+    3\. Go back to the main screen and click Receive.\
+    4\. Copy address and use a giver (for example [everdev\_giver\_bot](https://t.me/everdev\_giver\_bot) on Telegram) to get Rubies.
+2.  To configure the environment required for contract development, you should install the EverDev tool by running the following command:
 
     ```
     npm i -g everdev
     ```
-
-3. Add a Developer Network to the EverDev registry with two endpoints (for details, see [Networks](https://tonlabs.gitbook.io/ton-sdk/reference/ton-os-api/networks)):
+3.  Add a Developer Network to the EverDev registry with two endpoints (for details, see [Networks](https://docs.everos.dev/ever-sdk/reference/ever-os-api/networks)):
 
     ```
     everdev network add devnet eri01.net.everos.dev,rbx01.net.everos.dev,gra01.net.everos.dev
     ```
-
-4.	Specify the developer’s network devnet as a default network for contract development (see the [EverDev documentation](../command-line-interface/network-tool.md)) by running the following command:
+4.  Specify the developer’s network devnet as a default network for contract development (see the [EverDev documentation](../command-line-interface/network-tool.md)) by running the following command:
 
     ```
     everdev network default devnet
     ```
-
-5.	To enable using your wallet as a giver, you need to import the seed phrase from Surf to EverDev. In Surf, select: Settings > Safety protection > Master password. The system will ask you to enter your PIN. After successful PIN validation, it will display the master password, consisting of 12 words (seed phrase). Copy and save your seed phrase.
-
-6.	Add a signer with previously generated keys (seed phrase):
+5. To enable using your wallet as a giver, you need to import the seed phrase from Surf to EverDev. In Surf, select: Settings > Safety protection > Master password. The system will ask you to enter your PIN. After successful PIN validation, it will display the master password, consisting of 12 words (seed phrase). Copy and save your seed phrase.
+6.  Add a signer with previously generated keys (seed phrase):
 
     ```
     everdev signer add <signer_name> <seed_phrase_in_quotes>
@@ -58,36 +55,28 @@ To cover this functionality we will test the following use-case: deploy a multi-
     ```
     everdev signer add signer1 "word1 word2 word3 word4 word5 word6 word7 word8 word9 word10 word11 word12"
     ```
+7.  Copy and save the wallet address from Surf by selecting: Chain Rider > Share wallet address.
 
-1. Copy and save the wallet address from Surf by selecting: Chain Rider > Share wallet address.
-
-    **Note:** Alternatively, you can access the wallet address from Settings > Safety Protection > Address and keys, or you can click Receive and then click on the address (will be copied automatically). 
-
-8.	Configure the Surf wallet as a giver for the network (devnet) with the wallet address and signer (created in step 6) as shown in the below command example:
+    **Note:** Alternatively, you can access the wallet address from Settings > Safety Protection > Address and keys, or you can click Receive and then click on the address (will be copied automatically).
+8.  Configure the Surf wallet as a giver for the network (devnet) with the wallet address and signer (created in step 6) as shown in the below command example:
 
     ```
     everdev network giver devnet 0:4a367a6beade23b7b5b98a6b018f797787986b3fad3704550ac87655abe5643e
     -s signer1
     ```
 
-    **Note:** The default value sponsored by the a giver is 1 token. The sponsored value can be changed with the `-value`  option. The `-value`  parameter is specified in nanotokens (1 token = 1000000000 nanotokens).
+    **Note:** The default value sponsored by the a giver is 1 token. The sponsored value can be changed with the `-value` option. The `-value` parameter is specified in nanotokens (1 token = 1000000000 nanotokens).
 
+## Deploying the contract
 
-# Deploying the contract
-
-1.	Create a directory that you will use as a work folder for your contract testing and enter it. 
-We create `multisig` folder in this example.
+1.  Create a directory that you will use as a work folder for your contract testing and enter it. We create `multisig` folder in this example.
 
     ```jsx
     mkdir multisig
     cd multisig
     ```
-
-2.	Download the abi and .tvc files of your contract and copy them into your working directory.
-Here we will use Setcode multisig contract from the [multisig contract directory](https://github.com/tonlabs/ton-labs-contracts/tree/master/solidity/setcodemultisig) and copy them into  `multisig` folder. 
-
-3.	Now you need to add keys that will be used to sign transactions. 
-    We want to deploy multisig wallet with 2 custodians, so we will generate 2 key pairs.
+2. Download the abi and .tvc files of your contract and copy them into your working directory. Here we will use Setcode multisig contract from the [multisig contract directory](https://github.com/tonlabs/ton-labs-contracts/tree/master/solidity/setcodemultisig) and copy them into `multisig` folder.
+3.  Now you need to add keys that will be used to sign transactions. We want to deploy multisig wallet with 2 custodians, so we will generate 2 key pairs.
 
     Add two signers with randomly generated keys:
 
@@ -108,14 +97,12 @@ Here we will use Setcode multisig contract from the [multisig contract directory
     ```
     everdev signer generate k2
     ```
-
-4.	Specify the first key pair (k1) as a default. It will be used if Signer parameter is not specified. 
+4.  Specify the first key pair (k1) as a default. It will be used if Signer parameter is not specified.
 
     ```
     everdev signer default k1
     ```
-
-5.	To view public keys, execute the following command:
+5.  To view public keys, execute the following command:
 
     ```
     everdev signer info
@@ -133,8 +120,7 @@ Here we will use Setcode multisig contract from the [multisig contract directory
     k2
     fc911f562450a5cf943fa2ac5d0f6baf3d107ac2daf37dcdc1da72785158ff2a
     ```
-
-1. To [deploy the contract](../command-line-interface/contract-management.md#deploy-contract) to blockchain, run the following command:
+6.  To [deploy the contract](../command-line-interface/contract-management.md#deploy-contract) to blockchain, run the following command:
 
     ```
     everdev contract deploy <contract_name>
@@ -150,10 +136,10 @@ Here we will use Setcode multisig contract from the [multisig contract directory
 
     When running this command, you enter the following options (constructor parameters):
 
-    - Number of signers (number of items in owners: 2).
-    - Owner 1: The first signer’s (K1) public key value preceded with 0x characters.
-    - Owner 2: The second signer’s (K2) public key value preceded with 0x characters.
-    - Number of required confirmations: 2
+    * Number of signers (number of items in owners: 2).
+    * Owner 1: The first signer’s (K1) public key value preceded with 0x characters.
+    * Owner 2: The second signer’s (K2) public key value preceded with 0x characters.
+    * Number of required confirmations: 2
 
     The example of constructor parameters is shown below:
 
@@ -164,8 +150,7 @@ Here we will use Setcode multisig contract from the [multisig contract directory
     3. owners 2 (uint256): 0xfc911f562450a5cf943fa2ac5d0f6baf3d107ac2daf37dcdc1da72785158ff2a
     reqConfirms (uint8): 2
     ```
-
-2. Verify that the contract is successfully deployed as shown in the example below:
+7.  Verify that the contract is successfully deployed as shown in the example below:
 
     ```
     Deploying...
@@ -173,35 +158,33 @@ Here we will use Setcode multisig contract from the [multisig contract directory
     0:e61e3b688b3c388540ce5116ad9de41cb2927fe4915ddad5bd30b3a713b0f148
     ```
 
-# Calling the Contract (on-chain and off-chain)
+## Calling the Contract (on-chain and off-chain)
 
-When the contract is successfully deployed in the blockchain, we can run its methods. 
-Methods can be called on-chain with this command:
+When the contract is successfully deployed in the blockchain, we can run its methods. Methods can be called on-chain with this command:
+
 ```
 everdev contract run <Contract>
 ```
 
 Methods can be called off-chain (to read some data) with this command:
+
 ```
 everdev contract run-local <Contract>
 ```
 
-In this example, you will create a transaction by the first custodian and confirm it by the second custodian. 
+In this example, you will create a transaction by the first custodian and confirm it by the second custodian.
 
 1. You will sequentially call the following three methods:
+   1. On-chain call of the [submitTransaction](https://github.com/tonlabs/ton-labs-contracts/blob/776bc3d614ded58330577167313a9b4f80767f41/solidity/setcodemultisig/SetcodeMultisigWallet.sol#L273) to initiate the transfer by the first custodian
+   2. Off-chain call of the [getTransaction](https://github.com/tonlabs/ton-labs-contracts/blob/776bc3d614ded58330577167313a9b4f80767f41/solidity/setcodemultisig/SetcodeMultisigWallet.sol#L398) method to get the created transaction ID
+   3. The last on-chain call of the [confirmTransaction](https://github.com/tonlabs/ton-labs-contracts/blob/776bc3d614ded58330577167313a9b4f80767f41/solidity/setcodemultisig/SetcodeMultisigWallet.sol#L307) method to confirm the transaction by the second custodian (see [Run contract deployed on the network](../command-line-interface/contract-management.md#run-contract-deployed-on-the-network) for details).
+2.  Call contract’s `submitTransaction` method with the first custodian key (k1) to initiate a transaction to some random address. Select function 4 (`submitTransaction`) with the following parameters:
 
-    1) On-chain call of the [submitTransaction](https://github.com/tonlabs/ton-labs-contracts/blob/776bc3d614ded58330577167313a9b4f80767f41/solidity/setcodemultisig/SetcodeMultisigWallet.sol#L273) to initiate the transfer by the first custodian
-
-    2) Off-chain call of the [getTransaction](https://github.com/tonlabs/ton-labs-contracts/blob/776bc3d614ded58330577167313a9b4f80767f41/solidity/setcodemultisig/SetcodeMultisigWallet.sol#L398) method to get the created transaction ID
-
-    3) The last on-chain call of the [confirmTransaction](https://github.com/tonlabs/ton-labs-contracts/blob/776bc3d614ded58330577167313a9b4f80767f41/solidity/setcodemultisig/SetcodeMultisigWallet.sol#L307) method to confirm the transaction by the second custodian (see [Run contract deployed on the network](../command-line-interface/contract-management.md#run-contract-deployed-on-the-network) for details).
-
-2. Call contract’s `submitTransaction` method with the first custodian key (k1) to initiate a transaction to some random address. Select function 4 (`submitTransaction`) with the following parameters:
-    - dest (address) – the destination address (wallet address copied from the recipient’s TON Surf application). **Note**: In this example, another Surf wallet was created. Its address is used as a recipient address.
-    - value – the value in nanotokens (1 token = 1000000000 nanotokens)
-    - bounce (bool) – true if tokens are transferred to an existing account; set false to transfer to a non-deployed account
-    - allBalance – true if need to transfer all remaining balance
-    - payload (cell) – leave blank.
+    * dest (address) – the destination address (wallet address copied from the recipient’s TON Surf application). **Note**: In this example, another Surf wallet was created. Its address is used as a recipient address.
+    * value – the value in nanotokens (1 token = 1000000000 nanotokens)
+    * bounce (bool) – true if tokens are transferred to an existing account; set false to transfer to a non-deployed account
+    * allBalance – true if need to transfer all remaining balance
+    * payload (cell) – leave blank.
 
     The example of the command to run the contract with the `submitTransaction` function is shown below:
 
@@ -245,7 +228,7 @@ In this example, you will create a transaction by the first custodian and confir
 
     In the output, note the transaction ID (`transId` field) value, which will be used in the next step.
 
-    For example: 
+    For example:
 
     ```
     ...
@@ -254,8 +237,7 @@ In this example, you will create a transaction by the first custodian and confir
     },
     ...
     ```
-
-3.	Execute the command to run the contract locally and call the get`getTransaction` method.
+3.  Execute the command to run the contract locally and call the get`getTransaction` method.
 
     ```
     everdev contract run-local <contract_name>
@@ -294,15 +276,14 @@ In this example, you will create a transaction by the first custodian and confir
     Parameters of getTransaction:
     transactionId (uint64): 6963980449992624641
     ```
-
-4. Run the contract and call the [confirmTransaction](https://github.com/tonlabs/ton-labs-contracts/blob/776bc3d614ded58330577167313a9b4f80767f41/solidity/setcodemultisig/SetcodeMultisigWallet.sol#L307) method with the second custodian key to confirm the transaction:
+4.  Run the contract and call the [confirmTransaction](https://github.com/tonlabs/ton-labs-contracts/blob/776bc3d614ded58330577167313a9b4f80767f41/solidity/setcodemultisig/SetcodeMultisigWallet.sol#L307) method with the second custodian key to confirm the transaction:
 
     ```
     everdev contract run <contract_name> -a <contract_address> --signer (second_signer name)
     ```
 
-    - Choose function 5: (`confirmTransaction`).
-    - Enter the transaction ID (`transId`) parameter value.
+    * Choose function 5: (`confirmTransaction`).
+    * Enter the transaction ID (`transId`) parameter value.
 
     In the below example, we execute the following command:
 
@@ -339,16 +320,15 @@ In this example, you will create a transaction by the first custodian and confir
     transactionId (uint64): 6963980449992624641
     Running...
     ```
+5.  Verify that the transaction is completed successfully and the tokens are transferred to the recipient’s account: either search for the recipient's address in the [ever.live](https://net.ever.live) blockchain explorer, or check recipient's account info with everdev:
 
-4. Verify that the transaction is completed successfully and the tokens are transferred to the recipient’s account: either search for the recipient's address in the [ton.live](https://net.ever.live/) blockchain explorer, or check recipient's account info with everdev:
-    
     ```
     everdev contract info -a <recipient_address>
     ```
-    
+
     Viewing contract info does not require keys, and, if the address is specified with the `-a` option, does not require contract files.
-    
-    ```    
+
+    ```
     everdev contract info -a 0:8a398f150c7eff3927eb23b52af9c5c29a0aca67b49b9ac5e9bdac04e25fefa6
 
     Configuration
@@ -360,4 +340,4 @@ In this example, you will create a transaction by the first custodian and confir
     Account:   Active
     Balance:   142692817630 (≈ 143 tokens)
     ...
-    ```   
+    ```

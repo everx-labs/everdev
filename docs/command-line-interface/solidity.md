@@ -10,8 +10,7 @@ everdev sol create Contract
 
 ## Compile
 
-This command compiles and links a selected Solidity contract.
-After successful compilation you get .abi.json and .tvc files that you can later [use in your DApps to deploy and run contract methods](https://tonlabs.gitbook.io/ton-sdk/guides/work_with_contracts/add_contract_to_your_app).
+This command compiles and links a selected Solidity contract. After successful compilation you get .abi.json and .tvc files that you can later [use in your DApps to deploy and run contract methods](https://docs.everos.dev/ever-sdk/guides/work\_with\_contracts/add\_contract\_to\_your\_app).
 
 ```shell
 everdev sol compile Contract.sol
@@ -22,8 +21,8 @@ To save generated assembler code use `-c` option (default is false)
 ```shell
 everdev sol compile Contract.sol -c path/to/output/file
 ```
-Assembler code will be saved in path/to/output/file with the extension `code`
 
+Assembler code will be saved in path/to/output/file with the extension `code`
 
 You can specify the output files location with the `-o` option:
 
@@ -66,8 +65,8 @@ This command updates the compiler and linker to the latest version.
 ```shell
 everdev sol update
 ```
-**Attention!**
-Use --force option to force update of components that do not update their version.
+
+**Attention!** Use --force option to force update of components that do not update their version.
 
 ## Set
 
@@ -76,5 +75,5 @@ This command sets the compiler and linker versions and downloads them if needed.
 ```shell
 everdev sol set --compiler 0.38.0 --linker 0.23.54
 ```
-**Attention!**
-Use --force option to force update of components that do not update their version.
+
+**Attention!** Use --force option to force update of components that do not update their version.

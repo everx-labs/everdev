@@ -10,8 +10,7 @@ everdev clang create Contract
 
 ## Compile
 
-This command compiles and links a selected C++ contract.
-After successful compilation you get .abi.json and .tvc files that you can later [use in your DApps to deploy and run contract methods](https://tonlabs.gitbook.io/ton-sdk/guides/work_with_contracts/add_contract_to_your_app).
+This command compiles and links a selected C++ contract. After successful compilation you get .abi.json and .tvc files that you can later [use in your DApps to deploy and run contract methods](https://docs.everos.dev/ever-sdk/guides/work\_with\_contracts/add\_contract\_to\_your\_app).
 
 ```shell
 everdev clang compile Contract.cpp

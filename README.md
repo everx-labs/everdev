@@ -69,7 +69,7 @@ everdev <tool> <command> ...args
 
 Some tools (network, signer, contract, js) and commands have short aliases. For example instead of using `everdev network list` you can use `everdev n l` and even shorter `everdev nl`.
 
-Explore the detailed description of command line interface in the corresponding [section](docs/command-line-interface/).
+Explore the detailed description of command line interface in the corresponding [section](broken-reference).
 
 ## Working with DevNet
 
@@ -88,4 +88,4 @@ Learn more about creating your own controller: [Creating Controller](docs/guides
 
 ## Troubleshooting
 
-If you encountered any problem try to seek the solution in [Troubleshooting Notes](docs/troubleshooting.md). If it didn't help - please, ask in our [telegram channel](https://t.me/ton\_sdk).
+If you encountered any problem try to seek the solution in [Troubleshooting Notes](docs/troubleshooting.md). If it didn't help - please, ask in our [telegram channel](https://t.me/ever\_sdk).
