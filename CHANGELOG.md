@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.2] - 2022-02-05
+### Fixed
+ - Updated Ever OS Cloud endpoints.
+
 ## [1.1.1] - 2022-02-11
 ### Fixed
  - An error "TON Client binary bridge is not set"  that occurred when using `js wrap` command as a module

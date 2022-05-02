@@ -82,11 +82,19 @@ export class NetworkRegistry {
             }, {
                 name: "dev",
                 endpoints: [
-                    "net.ton.dev", "net1.ton.dev", "net5.ton.dev",
+                    "eri01.net.everos.dev",
+                    "rbx01.net.everos.dev",
+                    "gra01.net.everos.dev",
                 ],
             }, {
                 name: "main",
-                endpoints: ["main.ton.dev", "main2.ton.dev", "main3.ton.dev", "main4.ton.dev"],
+                endpoints: [
+                    "eri01.main.everos.dev",
+                    "gra01.main.everos.dev",
+                    "gra02.main.everos.dev",
+                    "lim01.main.everos.dev",
+                    "rbx01.main.everos.dev",
+                ],
             }];
             this.default = "dev";
         }

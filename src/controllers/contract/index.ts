@@ -118,7 +118,7 @@ const preventUiOpt: CommandArg = {
         "waiting for the user input.\n" +
         "Instead everdev will abort with error.\n" +
         "For example when some parameters are missing in command line " +
-        "then ton dev will prompt user to input values for missing parameters " +
+        "then everdev will prompt user to input values for missing parameters " +
         "(or fails if prevent-ui option is specified).",
     type: "boolean",
     defaultValue: "false",
