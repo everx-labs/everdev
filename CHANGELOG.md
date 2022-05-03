@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [1.1.2] - 2022-02-05
 ### Fixed
  - Updated Ever OS Cloud endpoints.
+ - Updated the C++ contract example for use with the latest (7.7.35) clang compiler.
 
 ## [1.1.1] - 2022-02-11
 ### Fixed
