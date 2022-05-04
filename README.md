@@ -12,15 +12,15 @@
 
 ## Content Table
 
-* [EverDev](./#everdev)
-  * [Content Table](./#content-table)
-  * [What is EverDev?](./#what-is-everdev)
-    * [Use-cases](./#use-cases)
-    * [What tools does it support?](./#what-tools-does-it-support)
-  * [Quick Start](./#quick-start)
-  * [Working with DevNet](./#working-with-devnet)
-  * [EverDev Extensibility](./#everdev-extensibility)
-  * [Troubleshooting](./#troubleshooting)
+* [EverDev](#everdev)
+  * [Content Table](#content-table)
+  * [What is EverDev?](#what-is-everdev)
+    * [Use-cases](#use-cases)
+    * [What tools does it support?](#what-tools-does-it-support)
+  * [Quick Start](#quick-start)
+  * [Working with DevNet](#working-with-devnet)
+  * [EverDev Extensibility](#everdev-extensibility)
+  * [Troubleshooting](#troubleshooting)
 
 ## What is EverDev?
 
@@ -49,7 +49,7 @@ Components are downloaded and installed automatically for the target platform up
 * [TestSuite4](docs/command-line-interface/testsuite4.md) – Python lightweight framework for contract testing.
 * [tonos-cli](https://github.com/tonlabs/tonos-cli) – Command line tool for multisigwallet management and staking, includes CLI Debot Browser. EverDev helps with installation and version management.
 
-EverDev can be extended with other tools following the [instructions of integration](./#everdev-extensibility).
+EverDev can be extended with other tools following the [instructions of integration](#everdev-extensibility).
 
 ## Quick Start
 
@@ -69,7 +69,7 @@ everdev <tool> <command> ...args
 
 Some tools (network, signer, contract, js) and commands have short aliases. For example instead of using `everdev network list` you can use `everdev n l` and even shorter `everdev nl`.
 
-Explore the detailed description of command line interface in the corresponding [section](broken-reference).
+Explore the detailed description of command line interface in the corresponding [section](docs/command-line-interface/solidity.md).
 
 ## Working with DevNet
 
