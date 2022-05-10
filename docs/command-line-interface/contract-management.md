@@ -222,8 +222,8 @@ or
 ```
 everdev contract run -s none -a <address>
 ```
-In this case you have to explicitly specify address in run function because otherwise everdev may calculate a wrong address from empty pubkey.
 
+In this case you have to explicitly specify address in run function because otherwise everdev may calculate a wrong address from empty pubkey.
 
 To **execute a smart contract function with bytes argument**, the argument needs to be in hex format.
 
@@ -234,12 +234,26 @@ cat bytes | xxd -p | tr -d '\n' > bytes.hex
 everdev contract run contract.abi.json function_name -i value:$(cat bytes.hex)
 ```
 
-
 **Execute a smart contract function with structure argument**:
+
 ```
 everdev contract run shapes.tvc \
+    savePoint \
     --address 0:540c1837656674d548c934258ddec9b5fd11b543da977b0016c14b5650bc7eb5 \
     --input '{ "point": { "color": "red", "center": { "x": 1, "y": 2 } } }'
+```
+
+or with an even more complicated structure:
+
+```
+everdev contract run shapes.tvc \
+    savePoints \
+    --address 0:540c1837656674d548c934258ddec9b5fd11b543da977b0016c14b5650bc7eb5 \
+    --input \
+        '{ "points": [
+                { "color": "pink", "center": { "x": 4, "y": 5 }},
+                { "color": "gray", "center": { "x": 6, "y": 7 }}
+        ]}'
 ```
 
 #### Run contract locally on TVM
@@ -364,6 +378,7 @@ Options:
 ```
 
 ## Top up contract balance from giver
+
 If you have set a giver for a network, you can top up contract balances on it with the following command.
 
 ```
@@ -403,4 +418,3 @@ or
 ```
 everdev ct -a <addrress>
 ```
-
