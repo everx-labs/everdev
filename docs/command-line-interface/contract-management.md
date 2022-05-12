@@ -234,7 +234,7 @@ cat bytes | xxd -p | tr -d '\n' > bytes.hex
 everdev contract run contract.abi.json function_name -i value:$(cat bytes.hex)
 ```
 
-**Execute a smart contract function with structure argument**:
+**Execute a smart contract function with structure arguments**:
 
 ```
 everdev contract run shapes.tvc \
@@ -243,7 +243,7 @@ everdev contract run shapes.tvc \
     --input '{ "point": { "color": "red", "center": { "x": 1, "y": 2 } } }'
 ```
 
-or with an even more complicated structure:
+**or with an array of structures:**
 
 ```
 everdev contract run shapes.tvc \
