@@ -18,10 +18,11 @@ EverDev is a Node.js package with CLI interface that allows to set up developer 
 * Work with blockchain from CLI
   
 
-
+# Content table
 - [About EverDev](#about-everdev)
 - [Quick Start](#quick-start)
   - [Use-cases](#use-cases)
+- [Content table](#content-table)
 - [Command Line Interface](#command-line-interface)
   - [General command syntax](#general-command-syntax)
   - [Solidity Compiler](#solidity-compiler)
