@@ -37,8 +37,11 @@ pipeline {
                     //     echo "Can't get project data"
                     // }
 
+                    // branch is PR
+                    G_info.put('isPR', G_info.branch ==~ /^PR-\d+/ ? true : false)
+
                     // check reason
-                    if(G_info.branch == "master") {
+                    if(G_info.branch == "main") {
                         // def commitText = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim().split('\n').findAll{rec ->
                         //     rec.trim() != '' && !(rec ==~ /.*Merge.*/)
                         // }
@@ -55,16 +58,13 @@ pipeline {
                         // ) {
                         //     G_process_build = false
                         // }
-                    }
-
-					// branch is PR
-                    G_info.put('isPR', G_info.branch ==~ /^PR-\d+/ ? true : false)
-
-					if (G_info.branch == 'gitbook') {
+                    } else if (G_info.branch == 'gitbook') {
                             println("resolution: gitbook")
                             currentBuild.result = 'SUCCESS'
                             build job: "Builder/gitbook"
                             return
+                    } else if (G_info.branch == 'jenkins') {
+                            println("test: Jenkins")
                     }
 				}
             }
