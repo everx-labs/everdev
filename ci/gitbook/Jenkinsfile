@@ -7,7 +7,7 @@ pipeline {
         label 'master'
     }
     stages{
-        stage('Publish gitbook branch into master') {
+        stage('Publish gitbook branch into main') {
             steps {
                 script {
                     sshagent([G_gitcred]) {
@@ -18,10 +18,10 @@ pipeline {
                         dir(tmpFolder) {
                             try {
                                 sh """
-                                git merge origin/master
+                                git merge origin/main
                                 git push --set-upstream origin gitbook
                                 """
-                                def newPR = gitFunc.createPR('everdev', 'gitbook', 'master', 'Update docs from gitbook')
+                                def newPR = gitFunc.createPR('everdev', 'gitbook', 'main', 'Update docs from gitbook')
                                 def num = newPR.number
                                 if (num) {
                                     def sha = gitFunc.infoPR('everdev', num).head.sha
