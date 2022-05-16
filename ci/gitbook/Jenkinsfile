@@ -1,0 +1,48 @@
+@Library('infrastructure-jenkins-shared-library') _
+
+G_gitcred = 'TonJenSSH'
+
+pipeline {
+    agent {
+        label 'master'
+    }
+    stages{
+        stage('Publish gitbook branch into master') {
+            steps {
+                script {
+                    sshagent([G_gitcred]) {
+                        def tmpFolder = UUID.randomUUID().toString()
+                        sh """
+                            git clone -b gitbook git@github.com:tonlabs/everdev ${tmpFolder}
+                        """
+                        dir(tmpFolder) {
+                            try {
+                                sh """
+                                git merge origin/master
+                                git push --set-upstream origin gitbook
+                                """
+                                def newPR = gitFunc.createPR('everdev', 'gitbook', 'master', 'Update docs from gitbook')
+                                def num = newPR.number
+                                if (num) {
+                                    def sha = gitFunc.infoPR('everdev', num).head.sha
+                                    def context = "continuous-integration/jenkins/pr-merge"
+                                    gitFunc.setGitHubBuildStatus('everdev', sha, true, 'Updated by Jenkins pipeline', context)
+                                    gitFunc.approvePR('everdev', num)
+                                    println( gitFunc.mergePR('everdev', num) )
+                                }
+                            } catch(ex) {
+                                echo ex
+                            }
+                            deleteDir()
+                        }
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}

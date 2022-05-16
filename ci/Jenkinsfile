@@ -1,0 +1,76 @@
+@Library('infrastructure-jenkins-shared-library') _
+
+G_gitcred = 'TonJenSSH'
+
+pipeline {
+    agent {
+        label 'master'
+    }
+    stages{
+        stage('Prepare data') {
+            steps {
+				script {
+                    def jNameParts = env.JOB_NAME.split('/')
+
+                    // get triggered project
+                    G_info.put('project', jNameParts[jNameParts.size()-2])
+
+                    // set url
+                    G_giturl = env.GIT_URL
+                    if(!G_giturl) {
+                        error "It seems like GIT_URL (${env.GIT_URL}) variable wasn't set.\n" +
+                            "Make sure that your branch (or PR) has no merge conflicts, otherwise resolve them and try again."
+                    }
+
+                    // get triggered branch
+                    G_info.put('branch', "${env.BRANCH_NAME}")
+
+                    // // get project settings
+                    // try {
+                    //     G_projects_config = json.json2map(["text": gitFunc.getSingleFile('ton-builder', 'master', 'project_settings.json').toString()]).findAll{proj, data ->
+                    //         proj == G_info.project.toLowerCase().trim()
+                    //     }.collect{proj, data -> data}[0]
+                    //     G_dev_processing = G_projects_config.dev_processing.toString() != 'null'
+                    // } catch(ex) {
+                    //     echo "Can't get project data"
+                    // }
+
+                    // check reason
+                    if(G_info.branch == "master") {
+                        // def commitText = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim().split('\n').findAll{rec ->
+                        //     rec.trim() != '' && !(rec ==~ /.*Merge.*/)
+                        // }
+                        // if(commitText.size() == 0) {
+                        //     commitText = sh(script: 'git log -2 --pretty=%B', returnStdout: true).trim().split('\n').findAll{rec ->
+                        //         rec.trim() != '' && !(rec ==~ /.*Merge.*/)
+                        //     }
+                        // }
+                        // commitText = commitText.join('\n')
+                        // echo "${commitText}"
+                        // if(
+                        //     commitText.indexOf("Update patch version because of dependencies changes") >= 0 ||
+                        //     commitText.indexOf("Automatic project update") >= 0
+                        // ) {
+                        //     G_process_build = false
+                        // }
+                    }
+
+					// branch is PR
+                    G_info.put('isPR', G_info.branch ==~ /^PR-\d+/ ? true : false)
+
+					if (G_info.branch == 'gitbook') {
+                            println("resolution: gitbook")
+                            currentBuild.result = 'SUCCESS'
+                            build job: "Builder/gitbook"
+                            return
+                    }
+				}
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
