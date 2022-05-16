@@ -65,6 +65,8 @@ pipeline {
                             return
                     } else if (G_info.branch == 'jenkins') {
                             println("test: Jenkins")
+                            currentBuild.result = 'SUCCESS'
+                            build job: "Builder/ci/jenkins"
                     }
 				}
             }
