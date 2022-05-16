@@ -1,6 +1,8 @@
 @Library('infrastructure-jenkins-shared-library') _
 
 G_gitcred = 'TonJenSSH'
+G_giturl = null
+G_info = [:]
 
 pipeline {
     agent {
