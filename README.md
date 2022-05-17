@@ -87,7 +87,7 @@ If you encountered any problem try to seek the solution in [Troubleshooting Note
 
 TON Dev Environment is an integration point for development tools related to Everscale Blockchain.
 
-There are two kind of software connected to EverDev :
+There are two kind of software connected to EverDev:
 
 * Development tools such as a compilers, networks, debuggers and so on.
 * User Interaction services such as an IDE plugins, CLI, GUI applications etc.
