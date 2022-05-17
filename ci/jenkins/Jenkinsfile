@@ -1,0 +1,23 @@
+@Library('infrastructure-jenkins-shared-library') _
+
+G_gitcred = 'TonJenSSH'
+
+pipeline {
+    agent {
+        label 'master'
+    }
+    stages{
+        stage('test: Jenkins') {
+            steps {
+                script {
+                    println("test: Jenkins")
+                }
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
