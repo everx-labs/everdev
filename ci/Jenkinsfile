@@ -4,6 +4,39 @@ G_gitcred = 'TonJenSSH'
 G_giturl = null
 G_info = [:]
 
+def gitbook(project_name = null) {
+    sshagent([G_gitcred]) {
+        def tmpFolder = UUID.randomUUID().toString()
+        sh """
+            git clone -b gitbook git@github.com:tonlabs/${project_name} ${tmpFolder}
+        """
+        dir(tmpFolder) {
+            try {
+                sh """
+                git merge origin/main
+                git push --set-upstream origin gitbook
+                """
+                def newPR = gitFunc.createPR(project_name, 'gitbook', 'main', 'Update docs from gitbook')
+                def num = newPR.number
+                if (num) {
+                    def sha = gitFunc.infoPR(project_name, num).head.sha
+                    def context = "continuous-integration/jenkins/pr-merge"
+                    gitFunc.setGitHubBuildStatus(project_name, sha, true, 'Updated by Jenkins pipeline', context)
+                    gitFunc.approvePR(project_name, num)
+                    println( gitFunc.mergePR(project_name, num) )
+                }
+            } catch(ex) {
+                echo ex
+            }
+            deleteDir()
+        }
+    }
+}
+
+def test_jenkins(project_name = null) {
+    println("test: Jenkins ${project_name}")
+}
+
 pipeline {
     agent {
         label 'master'
@@ -60,13 +93,16 @@ pipeline {
                         // }
                     } else if (G_info.branch == 'gitbook') {
                             println("resolution: gitbook")
-                            currentBuild.result = 'SUCCESS'
-                            build job: "Builder/gitbook"
-                            return
+                            gitbook('everdev')
+                            //currentBuild.result = 'SUCCESS'
+                            //build job: "Builder/gitbook"
+                            //return
                     } else if (G_info.branch == 'jenkins') {
                             println("test: Jenkins")
-                            currentBuild.result = 'SUCCESS'
-                            build job: "Everdev/ci/jenkins"
+                            test_jenkins('everdev')
+                            //currentBuild.result = 'SUCCESS'
+                            //build job: "Everdev/ci/jenkins"
+                            //return
                     }
 				}
             }
