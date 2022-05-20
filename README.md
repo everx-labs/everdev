@@ -17,33 +17,33 @@ EverDev is a Node.js package with CLI interface that allows to set up developer 
 
 ## Content table
 
-* [Quick Start](./#quick-start)
-  * [Use-cases](./#use-cases)
-* [Content table](./#content-table)
-* [Installation](./#installation)
-  * [Prerequisites](./#prerequisites)
-  * [Install](./#install)
-  * [Download](./#download)
-  * [Update](./#update)
-* [Command Line Interface](./#command-line-interface)
-  * [General command syntax](./#general-command-syntax)
-  * [Solidity Compiler](./#solidity-compiler)
-  * [C/C++ Compiler](./#cc-compiler)
-  * [Network Tool](./#network-tool)
-  * [Signer Tool](./#signer-tool)
-  * [Contract Management Tool](./#contract-management-tool)
-  * [Evernode Simple Emulator (local blockchain)](./#evernode-simple-emulator-local-blockchain)
-  * [Debot Browser](./#debot-browser)
-  * [TestSuite4](./#testsuite4)
-  * [tonos-cli](./#tonos-cli)
-* [Cookbook](./#cookbook)
-  * [Quick start](./#quick-start-1)
-  * [Work with contracts](./#work-with-contracts)
-  * [Work with DevNet](./#work-with-devnet)
-  * [Create controller](./#create-controller)
-  * [View controller info](./#view-controller-info)
-* [Troubleshooting](./#troubleshooting)
-* [EverDev Extensibility](./#everdev-extensibility)
+* [Quick Start](#quick-start)
+  * [Use-cases](#use-cases)
+* [Content table](#content-table)
+* [Installation](#installation)
+  * [Prerequisites](#prerequisites)
+  * [Install](#install)
+  * [Download](#download)
+  * [Update](#update)
+* [Command Line Interface](#command-line-interface)
+  * [General command syntax](#general-command-syntax)
+  * [Solidity Compiler](#solidity-compiler)
+  * [C/C++ Compiler](#cc-compiler)
+  * [Network Tool](#network-tool)
+  * [Signer Tool](#signer-tool)
+  * [Contract Management Tool](#contract-management-tool)
+  * [Evernode Simple Emulator (local blockchain)](#evernode-simple-emulator-local-blockchain)
+  * [Debot Browser](#debot-browser)
+  * [TestSuite4](#testsuite4)
+  * [tonos-cli](#tonos-cli)
+* [Cookbook](#cookbook)
+  * [Quick start](#quick-start-1)
+  * [Work with contracts](#work-with-contracts)
+  * [Work with DevNet](#work-with-devnet)
+  * [Create controller](#create-controller)
+  * [View controller info](#view-controller-info)
+* [Troubleshooting](#troubleshooting)
+* [EverDev Extensibility](#everdev-extensibility)
 
 ## Installation
 
@@ -154,7 +154,7 @@ Controller for [tonos-cli](https://github.com/tonlabs/tonos-cli) tool management
 
 
 
-EverDev can be extended with other tools following the [instructions of integration](./#everdev-extensibility).
+EverDev can be extended with other tools following the [instructions of integration](#everdev-extensibility).
 
 ## Cookbook
 
