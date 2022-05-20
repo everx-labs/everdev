@@ -1,7 +1,6 @@
 # Table of contents
 
 * [EverDev](../README.md)
-* [Installation](installation.md)
 * [Troubleshooting](troubleshooting.md)
 * [Use in JS applications](use-in-js-applications.md)
 
