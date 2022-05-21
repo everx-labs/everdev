@@ -155,15 +155,29 @@ export const networkGiverCommand: Command = {
             type: "string",
             defaultValue: "",
         },
+        {
+            name: "type",
+            alias: "t",
+            title: "Type giver contract (GiverV1 | GiverV2 | GiverV3 | SafeMultisigWallet | SetcodeMultisigWallet)",
+            type: "string",
+            defaultValue: "auto",
+        },
     ],
     async run(_terminal: Terminal, args: {
         name: string,
         address: string,
         signer: string,
         value: string,
+        type: string,
     }) {
         const value = parseNumber(args.value);
-        return new NetworkRegistry().setGiver(args.name, args.address, args.signer, value);
+        return new NetworkRegistry().setGiver(
+            args.name,
+            args.address,
+            args.signer,
+            value,
+            args.type,
+        );
     },
 };
 

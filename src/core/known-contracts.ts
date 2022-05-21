@@ -26,6 +26,13 @@ export async function knownContractFromAddress(client: TonClient, name: string, 
     return knownContractFromCodeHash(codeHash, name, address);
 }
 
+export function knownContractByName(name: string): KnownContract {
+    if (!(name in KnownContracts)) {
+        throw new Error(`Unknown contract type ${name}.`);
+    }
+    return KnownContracts[name];
+}
+
 export function knownContractFromCodeHash(codeHash: string, name: string, address?: string): KnownContract {
     const contract = contracts[codeHash];
     if (!contract) {
@@ -45,10 +52,18 @@ export function loadAbi(name: string): AbiContract {
     return JSON.parse(fs.readFileSync(contractsFile(`${name}.abi.json`), "utf8"));
 }
 
-export const KnownContracts = {
+export const KnownContracts: {[key: string]: KnownContract} = {
+    GiverV1: {
+        name: "GiverV1",
+        abi: loadAbi("GiverV1"),
+    },
     GiverV2: {
         name: "GiverV2",
         abi: loadAbi("GiverV2"),
+    },
+    GiverV3: {
+        name: "GiverV3",
+        abi: loadAbi("GiverV3"),
     },
     SetcodeMultisigWallet: {
         name: "SetcodeMultisigWallet",

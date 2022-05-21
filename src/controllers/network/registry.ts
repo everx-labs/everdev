@@ -174,12 +174,12 @@ export class NetworkRegistry {
 
     }
 
-    async setGiver(name: string, address: string, signer: string, value: number | undefined) {
-        const network = this.get(name);
+    async setGiver(networkName: string, address: string, signer: string, value: number | undefined, name: string) {
+        const network = this.get(networkName);
         const client = new TonClient({ network: { endpoints: network.endpoints } });
         try {
             const giver = await NetworkGiver.create(client, {
-                name: "",
+                name,
                 address,
                 signer,
                 value,
