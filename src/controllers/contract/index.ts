@@ -1,27 +1,15 @@
-import {
-    Command,
-    CommandArg,
-    Terminal,
-    ToolController,
-} from "../../core";
-import {
-    Account,
-    AccountType,
-} from "@tonclient/appkit";
-import { TonClient } from "@tonclient/core";
-import { getAccount } from "./accounts";
-import {
-    getRunParams,
-    logRunResult,
-    resolveParams,
-} from "./run";
-import { NetworkGiver } from "../network/giver";
-import { NetworkRegistry } from "../network/registry";
+import { Command, CommandArg, Terminal, ToolController } from "../../core"
+import { Account, AccountType } from "@tonclient/appkit"
+import { TonClient } from "@tonclient/core"
+import { getAccount } from "./accounts"
+import { getRunParams, logRunResult, resolveParams } from "./run"
+import { NetworkGiver } from "../network/giver"
+import { NetworkRegistry } from "../network/registry"
 import {
     formatTokens,
     parseNanoTokens,
     reduceBase64String,
-} from "../../core/utils";
+} from "../../core/utils"
 
 const fileArg: CommandArg = {
     isArg: true,
@@ -29,12 +17,12 @@ const fileArg: CommandArg = {
     title: "ABI file",
     type: "file",
     nameRegExp: /\.abi$/i,
-};
+}
 
 const infoFileArg: CommandArg = {
     ...fileArg,
     defaultValue: "",
-};
+}
 
 const networkOpt: CommandArg = {
     name: "network",
@@ -42,7 +30,7 @@ const networkOpt: CommandArg = {
     type: "string",
     title: "Network name",
     defaultValue: "",
-};
+}
 
 const signerOpt: CommandArg = {
     name: "signer",
@@ -50,16 +38,17 @@ const signerOpt: CommandArg = {
     title: "Signer key name",
     type: "string",
     defaultValue: "",
-};
+}
 
 const runSignerOpt: CommandArg = {
     name: "run-signer",
     title: "Signer key name",
-    description: "This signer will be used to sing message. " +
+    description:
+        "This signer will be used to sing message. " +
         "If run signer is not specified then contract's signer is used",
     type: "string",
     defaultValue: "",
-};
+}
 
 const addressOpt: CommandArg = {
     name: "address",
@@ -67,7 +56,7 @@ const addressOpt: CommandArg = {
     title: "Account address",
     type: "string",
     defaultValue: "",
-};
+}
 
 const functionArg: CommandArg = {
     isArg: true,
@@ -75,18 +64,19 @@ const functionArg: CommandArg = {
     title: "Function name",
     type: "string",
     defaultValue: "",
-};
+}
 
 const inputOpt: CommandArg = {
     name: "input",
     alias: "i",
     title: "Function parameters as name:value,...",
-    description: "Array values must be specified as [item,...]. " +
-        "Spaces are not allowed. If value contains spaces or special symbols \"[],:\" " +
+    description:
+        "Array values must be specified as [item,...]. " +
+        'Spaces are not allowed. If value contains spaces or special symbols "[],:" ' +
         "it must be enclosed in \"\" or ''",
     type: "string",
     defaultValue: "",
-};
+}
 
 const dataOpt: CommandArg = {
     name: "data",
@@ -95,11 +85,11 @@ const dataOpt: CommandArg = {
     description:
         "This data is required to calculate the account address and to deploy contract.\n" +
         "Array values must be specified as [item,...]. " +
-        "Spaces are not allowed. If value contains spaces or special symbols \"[],:\" " +
+        'Spaces are not allowed. If value contains spaces or special symbols "[],:" ' +
         "it must be enclosed in \"\" or ''",
     type: "string",
     defaultValue: "",
-};
+}
 
 const valueOpt: CommandArg = {
     name: "value",
@@ -107,7 +97,7 @@ const valueOpt: CommandArg = {
     title: "Deploying balance value in nano tokens",
     type: "string",
     defaultValue: "",
-};
+}
 
 const preventUiOpt: CommandArg = {
     name: "prevent-ui",
@@ -122,54 +112,59 @@ const preventUiOpt: CommandArg = {
         "(or fails if prevent-ui option is specified).",
     type: "boolean",
     defaultValue: "false",
-};
+}
 
 export const contractInfoCommand: Command = {
     name: "info",
     alias: "i",
     title: "Prints contract summary",
-    args: [
-        infoFileArg,
-        networkOpt,
-        signerOpt,
-        dataOpt,
-        addressOpt,
-    ],
-    async run(terminal: Terminal, args: {
-        file: string,
-        network: string,
-        signer: string,
-        data: string,
-        address: string,
-    }) {
+    args: [infoFileArg, networkOpt, signerOpt, dataOpt, addressOpt],
+    async run(
+        terminal: Terminal,
+        args: {
+            file: string
+            network: string
+            signer: string
+            data: string
+            address: string
+        },
+    ) {
         if (args.file === "" && args.address === "") {
-            throw new Error("File argument or address option must be specified");
+            throw new Error("File argument or address option must be specified")
         }
-        const account = await getAccount(terminal, args);
-        const parsed = await account.getAccount();
-        const accType = parsed.acc_type as AccountType;
+        const account = await getAccount(terminal, args)
+        const parsed = await account.getAccount()
+        const accType = parsed.acc_type as AccountType
         if (account.contract.tvc) {
-            const boc = account.client.boc;
-            const codeHash = (await boc.get_boc_hash({
-                boc: (await boc.get_code_from_tvc({ tvc: account.contract.tvc })).code,
-            })).hash;
-            terminal.log(`Code Hash: ${codeHash} (from TVC file)`);
+            const boc = account.client.boc
+            const codeHash = (
+                await boc.get_boc_hash({
+                    boc: (
+                        await boc.get_code_from_tvc({
+                            tvc: account.contract.tvc,
+                        })
+                    ).code,
+                })
+            ).hash
+            terminal.log(`Code Hash: ${codeHash} (from TVC file)`)
         }
         if (accType === AccountType.nonExist) {
-            terminal.log("Account:   Doesn't exist");
+            terminal.log("Account:   Doesn't exist")
         } else {
-            terminal.log(`Account:   ${parsed.acc_type_name}`);
-            terminal.log(`Balance:   ${formatTokens(parsed.balance)}`);
-            parsed.boc = reduceBase64String(parsed.boc);
-            parsed.code = reduceBase64String(parsed.code);
-            parsed.data = reduceBase64String(parsed.data);
+            terminal.log(`Account:   ${parsed.acc_type_name}`)
+            terminal.log(`Balance:   ${formatTokens(parsed.balance)}`)
+            parsed.boc = reduceBase64String(parsed.boc)
+            parsed.code = reduceBase64String(parsed.code)
+            parsed.data = reduceBase64String(parsed.data)
 
-            terminal.log(`Details:   ${JSON.stringify(parsed, undefined, "    ")}`);
+            terminal.log(
+                `Details:   ${JSON.stringify(parsed, undefined, "    ")}`,
+            )
         }
-        await account.free();
-        account.client.close();
+        await account.free()
+        account.client.close()
     },
-};
+}
 
 export const contractDeployCommand: Command = {
     name: "deploy",
@@ -185,39 +180,46 @@ export const contractDeployCommand: Command = {
         valueOpt,
         preventUiOpt,
     ],
-    async run(terminal: Terminal, args: {
-        file: string,
-        network: string,
-        signer: string,
-        function: string,
-        input: string,
-        data: string,
-        value: string,
-        preventUi: boolean,
-    }) {
-        let account = await getAccount(terminal, args);
-        const info = await account.getAccount();
+    async run(
+        terminal: Terminal,
+        args: {
+            file: string
+            network: string
+            signer: string
+            function: string
+            input: string
+            data: string
+            value: string
+            preventUi: boolean
+        },
+    ) {
+        let account = await getAccount(terminal, args)
+        const info = await account.getAccount()
         const accountAddress = await account.getAddress()
         if (info.acc_type === AccountType.active) {
-            throw new Error(`Account ${accountAddress} already deployed.`);
+            throw new Error(`Account ${accountAddress} already deployed.`)
         }
-        const { giver: giverInfo, name: networkName } = new NetworkRegistry().get(args.network);
-        const topUpValue = parseNanoTokens(args.value);
+        const { giver: giverInfo, name: networkName } =
+            new NetworkRegistry().get(args.network)
+        const topUpValue = parseNanoTokens(args.value)
 
         if (topUpValue) {
             if (giverInfo) {
-                const giver = await NetworkGiver.create(account.client, giverInfo)
+                const giver = await NetworkGiver.create(
+                    account.client,
+                    giverInfo,
+                )
                 giver.value = topUpValue
                 await giver.sendTo(accountAddress, topUpValue)
                 await giver.account.free()
             } else {
                 throw new Error(
                     `A top-up was requested, but giver is not configured for the network ${networkName} was found.\n` +
-                    `You have to set up a giver for this network with \`everdev network giver\` command.`,
+                        `You have to set up a giver for this network with \`everdev network giver\` command.`,
                 )
             }
         }
-        const dataParams = account.contract.abi.data ?? [];
+        const dataParams = account.contract.abi.data ?? []
         if (dataParams.length > 0) {
             const initData = await resolveParams(
                 terminal,
@@ -225,37 +227,45 @@ export const contractDeployCommand: Command = {
                 dataParams,
                 args.data ?? "",
                 args.preventUi,
-            );
-            await account.free();
+            )
+            await account.free()
             account = new Account(account.contract, {
                 client: account.client,
                 address: await accountAddress,
                 signer: account.signer,
                 initData,
-            });
+            })
         }
 
-        const initFunctionName = args.function.toLowerCase() === "none" ? "" : (args.function || "constructor");
-        const initFunction = account.contract.abi.functions?.find(x => x.name === initFunctionName);
+        const initFunctionName =
+            args.function.toLowerCase() === "none"
+                ? ""
+                : args.function || "constructor"
+        const initFunction = account.contract.abi.functions?.find(
+            x => x.name === initFunctionName,
+        )
         const initInput = await resolveParams(
             terminal,
             "\nParameters of constructor:\n",
             initFunction?.inputs ?? [],
             args.input,
             args.preventUi,
-        );
-        terminal.log("\nDeploying...");
+        )
+        terminal.log("\nDeploying...")
 
         try {
             await account.deploy({
                 initFunctionName: initFunction?.name,
                 initInput,
-
             })
-        } catch(err: any) {
+        } catch (err: any) {
             const isLowBalance =
-                ([407, 409].includes(err?.data?.local_error?.code)) /* low balance on real network */ ||
-                ([407, 409].includes(err.code) && err.data?.local_error === undefined) /* low balance on node se */
+                [407, 409].includes(
+                    err?.data?.local_error?.code,
+                ) /* low balance on real network */ ||
+                ([407, 409].includes(err.code) &&
+                    err.data?.local_error ===
+                        undefined) /* low balance on node se */
 
             throw isLowBalance
                 ? new Error(
@@ -271,68 +281,69 @@ export const contractDeployCommand: Command = {
                 : err
         }
 
-        terminal.log(`Contract is deployed at address: ${accountAddress}`);
-        await account.free();
-        account.client.close();
-        TonClient.default.close();
-        process.exit(0);
+        terminal.log(`Contract is deployed at address: ${accountAddress}`)
+        await account.free()
+        account.client.close()
+        TonClient.default.close()
+        process.exit(0)
     },
-};
-
+}
 
 export const contractTopUpCommand: Command = {
     name: "topup",
     alias: "t",
     title: "Top up account from giver",
-    args: [
-        infoFileArg,
-        addressOpt,
-        networkOpt,
-        signerOpt,
-        dataOpt,
-        valueOpt,
-    ],
-    async run(terminal: Terminal, args: {
-        file: string,
-        address: string,
-        network: string,
-        signer: string,
-        data: string,
-        value: string,
-    }) {
+    args: [infoFileArg, addressOpt, networkOpt, signerOpt, dataOpt, valueOpt],
+    async run(
+        terminal: Terminal,
+        args: {
+            file: string
+            address: string
+            network: string
+            signer: string
+            data: string
+            value: string
+        },
+    ) {
         if (args.file === "" && args.address === "") {
-            throw new Error("File argument or address option must be specified");
+            throw new Error("File argument or address option must be specified")
         }
-        const account = await getAccount(terminal, args);
+        const account = await getAccount(terminal, args)
 
-        const network = new NetworkRegistry().get(args.network);
-        const networkGiverInfo = network.giver;
+        const network = new NetworkRegistry().get(args.network)
+        const networkGiverInfo = network.giver
         if (!networkGiverInfo) {
             throw new Error(
                 `Missing giver for the network ${network.name}.\n` +
-                `You have to set up a giver for this network with \`everdev network giver\` command.`,
-            );
+                    `You have to set up a giver for this network with \`everdev network giver\` command.`,
+            )
         }
-        const giver = await NetworkGiver.create(account.client, networkGiverInfo)
+        const giver = await NetworkGiver.create(
+            account.client,
+            networkGiverInfo,
+        )
         const value = parseNanoTokens(args.value) ?? giver.value
         if (!value) {
             throw new Error(
                 `Missing top-up value.\n` +
-                `You must specify a value with the option \`-v\` or\n` +
-                `set the default value for the giver with \`everdev network giver\` command.`,
+                    `You must specify a value with the option \`-v\` or\n` +
+                    `set the default value for the giver with \`everdev network giver\` command.`,
             )
         }
-        giver.value = value;
-        await giver.sendTo(await account.getAddress(), value);
-        terminal.log(`${formatTokens(giver.value)} were sent to address ${await account.getAddress()}`);
-        await giver.account.free();
-        await account.free();
-        account.client.close();
-        TonClient.default.close();
-        process.exit(0);
+        giver.value = value
+        await giver.sendTo(await account.getAddress(), value)
+        terminal.log(
+            `${formatTokens(
+                giver.value,
+            )} were sent to address ${await account.getAddress()}`,
+        )
+        await giver.account.free()
+        await account.free()
+        account.client.close()
+        TonClient.default.close()
+        process.exit(0)
     },
-};
-
+}
 
 export const contractRunCommand: Command = {
     name: "run",
@@ -349,35 +360,37 @@ export const contractRunCommand: Command = {
         inputOpt,
         preventUiOpt,
     ],
-    async run(terminal: Terminal, args: {
-        file: string,
-        network: string,
-        signer: string,
-        runSigner: string,
-        data: string,
-        address: string,
-        function: string,
-        input: string,
-        preventUi: boolean,
-    }) {
-        const account = await getAccount(terminal, args);
-        const {
-            functionName,
-            functionInput,
-            signer,
-        } = await getRunParams(terminal, account, args);
-        terminal.log("\nRunning...");
+    async run(
+        terminal: Terminal,
+        args: {
+            file: string
+            network: string
+            signer: string
+            runSigner: string
+            data: string
+            address: string
+            function: string
+            input: string
+            preventUi: boolean
+        },
+    ) {
+        const account = await getAccount(terminal, args)
+        const { functionName, functionInput, signer } = await getRunParams(
+            terminal,
+            account,
+            args,
+        )
+        terminal.log("\nRunning...")
         const result = await account.run(functionName, functionInput, {
-            signer
-        });
-        await logRunResult(terminal, result.decoded, result.transaction);
-        await account.free();
-        account.client.close();
-        TonClient.default.close();
-        process.exit(0);
+            signer,
+        })
+        await logRunResult(terminal, result.decoded, result.transaction)
+        await account.free()
+        account.client.close()
+        TonClient.default.close()
+        process.exit(0)
     },
-};
-
+}
 
 export const contractRunLocalCommand: Command = {
     name: "run-local",
@@ -394,39 +407,46 @@ export const contractRunLocalCommand: Command = {
         inputOpt,
         preventUiOpt,
     ],
-    async run(terminal: Terminal, args: {
-        file: string,
-        network: string,
-        signer: string,
-        runSigner: string,
-        data: string,
-        address: string,
-        function: string,
-        input: string,
-        preventUi: boolean,
-    }) {
-        const account = await getAccount(terminal, args);
+    async run(
+        terminal: Terminal,
+        args: {
+            file: string
+            network: string
+            signer: string
+            runSigner: string
+            data: string
+            address: string
+            function: string
+            input: string
+            preventUi: boolean
+        },
+    ) {
+        const account = await getAccount(terminal, args)
 
         await guardAccountIsActive(account)
 
-        const {
-            functionName,
-            functionInput,
-        } = await getRunParams(terminal, account, args);
+        const { functionName, functionInput } = await getRunParams(
+            terminal,
+            account,
+            args,
+        )
         const accountWithoutSigner = new Account(account.contract, {
             client: account.client,
             address: await account.getAddress(),
-        });
-        const result = await accountWithoutSigner.runLocal(functionName, functionInput, {
-        });
-        await logRunResult(terminal, result.decoded, result.transaction);
-        await account.free();
-        await accountWithoutSigner.free();
-        account.client.close();
-        TonClient.default.close();
-        process.exit(0);
+        })
+        const result = await accountWithoutSigner.runLocal(
+            functionName,
+            functionInput,
+            {},
+        )
+        await logRunResult(terminal, result.decoded, result.transaction)
+        await account.free()
+        await accountWithoutSigner.free()
+        account.client.close()
+        TonClient.default.close()
+        process.exit(0)
     },
-};
+}
 
 export const contractRunExecutorCommand: Command = {
     name: "run-executor",
@@ -443,32 +463,36 @@ export const contractRunExecutorCommand: Command = {
         inputOpt,
         preventUiOpt,
     ],
-    async run(terminal: Terminal, args: {
-        file: string,
-        network: string,
-        signer: string,
-        runSigner: string,
-        data: string,
-        address: string,
-        function: string,
-        input: string,
-        preventUi: boolean,
-    }) {
-        const account = await getAccount(terminal, args);
-        const {
-            functionName,
-            functionInput,
-        } = await getRunParams(terminal, account, args);
+    async run(
+        terminal: Terminal,
+        args: {
+            file: string
+            network: string
+            signer: string
+            runSigner: string
+            data: string
+            address: string
+            function: string
+            input: string
+            preventUi: boolean
+        },
+    ) {
+        const account = await getAccount(terminal, args)
+        const { functionName, functionInput } = await getRunParams(
+            terminal,
+            account,
+            args,
+        )
         const result = await account.runLocal(functionName, functionInput, {
             performAllChecks: true,
-        });
-        await logRunResult(terminal, result.decoded, result.transaction);
-        await account.free();
-        account.client.close();
-        TonClient.default.close();
-        process.exit(0);
+        })
+        await logRunResult(terminal, result.decoded, result.transaction)
+        await account.free()
+        account.client.close()
+        TonClient.default.close()
+        process.exit(0)
     },
-};
+}
 
 const guardAccountIsActive = async (acc: Account) => {
     const { active, uninit, frozen } = AccountType
@@ -476,10 +500,10 @@ const guardAccountIsActive = async (acc: Account) => {
     if (accType === active) return
     const status =
         accType === uninit
-            ? 'is not initialized'
+            ? "is not initialized"
             : accType === frozen
-            ? 'is frozen'
-            : 'does not exist'
+            ? "is frozen"
+            : "does not exist"
     throw Error(`Account ${await acc.getAddress()} ${status}`)
 }
 
@@ -495,4 +519,4 @@ export const Contract: ToolController = {
         contractRunLocalCommand,
         contractRunExecutorCommand,
     ],
-};
+}

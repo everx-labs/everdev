@@ -1,46 +1,19 @@
 {
-	"compilerOptions": {
-		"lib": [
-			"es2019",
-			"es2020.promise",
-			"es2020.bigint",
-			"es2020.string"
-		],
-		"module": "commonjs",
-		"target": "es2019",
-		"strict": true,
-		"esModuleInterop": true,
-		"skipLibCheck": true,
-		"forceConsistentCasingInFileNames": true,
-		"composite": true,
-		"moduleResolution": "node",
-		"sourceMap": true,
-		"declaration": true,
-		"declarationMap": true,
-		"removeComments": false,
-		"noImplicitAny": true,
-		"noImplicitReturns": true,
-		"noFallthroughCasesInSwitch": true,
-		"noUnusedParameters": true,
-		"noUnusedLocals": true,
-		"types": [
-			"node",
-			"jest"
-		],
-		"baseUrl": ".",
-		"paths": {
-			"*": [
-				"types/*"
-			]
-		},
-		"rootDir": "./src",
-		"outDir": "./dist"
-	},
-	"include": [
-		"src/**/*"
-	],
-	"exclude": [
-//		"**/__tests__",
-		"**/__mocks__"
-	]
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "*": ["node_modules/*", "src/types/*"]
+    }
+  },
+  "include": ["src/**/*", "test/**/*"],
+  "exclude": ["node_modules", "src/**/*.spec.ts", "**/__mocks__"]
 }

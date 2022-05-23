@@ -1,4 +1,4 @@
-import path from "path";
+import path from "path"
 import {
     downloadFromBinaries,
     ellipsisString,
@@ -9,133 +9,154 @@ import {
     run,
     StringTerminal,
     writeJsonFile,
-} from "./utils";
-import {
-    Terminal,
-    everdevHome,
-} from "./";
-import fs from "fs";
+} from "./utils"
+import { Terminal, everdevHome } from "./"
+import fs from "fs"
 
 export type ComponentOptions = {
     /**
      * Component is an executable file.
      */
-    isExecutable?: boolean,
+    isExecutable?: boolean
     /**
      * Component must be aliased to run globally.
      */
-    runGlobally?: boolean,
+    runGlobally?: boolean
     /**
      * Regular expression to extract version from
      * components --version output.
      */
-    resolveVersionRegExp?: RegExp,
+    resolveVersionRegExp?: RegExp
     /**
      * Target name for a component file. In some cases targetName is a path to folder.
      */
-    targetName?: string,
+    targetName?: string
     /**
      * Path to executable file name inside targetName (when targetName is a directory)
      */
-    innerPath?: string;
+    innerPath?: string
     /**
      * Do not include this component in the displayed list
      */
-    hidden?: boolean;
+    hidden?: boolean
 }
 
 export class Component {
-    isExecutable: boolean;
-    runGlobally: boolean;
-    resolveVersionRegExp: RegExp;
-    targetName: string;
-    innerPath?: string;
-    hidden?: boolean;
+    isExecutable: boolean
+    runGlobally: boolean
+    resolveVersionRegExp: RegExp
+    targetName: string
+    innerPath?: string
+    hidden?: boolean
 
-    constructor(public toolFolderName: string, public name: string, options?: ComponentOptions) {
-        this.isExecutable = options?.isExecutable ?? false;
-        this.runGlobally = options?.runGlobally ?? false;
-        this.resolveVersionRegExp = options?.resolveVersionRegExp ?? /Version:\s*([0-9.]+)/;
-        this.targetName = options?.targetName ?? name;
+    constructor(
+        public toolFolderName: string,
+        public name: string,
+        options?: ComponentOptions,
+    ) {
+        this.isExecutable = options?.isExecutable ?? false
+        this.runGlobally = options?.runGlobally ?? false
+        this.resolveVersionRegExp =
+            options?.resolveVersionRegExp ?? /Version:\s*([0-9.]+)/
+        this.targetName = options?.targetName ?? name
         if (this.isExecutable) {
-            this.targetName = executableName(this.targetName);
+            this.targetName = executableName(this.targetName)
         }
 
-        this.innerPath = options?.innerPath;
-        this.hidden = options?.hidden ?? false;
+        this.innerPath = options?.innerPath
+        this.hidden = options?.hidden ?? false
     }
 
     home(): string {
-        return this.toolFolderName !== "" ? path.resolve(everdevHome(), this.toolFolderName) : "";
+        return this.toolFolderName !== ""
+            ? path.resolve(everdevHome(), this.toolFolderName)
+            : ""
     }
 
     path(): string {
-        return (this.runGlobally && this.toolFolderName === "")
+        return this.runGlobally && this.toolFolderName === ""
             ? this.targetName
-            : path.resolve(this.home(), this.targetName);
+            : path.resolve(this.home(), this.targetName)
     }
 
     adjustedPath(): string | undefined {
-        return this.innerPath !== undefined ? path.resolve(this.home(), this.innerPath) : undefined;
+        return this.innerPath !== undefined
+            ? path.resolve(this.home(), this.innerPath)
+            : undefined
     }
 
-    async run(terminal: Terminal, workDir: string, args: string[]): Promise<string> {
-        const out = await run(this.adjustedPath() ?? this.path(), args, { cwd: workDir }, terminal);
-        return out.replace(/\r?\n/g, "\r\n");
+    async run(
+        terminal: Terminal,
+        workDir: string,
+        args: string[],
+    ): Promise<string> {
+        const out = await run(
+            this.adjustedPath() ?? this.path(),
+            args,
+            { cwd: workDir },
+            terminal,
+        )
+        return out.replace(/\r?\n/g, "\r\n")
     }
 
-    async silentRun(terminal: Terminal, workDir: string, args: string[]): Promise<string> {
-        const runTerminal = new StringTerminal();
+    async silentRun(
+        terminal: Terminal,
+        workDir: string,
+        args: string[],
+    ): Promise<string> {
+        const runTerminal = new StringTerminal()
         try {
             const result = await this.run(runTerminal, workDir, args)
-            // Solidity compiler successfully compiles code despite outputting 
+            // Solidity compiler successfully compiles code despite outputting
             // warnings to stderr, so we have to print them:
             if (runTerminal.stderr !== "") {
-                terminal.log(runTerminal.stderr);
+                terminal.log(runTerminal.stderr)
             }
             return result
         } catch (error) {
             if (runTerminal.stdout !== "") {
-                terminal.write(runTerminal.stdout);
+                terminal.write(runTerminal.stdout)
             }
             if (runTerminal.stderr !== "") {
-                terminal.writeError(runTerminal.stderr);
+                terminal.writeError(runTerminal.stderr)
             }
-            throw error;
+            throw error
         }
     }
 
     getSourceName(version: string): string {
-        return `${this.name}_${version.split(".").join("_")}_{p}.gz`;
+        return `${this.name}_${version.split(".").join("_")}_{p}.gz`
     }
 
     async loadAvailableVersions(): Promise<string[]> {
-        return loadBinaryVersions(this.name);
+        return loadBinaryVersions(this.name)
     }
 
     async resolveVersion(_downloadedVersion: string): Promise<string> {
         if (fs.existsSync(this.path())) {
-            const isDeprecatedVersion = !!(_downloadedVersion.match(/^0.21.0$|^0.1.21$/))
-            const compilerOut = await this.run(nullTerminal, process.cwd(), ["--version"]);
+            const isDeprecatedVersion =
+                !!_downloadedVersion.match(/^0.21.0$|^0.1.21$/)
+            const compilerOut = await this.run(nullTerminal, process.cwd(), [
+                "--version",
+            ])
             return isDeprecatedVersion
                 ? _downloadedVersion
-                : compilerOut.match(this.resolveVersionRegExp)?.[1] ?? ''
+                : compilerOut.match(this.resolveVersionRegExp)?.[1] ?? ""
         }
-        return "";
+        return ""
     }
 
     async getCurrentVersion(): Promise<string> {
-        const infoPath = `${this.path()}.json`;
+        const infoPath = `${this.path()}.json`
         if (fs.existsSync(infoPath)) {
             try {
-                const info = JSON.parse(fs.readFileSync(infoPath, "utf8"));
+                const info = JSON.parse(fs.readFileSync(infoPath, "utf8"))
                 if (info.version) {
-                    return info.version;
+                    return info.version
                 }
-            } catch {
-            }
+            } catch {}
         }
-        return this.resolveVersion("");
+        return this.resolveVersion("")
     }
 
     async ensureVersion(
@@ -143,42 +164,45 @@ export class Component {
         force: boolean,
         requiredVersion?: string,
     ): Promise<boolean> {
-        const current = await this.getCurrentVersion();
+        const current = await this.getCurrentVersion()
         if (!force && current !== "" && !requiredVersion) {
-            return false;
+            return false
         }
-        let version = (requiredVersion ?? "latest").toLowerCase();
+        let version = (requiredVersion ?? "latest").toLowerCase()
         if (!force && version === current) {
-            return false;
+            return false
         }
-        const available = await this.loadAvailableVersions();
+        const available = await this.loadAvailableVersions()
         if (version === "latest") {
-            version = available[0];
+            version = available[0]
         } else {
             if (!available.includes(version)) {
-                throw new Error(`Invalid ${this.name} version ${version}`);
+                throw new Error(`Invalid ${this.name} version ${version}`)
             }
         }
         if (!force && version === current) {
-            return false;
+            return false
         }
-        const sourceName = this.getSourceName(version);
+        const sourceName = this.getSourceName(version)
         await downloadFromBinaries(terminal, this.path(), sourceName, {
             executable: this.isExecutable,
             adjustedPath: this.adjustedPath(), // need for chmod only
             globally: this.runGlobally,
             version,
-        });
+        })
         const info = {
             version: await this.resolveVersion(version),
-        };
-        writeJsonFile(`${this.path()}.json`, info);
-        return true;
+        }
+        writeJsonFile(`${this.path()}.json`, info)
+        return true
     }
 
-    static async ensureInstalledAll(terminal: Terminal, components: { [name: string]: Component }) {
+    static async ensureInstalledAll(
+        terminal: Terminal,
+        components: { [name: string]: Component },
+    ) {
         for (const component of Object.values(components)) {
-            await component.ensureVersion(terminal, false);
+            await component.ensureVersion(terminal, false)
         }
     }
 
@@ -188,58 +212,67 @@ export class Component {
         components: { [name: string]: Component },
         versions: { [name: string]: any },
     ) {
-        let hasUpdates = false;
+        let hasUpdates = false
         for (const [name, component] of Object.entries(components)) {
-            if (await component.ensureVersion(terminal, force, versions[name])) {
-                hasUpdates = true;
+            if (
+                await component.ensureVersion(terminal, force, versions[name])
+            ) {
+                hasUpdates = true
             }
         }
         if (hasUpdates) {
-            terminal.log(await this.getInfoAll(components));
+            terminal.log(await this.getInfoAll(components))
         } else {
-            terminal.log("All components already up to date.");
+            terminal.log("All components already up to date.")
         }
     }
 
-    static async updateAll(terminal: Terminal, force: boolean, components: { [name: string]: Component }) {
-        const latest: { [name: string]: string } = {};
+    static async updateAll(
+        terminal: Terminal,
+        force: boolean,
+        components: { [name: string]: Component },
+    ) {
+        const latest: { [name: string]: string } = {}
         for (const name of Object.keys(components)) {
-            latest[name] = "latest";
+            latest[name] = "latest"
         }
-        await this.setVersions(terminal, force, components, latest);
+        await this.setVersions(terminal, force, components, latest)
     }
 
-    static async getInfoAll(components: { [name: string]: Component }): Promise<string> {
-        const table = [["Component", "Version", "Available"]];
-        const files  = [];
-        let hasNotInstalledComponents = false;
+    static async getInfoAll(components: {
+        [name: string]: Component
+    }): Promise<string> {
+        const table = [["Component", "Version", "Available"]]
+        const files = []
+        let hasNotInstalledComponents = false
         for (const [name, component] of Object.entries(components)) {
-            const version = await component.getCurrentVersion();
+            const version = await component.getCurrentVersion()
             if (version === "") {
-                hasNotInstalledComponents = true;
+                hasNotInstalledComponents = true
             }
             const allVersions = await component.loadAvailableVersions()
             if (!component.hidden) {
                 table.push([
                     name,
-                    version !== '' ? version : 'not installed',
+                    version !== "" ? version : "not installed",
                     ellipsisString(allVersions),
                 ])
-                if (version !== '') {
-                    const filename = component.adjustedPath() ?? component.path();
+                if (version !== "") {
+                    const filename =
+                        component.adjustedPath() ?? component.path()
                     if (filename) {
-                        files.push(filename);
+                        files.push(filename)
                     }
                 }
             }
         }
-        let info = formatTable(table, { headerSeparator: true });
+        let info = formatTable(table, { headerSeparator: true })
         if (hasNotInstalledComponents) {
-            info += "\n\nMissing components will be automatically installed  on first demand.";
-        } else if (files.length !== 0) {  
-            info += "\n\nFile path: " + files.join("; ");
+            info +=
+                "\n\nMissing components will be automatically installed  on first demand."
+        } else if (files.length !== 0) {
+            info += "\n\nFile path: " + files.join("; ")
         }
-        return info;
+        return info
     }
-
 }

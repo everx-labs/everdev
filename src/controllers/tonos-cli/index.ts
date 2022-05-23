@@ -1,19 +1,14 @@
-import {
-    Command,
-    Component,
-    Terminal,
-    ToolController,
-} from "../../core";
-import {components} from "./components";
+import { Command, Component, Terminal, ToolController } from "../../core"
+import { components } from "./components"
 
 export const tonosInstallCommand: Command = {
     name: "install",
     title: "Install latest stable TON OS CLI",
     args: [],
     async run(terminal: Terminal) {
-        await Component.ensureInstalledAll(terminal, components);
+        await Component.ensureInstalledAll(terminal, components)
     },
-};
+}
 
 export const tonosSetCommand: Command = {
     name: "set",
@@ -29,25 +24,25 @@ export const tonosSetCommand: Command = {
     async run(terminal: Terminal, args: { version: string }): Promise<void> {
         await Component.setVersions(terminal, false, components, {
             tonoscli: args.version,
-        });
+        })
     },
-};
+}
 
 export const tonosUpdateCommand: Command = {
     name: "update",
     title: "Update to the latest version",
     async run(terminal: Terminal, _args: {}): Promise<void> {
-        await Component.updateAll(terminal, false, components);
+        await Component.updateAll(terminal, false, components)
     },
-};
+}
 
 export const tonosVersionCommand: Command = {
     name: "version",
     title: "Show installed and available versions",
     async run(terminal: Terminal, _args: {}): Promise<void> {
-        terminal.log(await Component.getInfoAll(components));
+        terminal.log(await Component.getInfoAll(components))
     },
-};
+}
 
 export const TONOS: ToolController = {
     name: "tonos-cli",
@@ -58,4 +53,4 @@ export const TONOS: ToolController = {
         tonosVersionCommand,
         tonosUpdateCommand,
     ],
-};
+}

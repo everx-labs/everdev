@@ -52,4 +52,4 @@ contract {name} {
         dest.transfer(amount, bounce, 0);
     }
 }
-`;
+`

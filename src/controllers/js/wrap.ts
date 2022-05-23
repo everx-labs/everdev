@@ -1,14 +1,10 @@
-import {
-    Command,
-    CommandArgVariant,
-    Terminal,
-} from "../../core";
-import path from "path";
-import {TonClient} from "@tonclient/core";
-import {resolveContract, writeTextFile} from "../../core/utils";
-const {libNode} = require("@tonclient/lib-node");
+import { Command, CommandArgVariant, Terminal } from "../../core"
+import path from "path"
+import { TonClient } from "@tonclient/core"
+import { resolveContract, writeTextFile } from "../../core/utils"
+const { libNode } = require("@tonclient/lib-node")
 
-TonClient.useBinaryLibrary(libNode);
+TonClient.useBinaryLibrary(libNode)
 
 enum ExportFormat {
     CommonJs = "commonjs",
@@ -19,16 +15,16 @@ enum ExportFormat {
 
 function getExportSection(exportFormat: ExportFormat, name: string): string {
     switch (exportFormat) {
-    case ExportFormat.CommonJs:
-        return `module.exports = { ${name} };`;
-    case ExportFormat.CommonJsDefault:
-        return `module.exports = ${name};`;
-    case ExportFormat.Es6:
-        return `export ${name};`;
-    case ExportFormat.Es6Default:
-        return `export default ${name};`;
+        case ExportFormat.CommonJs:
+            return `module.exports = { ${name} };`
+        case ExportFormat.CommonJsDefault:
+            return `module.exports = ${name};`
+        case ExportFormat.Es6:
+            return `export ${name};`
+        case ExportFormat.Es6Default:
+            return `export default ${name};`
     }
-    throw new Error(`Invalid JS export mode ${exportFormat}`);
+    throw new Error(`Invalid JS export mode ${exportFormat}`)
 }
 
 export const jsWrapCommand: Command = {
@@ -70,7 +66,8 @@ export const jsWrapCommand: Command = {
                     },
                     {
                         value: "commonjs-default",
-                        description: "Use CommonJS modules (NodeJS) with default export",
+                        description:
+                            "Use CommonJS modules (NodeJS) with default export",
                     },
                     {
                         value: "es6",
@@ -80,53 +77,67 @@ export const jsWrapCommand: Command = {
                         value: "es6-default",
                         description: "Use ES6 modules with default export",
                     },
-                ];
+                ]
             },
             defaultValue: ExportFormat.CommonJs,
         },
     ],
-    run: async function (terminal: Terminal, args: {
-        file: string,
-        print: boolean,
-        output: string,
-        export: string,
-    }) {
-        const contract = resolveContract(path.resolve(process.cwd(), args.file));
-        const name = path.basename(contract.abiPath).slice(0, -".abi.json".length);
-        const abi = contract.package.abi;
-        const contractName = `${name.substr(0, 1).toUpperCase()}${name.substr(1)}Contract`;
-        const code = [`const ${contractName} = {`];
-        const abiCode = JSON
-            .stringify(abi, undefined, "    ")
+    run: async function (
+        terminal: Terminal,
+        args: {
+            file: string
+            print: boolean
+            output: string
+            export: string
+        },
+    ) {
+        const contract = resolveContract(path.resolve(process.cwd(), args.file))
+        const name = path
+            .basename(contract.abiPath)
+            .slice(0, -".abi.json".length)
+        const abi = contract.package.abi
+        const contractName = `${name.substr(0, 1).toUpperCase()}${name.substr(
+            1,
+        )}Contract`
+        const code = [`const ${contractName} = {`]
+        const abiCode = JSON.stringify(abi, undefined, "    ")
             .split("\r\n")
             .join("\n")
             .split("\n")
-            .map((x, i) => i > 0 ? `    ${x}` : x)
-            .join("\n");
+            .map((x, i) => (i > 0 ? `    ${x}` : x))
+            .join("\n")
 
-        code.push(`    abi: ${abiCode},`);
-        const tvc = contract.package.tvc;
+        code.push(`    abi: ${abiCode},`)
+        const tvc = contract.package.tvc
         if (tvc !== undefined) {
-            code.push(`    tvc: "${tvc}",`);
-            const client = new TonClient();
-            const tvcCode = (await client.boc.get_code_from_tvc({tvc})).code;
-            code.push(`    code: "${tvcCode}",`);
-            code.push(`    codeHash: "${(await client.boc.get_boc_hash({boc: tvcCode})).hash}",`);
-            await client.close();
+            code.push(`    tvc: "${tvc}",`)
+            const client = new TonClient()
+            const tvcCode = (await client.boc.get_code_from_tvc({ tvc })).code
+            code.push(`    code: "${tvcCode}",`)
+            code.push(
+                `    codeHash: "${
+                    (await client.boc.get_boc_hash({ boc: tvcCode })).hash
+                }",`,
+            )
+            await client.close()
         }
-        code.push("};");
-        code.push(getExportSection(args.export.toLowerCase() as ExportFormat, contractName));
-        const wrapperCode = code.join("\n");
+        code.push("};")
+        code.push(
+            getExportSection(
+                args.export.toLowerCase() as ExportFormat,
+                contractName,
+            ),
+        )
+        const wrapperCode = code.join("\n")
         if (args.print) {
-            terminal.log(wrapperCode);
+            terminal.log(wrapperCode)
         } else {
             const wrapperPath = path.resolve(
                 path.dirname(contract.abiPath),
                 args.output !== "" ? args.output : `${contractName}.js`,
-            );
-            writeTextFile(wrapperPath, wrapperCode);
-            terminal.log(`Generated wrapper code written to: ${wrapperPath}`);
+            )
+            writeTextFile(wrapperPath, wrapperCode)
+            terminal.log(`Generated wrapper code written to: ${wrapperPath}`)
         }
     },
-};
-
+}

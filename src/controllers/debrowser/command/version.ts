@@ -1,10 +1,12 @@
-import { getAvailableVersions } from "../installer";
-import { Command, Terminal } from "../../../core";
+import { getAvailableVersions } from "../installer"
+import { Command, Terminal } from "../../../core"
 
 export const versionCommand: Command = {
     name: "version",
     title: "Show DeBrowser Versions",
     async run(terminal: Terminal, _args: {}): Promise<void> {
-        terminal.log(`Available Versions: ${(await getAvailableVersions()).join(", ")}`);
+        terminal.log(
+            `Available Versions: ${(await getAvailableVersions()).join(", ")}`,
+        )
     },
-};
+}

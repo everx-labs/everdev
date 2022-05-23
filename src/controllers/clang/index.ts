@@ -1,17 +1,17 @@
-import { Command, Component, Terminal, ToolController } from "../../core";
-import path from "path";
-import {changeExt, uniqueFilePath, writeTextFile} from "../../core/utils";
-import fs from "fs";
-import { BasicContractCode, BasicContractHeaders } from "./snippets";
-import { components } from "./components";
+import { Command, Component, Terminal, ToolController } from "../../core"
+import path from "path"
+import { changeExt, uniqueFilePath, writeTextFile } from "../../core/utils"
+import fs from "fs"
+import { BasicContractCode, BasicContractHeaders } from "./snippets"
+import { components } from "./components"
 
 export const clangVersionCommand: Command = {
     name: "version",
     title: "Show C++ Compiler Version",
     async run(terminal: Terminal, _args: {}): Promise<void> {
-        terminal.log(await Component.getInfoAll(components));
+        terminal.log(await Component.getInfoAll(components))
     },
-};
+}
 
 export const clangCreateCommand: Command = {
     name: "create",
@@ -32,17 +32,20 @@ export const clangCreateCommand: Command = {
     ],
     async run(terminal: Terminal, args: { name: string; folder: string }) {
         // filename was entered with an extension, delete it
-        args.name = args.name.replace(/.cpp$/, "");
+        args.name = args.name.replace(/.cpp$/, "")
 
-        const hFilePath = uniqueFilePath(args.folder, `${args.name}{}.hpp`);
-        const cFilePath = uniqueFilePath(args.folder, `${args.name}{}.cpp`);
+        const hFilePath = uniqueFilePath(args.folder, `${args.name}{}.hpp`)
+        const cFilePath = uniqueFilePath(args.folder, `${args.name}{}.cpp`)
 
-        writeTextFile(hFilePath, BasicContractHeaders);
-        writeTextFile(cFilePath, BasicContractCode.split("{name}").join(hFilePath));
-        terminal.log(`${hFilePath} created.`);
-        terminal.log(`${cFilePath} created.`);
+        writeTextFile(hFilePath, BasicContractHeaders)
+        writeTextFile(
+            cFilePath,
+            BasicContractCode.split("{name}").join(hFilePath),
+        )
+        terminal.log(`${hFilePath} created.`)
+        terminal.log(`${cFilePath} created.`)
     },
-};
+}
 
 export const clangCompileCommand: Command = {
     name: "compile",
@@ -57,26 +60,26 @@ export const clangCompileCommand: Command = {
         },
     ],
     async run(terminal: Terminal, args: { file: string }): Promise<void> {
-        const ext = path.extname(args.file);
+        const ext = path.extname(args.file)
         if (ext !== ".cpp") {
-            terminal.log(`Choose source file.`);
-            return;
+            terminal.log(`Choose source file.`)
+            return
         }
-        await Component.ensureInstalledAll(terminal, components);
-        const tvcName = changeExt(args.file, ".tvc");
-        const generatedAbiName = changeExt(args.file, ".abi");
-        const renamedAbiName = changeExt(args.file, ".abi.json");
+        await Component.ensureInstalledAll(terminal, components)
+        const tvcName = changeExt(args.file, ".tvc")
+        const generatedAbiName = changeExt(args.file, ".abi")
+        const renamedAbiName = changeExt(args.file, ".abi.json")
 
         await components.compiler.run(
             terminal,
             path.dirname(args.file), // cd to this directory
-            [args.file, "-o", tvcName]
-        );
+            [args.file, "-o", tvcName],
+        )
 
-        fs.renameSync( generatedAbiName, renamedAbiName )
-        terminal.log(`Success, files created: ${tvcName}, ${renamedAbiName}`);
+        fs.renameSync(generatedAbiName, renamedAbiName)
+        terminal.log(`Success, files created: ${tvcName}, ${renamedAbiName}`)
     },
-};
+}
 
 export const clangUpdateCommand: Command = {
     name: "update",
@@ -91,9 +94,9 @@ export const clangUpdateCommand: Command = {
         },
     ],
     async run(terminal: Terminal, args: { force: boolean }): Promise<void> {
-        await Component.updateAll(terminal, args.force, components);
+        await Component.updateAll(terminal, args.force, components)
     },
-};
+}
 
 export const clangSetCommand: Command = {
     name: "set",
@@ -117,19 +120,19 @@ export const clangSetCommand: Command = {
     async run(
         terminal: Terminal,
         args: {
-            force: boolean;
-            compiler: string;
-        }
+            force: boolean
+            compiler: string
+        },
     ): Promise<void> {
         const versions: {
-            compiler?: string;
-        } = {};
+            compiler?: string
+        } = {}
         if (args.compiler !== "") {
-            versions.compiler = args.compiler;
+            versions.compiler = args.compiler
         }
-        await Component.setVersions(terminal, args.force, components, versions);
+        await Component.setVersions(terminal, args.force, components, versions)
     },
-};
+}
 
 export const Clang: ToolController = {
     name: "clang",
@@ -141,4 +144,4 @@ export const Clang: ToolController = {
         clangSetCommand,
         clangUpdateCommand,
     ],
-};
+}

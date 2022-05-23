@@ -1,4 +1,4 @@
-import { ToolController } from "../../core";
+import { ToolController } from "../../core"
 import {
     seInfoCommand,
     seVersionCommand,
@@ -8,7 +8,7 @@ import {
     seStartCommand,
     seStopCommand,
     seDeleteCommand,
-} from "./commands";
+} from "./commands"
 
 export const SE: ToolController = {
     name: "se",
@@ -23,4 +23,4 @@ export const SE: ToolController = {
         seResetCommand,
         seDeleteCommand,
     ],
-};
+}

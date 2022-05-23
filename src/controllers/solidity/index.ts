@@ -1,50 +1,43 @@
-import {
-    Command,
-    Component,
-    Terminal,
-    ToolController,
-} from "../../core";
-import path from "path";
-import {
-    changeExt,
-    uniqueFilePath,
-    writeTextFile,
-} from "../../core/utils";
-import fs from "fs";
-import mv from "mv";
-import { BasicContract } from "./snippets";
-import { components } from "./components";
+import { Command, Component, Terminal, ToolController } from "../../core"
+import path from "path"
+import { changeExt, uniqueFilePath, writeTextFile } from "../../core/utils"
+import fs from "fs"
+import mv from "mv"
+import { BasicContract } from "./snippets"
+import { components } from "./components"
 
 export const solidityVersionCommand: Command = {
     name: "version",
     title: "Show Solidity Version",
     async run(terminal: Terminal, _args: {}): Promise<void> {
-        terminal.log(await Component.getInfoAll(components));
+        terminal.log(await Component.getInfoAll(components))
     },
-};
+}
 
 export const solidityCreateCommand: Command = {
     name: "create",
     title: "Create Solidity Contract",
-    args: [{
-        isArg: true,
-        name: "name",
-        title: "Contract Name",
-        type: "string",
-        defaultValue: "Contract",
-    }, {
-        name: "folder",
-        type: "folder",
-        title: "Target folder (current is default)",
-    }],
-    async run(terminal: Terminal, args: { name: string, folder: string }) {
-        const filePath = uniqueFilePath(args.folder, `${args.name}{}.sol`);
-        const text = BasicContract.split("{name}").join(args.name);
-        writeTextFile(filePath, text);
-        terminal.log(`Solidity contract ${path.basename(filePath)} created.`);
+    args: [
+        {
+            isArg: true,
+            name: "name",
+            title: "Contract Name",
+            type: "string",
+            defaultValue: "Contract",
+        },
+        {
+            name: "folder",
+            type: "folder",
+            title: "Target folder (current is default)",
+        },
+    ],
+    async run(terminal: Terminal, args: { name: string; folder: string }) {
+        const filePath = uniqueFilePath(args.folder, `${args.name}{}.sol`)
+        const text = BasicContract.split("{name}").join(args.name)
+        writeTextFile(filePath, text)
+        terminal.log(`Solidity contract ${path.basename(filePath)} created.`)
     },
-};
-
+}
 
 export const solidityCompileCommand: Command = {
     name: "compile",
@@ -72,44 +65,63 @@ export const solidityCompileCommand: Command = {
             defaultValue: "",
         },
     ],
-    async run(terminal: Terminal, args: {
-        file: string,
-        outputDir: string,
-        code: boolean,
-    }): Promise<void> {
-        await Component.ensureInstalledAll(terminal, components);
-        const fileDir = path.dirname(args.file);
-        const fileName = path.basename(args.file);
+    async run(
+        terminal: Terminal,
+        args: {
+            file: string
+            outputDir: string
+            code: boolean
+        },
+    ): Promise<void> {
+        await Component.ensureInstalledAll(terminal, components)
+        const fileDir = path.dirname(args.file)
+        const fileName = path.basename(args.file)
 
-        const outputDir = path.resolve(args.outputDir ?? ".");
-        const preserveCode = args.code;
-        const tvcName = path.resolve(outputDir, changeExt(fileName, ".tvc"));
-        const abiName = path.resolve(outputDir, changeExt(fileName, ".abi.json"));
-        const codeName = path.resolve(outputDir, changeExt(fileName, ".code"));
+        const outputDir = path.resolve(args.outputDir ?? ".")
+        const preserveCode = args.code
+        const tvcName = path.resolve(outputDir, changeExt(fileName, ".tvc"))
+        const abiName = path.resolve(
+            outputDir,
+            changeExt(fileName, ".abi.json"),
+        )
+        const codeName = path.resolve(outputDir, changeExt(fileName, ".code"))
 
-        const isDeprecatedVersion = (await components.compiler.getCurrentVersion()) <= '0.21.0'
+        const isDeprecatedVersion =
+            (await components.compiler.getCurrentVersion()) <= "0.21.0"
 
-        let linkerOut: string;
+        let linkerOut: string
 
         if (isDeprecatedVersion) {
-            terminal.log("You use an obsolete version of the compiler.\nThe output files are saved in the current directory");
+            terminal.log(
+                "You use an obsolete version of the compiler.\nThe output files are saved in the current directory",
+            )
 
-            await components.compiler.silentRun(terminal, fileDir, [ fileName]);
-            linkerOut = await components.linker.silentRun(
-                terminal,
-                fileDir,
-                ["compile", codeName, "-a", abiName,  "--lib", components.stdlib.path()],
-            );
+            await components.compiler.silentRun(terminal, fileDir, [fileName])
+            linkerOut = await components.linker.silentRun(terminal, fileDir, [
+                "compile",
+                codeName,
+                "-a",
+                abiName,
+                "--lib",
+                components.stdlib.path(),
+            ])
         } else {
-            await components.compiler.silentRun(terminal, fileDir, ["-o", outputDir, fileName]);
-            linkerOut = await components.linker.silentRun(
-                terminal,
-                fileDir,
-                ["compile", codeName, "--lib", components.stdlib.path()],
-            );
+            await components.compiler.silentRun(terminal, fileDir, [
+                "-o",
+                outputDir,
+                fileName,
+            ])
+            linkerOut = await components.linker.silentRun(terminal, fileDir, [
+                "compile",
+                codeName,
+                "--lib",
+                components.stdlib.path(),
+            ])
         }
 
-        const generatedTvcName = `${/Saved contract to file (.*)$/mg.exec(linkerOut)?.[1]}`;
+        const generatedTvcName = `${
+            /Saved contract to file (.*)$/gm.exec(linkerOut)?.[1]
+        }`
 
         // fs.renameSync was replaces by this code, because of an error: EXDEV: cross-device link not permitted
         await new Promise((res, rej) =>
@@ -122,10 +134,12 @@ export const solidityCompileCommand: Command = {
                 },
                 (err: Error) => (err ? rej(err) : res(true)),
             ),
-        );
-        if (!preserveCode) fs.unlinkSync(path.resolve(fileDir, codeName));
+        )
+        if (!preserveCode) {
+            fs.unlinkSync(path.resolve(fileDir, codeName))
+        }
     },
-};
+}
 
 export const solidityAstCommand: Command = {
     name: "ast",
@@ -151,49 +165,54 @@ export const solidityAstCommand: Command = {
             type: "folder",
             title: "Output folder (current is default)",
             defaultValue: "",
-        }
+        },
     ],
-    async run(terminal: Terminal, args: {
-        file: string,
-        format: string,
-        outputDir?: string
-    }): Promise<void> {
-        const ext = path.extname(args.file);
+    async run(
+        terminal: Terminal,
+        args: {
+            file: string
+            format: string
+            outputDir?: string
+        },
+    ): Promise<void> {
+        const ext = path.extname(args.file)
         if (ext !== ".sol") {
-            terminal.log(`Choose solidity source file.`);
-            return;
+            terminal.log(`Choose solidity source file.`)
+            return
         }
-        if(args.format.match(/^(compact-json|json)$/i) == null){
-            terminal.log(`Wrong ast format.`);
-            return;
+        if (args.format.match(/^(compact-json|json)$/i) == null) {
+            terminal.log(`Wrong ast format.`)
+            return
         }
-        await Component.ensureInstalledAll(terminal, components);
-        const fileDir = path.dirname(args.file);
-        const fileName = path.basename(args.file);
-        args.outputDir = path.resolve(args.outputDir ?? ".");
+        await Component.ensureInstalledAll(terminal, components)
+        const fileDir = path.dirname(args.file)
+        const fileName = path.basename(args.file)
+        args.outputDir = path.resolve(args.outputDir ?? ".")
         await components.compiler.silentRun(terminal, fileDir, [
             `--ast-${args.format}`,
-            '--output-dir',
+            "--output-dir",
             args.outputDir,
             fileName,
-        ]);
+        ])
     },
-};
+}
 
 export const solidityUpdateCommand: Command = {
     name: "update",
     title: "Update Solidity Compiler",
-    args: [{
-        name: "force",
-        alias: "f",
-        title: "Force reinstall even if up to date",
-        type: "boolean",
-        defaultValue: "false",
-    }],
+    args: [
+        {
+            name: "force",
+            alias: "f",
+            title: "Force reinstall even if up to date",
+            type: "boolean",
+            defaultValue: "false",
+        },
+    ],
     async run(terminal: Terminal, args: { force: boolean }): Promise<void> {
-        await Component.updateAll(terminal, args.force, components);
+        await Component.updateAll(terminal, args.force, components)
     },
-};
+}
 
 export const soliditySetCommand: Command = {
     name: "set",
@@ -205,7 +224,6 @@ export const soliditySetCommand: Command = {
             title: "Compiler version (version number or `latest`)",
             type: "string",
             defaultValue: "",
-
         },
         {
             name: "linker",
@@ -213,7 +231,6 @@ export const soliditySetCommand: Command = {
             title: "Linker version (version number or `latest`)",
             type: "string",
             defaultValue: "",
-
         },
         {
             name: "force",
@@ -223,28 +240,30 @@ export const soliditySetCommand: Command = {
             defaultValue: "false",
         },
     ],
-    async run(terminal: Terminal, args: {
-        force: boolean,
-        compiler: string,
-        linker: string,
-        stdlib: string,
-    }): Promise<void> {
+    async run(
+        terminal: Terminal,
+        args: {
+            force: boolean
+            compiler: string
+            linker: string
+            stdlib: string
+        },
+    ): Promise<void> {
         const versions: {
-            compiler?: string,
-            linker?: string,
-            stdlib?: string,
-        } = {};
+            compiler?: string
+            linker?: string
+            stdlib?: string
+        } = {}
         if (args.compiler !== "") {
-            versions.compiler = args.compiler;
-            versions.stdlib = args.compiler;
+            versions.compiler = args.compiler
+            versions.stdlib = args.compiler
         }
         if (args.linker !== "") {
-            versions.linker = args.linker;
+            versions.linker = args.linker
         }
-        await Component.setVersions(terminal, args.force, components, versions);
+        await Component.setVersions(terminal, args.force, components, versions)
     },
-};
-
+}
 
 export const Solidity: ToolController = {
     name: "sol",
@@ -257,4 +276,4 @@ export const Solidity: ToolController = {
         soliditySetCommand,
         solidityUpdateCommand,
     ],
-};
+}

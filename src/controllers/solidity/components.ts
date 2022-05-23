@@ -1,8 +1,6 @@
-import {
-    Component,
-} from "../../core";
+import { Component } from "../../core"
 
-const TOOL_FOLDER_NAME = "solidity";
+const TOOL_FOLDER_NAME = "solidity"
 
 export const components = {
     compiler: new Component(TOOL_FOLDER_NAME, "solc", {
@@ -14,20 +12,20 @@ export const components = {
         resolveVersionRegExp: /[^0-9]*([0-9.]+)/,
     }),
 
-    stdlib: new class extends Component {
+    stdlib: new (class extends Component {
         getSourceName(version: string): string {
-            return `${this.name}_${version.split(".").join("_")}.tvm.gz`;
+            return `${this.name}_${version.split(".").join("_")}.tvm.gz`
         }
 
         async resolveVersion(downloadedVersion: string): Promise<string> {
-            return downloadedVersion;
+            return downloadedVersion
         }
 
         async loadAvailableVersions(): Promise<string[]> {
-            return components.compiler.loadAvailableVersions();
+            return components.compiler.loadAvailableVersions()
         }
-    }(TOOL_FOLDER_NAME, "stdlib_sol", {
+    })(TOOL_FOLDER_NAME, "stdlib_sol", {
         targetName: "stdlib_sol.tvm",
         hidden: true,
     }),
-};
+}
