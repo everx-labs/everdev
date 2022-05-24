@@ -1,7 +1,7 @@
 import { AbiParam } from "@tonclient/core"
 
 export class ParamParser {
-    pos: number = 0
+    pos = 0
 
     private constructor(public text: string) {}
 
@@ -134,7 +134,7 @@ export class ParamParser {
         const end = Math.min(pos + 12, text.length)
         const prefix = start > 0 ? "..." : ""
         const suffix = end < text.length ? "..." : ""
-        let context = `"${prefix}${text.substring(
+        const context = `"${prefix}${text.substring(
             start,
             pos,
         )} -> ${text.substring(pos, end)}${suffix}"`

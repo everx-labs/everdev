@@ -8,7 +8,7 @@ import { components } from "./components"
 export const clangVersionCommand: Command = {
     name: "version",
     title: "Show C++ Compiler Version",
-    async run(terminal: Terminal, _args: {}): Promise<void> {
+    async run(terminal: Terminal): Promise<void> {
         terminal.log(await Component.getInfoAll(components))
     },
 }

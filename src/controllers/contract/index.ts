@@ -497,7 +497,9 @@ export const contractRunExecutorCommand: Command = {
 const guardAccountIsActive = async (acc: Account) => {
     const { active, uninit, frozen } = AccountType
     const { acc_type: accType } = await acc.getAccount()
-    if (accType === active) return
+    if (accType === active) {
+        return
+    }
     const status =
         accType === uninit
             ? "is not initialized"

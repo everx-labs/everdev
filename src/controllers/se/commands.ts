@@ -56,7 +56,7 @@ export const seInfoCommand: Command = {
 export const seVersionCommand: Command = {
     name: "version",
     title: "Show SE Versions",
-    async run(terminal: Terminal, _args: {}): Promise<void> {
+    async run(terminal: Terminal): Promise<void> {
         const registry = new SERegistry()
         for (const item of registry.items) {
             terminal.log(`${item.name}: ${await registry.getSourceInfo(item)}`)

@@ -162,7 +162,7 @@ export const signerListCommand: Command = {
     alias: "l",
     title: "Prints list of registered signers",
     args: [],
-    async run(terminal: Terminal, _args: {}) {
+    async run(terminal: Terminal) {
         const registry = new SignerRegistry()
         const networks = new NetworkRegistry()
         const rows = [["Signer", "Public Key", "Used", "Description"]]

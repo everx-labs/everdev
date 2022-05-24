@@ -60,7 +60,7 @@ function inputLine(terminal: Terminal, prompt: string): Promise<string> {
 }
 
 async function inputTuple(terminal: Terminal, param: AbiParam): Promise<any> {
-    while (true) {
+    for (;;) {
         const value = await inputLine(terminal, `${param.name} (${param.type})`)
         try {
             return JSON.parse(value)
@@ -71,7 +71,7 @@ async function inputTuple(terminal: Terminal, param: AbiParam): Promise<any> {
 }
 
 async function inputScalar(terminal: Terminal, param: AbiParam): Promise<any> {
-    while (true) {
+    for (;;) {
         const value = await inputLine(terminal, `${param.name} (${param.type})`)
         try {
             return ParamParser.scalar(param, `"${value}"`)
@@ -84,7 +84,7 @@ async function inputScalar(terminal: Terminal, param: AbiParam): Promise<any> {
 async function inputArray(terminal: Terminal, param: AbiParam): Promise<any[]> {
     const item = JSON.parse(JSON.stringify(param)) as AbiParam
     item.type = param.type.slice(0, -2)
-    let count = Number(
+    const count = Number(
         await inputLine(terminal, `Enter number of items in ${param.name}`),
     )
     const items = []

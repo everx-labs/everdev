@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { everdevInit, everdevDone, everdevHome, writeTextFile } from ".."
 import path from "path"
 import fs from "fs"

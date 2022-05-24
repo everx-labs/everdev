@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import {
     Command,
     CommandArg,
@@ -212,7 +213,7 @@ export async function run(terminal: Terminal) {
 
     // Once a day, create a file containing the latest version number of `everdev`
     // Ignoring any (network, concurent access to file, etc) errors
-    createLatestVerFile(pkg.name).catch(_ => {})
+    createLatestVerFile(pkg.name).catch(() => {})
 
     const msg = getUpdateIsAvailableMsg(pkg.name, pkg.version)
     if (msg !== "") {

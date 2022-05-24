@@ -156,7 +156,7 @@ function downloadAndGunzip(
 
             response.pipe(unzip)
 
-            response.on("data", _ => {
+            response.on("data", () => {
                 terminal.write(".")
             })
 

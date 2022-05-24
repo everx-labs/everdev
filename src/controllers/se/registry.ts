@@ -229,7 +229,7 @@ export class SERegistry {
                     }
                     this.items.push(instance)
                 } else {
-                    throw new Error(`Instance \"${name}\" is not found`)
+                    throw new Error(`Instance "${name}" is not found`)
                 }
             }
             filtered.push(instance)

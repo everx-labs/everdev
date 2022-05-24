@@ -9,7 +9,7 @@ import { components } from "./components"
 export const solidityVersionCommand: Command = {
     name: "version",
     title: "Show Solidity Version",
-    async run(terminal: Terminal, _args: {}): Promise<void> {
+    async run(terminal: Terminal): Promise<void> {
         terminal.log(await Component.getInfoAll(components))
     },
 }

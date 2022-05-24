@@ -49,7 +49,7 @@ export const networkListCommand: Command = {
     alias: "l",
     title: "Prints list of networks",
     args: [],
-    async run(terminal: Terminal, _args: {}) {
+    async run(terminal: Terminal) {
         const registry = new NetworkRegistry()
         const rows = [["Network", "Endpoints", "Giver", "Description"]]
         registry.items.forEach(network => {

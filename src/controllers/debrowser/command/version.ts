@@ -4,7 +4,7 @@ import { Command, Terminal } from "../../../core"
 export const versionCommand: Command = {
     name: "version",
     title: "Show DeBrowser Versions",
-    async run(terminal: Terminal, _args: {}): Promise<void> {
+    async run(terminal: Terminal): Promise<void> {
         terminal.log(
             `Available Versions: ${(await getAvailableVersions()).join(", ")}`,
         )
