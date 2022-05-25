@@ -99,6 +99,7 @@ export async function printUsage(
     }
     terminal.log("Tools:")
     const rows: string[][] = []
+    rows.push(["  ", "info", "Summary of all tools"])
     controllers.forEach(controller => {
         rows.push(["  ", nameInfo(controller), controller.title ?? ""])
     })

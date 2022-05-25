@@ -1,22 +1,20 @@
 #!/usr/bin/env node
 
-const { consoleTerminal } = require("./dist");
-const cli = require("./dist/cli/index");
-const { everdevInit, everdevDone } = require("./dist/core");
+const { consoleTerminal, everdevInit, everdevDone, cli } = require("./dist")
 
-(async () => {
+;(async () => {
     try {
         everdevInit()
-        await cli.run(consoleTerminal);
-        everdevDone();
+        await cli.run(consoleTerminal)
+        everdevDone()
     } catch (err) {
         if (!(err instanceof Error)) {
-            const {data, code} = err;
-            err = new Error(err.message);
-            err.code = code;
-            err.data = data;
+            const { data, code } = err
+            err = new Error(err.message)
+            err.code = code
+            err.data = data
         }
-        console.error(`${err}`);
-        process.exit(1);
+        console.error(`${err}`)
+        process.exit(1)
     }
-})();
+})()
