@@ -1,4 +1,5 @@
 import { Command, CommandArg, Terminal, ToolController } from "../../core"
+import { resolveContract } from "../../core/utils"
 import { Account, AccountType } from "@tonclient/appkit"
 import { TonClient } from "@tonclient/core"
 import { getAccount } from "./accounts"
@@ -285,7 +286,6 @@ export const contractDeployCommand: Command = {
         await account.free()
         account.client.close()
         TonClient.default.close()
-        process.exit(0)
     },
 }
 
@@ -341,7 +341,6 @@ export const contractTopUpCommand: Command = {
         await account.free()
         account.client.close()
         TonClient.default.close()
-        process.exit(0)
     },
 }
 
@@ -388,7 +387,6 @@ export const contractRunCommand: Command = {
         await account.free()
         account.client.close()
         TonClient.default.close()
-        process.exit(0)
     },
 }
 
@@ -444,7 +442,6 @@ export const contractRunLocalCommand: Command = {
         await accountWithoutSigner.free()
         account.client.close()
         TonClient.default.close()
-        process.exit(0)
     },
 }
 
@@ -490,7 +487,51 @@ export const contractRunExecutorCommand: Command = {
         await account.free()
         account.client.close()
         TonClient.default.close()
-        process.exit(0)
+    },
+}
+
+export const contractDecodeAccountDataCommand: Command = {
+    name: "decode-account-data",
+    alias: "dad",
+    title: "Decode data from a contract deployed on the network",
+    args: [fileArg, networkOpt, addressOpt],
+    async run(
+        terminal: Terminal,
+        args: {
+            file: string
+            network: string
+            signer: string
+            data: string
+            address: string
+        },
+    ) {
+        if (args.file === "" && args.address === "") {
+            throw new Error("File argument or address option must be specified")
+        }
+        const { abi } = resolveContract(args.file).package
+        if (abi.version === undefined || abi.version < "2.1") {
+            throw new Error("This feature requires ABI 2.1 or higher")
+        }
+        const account = await getAccount(terminal, { ...args, signer: "" })
+        await guardAccountIsActive(account)
+        const { data } = await account.getAccount()
+        const decodedData = await account.client.abi.decode_account_data({
+            abi: {
+                type: "Contract",
+                value: abi,
+            },
+            data,
+        })
+        terminal.log(
+            `Decoded account data: ${JSON.stringify(
+                decodedData,
+                undefined,
+                4,
+            )}`,
+        )
+        await account.free()
+        account.client.close()
+        TonClient.default.close()
     },
 }
 
@@ -515,6 +556,7 @@ export const Contract: ToolController = {
     title: "Smart Contracts",
     commands: [
         contractInfoCommand,
+        contractDecodeAccountDataCommand,
         contractTopUpCommand,
         contractDeployCommand,
         contractRunCommand,
