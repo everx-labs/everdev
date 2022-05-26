@@ -603,6 +603,15 @@ export type ResolvedContractPackage = {
     tvcPath?: string
 }
 
+export function resolveTvcAsBase64(filePath: string): string {
+    const tvcPath = findExisting([filePath, `${filePath}.tvc`])
+    if (tvcPath) {
+        return fs.readFileSync(tvcPath).toString("base64")
+    } else {
+        throw Error(`File ${filePath} not exists`)
+    }
+}
+
 export function resolveContract(filePath: string): ResolvedContractPackage {
     filePath = filePath.trim()
     const lowered = filePath.toLowerCase()
@@ -642,12 +651,7 @@ export function resolveContract(filePath: string): ResolvedContractPackage {
 }
 
 export function isHex(s: string): boolean {
-    for (let i = 0; i < s.length; i += 1) {
-        if (!"0123456789ABCDEFabcdef".includes(s[i])) {
-            return false
-        }
-    }
-    return true
+    return /^[0-9a-f]*$/i.test(s)
 }
 
 export function resolvePath(s: string): string {

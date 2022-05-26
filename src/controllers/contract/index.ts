@@ -1,5 +1,5 @@
 import { Command, CommandArg, Terminal, ToolController } from "../../core"
-import { resolveContract } from "../../core/utils"
+import { resolveContract, resolveTvcAsBase64 } from "../../core/utils"
 import { Account, AccountType } from "@tonclient/appkit"
 import { TonClient } from "@tonclient/core"
 import { getAccount } from "./accounts"
@@ -515,7 +515,7 @@ export const contractDecodeAccountDataCommand: Command = {
         const account = await getAccount(terminal, { ...args, signer: "" })
         await guardAccountIsActive(account)
         const { data } = await account.getAccount()
-        const decodedData = await account.client.abi.decode_account_data({
+        const decoded = await account.client.abi.decode_account_data({
             abi: {
                 type: "Contract",
                 value: abi,
@@ -523,15 +523,29 @@ export const contractDecodeAccountDataCommand: Command = {
             data,
         })
         terminal.log(
-            `Decoded account data: ${JSON.stringify(
-                decodedData,
-                undefined,
-                4,
-            )}`,
+            `Decoded account data: ${JSON.stringify(decoded, undefined, 4)}`,
         )
         await account.free()
         account.client.close()
         TonClient.default.close()
+    },
+}
+
+export const contractDecodeTvcCommand: Command = {
+    name: "decode-tvc",
+    alias: "dt",
+    title: "Decode tvc into code, data, libraries and special options",
+    args: [fileArg],
+    async run(
+        terminal: Terminal,
+        args: {
+            file: string
+        },
+    ) {
+        const decoded = await TonClient.default.boc.decode_tvc({
+            tvc: resolveTvcAsBase64(args.file),
+        })
+        terminal.log(`Decoded TVC: ${JSON.stringify(decoded, undefined, 4)}`)
     },
 }
 
@@ -557,6 +571,7 @@ export const Contract: ToolController = {
     commands: [
         contractInfoCommand,
         contractDecodeAccountDataCommand,
+        contractDecodeTvcCommand,
         contractTopUpCommand,
         contractDeployCommand,
         contractRunCommand,
