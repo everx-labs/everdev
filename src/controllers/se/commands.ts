@@ -1,6 +1,8 @@
-import { SERegistry } from "./registry"
+import { SERegistry, RegistryError } from "./registry"
 import { Command, CommandArg, Terminal } from "../../core"
-import { formatTable } from "../../core/utils"
+import { formatTable, StringTerminal } from "../../core/utils"
+import { printUsage } from "../../everdev/help"
+import { SE } from "."
 
 export const instanceArg: CommandArg = {
     isArg: true,
@@ -37,7 +39,7 @@ export const seInfoCommand: Command = {
             ],
         ]
         const registry = new SERegistry()
-        for (const item of await registry.filter(args.instance, false)) {
+        for (const item of registry.filter(args.instance, false)) {
             const info = await registry.getItemInfo(item)
             table.push([
                 item.name,
@@ -152,7 +154,19 @@ export const seSetCommand: Command = {
             instance: string
         },
     ): Promise<void> {
-        await new SERegistry().configure(terminal, args)
+        try {
+            await new SERegistry().configure(terminal, args)
+        } catch (err: any) {
+            if (err instanceof RegistryError) {
+                // Show HELP section
+                const terminal = new StringTerminal()
+                terminal.log(err.message + "\n")
+                await printUsage(terminal, SE, this)
+                throw Error(terminal.stdout)
+            } else {
+                throw err
+            }
+        }
     },
 }
 
