@@ -23,6 +23,8 @@ function seHome() {
     return path.resolve(everdevHome(), TOOL_FOLDER_NAME)
 }
 
+export class RegistryError extends Error {}
+
 export enum SESourceType {
     TONOS_SE_VERSION = "tonos-se-version",
     DOCKER_IMAGE = "docker-image",
@@ -127,8 +129,8 @@ export function updateInstance(
         updates.port === undefined &&
         updates.dbPort === undefined
     ) {
-        throw new Error(
-            "There is nothing to set. You have to specify at least one config parameter. See command help.",
+        throw new RegistryError(
+            "You have to specify at least one config parameter",
         )
     }
 
