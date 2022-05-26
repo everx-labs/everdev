@@ -18,7 +18,7 @@ export function touch(file: string): Date | undefined {
     let mtime
     try {
         mtime = fs.statSync(file).mtime
-    } catch (_) {}
+    } catch (_) {} /* eslint-disable-line no-empty */
     const time = new Date()
     try {
         fs.utimesSync(file, time, time)
