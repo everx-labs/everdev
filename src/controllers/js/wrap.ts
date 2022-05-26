@@ -1,8 +1,9 @@
-import { Command, CommandArgVariant, Terminal } from "../../core"
 import path from "path"
 import { TonClient } from "@tonclient/core"
+import { libNode } from "@tonclient/lib-node"
+
 import { resolveContract, writeTextFile } from "../../core/utils"
-const { libNode } = require("@tonclient/lib-node")
+import { Command, CommandArgVariant, Terminal } from "../../core"
 
 TonClient.useBinaryLibrary(libNode)
 

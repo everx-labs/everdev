@@ -7,7 +7,7 @@ import { BasicTest } from "./snippets"
 export const ts4VersionCommand: Command = {
     name: "version",
     title: "Show installed and available versions",
-    async run(terminal: Terminal, _args: {}): Promise<void> {
+    async run(terminal: Terminal): Promise<void> {
         terminal.log(await Component.getInfoAll(components))
     },
 }
@@ -36,7 +36,7 @@ export const ts4InstallCommand: Command = {
 export const ts4UpdateCommand: Command = {
     name: "update",
     title: "Update to the latest version",
-    async run(terminal: Terminal, _args: {}): Promise<void> {
+    async run(terminal: Terminal): Promise<void> {
         await Component.updateAll(terminal, true, components)
     },
 }

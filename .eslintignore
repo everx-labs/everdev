@@ -8,3 +8,5 @@ coverage/*
 /src/public/
 # custom definition files
 /src/types/
+
+cli.js

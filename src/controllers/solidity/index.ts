@@ -9,7 +9,7 @@ import { components } from "./components"
 export const solidityVersionCommand: Command = {
     name: "version",
     title: "Show Solidity Version",
-    async run(terminal: Terminal, _args: {}): Promise<void> {
+    async run(terminal: Terminal): Promise<void> {
         terminal.log(await Component.getInfoAll(components))
     },
 }
@@ -49,6 +49,7 @@ export const solidityCompileCommand: Command = {
             type: "file",
             title: "Source file",
             nameRegExp: /\.sol$/i,
+            greedy: true,
         },
         {
             name: "code",
@@ -74,69 +75,79 @@ export const solidityCompileCommand: Command = {
         },
     ): Promise<void> {
         await Component.ensureInstalledAll(terminal, components)
-        const fileDir = path.dirname(args.file)
-        const fileName = path.basename(args.file)
+        for (const file of args.file.split(" ")) {
+            const fileDir = path.dirname(file)
+            const fileName = path.basename(file)
 
-        const outputDir = path.resolve(args.outputDir ?? ".")
-        const preserveCode = args.code
-        const tvcName = path.resolve(outputDir, changeExt(fileName, ".tvc"))
-        const abiName = path.resolve(
-            outputDir,
-            changeExt(fileName, ".abi.json"),
-        )
-        const codeName = path.resolve(outputDir, changeExt(fileName, ".code"))
-
-        const isDeprecatedVersion =
-            (await components.compiler.getCurrentVersion()) <= "0.21.0"
-
-        let linkerOut: string
-
-        if (isDeprecatedVersion) {
-            terminal.log(
-                "You use an obsolete version of the compiler.\nThe output files are saved in the current directory",
+            const outputDir = path.resolve(args.outputDir ?? ".")
+            const preserveCode = args.code
+            const tvcName = path.resolve(outputDir, changeExt(fileName, ".tvc"))
+            const abiName = path.resolve(
+                outputDir,
+                changeExt(fileName, ".abi.json"),
+            )
+            const codeName = path.resolve(
+                outputDir,
+                changeExt(fileName, ".code"),
             )
 
-            await components.compiler.silentRun(terminal, fileDir, [fileName])
-            linkerOut = await components.linker.silentRun(terminal, fileDir, [
-                "compile",
-                codeName,
-                "-a",
-                abiName,
-                "--lib",
-                components.stdlib.path(),
-            ])
-        } else {
-            await components.compiler.silentRun(terminal, fileDir, [
-                "-o",
-                outputDir,
-                fileName,
-            ])
-            linkerOut = await components.linker.silentRun(terminal, fileDir, [
-                "compile",
-                codeName,
-                "--lib",
-                components.stdlib.path(),
-            ])
-        }
+            const isDeprecatedVersion =
+                (await components.compiler.getCurrentVersion()) <= "0.21.0"
 
-        const generatedTvcName = `${
-            /Saved contract to file (.*)$/gm.exec(linkerOut)?.[1]
-        }`
+            let linkerOut: string
 
-        // fs.renameSync was replaces by this code, because of an error: EXDEV: cross-device link not permitted
-        await new Promise((res, rej) =>
-            mv(
-                path.resolve(fileDir, generatedTvcName),
-                path.resolve(outputDir, tvcName),
-                {
-                    mkdirp: true,
-                    clobber: true,
-                },
-                (err: Error) => (err ? rej(err) : res(true)),
-            ),
-        )
-        if (!preserveCode) {
-            fs.unlinkSync(path.resolve(fileDir, codeName))
+            if (isDeprecatedVersion) {
+                terminal.log(
+                    "You use an obsolete version of the compiler.\nThe output files are saved in the current directory",
+                )
+
+                await components.compiler.silentRun(terminal, fileDir, [
+                    fileName,
+                ])
+                linkerOut = await components.linker.silentRun(
+                    terminal,
+                    fileDir,
+                    [
+                        "compile",
+                        codeName,
+                        "-a",
+                        abiName,
+                        "--lib",
+                        components.stdlib.path(),
+                    ],
+                )
+            } else {
+                await components.compiler.silentRun(terminal, fileDir, [
+                    "-o",
+                    outputDir,
+                    fileName,
+                ])
+                linkerOut = await components.linker.silentRun(
+                    terminal,
+                    fileDir,
+                    ["compile", codeName, "--lib", components.stdlib.path()],
+                )
+            }
+
+            const generatedTvcName = `${
+                /Saved contract to file (.*)$/gm.exec(linkerOut)?.[1]
+            }`
+
+            // fs.renameSync was replaces by this code, because of an error: EXDEV: cross-device link not permitted
+            await new Promise((res, rej) =>
+                mv(
+                    path.resolve(fileDir, generatedTvcName),
+                    path.resolve(outputDir, tvcName),
+                    {
+                        mkdirp: true,
+                        clobber: true,
+                    },
+                    (err: Error) => (err ? rej(err) : res(true)),
+                ),
+            )
+            if (!preserveCode) {
+                fs.unlinkSync(path.resolve(fileDir, codeName))
+            }
         }
     },
 }
@@ -151,6 +162,7 @@ export const solidityAstCommand: Command = {
             type: "file",
             title: "Source file",
             nameRegExp: /\.sol$/i,
+            greedy: true,
         },
         {
             name: "format",
@@ -175,25 +187,27 @@ export const solidityAstCommand: Command = {
             outputDir?: string
         },
     ): Promise<void> {
-        const ext = path.extname(args.file)
-        if (ext !== ".sol") {
-            terminal.log(`Choose solidity source file.`)
-            return
+        for (const file of args.file.split(" ")) {
+            const ext = path.extname(file)
+            if (ext !== ".sol") {
+                terminal.log(`Choose solidity source file.`)
+                return
+            }
+            if (args.format.match(/^(compact-json|json)$/i) == null) {
+                terminal.log(`Wrong ast format.`)
+                return
+            }
+            await Component.ensureInstalledAll(terminal, components)
+            const fileDir = path.dirname(file)
+            const fileName = path.basename(file)
+            args.outputDir = path.resolve(args.outputDir ?? ".")
+            await components.compiler.silentRun(terminal, fileDir, [
+                `--ast-${args.format}`,
+                "--output-dir",
+                args.outputDir,
+                fileName,
+            ])
         }
-        if (args.format.match(/^(compact-json|json)$/i) == null) {
-            terminal.log(`Wrong ast format.`)
-            return
-        }
-        await Component.ensureInstalledAll(terminal, components)
-        const fileDir = path.dirname(args.file)
-        const fileName = path.basename(args.file)
-        args.outputDir = path.resolve(args.outputDir ?? ".")
-        await components.compiler.silentRun(terminal, fileDir, [
-            `--ast-${args.format}`,
-            "--output-dir",
-            args.outputDir,
-            fileName,
-        ])
     },
 }
 

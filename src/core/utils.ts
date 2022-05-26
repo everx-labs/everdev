@@ -156,7 +156,7 @@ function downloadAndGunzip(
 
             response.pipe(unzip)
 
-            response.on("data", _ => {
+            response.on("data", () => {
                 terminal.write(".")
             })
 
@@ -328,9 +328,9 @@ export const consoleTerminal: Terminal = {
 }
 
 export const nullTerminal: Terminal = {
-    write(_text: string) {},
-    writeError(_text: string) {},
-    log(..._args) {},
+    write() {},
+    writeError() {},
+    log() {},
 }
 
 export class StringTerminal implements Terminal {

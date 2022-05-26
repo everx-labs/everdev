@@ -8,7 +8,7 @@ import { components } from "./components"
 export const clangVersionCommand: Command = {
     name: "version",
     title: "Show C++ Compiler Version",
-    async run(terminal: Terminal, _args: {}): Promise<void> {
+    async run(terminal: Terminal): Promise<void> {
         terminal.log(await Component.getInfoAll(components))
     },
 }
@@ -57,27 +57,32 @@ export const clangCompileCommand: Command = {
             type: "file",
             title: "Source file",
             nameRegExp: /\.cpp$/i,
+            greedy: true,
         },
     ],
     async run(terminal: Terminal, args: { file: string }): Promise<void> {
-        const ext = path.extname(args.file)
-        if (ext !== ".cpp") {
-            terminal.log(`Choose source file.`)
-            return
+        for (let file of args.file.split(" ")) {
+            const ext = path.extname(file)
+            if (ext !== ".cpp") {
+                terminal.log(`Choose source file.`)
+                return
+            }
+            await Component.ensureInstalledAll(terminal, components)
+            file = path.resolve(file)
+            const tvcName = changeExt(file, ".tvc")
+            const generatedAbiName = changeExt(file, ".abi")
+            const renamedAbiName = changeExt(file, ".abi.json")
+            await components.compiler.run(
+                terminal,
+                path.dirname(file), // cd to this directory
+                [file, "-o", tvcName],
+            )
+
+            fs.renameSync(generatedAbiName, renamedAbiName)
+            terminal.log(
+                `Success, files created: ${tvcName}, ${renamedAbiName}`,
+            )
         }
-        await Component.ensureInstalledAll(terminal, components)
-        const tvcName = changeExt(args.file, ".tvc")
-        const generatedAbiName = changeExt(args.file, ".abi")
-        const renamedAbiName = changeExt(args.file, ".abi.json")
-
-        await components.compiler.run(
-            terminal,
-            path.dirname(args.file), // cd to this directory
-            [args.file, "-o", tvcName],
-        )
-
-        fs.renameSync(generatedAbiName, renamedAbiName)
-        terminal.log(`Success, files created: ${tvcName}, ${renamedAbiName}`)
     },
 }
 

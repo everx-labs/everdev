@@ -31,7 +31,7 @@ export const tonosSetCommand: Command = {
 export const tonosUpdateCommand: Command = {
     name: "update",
     title: "Update to the latest version",
-    async run(terminal: Terminal, _args: {}): Promise<void> {
+    async run(terminal: Terminal): Promise<void> {
         await Component.updateAll(terminal, false, components)
     },
 }
@@ -39,7 +39,7 @@ export const tonosUpdateCommand: Command = {
 export const tonosVersionCommand: Command = {
     name: "version",
     title: "Show installed and available versions",
-    async run(terminal: Terminal, _args: {}): Promise<void> {
+    async run(terminal: Terminal): Promise<void> {
         terminal.log(await Component.getInfoAll(components))
     },
 }

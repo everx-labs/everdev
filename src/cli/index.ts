@@ -1,3 +1,9 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
+import fs from "fs"
+import path from "path"
+import chalk from "chalk"
+import * as process from "process"
+
 import {
     Command,
     CommandArg,
@@ -14,50 +20,58 @@ import {
     createLatestVerFile,
     getUpdateIsAvailableMsg,
 } from "../everdev/checkNewVersion"
-import * as process from "process"
-import fs from "fs"
-import path from "path"
-import chalk from "chalk"
 
 function findOptionArg(command: Command, name: string): CommandArg | undefined {
     if (name.startsWith("--")) {
-        name = name.substr(2).toLowerCase()
+        name = name.substring(2).toLowerCase()
         return command.args?.find(x => !x.isArg && x.name === name)
     }
     if (name.startsWith("-")) {
-        name = name.substr(1).toLowerCase()
+        name = name.substring(1).toLowerCase()
         return command.args?.find(x => !x.isArg && x.alias === name)
     }
     return undefined
 }
 
-class CommandLine {
-    args: { help?: boolean; [name: string]: any } = {}
+export class CommandLine {
+    args: Record<string, string | boolean> = {}
     controller: ToolController | undefined = undefined
     command: Command | undefined = undefined
     positional: CommandArg[] = []
     unresolved = new Map<string, CommandArg>()
     pending: CommandArg | undefined = undefined
     printSummaryInfo = false
+    greedyArgument: CommandArg
 
-    setArgValue(arg: CommandArg, value: any) {
+    setArgValue(arg: CommandArg, value: string | boolean) {
         const name = arg.name
             .split("-")
             .map((x, i) =>
-                i > 0 ? x.substr(0, 1).toUpperCase() + x.substr(1) : x,
+                i > 0 ? x.substring(0, 1).toUpperCase() + x.substring(1) : x,
             )
             .join("")
-        this.args[name] = value
+
+        if (typeof value === "string") {
+            const prevVal = this.args[name]
+            if (prevVal) {
+                this.args[name] = prevVal + " " + value
+            } else {
+                this.args[name] = value
+            }
+        } else {
+            this.args[name] = value
+        }
     }
 
-    async resolveValue(arg: CommandArg, value: string | undefined) {
+    async resolveValue(arg: CommandArg, value?: string) {
         if (arg.type === "boolean" && value === undefined) {
             value = "true"
         }
+
         if (value === undefined) {
             throw new Error(`Missing value for ${arg.name}`)
         }
-        let resolved: any
+        let resolved: string | boolean
         if (arg.type === "boolean") {
             resolved = value.toLowerCase() === "true"
         } else {
@@ -128,7 +142,8 @@ class CommandLine {
     }
 
     async parse(programArgs: string[]) {
-        for (let arg of programArgs) {
+        for (let i = 0; i < programArgs.length; i++) {
+            let arg = programArgs[i]
             if (arg.startsWith("-") && !this.pending) {
                 await this.parseOptionName(arg)
             } else {
@@ -136,10 +151,19 @@ class CommandLine {
                 if (this.pending) {
                     await this.resolveValue(this.pending, arg)
                 } else if (this.controller && this.command) {
-                    if (this.positional.length === 0) {
+                    if (
+                        this.positional.length === 0 &&
+                        this.greedyArgument === undefined
+                    ) {
                         throw new Error(`Unexpected argument ${arg}`)
                     }
-                    await this.resolveValue(this.positional[0], arg)
+                    if (this.positional[0]?.greedy) {
+                        this.greedyArgument = this.positional[0]
+                    }
+                    await this.resolveValue(
+                        this.positional[0] || this.greedyArgument,
+                        arg,
+                    )
                 } else if (this.controller) {
                     const command = this.controller.commands.find(x =>
                         matchName(x, arg),
@@ -212,7 +236,7 @@ export async function run(terminal: Terminal) {
 
     // Once a day, create a file containing the latest version number of `everdev`
     // Ignoring any (network, concurent access to file, etc) errors
-    createLatestVerFile(pkg.name).catch(_ => {})
+    createLatestVerFile(pkg.name).catch(() => {})
 
     const msg = getUpdateIsAvailableMsg(pkg.name, pkg.version)
     if (msg !== "") {
@@ -221,7 +245,7 @@ export async function run(terminal: Terminal) {
 
     if (isPrintVersionMode()) {
         terminal.log(pkg.version)
-        process.exit(0)
+        return
     }
     await parser.parse(process.argv.slice(2))
     if (parser.printSummaryInfo) {
@@ -229,6 +253,7 @@ export async function run(terminal: Terminal) {
         return
     }
     const { controller, command, args } = parser
+
     if (!controller || !command) {
         await printUsage(terminal, controller, command)
         return

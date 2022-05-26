@@ -6,7 +6,7 @@ import { Command, Terminal, ToolController } from "../core"
 function findInfoCommand(
     controller: ToolController,
     name: string,
-): { command: Command; args: any } | undefined {
+): { command: Command; args: Record<string, string> } | undefined {
     if (controller.name === "contract" && name === "info") {
         return undefined
     }
@@ -14,7 +14,7 @@ function findInfoCommand(
     if (!command) {
         return undefined
     }
-    const args: any = {}
+    const args: Record<string, string> = {}
     for (const arg of command.args ?? []) {
         if (arg.defaultValue === undefined) {
             return undefined

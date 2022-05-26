@@ -18,7 +18,7 @@ export interface Terminal {
      * Print line. Provided argument will be converted to strings and separated by space.
      * @param args values to print.
      */
-    log(...args: any[]): void
+    log(...args: unknown[]): void
 
     /**
      * Prints text. No line feeds will be produced.
@@ -66,6 +66,11 @@ export type BaseCommandArg = {
      * Determine that the arg is a CLI arg (not an option).
      */
     isArg?: boolean
+    /*
+     * Gredy argument value can include several words
+     */
+    greedy?: boolean
+
     /**
      * Get available CLI argument variants
      */
@@ -73,7 +78,7 @@ export type BaseCommandArg = {
 }
 
 /**
- * Argument with path ti the file.
+ * Argument with path to the file.
  */
 export type FileArg = BaseCommandArg & {
     type: "file"
@@ -140,7 +145,7 @@ export interface Command {
      *   Handler must print all human readable output using this terminal.
      * @param args Actual command arguments provided by user according to argument definitions.
      */
-    run(terminal: Terminal, args: any): Promise<void>
+    run(terminal: Terminal, args: unknown): Promise<void>
 }
 
 type NameAlias = {
@@ -214,13 +219,6 @@ export function everdevHome() {
 
 export async function getArgVariants(
     arg: CommandArg,
-): Promise<CommandArgVariant[] | undefined> {
-    if (!arg.getVariants) {
-        return undefined
-    }
-    const variants = arg.getVariants()
-    if (variants instanceof Promise) {
-        return await variants
-    }
-    return variants
+): Promise<CommandArgVariant[]> {
+    return arg.getVariants === undefined ? undefined : arg.getVariants()
 }
