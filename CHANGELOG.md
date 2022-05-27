@@ -2,6 +2,55 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2022-05-27
+
+### New
+
+- Add new option `--type` to the `everdev network giver` command.
+
+    If you compiled your own giver, `everdev` may refuse to use it because it doesn't know what interface it implements.
+
+    You can specify which interface your giver implements by specifying the --type = GiverV1 | GiverV2 | GiverV3 | SecureMultiSigWallet | SetcodeMultisigWallet
+
+-   Add new sub command "everdev contract decode-account-data file [options]". This command decodes data from a contract deployed on the network.
+    For example:
+
+    ```
+    $ everdev contract decode-account-data HelloWallet.abi.json  -a 0:783abd8b2cbcc578397d8d15ae8293688a87da15a052a993cfb51cbd3e6452a3
+    Decoded account data: {
+        "data": {
+            "_pubkey": "0x95c06aa743d1f9000dd64b75498f106af4b7e7444234d7de67ea26988f6181df",
+            "_timestamp": "1653482490973",
+            "_constructorFlag": true,
+            "timestamp": "1653482492"
+        }
+    }
+    ```
+
+-   Add new sub command "everdev contract decode-tvc file". This command decodes TVC into code, data, libraries and special options.
+    For example:
+
+    ```
+    $ everdev contract decode-tvc HelloWallet.tvc
+    Decoded TVC: {
+      "code": "te6ccPKo3tM/AfhDIbnytCD4I4ED6KiCCBt3QKC58rT4Y9MfAfgjvPK50x8B2zzyPAYDA0rtRNDXScMB+GYi0NcLA6k4ANwhxwDjAiHXDR/yvC==',
+      "code_hash": "7a588d25395138fa12f9fd358b2383922b80a2dcbc973cd437723b4d96c9ae13",
+      "data": "te6ccgEBAgEAKAABAcABAEPQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAg",
+      "data_hash": "55a703465a160dce20481375de2e5b830c841c2787303835eb5821d62d65ca9d",
+      ----%<------------------------
+      "compiler_version": "sol 0.61.0"
+    }
+    ```
+
+### Improved
+
+- For "everdev sol compile" and "everdev clang compile" commands, you can specify a variable number of input files, for example:
+    ```
+    $ everdev sol compile Contract1.sol Contract2.sol Contract3.sol  # It works
+    $ everdev sol compile *.sol  # It works too
+    ```
+
+
 ## [1.1.2] - 2022-05-12
 ### Fixed
  - Updated Ever OS Cloud endpoints.
