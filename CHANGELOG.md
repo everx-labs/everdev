@@ -12,11 +12,11 @@ All notable changes to this project will be documented in this file.
 
     You can specify which interface your giver implements by specifying the --type = GiverV1 | GiverV2 | GiverV3 | SecureMultiSigWallet | SetcodeMultisigWallet
 
--   Add new sub command "everdev contract decode-account-data file [options]". This command decodes data from a contract deployed on the network.
+-   Add new sub command "everdev contract decode-data file [options]". This command decodes data from a contract deployed on the network.
     For example:
 
     ```
-    $ everdev contract decode-account-data HelloWallet.abi.json  -a 0:783abd8b2cbcc578397d8d15ae8293688a87da15a052a993cfb51cbd3e6452a3
+    $ everdev contract decode-data HelloWallet.abi.json  -a 0:783abd8b2cbcc578397d8d15ae8293688a87da15a052a993cfb51cbd3e6452a3
     Decoded account data: {
         "data": {
             "_pubkey": "0x95c06aa743d1f9000dd64b75498f106af4b7e7444234d7de67ea26988f6181df",

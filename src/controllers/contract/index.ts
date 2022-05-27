@@ -491,8 +491,8 @@ export const contractRunExecutorCommand: Command = {
 }
 
 export const contractDecodeAccountDataCommand: Command = {
-    name: "decode-account-data",
-    alias: "dad",
+    name: "decode-data",
+    alias: "dd",
     title: "Decode data from a contract deployed on the network",
     args: [fileArg, networkOpt, addressOpt],
     async run(
