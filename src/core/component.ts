@@ -154,7 +154,7 @@ export class Component {
                 if (info.version) {
                     return info.version
                 }
-            } catch {}
+            } catch {} // eslint-disable-line no-empty
         }
         return this.resolveVersion("")
     }

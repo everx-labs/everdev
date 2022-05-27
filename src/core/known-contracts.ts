@@ -27,6 +27,13 @@ export async function knownContractFromAddress(
     return knownContractFromCodeHash(codeHash, name, address)
 }
 
+export function knownContractByName(name: string): KnownContract {
+    if (!(name in KnownContracts)) {
+        throw new Error(`Unknown contract type ${name}.`)
+    }
+    return KnownContracts[name]
+}
+
 export function knownContractFromCodeHash(
     codeHash: string,
     name: string,
@@ -54,10 +61,18 @@ export function loadAbi(name: string): AbiContract {
     )
 }
 
-export const KnownContracts = {
+export const KnownContracts: { [key: string]: KnownContract } = {
+    GiverV1: {
+        name: "GiverV1",
+        abi: loadAbi("GiverV1"),
+    },
     GiverV2: {
         name: "GiverV2",
         abi: loadAbi("GiverV2"),
+    },
+    GiverV3: {
+        name: "GiverV3",
+        abi: loadAbi("GiverV3"),
     },
     SetcodeMultisigWallet: {
         name: "SetcodeMultisigWallet",

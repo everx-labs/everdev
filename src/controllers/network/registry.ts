@@ -58,7 +58,7 @@ export class NetworkRegistry {
                     this.default = data.default
                 }
                 loaded = true
-            } catch {}
+            } catch {} // eslint-disable-line no-empty
         }
         if (!loaded) {
             this.items = [
@@ -178,18 +178,19 @@ export class NetworkRegistry {
     }
 
     async setGiver(
-        name: string,
+        networkName: string,
         address: string,
         signer: string,
         value: number | undefined,
+        name: string,
     ) {
-        const network = this.get(name)
+        const network = this.get(networkName)
         const client = new TonClient({
             network: { endpoints: network.endpoints },
         })
         try {
             const giver = await NetworkGiver.create(client, {
-                name: "",
+                name,
                 address,
                 signer,
                 value,

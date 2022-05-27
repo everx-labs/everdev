@@ -8,6 +8,7 @@ import {
 } from "@tonclient/core"
 import {
     KnownContract,
+    knownContractByName,
     knownContractFromAddress,
     KnownContracts,
 } from "../../core/known-contracts"
@@ -23,6 +24,18 @@ async function giverV2Send(
     await giver.run("sendTransaction", {
         dest: address,
         value: value,
+        bounce: false,
+    })
+}
+
+async function giverV1Send(
+    giver: Account,
+    address: string,
+    value: number,
+): Promise<void> {
+    await giver.run("sendGrams", {
+        dest: address,
+        amount: value,
         bounce: false,
     })
 }
@@ -51,6 +64,7 @@ const seGiverKeysTvc =
 export class NetworkGiver implements AccountGiver {
     account: Account
     value: number | undefined
+    name: string | undefined
 
     constructor(
         public contract: KnownContract,
@@ -65,6 +79,7 @@ export class NetworkGiver implements AccountGiver {
         ) => Promise<void>,
     ) {
         this.value = info.value
+        this.name = info.name
         this.account = new Account(contract, {
             client,
             address,
@@ -95,17 +110,24 @@ export class NetworkGiver implements AccountGiver {
                           signer,
                       })
                   ).address
-        const contract = await knownContractFromAddress(
-            client,
-            "Giver",
-            address,
-        )
+        let contract: KnownContract
         let send: (
             giver: Account,
             address: string,
             value: number,
         ) => Promise<void>
-        if (contract === KnownContracts.GiverV2) {
+
+        if (info.name !== undefined && info.name !== "auto") {
+            contract = await knownContractByName(info.name)
+        } else {
+            contract = await knownContractFromAddress(client, "Giver", address)
+        }
+
+        if (contract === KnownContracts.GiverV1) {
+            send = giverV1Send
+        } else if (contract === KnownContracts.GiverV2) {
+            send = giverV2Send
+        } else if (contract === KnownContracts.GiverV3) {
             send = giverV2Send
         } else if (contract === KnownContracts.SetcodeMultisigWallet) {
             send = multisigSend
