@@ -83,7 +83,7 @@ test("everdev create a.sol", async () => {
     expect(command).toEqual(solidityCreateCommand)
     expect(args).toEqual({
         name: "a.sol",
-        folder: "/home/tiger/everdev",
+        folder: process.cwd(),
     })
 })
 
@@ -91,7 +91,6 @@ test("everdev create a.sol b.sol, should throw", async () => {
     const parser = new CommandLine()
     try {
         await parser.parse(["sol", "create", "a.sol", "b.sol"])
-        const { controller, command, args } = parser
         throw Error("Shouldn't resolve!")
     } catch (err) {
         expect(err.message).toMatch(/Unexpected argument/)
