@@ -418,3 +418,53 @@ or
 ```
 everdev ct -a <addrress>
 ```
+
+## Decode data from a contract deployed on the network.
+
+```
+$ everdev contract decode-data --help
+EverDev Version: 1.2.0
+Use: everdev contract decode-data file [options]
+Args:
+    file  ABI file
+Options:
+    --help, -h     Show command usage
+    --network, -n  Network name
+    --address, -a  Account address
+
+```
+For example:
+```
+$ everdev contract decode-data HelloWallet.abi.json  -a 0:783abd8b2cbcc578397d8d15ae8293688a87da15a052a993cfb51cbd3e6452a3
+Decoded account data: {
+    "data": {
+        "_pubkey": "0x95c06aa743d1f9000dd64b75498f106af4b7e7444234d7de67ea26988f6181df",
+        "_timestamp": "1653482490973",
+        "_constructorFlag": true,
+        "timestamp": "1653482492"
+    }
+}
+```
+## Decode TVC into code, data, libraries and special options.
+```
+$ everdev contract decode-tvc --help
+EverDev Version: 1.2.0
+Use: everdev contract decode-tvc file
+Args:
+    file  ABI file
+Options:
+    --help, -h  Show command usage
+```
+For example:
+```
+$ everdev contract decode-data HelloWallet.abi.json  -a 0:783abd8b2cbcc578397d8d15ae8293688a87da15a052a993cfb51cbd3e6452a3
+Decoded account data: {
+    "data": {
+        "_pubkey": "0x95c06aa743d1f9000dd64b75498f106af4b7e7444234d7de67ea26988f6181df",
+        "_timestamp": "1653482490973",
+        "_constructorFlag": true,
+        "timestamp": "1653482492"
+    }
+}
+
+```

@@ -1,37 +1,49 @@
-import fs from 'fs'
-import path from 'path'
+import fs from "fs"
+import path from "path"
 
-import { doneTests, initTests, deleteFolderRecursive } from './init'
-import { StringTerminal, runCommand } from '..'
+import { doneTests, initTests, deleteFolderRecursive } from "./init"
+import { StringTerminal, runCommand } from ".."
 
-const outPath = path.resolve(__dirname, '..', '..', `${Date.now()}-tmp`)
+const outPath = path.resolve(__dirname, "..", "..", `${Date.now()}-tmp`)
 
 beforeAll(initTests)
 afterAll(doneTests)
 beforeEach(() => deleteFolderRecursive(outPath))
 afterEach(() => deleteFolderRecursive(outPath))
 
-test('Should create HelloWallet.tvc in user defined output directory', async () => {
-    const solPath = path.resolve(__dirname, '..', '..', 'contracts', 'HelloWallet.sol')
+test("Should create HelloWallet.tvc in user defined output directory", async () => {
+    const solPath = path.resolve(
+        __dirname,
+        "..",
+        "..",
+        "contracts",
+        "HelloWallet.sol",
+    )
 
     const terminal = new StringTerminal()
-    await runCommand(terminal, 'sol compile', {
+    await runCommand(terminal, "sol compile", {
         file: solPath,
         outputDir: outPath,
     })
-    expect(terminal.stderr.trim()).toEqual('')
+    expect(terminal.stderr.trim()).toEqual("")
 
-    const tvcFile = path.resolve(outPath, 'HelloWallet.tvc')
+    const tvcFile = path.resolve(outPath, "HelloWallet.tvc")
     expect(fs.existsSync(tvcFile)).toBeTruthy()
 })
 
-test('Should warn user to use options in camelCase', async () => {
-    const solPath = path.resolve(__dirname, '..', '..', 'contracts', 'HelloWallet.sol')
+test("Should warn user to use options in camelCase", async () => {
+    const solPath = path.resolve(
+        __dirname,
+        "..",
+        "..",
+        "contracts",
+        "HelloWallet.sol",
+    )
     const terminal = new StringTerminal()
     try {
-        await runCommand(terminal, 'sol compile', {
+        await runCommand(terminal, "sol compile", {
             file: solPath,
-           'hello-world': 'hi!',
+            "hello-world": "hi!",
         })
         throw Error("This function didn't throw")
     } catch (err: any) {

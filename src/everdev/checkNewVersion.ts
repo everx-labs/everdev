@@ -1,10 +1,16 @@
-import * as path from 'path'
+import * as path from "path"
 
-import { everdevHome } from '../core/index'
-import { compareVersions, touch, writeTextFile, readTextFileSyncOnce, getLatestFromNmp } from '../core/utils'
+import { everdevHome } from "../core/index"
+import {
+    compareVersions,
+    touch,
+    writeTextFile,
+    readTextFileSyncOnce,
+    getLatestFromNmp,
+} from "../core/utils"
 
-const LAST_RUN_FILE = '.lastrun'
-const LATEST_VERSION_FILE = '.latest'
+const LAST_RUN_FILE = ".lastrun"
+const LATEST_VERSION_FILE = ".latest"
 
 /*
  * Checks if this is the first run in the last 24 hours
@@ -23,22 +29,25 @@ export async function createLatestVerFile(pkgName: string): Promise<void> {
     }
 }
 
-export function getUpdateIsAvailableMsg(pkgName: string, pkgVer: string): string {
+export function getUpdateIsAvailableMsg(
+    pkgName: string,
+    pkgVer: string,
+): string {
     const latestVer: string = readTextFileSyncOnce(
-        path.resolve(everdevHome(), LATEST_VERSION_FILE)
+        path.resolve(everdevHome(), LATEST_VERSION_FILE),
     )
-    if ( latestVer && compareVersions(latestVer, pkgVer) > 0) {
-        const sep = '********************************************'
+    if (latestVer && compareVersions(latestVer, pkgVer) > 0) {
+        const sep = "********************************************"
         return [
-            '',
+            "",
             sep,
             `A new version of ${pkgName} ${latestVer} is available!`,
             sep,
             `Installed version is ${pkgVer}`,
             `Update it with "npm update ${pkgName}"`,
-            '',
-        ].join('\n')
+            "",
+        ].join("\n")
     } else {
-        return ''
+        return ""
     }
 }

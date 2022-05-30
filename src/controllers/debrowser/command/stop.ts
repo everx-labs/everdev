@@ -1,6 +1,6 @@
-import {Command, Terminal} from "../../../core";
-import {ContainerStatus} from "../../../core/docker";
-import {controlInstances} from "../installer";
+import { Command, Terminal } from "../../../core"
+import { ContainerStatus } from "../../../core/docker"
+import { controlInstances } from "../installer"
 
 export const stopCommand: Command = {
     name: "stop",
@@ -8,7 +8,11 @@ export const stopCommand: Command = {
     args: [],
     async run(terminal: Terminal): Promise<void> {
         await controlInstances(async (docker, def) => {
-            await docker.shutdownContainer(terminal, def, ContainerStatus.created);
-        });
+            await docker.shutdownContainer(
+                terminal,
+                def,
+                ContainerStatus.created,
+            )
+        })
     },
-};
+}

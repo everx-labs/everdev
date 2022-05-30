@@ -1,17 +1,6 @@
-import {
-    Command,
-    CommandArg,
-    Terminal,
-    ToolController,
-} from "../../core";
-import {
-    getGiverSummary,
-    NetworkRegistry,
-} from "./registry";
-import {
-    formatTable,
-    parseNumber,
-} from "../../core/utils";
+import { Command, CommandArg, Terminal, ToolController } from "../../core"
+import { getGiverSummary, NetworkRegistry } from "./registry"
+import { formatTable, parseNumber } from "../../core/utils"
 
 const forceArg: CommandArg = {
     name: "force",
@@ -19,14 +8,14 @@ const forceArg: CommandArg = {
     type: "boolean",
     title: "Overwrite key if already exists",
     defaultValue: "false",
-};
+}
 
 const nameArg: CommandArg = {
     isArg: true,
     name: "name",
     type: "string",
     title: "Network name",
-};
+}
 
 export const networkAddCommand: Command = {
     name: "add",
@@ -41,40 +30,43 @@ export const networkAddCommand: Command = {
         },
         forceArg,
     ],
-    async run(_terminal: Terminal, args: {
-        name: string,
-        endpoints: string,
-        dictionary: string,
-        force: boolean
-    }) {
-        const endpoints = args.endpoints.split(",").filter(x => x !== "");
-        new NetworkRegistry().add(args.name, "", endpoints, args.force);
+    async run(
+        _terminal: Terminal,
+        args: {
+            name: string
+            endpoints: string
+            dictionary: string
+            force: boolean
+        },
+    ) {
+        const endpoints = args.endpoints.split(",").filter(x => x !== "")
+        new NetworkRegistry().add(args.name, "", endpoints, args.force)
     },
-};
+}
 
 export const networkListCommand: Command = {
     name: "list",
     alias: "l",
     title: "Prints list of networks",
     args: [],
-    async run(terminal: Terminal, _args: {}) {
-        const registry = new NetworkRegistry();
-        const rows = [["Network", "Endpoints", "Giver", "Description"]];
-        registry.items.forEach((network) => {
-            const summary = registry.getNetworkSummary(network);
+    async run(terminal: Terminal) {
+        const registry = new NetworkRegistry()
+        const rows = [["Network", "Endpoints", "Giver", "Description"]]
+        registry.items.forEach(network => {
+            const summary = registry.getNetworkSummary(network)
             rows.push([
                 summary.name,
                 summary.endpoints,
                 summary.giver,
                 summary.description,
-            ]);
-        });
-        const table = formatTable(rows, { headerSeparator: true });
+            ])
+        })
+        const table = formatTable(rows, { headerSeparator: true })
         if (table.trim() !== "") {
-            terminal.log(table);
+            terminal.log(table)
         }
     },
-};
+}
 
 export const networkInfoCommand: Command = {
     name: "info",
@@ -88,34 +80,34 @@ export const networkInfoCommand: Command = {
     ],
     async run(terminal: Terminal, args: { name: string }) {
         if (args.name === "") {
-            return networkListCommand.run(terminal, {});
+            return networkListCommand.run(terminal, {})
         }
-        const registry = new NetworkRegistry();
-        const network = registry.get(args.name);
-        const rows = [["Network", network.name]];
-        rows.push(["Endpoints", network.endpoints.join(", ")]);
-        const giver = network.giver;
+        const registry = new NetworkRegistry()
+        const network = registry.get(args.name)
+        const rows = [["Network", network.name]]
+        rows.push(["Endpoints", network.endpoints.join(", ")])
+        const giver = network.giver
         if (giver) {
-            rows.push(["Giver", getGiverSummary(giver)]);
+            rows.push(["Giver", getGiverSummary(giver)])
         }
         if (network.name === registry.default) {
-            rows.push(["Default", "true"]);
+            rows.push(["Default", "true"])
         }
         if (network.description) {
-            rows.push(["Description", network.description]);
+            rows.push(["Description", network.description])
         }
-        terminal.log(formatTable(rows));
+        terminal.log(formatTable(rows))
     },
-};
+}
 
 export const networkDeleteCommand: Command = {
     name: "delete",
     title: "Delete network from registry",
     args: [nameArg],
     async run(_terminal: Terminal, args: { name: string }) {
-        new NetworkRegistry().delete(args.name);
+        new NetworkRegistry().delete(args.name)
     },
-};
+}
 
 export const networkDefaultCommand: Command = {
     name: "default",
@@ -123,10 +115,9 @@ export const networkDefaultCommand: Command = {
     title: "Set default network",
     args: [nameArg],
     async run(_terminal: Terminal, args: { name: string }) {
-        new NetworkRegistry().setDefault(args.name);
+        new NetworkRegistry().setDefault(args.name)
     },
-};
-
+}
 
 export const networkGiverCommand: Command = {
     name: "giver",
@@ -155,17 +146,34 @@ export const networkGiverCommand: Command = {
             type: "string",
             defaultValue: "",
         },
+        {
+            name: "type",
+            alias: "t",
+            title: "Type giver contract (GiverV1 | GiverV2 | GiverV3 | SafeMultisigWallet | SetcodeMultisigWallet)",
+            type: "string",
+            defaultValue: "auto",
+        },
     ],
-    async run(_terminal: Terminal, args: {
-        name: string,
-        address: string,
-        signer: string,
-        value: string,
-    }) {
-        const value = parseNumber(args.value);
-        return new NetworkRegistry().setGiver(args.name, args.address, args.signer, value);
+    async run(
+        _terminal: Terminal,
+        args: {
+            name: string
+            address: string
+            signer: string
+            value: string
+            type: string
+        },
+    ) {
+        const value = parseNumber(args.value)
+        return new NetworkRegistry().setGiver(
+            args.name,
+            args.address,
+            args.signer,
+            value,
+            args.type,
+        )
     },
-};
+}
 
 export const NetworkTool: ToolController = {
     name: "network",
@@ -179,4 +187,4 @@ export const NetworkTool: ToolController = {
         networkDefaultCommand,
         networkGiverCommand,
     ],
-};
+}
