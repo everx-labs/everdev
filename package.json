@@ -1,6 +1,6 @@
 {
     "name": "everdev",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "description": "Everscale Dev Environment",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -45,9 +45,9 @@
         "node": ">=6"
     },
     "dependencies": {
-        "@tonclient/appkit": "^0",
-        "@tonclient/core": "^1",
-        "@tonclient/lib-node": "^1",
+        "@eversdk/appkit": "^0",
+        "@eversdk/core": "^1",
+        "@eversdk/lib-node": "^1",
         "chalk": "^2.4.2",
         "dockerode": "^3.3.1",
         "fs-extra": "^9.1.0",
@@ -86,6 +86,9 @@
         }
     },
     "lint-staged": {
-        "*.ts": ["npm run eslint", "npm run format"]
+        "*.ts": [
+            "npm run eslint",
+            "npm run format"
+        ]
     }
 }

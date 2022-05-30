@@ -2,7 +2,7 @@ import { doneTests, initTests, writeTempJson } from "./init"
 import { consoleTerminal } from ".."
 import { signerAddCommand } from "../controllers/signer"
 import { SignerRegistry } from "../controllers/signer/registry"
-import { TonClient } from "@tonclient/core"
+import { TonClient } from "@eversdk/core"
 
 beforeAll(initTests)
 afterAll(doneTests)

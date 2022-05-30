@@ -1,11 +1,11 @@
-import { Account, AccountGiver } from "@tonclient/appkit"
+import { Account, AccountGiver } from "@eversdk/appkit"
 import {
     abiContract,
     KeyPair,
     Signer,
     signerKeys,
     TonClient,
-} from "@tonclient/core"
+} from "@eversdk/core"
 import {
     KnownContract,
     knownContractByName,

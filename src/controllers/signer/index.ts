@@ -6,7 +6,7 @@ import {
     ToolController,
 } from "../../core"
 import { SignerRegistry } from "./registry"
-import { TonClient } from "@tonclient/core"
+import { TonClient } from "@eversdk/core"
 import { formatTable } from "../../core/utils"
 import { NetworkRegistry } from "../network/registry"
 

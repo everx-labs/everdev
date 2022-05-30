@@ -1,5 +1,5 @@
-import { Account, ContractPackage } from "@tonclient/appkit"
-import { TonClient, AbiContract } from "@tonclient/core"
+import { Account, ContractPackage } from "@eversdk/appkit"
+import { TonClient, AbiContract } from "@eversdk/core"
 
 import path from "path"
 import fs from "fs"

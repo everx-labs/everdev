@@ -1,4 +1,4 @@
-import { AbiParam } from "@tonclient/core"
+import { AbiParam } from "@eversdk/core"
 
 export class ParamParser {
     pos = 0
@@ -7,11 +7,13 @@ export class ParamParser {
 
     static scalar(param: AbiParam, text: string): any {
         const parser = new ParamParser(text)
+
         return parser.parseScalar(param)
     }
 
     static components(param: AbiParam, text: string): any {
         const parser = new ParamParser(text)
+
         return parser.parseComponents(param)
     }
 
@@ -37,6 +39,7 @@ export class ParamParser {
 
     passWhile(test: (c: string) => boolean): string | undefined {
         const savePos = this.pos
+
         while (this.passIf(test)) {}
         return this.pos > savePos
             ? this.text.substring(savePos, this.pos)
@@ -49,6 +52,7 @@ export class ParamParser {
         expectMessage: string,
     ): string {
         const passed = this.passWhile(test)
+
         if (passed !== undefined) {
             return passed
         }
@@ -65,6 +69,7 @@ export class ParamParser {
         const isScalarChar = (x: string) =>
             x !== "," && x !== ":" && x !== "[" && x !== "]"
         let quote = ""
+
         if (this.pass('"')) {
             quote = '"'
         } else if (this.pass("'")) {
@@ -83,9 +88,10 @@ export class ParamParser {
 
     parseArray(param: AbiParam): any[] {
         const item = JSON.parse(JSON.stringify(param)) as AbiParam
+        const value = []
+
         item.type = param.type.slice(0, -2)
         this.expect("[", param)
-        const value = []
         while (!this.pass("]")) {
             value.push(this.parseParam(item))
             this.pass(",")
@@ -107,6 +113,7 @@ export class ParamParser {
         const isIdent = (x: string) => isLetter(x) || isDigit(x) || x === "_"
         const components = param.components ?? []
         const value: { [name: string]: any } = {}
+
         while (this.hasMore()) {
             const name = this.expectIf(isIdent, param, "name")
             this.expect(":", param)
@@ -138,6 +145,7 @@ export class ParamParser {
             start,
             pos,
         )} -> ${text.substring(pos, end)}${suffix}"`
+
         return new Error(`${message} at ${context}`)
     }
 }

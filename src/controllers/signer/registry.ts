@@ -8,7 +8,7 @@ import {
     signerKeys,
     signerNone,
     TonClient,
-} from "@tonclient/core"
+} from "@eversdk/core"
 import { NetworkRegistry } from "../network/registry"
 import { isHex, resolvePath, writeJsonFile } from "../../core/utils"
 

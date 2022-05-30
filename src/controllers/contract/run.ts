@@ -6,8 +6,8 @@ import {
     DecodedOutput,
     MessageBodyType,
     Signer,
-} from "@tonclient/core"
-import { Account } from "@tonclient/appkit"
+} from "@eversdk/core"
+import { Account } from "@eversdk/appkit"
 import { ParamParser } from "./param-parser"
 import { SignerRegistry } from "../signer/registry"
 
