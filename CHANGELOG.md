@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.0] - 2022-05-27
+
+### New
+
+- `signer create-access-key` command creates Evernode Access Key.
+  It is used for statistics purpose.
+- `signer verify-access-key` command verifies Evernode Access Key.
+- `@tonclient/*` dependencies were replaced with `@eversdk/*`.
+
 ## [1.2.0] - 2022-05-27
 
 ### New

@@ -9,7 +9,7 @@ import * as zlib from "zlib"
 import * as unzip from "unzip-stream"
 import request from "request"
 import { Terminal } from "./index"
-import { ContractPackage } from "@tonclient/appkit"
+import { ContractPackage } from "@eversdk/appkit"
 
 /*
  * Touches file and returns its previous modification time

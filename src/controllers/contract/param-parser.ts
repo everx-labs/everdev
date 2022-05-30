@@ -1,4 +1,4 @@
-import { AbiParam } from "@tonclient/core"
+import { AbiParam } from "@eversdk/core"
 
 export class ParamParser {
     pos = 0

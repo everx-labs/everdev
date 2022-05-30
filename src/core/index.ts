@@ -1,7 +1,7 @@
 import path from "path"
 import os from "os"
-import { TonClient } from "@tonclient/core"
-import { libNode } from "@tonclient/lib-node"
+import { TonClient } from "@eversdk/core"
+import { libNode } from "@eversdk/lib-node"
 
 export { ComponentOptions, Component } from "./component"
 

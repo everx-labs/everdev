@@ -6,7 +6,7 @@ import {
     ToolController,
 } from "../../core"
 import { SignerRegistry } from "./registry"
-import { TonClient } from "@tonclient/core"
+import { TonClient } from "@eversdk/core"
 import { formatTable } from "../../core/utils"
 import { NetworkRegistry } from "../network/registry"
 
@@ -221,6 +221,92 @@ export const signerDefaultCommand: Command = {
     },
 }
 
+export const signerCreateAccessKeyCommand: Command = {
+    name: "create-access-key",
+    title: "Creates Evernode Access Key",
+    args: [
+        nameArg,
+        {
+            isArg: true,
+            name: "token",
+            title: "Application defined Access Token. Can be any string, but we recommend to use a public key of some keypair.",
+            type: "string",
+        },
+        {
+            name: "expiration",
+            alias: "e",
+            title: "Token expiration time. Must be a UNIX Time (in seconds). Default value is one year after current time.",
+            type: "string",
+            defaultValue: "",
+        },
+    ],
+    async run(
+        terminal: Terminal,
+        args: {
+            name: string
+            token: string
+            expiration: string
+        },
+    ) {
+        const signer = new SignerRegistry().get(args.name)
+        const expire =
+            args.expiration !== ""
+                ? args.expiration
+                : Math.floor(Date.now() / 1000 + 60 * 60 * 24 * 365).toString()
+        const toSig = `${args.token}/${expire}`
+        const sig = (
+            await TonClient.default.crypto.nacl_sign_detached({
+                unsigned: Buffer.from(toSig, "utf8").toString("base64"),
+                secret: `${signer.keys.secret}${signer.keys.public}`,
+            })
+        ).signature
+        terminal.log(`1,${signer.keys.public},${args.token},${expire},${sig}`)
+    },
+}
+
+export const signerVerifyAccessKeyCommand: Command = {
+    name: "verify-access-key",
+    title: "Verify Evernode Access Key",
+    args: [
+        {
+            isArg: true,
+            name: "key",
+            title: "Access Key",
+            type: "string",
+        },
+    ],
+    async run(
+        terminal: Terminal,
+        args: {
+            key: string
+        },
+    ) {
+        const [version, consumer, token, expiration, sig] = args.key.split(",")
+        if (sig === undefined) {
+            throw new Error("Invalid access key.")
+        }
+        if (version !== "1") {
+            throw new Error("Unsupported access key version.")
+        }
+        const toSig = `${token}/${expiration}`
+        const sigOk = (
+            await TonClient.default.crypto.nacl_sign_detached_verify({
+                unsigned: Buffer.from(toSig, "utf8").toString("base64"),
+                public: consumer,
+                signature: sig,
+            })
+        ).succeeded
+        if (!sigOk) {
+            throw new Error(
+                "Signature is not matched to consumer's public key.",
+            )
+        }
+        terminal.log(
+            `Access key is valid until ${new Date(Number(expiration) * 1000)}`,
+        )
+    },
+}
+
 export const SignerTool: ToolController = {
     name: "signer",
     alias: "s",
@@ -232,5 +318,7 @@ export const SignerTool: ToolController = {
         signerListCommand,
         signerGetCommand,
         signerDefaultCommand,
+        signerCreateAccessKeyCommand,
+        signerVerifyAccessKeyCommand,
     ],
 }
