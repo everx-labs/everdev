@@ -1,29 +1,31 @@
-import path from 'path'
-import { Command, Component, Terminal, ToolController } from '../../core'
-import {uniqueFilePath, writeTextFile} from '../../core/utils'
-import { components } from './components'
-import { BasicTest } from './snippets'
+import path from "path"
+import { Command, Component, Terminal, ToolController } from "../../core"
+import { uniqueFilePath, writeTextFile } from "../../core/utils"
+import { components } from "./components"
+import { BasicTest } from "./snippets"
 
 export const ts4VersionCommand: Command = {
     name: "version",
     title: "Show installed and available versions",
-    async run(terminal: Terminal, _args: {}): Promise<void> {
-        terminal.log(await Component.getInfoAll(components));
+    async run(terminal: Terminal): Promise<void> {
+        terminal.log(await Component.getInfoAll(components))
     },
 }
 
 export const ts4InstallCommand: Command = {
     name: "install",
     title: "Install a specific release of TestSuite4",
-    args: [{
-        isArg: true,
-        name: 'version',
-        type: 'string',
-        title: 'TestSuite4 version (semver compatible)',
-    }],
+    args: [
+        {
+            isArg: true,
+            name: "version",
+            type: "string",
+            title: "TestSuite4 version (semver compatible)",
+        },
+    ],
     async run(terminal: Terminal, args: { version: string }) {
         const versions: {
-            ts4?: string;
+            ts4?: string
         } = {
             ...(args.version !== "" ? { ts4: args.version } : {}),
         }
@@ -34,7 +36,7 @@ export const ts4InstallCommand: Command = {
 export const ts4UpdateCommand: Command = {
     name: "update",
     title: "Update to the latest version",
-    async run(terminal: Terminal, _args: {}): Promise<void> {
+    async run(terminal: Terminal): Promise<void> {
         await Component.updateAll(terminal, true, components)
     },
 }
@@ -42,35 +44,42 @@ export const ts4UpdateCommand: Command = {
 export const ts4CreateCommand: Command = {
     name: "create",
     title: "Create TestSuite4 test",
-    args: [{
-        isArg: true,
-        name: "name",
-        title: "Test script name",
-        type: "string",
-        defaultValue: "Test",
-    }, {
-        name: "folder",
-        type: "folder",
-        title: "Target folder (current is default)",
-    }],
-    async run(terminal: Terminal, args: { name: string, folder: string }) {
+    args: [
+        {
+            isArg: true,
+            name: "name",
+            title: "Test script name",
+            type: "string",
+            defaultValue: "Test",
+        },
+        {
+            name: "folder",
+            type: "folder",
+            title: "Target folder (current is default)",
+        },
+    ],
+    async run(terminal: Terminal, args: { name: string; folder: string }) {
         const filePath = uniqueFilePath(args.folder, `${args.name}{}.py`)
         const text = BasicTest.split("{name}").join(args.name)
         writeTextFile(filePath, text)
-        terminal.log(`TestSuite4 test script ${path.basename(filePath)} created.`)
+        terminal.log(
+            `TestSuite4 test script ${path.basename(filePath)} created.`,
+        )
     },
 }
 
 export const ts4RunCommand: Command = {
-    name: 'run',
-    title: 'Run TestSuite4\'s test',
-    args: [{
-        isArg: true,
-        name: 'file',
-        type: 'file',
-        title: 'Test',
-        nameRegExp: /\.py$/i,
-    }],
+    name: "run",
+    title: "Run TestSuite4's test",
+    args: [
+        {
+            isArg: true,
+            name: "file",
+            type: "file",
+            title: "Test",
+            nameRegExp: /\.py$/i,
+        },
+    ],
     async run(terminal: Terminal, args: { file: string }): Promise<void> {
         const ext = path.extname(args.file)
         if (ext !== ".py") {
