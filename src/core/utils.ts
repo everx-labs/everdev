@@ -197,53 +197,61 @@ export async function downloadFromBinaries(
         version?: string
     },
 ) {
-    src = src.replace("{p}", os.platform())
-    const srcExt = path.extname(src).toLowerCase()
-    const srcUrl = `https://binaries.tonlabs.io/${src}`
-    terminal.write(`Downloading from ${srcUrl}`)
-    const dstDir = path.dirname(dstPath)
-    if (!fs.existsSync(dstDir)) {
-        fs.mkdirSync(dstDir, { recursive: true })
-    }
-    if (srcExt === ".zip") {
-        await downloadAndUnzip(dstDir, srcUrl, terminal)
-    } else if (srcExt === ".gz") {
-        await downloadAndGunzip(dstPath, srcUrl, terminal)
-        if (path.extname(dstPath) === ".tar") {
-            await run(
-                "tar",
-                ["xvf", dstPath],
-                { cwd: path.dirname(dstPath) },
-                terminal,
-            )
-            fs.unlink(dstPath, () => {})
+    try {
+        console.log("TEST BRANCH")
+        src = src.replace("{p}", os.platform())
+        const srcExt = path.extname(src).toLowerCase()
+        const srcUrl = `https://binaries.tonlabs.io/${src}`
+        terminal.write(`Downloading from ${srcUrl}`)
+        const dstDir = path.dirname(dstPath)
+        if (!fs.existsSync(dstDir)) {
+            fs.mkdirSync(dstDir, { recursive: true })
         }
-    } else {
-        throw Error(`Unexpected binary file extension: ${srcExt}`)
-    }
-    if (options?.executable && os.platform() !== "win32") {
-        if (options?.adjustedPath) {
-            const dir = path.dirname(options.adjustedPath)
-            fs.readdirSync(dir)
-                .map(filename => path.resolve(dir, filename))
-                .filter(filename => !fs.lstatSync(filename).isDirectory())
-                .forEach(filename => fs.chmodSync(filename, 0o755))
+        if (srcExt === ".zip") {
+            await downloadAndUnzip(dstDir, srcUrl, terminal)
+        } else if (srcExt === ".gz") {
+            await downloadAndGunzip(dstPath, srcUrl, terminal)
+            if (path.extname(dstPath) === ".tar") {
+                await run(
+                    "tar",
+                    ["xvf", dstPath],
+                    { cwd: path.dirname(dstPath) },
+                    terminal,
+                )
+                fs.unlink(dstPath, () => {})
+            }
         } else {
-            fs.chmodSync(dstPath, 0o755)
+            throw Error(`Unexpected binary file extension: ${srcExt}`)
         }
-        // Without pause on Fedora 32 Linux always leads to an error: spawn ETXTBSY
-        await new Promise(resolve => setTimeout(resolve, 100))
-    }
-    if (options?.globally) {
-        if (!options.version) {
-            throw Error("Version required to install package")
+        if (options?.executable && os.platform() !== "win32") {
+            if (options?.adjustedPath) {
+                const dir = path.dirname(options.adjustedPath)
+                fs.readdirSync(dir)
+                    .map(filename => path.resolve(dir, filename))
+                    .filter(filename => !fs.lstatSync(filename).isDirectory())
+                    .forEach(filename => fs.chmodSync(filename, 0o755))
+            } else {
+                fs.chmodSync(dstPath, 0o755)
+            }
+            // Without pause on Fedora 32 Linux always leads to an error: spawn ETXTBSY
+            await new Promise(resolve => setTimeout(resolve, 100))
         }
-        await installGlobally(dstPath, options.version, terminal).catch(err => {
-            fs.unlink(dstPath, () => {})
-            throw err
-        })
+        if (options?.globally) {
+            if (!options.version) {
+                throw Error("Version required to install package")
+            }
+            await installGlobally(dstPath, options.version, terminal).catch(
+                err => {
+                    fs.unlink(dstPath, () => {})
+                    throw err
+                },
+            )
+        }
+        terminal.write("\n")
+    } catch (err) {
+        console.log(err)
+        throw err
     }
-    terminal.write("\n")
 }
 
 export function run(
