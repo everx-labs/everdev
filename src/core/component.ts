@@ -136,7 +136,8 @@ export class Component {
         if (fs.existsSync(this.path())) {
             const isDeprecatedVersion =
                 !!_downloadedVersion.match(/^0.21.0$|^0.1.21$/)
-            const compilerOut = await this.run(nullTerminal, process.cwd(), [
+            const stringTerminal = new StringTerminal()
+            const compilerOut = await this.run(stringTerminal, process.cwd(), [
                 "--version",
             ])
             return isDeprecatedVersion

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const { consoleTerminal, everdevInit, everdevDone, cli } = require("./dist")
+const { rewriteKnownErrors } = require("./dist/rewriteKnownErrors")
 
 ;(async () => {
     try {
@@ -14,6 +15,7 @@ const { consoleTerminal, everdevInit, everdevDone, cli } = require("./dist")
             err.code = code
             err.data = data
         }
+        err = rewriteKnownErrors(err)
         console.error(`${err}`)
         process.exit(1)
     }

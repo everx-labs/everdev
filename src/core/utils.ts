@@ -297,7 +297,13 @@ export function run(
                 if (code === 0) {
                     resolve(output.join(""))
                 } else {
-                    reject(`${name} failed`)
+                    reject(
+                        Error(
+                            terminal instanceof StringTerminal
+                                ? terminal.stderr
+                                : `${name} failed`,
+                        ),
+                    )
                 }
             })
         } catch (error) {
