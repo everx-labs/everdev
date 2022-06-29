@@ -198,7 +198,6 @@ export async function downloadFromBinaries(
     },
 ) {
     try {
-        console.log("TEST BRANCH")
         src = src.replace("{p}", os.platform())
         const srcExt = path.extname(src).toLowerCase()
         const srcUrl = `https://binaries.tonlabs.io/${src}`
