@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.2] - 2022-06-28
+
+### Fixed
+
+-   Fixed an uninformative error message when it occurred in a spawned process.
+
+
 ## [1.2.0] - 2022-05-27
 
 ### New
