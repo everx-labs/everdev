@@ -3,7 +3,7 @@ import fs from "fs-extra"
 
 import { everdevHome } from "../../core"
 import { NetworkGiver } from "./giver"
-import { TonClient } from "@tonclient/core"
+import { TonClient } from "@eversdk/core"
 import { KnownContracts } from "../../core/known-contracts"
 import { writeJsonFile } from "../../core/utils"
 

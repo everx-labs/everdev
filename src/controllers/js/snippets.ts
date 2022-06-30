@@ -1,8 +1,8 @@
 export const BaseApp = {
     index: `
 
-const {TonClient} = require("@tonclient/core");
-const {libNode} = require("@tonclient/lib-node");
+const {TonClient} = require("@eversdk/core");
+const {libNode} = require("@eversdk/lib-node");
 
 TonClient.useBinaryLibrary(libNode);
 (async () => {
@@ -27,8 +27,8 @@ async function main(client) {
     package: `
 {
     "dependencies": {
-        "@tonclient/core": "^1",
-        "@tonclient/lib-node": "^1"
+        "@eversdk/core": "^1",
+        "@eversdk/lib-node": "^1"
     }
 }
 `,

@@ -8,7 +8,7 @@ import {
     signerKeys,
     signerNone,
     TonClient,
-} from "@tonclient/core"
+} from "@eversdk/core"
 import { NetworkRegistry } from "../network/registry"
 import { isHex, resolvePath, writeJsonFile } from "../../core/utils"
 
@@ -65,7 +65,7 @@ export class SignerRegistry {
                 )
                 this.items = loaded.items ?? []
                 this.default = loaded.default
-            } catch {}
+            } catch {} /* eslint-disable-line no-empty */
         }
     }
 
