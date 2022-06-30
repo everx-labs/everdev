@@ -40,7 +40,7 @@ export class ParamParser {
     passWhile(test: (c: string) => boolean): string | undefined {
         const savePos = this.pos
 
-        while (this.passIf(test)) {}
+        while (this.passIf(test)) {} /* eslint-disable-line no-empty */
         return this.pos > savePos
             ? this.text.substring(savePos, this.pos)
             : undefined

@@ -65,7 +65,7 @@ export class SignerRegistry {
                 )
                 this.items = loaded.items ?? []
                 this.default = loaded.default
-            } catch {}
+            } catch {} /* eslint-disable-line no-empty */
         }
     }
 

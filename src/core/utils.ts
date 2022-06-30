@@ -96,7 +96,7 @@ function downloadAndUnzip(
 ): Promise<void> {
     return new Promise((resolve, reject) => {
         request(url)
-            .on("data", _ => {
+            .on("data", () => {
                 terminal.write(".")
             })
             .on("error", reject) // http protocol errors
