@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.2] - 2022-07-12
+
+### Fixed
+
+-   Fixed the address calculation error that occurred when running "everdev contract deploy" and entering initial data in dialog mode.
+
+
 ## [1.2.1] - 2022-06-30
 
 ### Fixed
