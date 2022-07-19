@@ -196,7 +196,27 @@ export const contractDeployCommand: Command = {
     ) {
         let account = await getAccount(terminal, args)
         const info = await account.getAccount()
-        const accountAddress = await account.getAddress()
+        let accountAddress = await account.getAddress()
+
+        const dataParams = account.contract.abi.data ?? []
+        if (dataParams.length > 0) {
+            const initData = await resolveParams(
+                terminal,
+                `\nDeploying initial data:\n`,
+                dataParams,
+                args.data ?? "",
+                args.preventUi,
+            )
+            await account.free()
+            account = new Account(account.contract, {
+                client: account.client,
+                signer: account.signer,
+                initData,
+            })
+
+            accountAddress = await account.getAddress()
+        }
+
         if (info.acc_type === AccountType.active) {
             throw new Error(`Account ${accountAddress} already deployed.`)
         }
@@ -219,23 +239,6 @@ export const contractDeployCommand: Command = {
                         `You have to set up a giver for this network with \`everdev network giver\` command.`,
                 )
             }
-        }
-        const dataParams = account.contract.abi.data ?? []
-        if (dataParams.length > 0) {
-            const initData = await resolveParams(
-                terminal,
-                `\nDeploying initial data:\n`,
-                dataParams,
-                args.data ?? "",
-                args.preventUi,
-            )
-            await account.free()
-            account = new Account(account.contract, {
-                client: account.client,
-                address: await accountAddress,
-                signer: account.signer,
-                initData,
-            })
         }
 
         const initFunctionName =
