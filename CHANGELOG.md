@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.3] - 2022-08-08
+
+### Fixed
+
+- Fixed  `everdev contract decode-tvc --help` output. 
+
+
 ## [1.2.2] - 2022-07-12
 
 ### Fixed
