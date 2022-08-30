@@ -12,7 +12,7 @@ import {
     reduceBase64String,
 } from "../../core/utils"
 
-const fileArg: CommandArg = {
+const abiFileArg: CommandArg = {
     isArg: true,
     name: "file",
     title: "ABI file",
@@ -20,8 +20,16 @@ const fileArg: CommandArg = {
     nameRegExp: /\.abi$/i,
 }
 
+const tvcFileArg: CommandArg = {
+    isArg: true,
+    name: "file",
+    title: "TVC file",
+    type: "file",
+    nameRegExp: /\.tvc$/i,
+}
+
 const infoFileArg: CommandArg = {
-    ...fileArg,
+    ...abiFileArg,
     defaultValue: "",
 }
 
@@ -172,7 +180,7 @@ export const contractDeployCommand: Command = {
     alias: "d",
     title: "Deploy contract to network",
     args: [
-        fileArg,
+        abiFileArg,
         networkOpt,
         signerOpt,
         functionArg,
@@ -352,7 +360,7 @@ export const contractRunCommand: Command = {
     alias: "r",
     title: "Run contract deployed on the network",
     args: [
-        fileArg,
+        abiFileArg,
         networkOpt,
         signerOpt,
         runSignerOpt,
@@ -398,7 +406,7 @@ export const contractRunLocalCommand: Command = {
     alias: "l",
     title: "Run contract locally on TVM",
     args: [
-        fileArg,
+        abiFileArg,
         networkOpt,
         signerOpt,
         runSignerOpt,
@@ -453,7 +461,7 @@ export const contractRunExecutorCommand: Command = {
     alias: "e",
     title: "Emulate transaction executor locally on TVM",
     args: [
-        fileArg,
+        abiFileArg,
         networkOpt,
         signerOpt,
         runSignerOpt,
@@ -497,7 +505,7 @@ export const contractDecodeAccountDataCommand: Command = {
     name: "decode-data",
     alias: "dd",
     title: "Decode data from a contract deployed on the network",
-    args: [fileArg, networkOpt, addressOpt],
+    args: [abiFileArg, networkOpt, addressOpt],
     async run(
         terminal: Terminal,
         args: {
@@ -538,7 +546,7 @@ export const contractDecodeTvcCommand: Command = {
     name: "decode-tvc",
     alias: "dt",
     title: "Decode tvc into code, data, libraries and special options",
-    args: [fileArg],
+    args: [tvcFileArg],
     async run(
         terminal: Terminal,
         args: {
