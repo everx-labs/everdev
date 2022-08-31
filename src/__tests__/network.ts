@@ -71,3 +71,23 @@ test("Add network giver error", async () => {
         expect(error.message).toBe("Unknown contract type NotExist.")
     }
 })
+
+test("Add credentials", async () => {
+    await runCommand(consoleTerminal, "network credentials", {
+        name: "se",
+        project: "pro123",
+        accessKey: "key456",
+    })
+    const registry = new NetworkRegistry().get("se")
+    expect(registry.credentials?.project).toEqual("pro123")
+    expect(registry.credentials?.accessKey).toEqual("key456")
+})
+
+test("Clear credentials", async () => {
+    await runCommand(consoleTerminal, "network credentials", {
+        name: "se",
+        clear: true,
+    })
+    const registry = new NetworkRegistry().get("se")
+    expect(registry.credentials?.project).toBeUndefined()
+})

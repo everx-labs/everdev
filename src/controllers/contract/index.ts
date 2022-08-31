@@ -243,7 +243,7 @@ export const contractDeployCommand: Command = {
                 await giver.account.free()
             } else {
                 throw new Error(
-                    `A top-up was requested, but giver is not configured for the network ${networkName} was found.\n` +
+                    `A top-up was requested, but giver is not configured for the network ${networkName}\n` +
                         `You have to set up a giver for this network with \`everdev network giver\` command.`,
                 )
             }
