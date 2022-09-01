@@ -14,6 +14,10 @@ All notable changes to this project will be documented in this file.
     --clear           Clear saved credentials (mutually exclusive with other options)
 ```
 
+### Fixed
+
+- Fixed  `everdev contract decode-tvc --help` output. 
+
 ## [1.2.2] - 2022-07-12
 
 ### Fixed
