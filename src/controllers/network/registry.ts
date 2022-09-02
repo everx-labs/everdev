@@ -22,11 +22,17 @@ export type NetworkGiverInfo = {
     value?: number
 }
 
+export type MetworkCredentials = {
+    project?: string
+    accessKey?: string
+}
+
 export type Network = {
     name: string
     description?: string
     endpoints: string[]
     giver?: NetworkGiverInfo
+    credentials?: MetworkCredentials
 }
 
 type NetworkSummary = {
@@ -74,21 +80,11 @@ export class NetworkRegistry {
                 },
                 {
                     name: "dev",
-                    endpoints: [
-                        "eri01.net.everos.dev",
-                        "rbx01.net.everos.dev",
-                        "gra01.net.everos.dev",
-                    ],
+                    endpoints: ["devnet.evercloud.dev"],
                 },
                 {
                     name: "main",
-                    endpoints: [
-                        "eri01.main.everos.dev",
-                        "gra01.main.everos.dev",
-                        "gra02.main.everos.dev",
-                        "lim01.main.everos.dev",
-                        "rbx01.main.everos.dev",
-                    ],
+                    endpoints: ["mainnet.evercloud.dev"],
                 },
             ]
             this.default = "dev"
@@ -207,6 +203,32 @@ export class NetworkRegistry {
         }
     }
 
+    async setCredentials(
+        name: string,
+        project?: string,
+        accessKey?: string,
+        clear?: boolean,
+    ) {
+        const network = this.get(name)
+
+        if (!project && !accessKey) {
+            if (clear) {
+                network.credentials = null
+            } else {
+                throw Error("At least one option is required")
+            }
+        } else {
+            if (clear) {
+                throw Error("--clear option can not be used with other options")
+            } else {
+                network.credentials = {
+                    ...(project ? { project } : {}),
+                    ...(accessKey ? { accessKey } : {}),
+                }
+            }
+        }
+        this.save()
+    }
     static getEndpointsSummary(network: Network): string {
         const maxEndpoints = 3
         const endpoints =

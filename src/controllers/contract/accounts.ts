@@ -6,6 +6,17 @@ import { SignerRegistry } from "../signer/registry"
 import { ParamParser } from "./param-parser"
 import { resolveContract } from "../../core/utils"
 
+// Remove sufix graphql if exists and add projectId
+// Intentionally do not use URL object or any modules,
+// because url may lack `http://` prefix
+export const transormEndpoint = (project?: string) => (url: string) => {
+    const result = url
+        .trim()
+        .replace(/\/graphql\/?$/i, "")
+        .replace(/\/$/, "")
+    return project ? `${result}/${project}` : result
+}
+
 export async function getAccount(
     terminal: Terminal,
     args: {
@@ -18,9 +29,12 @@ export async function getAccount(
 ): Promise<Account> {
     const address = args.address ?? ""
     const network = new NetworkRegistry().get(args.network)
+    const { project, accessKey } = network.credentials || {}
     const client = new TonClient({
         network: {
-            endpoints: network.endpoints,
+            endpoints: network.endpoints.map(transormEndpoint(project)),
+
+            ...(accessKey ? { access_key: accessKey } : {}),
         },
     })
     const contract =

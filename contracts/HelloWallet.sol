@@ -31,6 +31,7 @@ contract HelloWallet {
     }
 
     function renderHelloWorld () public pure returns (string) {
+        tvm.accept();
         return 'helloWorld';
     }
 
@@ -47,6 +48,7 @@ contract HelloWallet {
 
     // Function returns value of state variable `timestamp`
     function getTimestamp() public view returns (uint) {
+        tvm.accept();
         return timestamp;
     }
 

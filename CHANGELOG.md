@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.0] - 2022-08-31
+
+### New
+
+-   Added command `everdev network credentials`, to set credentials for network authentication, with options:
+
+```
+    --project, -p     Your project ID
+    --access-key, -k  Your secret or JWT token
+    --clear           Clear saved credentials (mutually exclusive with other options)
+```
+
+### Fixed
+
+- Fixed  `everdev contract decode-tvc --help` output. 
+
 ## [1.2.2] - 2022-07-12
 
 ### Fixed
