@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.1] - 2022-09-21
+
+### New
+
+- Build with new version sdk 1.37.2
+
 ## [1.3.0] - 2022-08-31
 
 ### New
