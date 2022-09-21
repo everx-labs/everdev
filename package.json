@@ -46,8 +46,8 @@
     },
     "dependencies": {
         "@eversdk/appkit": "^0",
-        "@eversdk/core": "^1.37.0",
-        "@eversdk/lib-node": "^1.37.0",
+        "@eversdk/core": "^1.37.2",
+        "@eversdk/lib-node": "^1.37.2",
         "chalk": "^2.4.2",
         "dockerode": "^3.3.1",
         "fs-extra": "^9.1.0",
