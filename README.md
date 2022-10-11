@@ -51,7 +51,7 @@ EverDev is a Node.js package with CLI interface that allows to set up developer 
 
 * [`Node.js`](https://nodejs.org) >= 14.x installed
 * (optional) [`Docker`](https://www.docker.com) >= 19.x installed
-* Solidity compiler requires VC++ Runtime on Windows. You can install it from [the latest supported Visual C++ downloads](https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0).
+* (optional) If use Visual Studio Code [support Everscale Solidity Language](https://marketplace.visualstudio.com/items?itemName=everscale.solidity-support)
 
 ### Install
 
