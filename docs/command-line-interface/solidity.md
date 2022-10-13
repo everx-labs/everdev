@@ -30,6 +30,22 @@ You can specify the output files location with the `-o` option:
 everdev sol compile Contract.sol -o path/to/output/file
 ```
 
+To make an additional source directory available to the default import callback use `-i` option:
+
+```shell
+everdev sol compile Contract.sol -i path/to/importFolder
+```
+
+Use this option if you want to import contracts, whose location is not fixed in relation to your main source tree, e.g. third-party libraries.
+
+It can be used multiple times.
+
+```shell
+everdev sol compile Contract.sol -i path/to/folder1,path/to/folder2
+```
+
+The default value is `node_modules` folder.
+
 ## Ast
 
 This command parses a ton-solidity file and creates an abstract syntax tree (AST) to the output directory.
@@ -48,6 +64,12 @@ To point the location of the output folder, use the `-o` or `--output-dir` optio
 
 ```shell
 everdev sol ast-json Contract.sol -f <json | compact-json> -o path/to/output/file
+```
+
+You can make an additional source directory available to the default import callback with `-i` option:
+
+```shell
+everdev sol ast Contract.sol -i path/to/importFolder
 ```
 
 ## Version
