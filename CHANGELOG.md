@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.2] - 2022-10-18
+
+### Fix
+
+- Fixed error messages for "deploy contract" and "execute contract" commands when called for a non-existent account.
+
 ## [1.3.1] - 2022-09-21
 
 ### New
