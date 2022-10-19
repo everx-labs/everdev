@@ -38,7 +38,7 @@ everdev sol compile Contract.sol -i path/to/importFolder
 
 Use this option if you want to import contracts, whose location is not fixed in relation to your main source tree, e.g. third-party libraries.
 
-It can be used multiple times.
+Separate different paths with a comma, no space allowed.
 
 ```shell
 everdev sol compile Contract.sol -i path/to/folder1,path/to/folder2
