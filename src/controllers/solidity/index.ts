@@ -65,12 +65,20 @@ export const solidityCompileCommand: Command = {
             title: "Output folder (current is default)",
             defaultValue: "",
         },
+        {
+            name: "include-path",
+            alias: "i",
+            type: "folder",
+            title: "Additional path(s) for inputs (node_modules is default)",
+            defaultValue: "node_modules",
+        },
     ],
     async run(
         terminal: Terminal,
         args: {
             file: string
             outputDir: string
+            includePath: string
             code: boolean
         },
     ): Promise<void> {
@@ -80,6 +88,13 @@ export const solidityCompileCommand: Command = {
             const fileName = path.basename(file)
 
             const outputDir = path.resolve(args.outputDir ?? ".")
+            const includePath = args.includePath
+                ? args.includePath
+                      .split(",")
+                      .map(p => path.resolve(p))
+                      .join(" -i ")
+                      .split(" ")
+                : [path.resolve("node_modules")]
             const preserveCode = args.code
             const tvcName = path.resolve(outputDir, changeExt(fileName, ".tvc"))
             const abiName = path.resolve(
@@ -120,6 +135,8 @@ export const solidityCompileCommand: Command = {
                 await components.compiler.silentRun(terminal, fileDir, [
                     "-o",
                     outputDir,
+                    "-i",
+                    ...includePath,
                     fileName,
                 ])
                 linkerOut = await components.linker.silentRun(
@@ -178,12 +195,20 @@ export const solidityAstCommand: Command = {
             title: "Output folder (current is default)",
             defaultValue: "",
         },
+        {
+            name: "include-path",
+            alias: "i",
+            type: "folder",
+            title: "Additional path(s) for inputs (node_modules is default)",
+            defaultValue: "node_modules",
+        },
     ],
     async run(
         terminal: Terminal,
         args: {
             file: string
             format: string
+            includePath: string
             outputDir?: string
         },
     ): Promise<void> {
@@ -201,10 +226,20 @@ export const solidityAstCommand: Command = {
             const fileDir = path.dirname(file)
             const fileName = path.basename(file)
             args.outputDir = path.resolve(args.outputDir ?? ".")
+            const includePath = args.includePath
+                ? args.includePath
+                      .split(",")
+                      .map(p => path.resolve(p))
+                      .join(" -i ")
+                      .split(" ")
+                : [path.resolve("node_modules")]
+
             await components.compiler.silentRun(terminal, fileDir, [
                 `--ast-${args.format}`,
                 "--output-dir",
                 args.outputDir,
+                "--include-path",
+                ...includePath,
                 fileName,
             ])
         }
