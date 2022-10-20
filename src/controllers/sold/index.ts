@@ -26,8 +26,40 @@ export const soldUpdateCommand: Command = {
     },
 }
 
+export const soldInstallCommand: Command = {
+    name: "install",
+    title: "Install latest stable sold",
+    args: [],
+    async run(terminal: Terminal) {
+        await Component.ensureInstalledAll(terminal, components)
+    },
+}
+
+export const soldSetCommand: Command = {
+    name: "set",
+    title: "Change installed version",
+    args: [
+        {
+            name: "version",
+            title: "version to install (e.g. 0.8.1 or latest)",
+            type: "string",
+            defaultValue: "latest",
+        },
+    ],
+    async run(terminal: Terminal, args: { version: string }): Promise<void> {
+        await Component.setVersions(terminal, false, components, {
+            driver: args.version,
+        })
+    },
+}
+
 export const Sold: ToolController = {
     name: "sold",
     title: "Sold Compiler Driver",
-    commands: [soldVersionCommand, soldUpdateCommand],
+    commands: [
+        soldVersionCommand,
+        soldUpdateCommand,
+        soldInstallCommand,
+        soldSetCommand,
+    ],
 }
