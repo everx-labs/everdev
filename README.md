@@ -29,6 +29,7 @@ EverDev is a Node.js package with CLI interface that allows to set up developer 
 * [Command Line Interface](#command-line-interface)
   * [General command syntax](#general-command-syntax)
   * [Solidity Compiler](#solidity-compiler)
+  * [Solidity Compiler Driver](#sold)
   * [C/C++ Compiler](#cc-compiler)
   * [Network Tool](#network-tool)
   * [Signer Tool](#signer-tool)
@@ -132,6 +133,10 @@ Some tools (network, signer, contract, js) and commands have short aliases. For 
 ### [Solidity Compiler](docs/command-line-interface/solidity.md)
 
 Controller for [Everscale Solidity compiler](https://github.com/tonlabs/TON-Solidity-Compiler).
+
+### [Solidity Compiler Driver](docs/command-line-interface/sold.md)
+
+Controller for sold (Everscale Solidity compiler driver)
 
 ### [C/C++ Compiler](docs/command-line-interface/c.md)
 
