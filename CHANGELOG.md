@@ -6,7 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ### New
 
-- Added a new compile option `-i [ --include-path ] path/to/dir` to make an additional source directory available 
+- `sold` - [Solidity Compiler Driver](https://github.com/tonlabs/TON-Solidity-Compiler/tree/master/sold) - version management added. Try it with `everdev sold install`. 
+
+- Added a new `everdev sol compile` option `-i [ --include-path ] path/to/dir` to make an additional source directory available 
   to the default import callback.\
   Use this option if you want to import contracts, whose location is not fixed in relation to your main source tree, 
   e.g. third-party libraries installed using a package manager. Separate different paths with a comma, no space allowed.
@@ -16,9 +18,10 @@ All notable changes to this project will be documented in this file.
 - Added new command `evedev update`.\
   This command updates everdev to the latest version and is technically an alias for `npm update -g everdev`.
 
-### Fix
 
-- Fixed incorrect error message when "deploy contract" and "execute contract" commands are executed for a non-existent account.
+### Fixed
+
+- Fixed incorrect error message when "deploy contract" and "execute contract" commands are executed for a non-existing (acc_type = nonExist) account.
 
 - Fixed incorrect error message when a user added a new signer with the name of an existing one.
 
