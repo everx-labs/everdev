@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.0] - 2022-10-19
+
+### New
+
+- Added a new compile option `-i [ --include-path ] path/to/dir` to make an additional source directory available 
+  to the default import callback.\
+  Use this option if you want to import contracts, whose location is not fixed in relation to your main source tree, 
+  e.g. third-party libraries installed using a package manager. Separate different paths with a comma, no space allowed.
+
+  Example: `everdev sol compile Contract.sol -i path1/folder1,path2/folder2`
+
+- Added new command `evedev update`.\
+  This command updates everdev to the latest version and is technically an alias for `npm update -g everdev`.
+
+### Fix
+
+- Fixed incorrect error message when "deploy contract" and "execute contract" commands are executed for a non-existent account.
+
+- Fixed incorrect error message when a user added a new signer with the name of an existing one.
+
 ## [1.3.1] - 2022-09-21
 
 ### New

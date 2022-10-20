@@ -16,6 +16,8 @@ import { controllers, findControllerAndCommandByAlias } from "../controllers"
 import { formatTable } from "../core/utils"
 import { printUsage } from "../everdev/help"
 import { printSummaryInfo } from "../everdev/info"
+import { update } from "../everdev/update"
+
 import {
     createLatestVerFile,
     getUpdateIsAvailableMsg,
@@ -41,6 +43,7 @@ export class CommandLine {
     unresolved = new Map<string, CommandArg>()
     pending: CommandArg | undefined = undefined
     printSummaryInfo = false
+    updateEverdev = false
     greedyArgument: CommandArg
 
     setArgValue(arg: CommandArg, value: string | boolean) {
@@ -183,6 +186,9 @@ export class CommandLine {
                         } else if (arg.toLowerCase().trim() === "info") {
                             this.printSummaryInfo = true
                             break
+                        } else if (arg.toLowerCase().trim() === "update") {
+                            this.updateEverdev = true
+                            break
                         } else {
                             throw new Error(`Unknown tool: ${arg}.`)
                         }
@@ -193,7 +199,7 @@ export class CommandLine {
         if (this.pending) {
             await this.resolveValue(this.pending, undefined)
         }
-        if (this.args.help || this.printSummaryInfo) {
+        if (this.args.help || this.printSummaryInfo || this.updateEverdev) {
             return
         }
         for (const arg of this.unresolved.values()) {
@@ -250,6 +256,10 @@ export async function run(terminal: Terminal) {
     await parser.parse(process.argv.slice(2))
     if (parser.printSummaryInfo) {
         await printSummaryInfo(terminal)
+        return
+    }
+    if (parser.updateEverdev) {
+        await update(terminal)
         return
     }
     const { controller, command, args } = parser

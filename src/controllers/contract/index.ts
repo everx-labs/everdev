@@ -225,6 +225,9 @@ export const contractDeployCommand: Command = {
             accountAddress = await account.getAddress()
         }
 
+        if (info.acc_type === AccountType.nonExist) {
+            throw new Error(`Account  ${accountAddress}  doesn't exist`)
+        }
         if (info.acc_type === AccountType.active) {
             throw new Error(`Account ${accountAddress} already deployed.`)
         }
@@ -385,6 +388,12 @@ export const contractRunCommand: Command = {
         },
     ) {
         const account = await getAccount(terminal, args)
+        const info = await account.getAccount()
+        if (info.acc_type !== AccountType.active) {
+            throw new Error(
+                `Account ${await account.getAddress()} not deployed or frozen`,
+            )
+        }
         const { functionName, functionInput, signer } = await getRunParams(
             terminal,
             account,

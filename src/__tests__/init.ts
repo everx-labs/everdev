@@ -4,7 +4,7 @@ import path from "path"
 import fs from "fs"
 import os from "os"
 
-jest.setTimeout(100000)
+jest.setTimeout(500000)
 
 test("init", () => {})
 
