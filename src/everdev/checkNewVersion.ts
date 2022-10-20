@@ -44,7 +44,8 @@ export function getUpdateIsAvailableMsg(
             `A new version of ${pkgName} ${latestVer} is available!`,
             sep,
             `Installed version is ${pkgVer}`,
-            `Update it with "npm update ${pkgName}"`,
+            `Update it with "npm update -g ${pkgName}", or use precompiled binaries:`,
+            `https://docs.everos.dev/everdev/#install`,
             "",
         ].join("\n")
     } else {
