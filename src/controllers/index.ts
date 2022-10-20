@@ -1,5 +1,6 @@
 import { Clang } from "./clang"
 import { Solidity } from "./solidity"
+import { Sold } from "./sold"
 // import {TestSuite} from "./ts";
 import { JsApps } from "./js"
 import { SE } from "./se"
@@ -15,6 +16,7 @@ import { missingArgError } from "../cli"
 export const controllers = [
     Clang,
     Solidity,
+    Sold,
     SE,
     NetworkTool,
     SignerTool,
