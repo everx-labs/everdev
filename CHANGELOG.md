@@ -13,6 +13,9 @@ All notable changes to this project will be documented in this file.
 
   Example: `everdev sol compile Contract.sol -i path1/folder1,path2/folder2`
 
+- Added new command `evedev update`.\
+  This command updates everdev to the latest version and is technically an alias for `npm update -g everdev`.
+
 ### Fix
 
 - Fixed incorrect error message when "deploy contract" and "execute contract" commands are executed for a non-existent account.
