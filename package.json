@@ -45,7 +45,7 @@
         "node": ">=6"
     },
     "dependencies": {
-        "@eversdk/appkit": "^0",
+        "@eversdk/appkit": "^0.3.2",
         "@eversdk/core": "^1.37.2",
         "@eversdk/lib-node": "^1.37.2",
         "chalk": "^2.4.2",
