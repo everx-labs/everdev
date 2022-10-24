@@ -169,7 +169,7 @@ export class SERegistry {
                     }
                 })
             }
-        } catch {}
+        } catch {} /* eslint-disable-line no-empty */
         if (this.items.length === 0) {
             this.items.push({
                 name: DEFAULT_INSTANCE_NAME,

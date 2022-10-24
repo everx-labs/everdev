@@ -51,6 +51,7 @@ test("everdev sol compile a.sol", async () => {
     expect(args).toEqual({
         code: false,
         file: "a.sol",
+        includePath: "node_modules",
         outputDir: "",
     })
 })
@@ -71,6 +72,7 @@ test("everdev sol compile a.sol b.sol --output-dir somedir", async () => {
     expect(args).toEqual({
         code: false,
         file: "a.sol b.sol",
+        includePath: "node_modules",
         outputDir: "somedir",
     })
 })

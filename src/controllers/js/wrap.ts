@@ -1,6 +1,6 @@
 import path from "path"
-import { TonClient } from "@tonclient/core"
-import { libNode } from "@tonclient/lib-node"
+import { TonClient } from "@eversdk/core"
+import { libNode } from "@eversdk/lib-node"
 
 import { resolveContract, writeTextFile } from "../../core/utils"
 import { Command, CommandArgVariant, Terminal } from "../../core"

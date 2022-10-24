@@ -17,6 +17,7 @@ module.exports = {
         "prettier/prettier": 2,
         "no-implicit-coercion": ["warn", { allow: ["!!"] }],
         curly: ["error", "all"],
+        "@typescript-eslint/no-explicit-any": "off"
     },
     env: {
         node: true,

@@ -137,6 +137,14 @@ Example of a 2/3 multisig wallet deployment command:
 ```bash
 everdev contract deploy SetcodeMultisigWallet.abi.json constructor -n dev -s sign1 -i owners:[0xad4bf7bd8da244932c52127a943bfa9217b6e215c1b3307272283c4d64f34486,0x5c2e348c5caeb420a863dc5e972f897ebe5ee899a6ef2a8299aac352eca4380a,0x8534c46f7a135058773fa1298cb3a299a5ddd40dafe41cb06c64f274da360bfb],reqConfirms:2
 ```
+#### Enclosing special characters
+If the parameters contain special characters, they must be enclosed in quotation marks.
+Here is an example of how this can be done:
+```bash
+everdev contract deploy MyContract --input "owner:'0:81f452f5aec2263ab10116f7108a20209d5051081bb3caed34f139f976a0e279'"
+```
+Note that the entire set of params is enclosed in DOUBLE quotes, and each parameter containing special characters is enclosed in SINGLE quotes.
+In the next paragraph, you can find an example of calling a function when its argument is a struct.
 
 ## Run contract deployed on the network
 

@@ -3,6 +3,8 @@ import { runCommand, consoleTerminal } from ".."
 import { NetworkRegistry } from "../controllers/network/registry"
 import { SignerRegistry } from "../controllers/signer/registry"
 
+import * as knownContracts from "../core/known-contracts"
+
 beforeAll(async () => {
     await initTests()
     await new SignerRegistry().addSecretKey(
@@ -15,14 +17,16 @@ beforeAll(async () => {
 afterAll(doneTests)
 
 test("Add network giver by address", async () => {
-    await runCommand(
-        consoleTerminal,
-        "network giver 0:b5e9240fc2d2f1ff8cbb1d1dee7fb7cae155e5f6320e585fcc685698994a19a5",
-        {
-            name: "se",
-            signer: "alice",
-        },
+    const mock = jest.spyOn(knownContracts, "knownContractFromAddress")
+    mock.mockReturnValue(
+        Promise.resolve(knownContracts.KnownContracts["GiverV2"]),
     )
+    await runCommand(consoleTerminal, "network giver", {
+        name: "se",
+        address:
+            "0:b5e9240fc2d2f1ff8cbb1d1dee7fb7cae155e5f6320e585fcc685698994a19a5",
+        signer: "alice",
+    })
     expect(new NetworkRegistry().get("se").giver?.name).toEqual("GiverV2")
 })
 
@@ -69,4 +73,24 @@ test("Add network giver error", async () => {
     } catch (error: any) {
         expect(error.message).toBe("Unknown contract type NotExist.")
     }
+})
+
+test("Add credentials", async () => {
+    await runCommand(consoleTerminal, "network credentials", {
+        name: "se",
+        project: "pro123",
+        accessKey: "key456",
+    })
+    const registry = new NetworkRegistry().get("se")
+    expect(registry.credentials?.project).toEqual("pro123")
+    expect(registry.credentials?.accessKey).toEqual("key456")
+})
+
+test("Clear credentials", async () => {
+    await runCommand(consoleTerminal, "network credentials", {
+        name: "se",
+        clear: true,
+    })
+    const registry = new NetworkRegistry().get("se")
+    expect(registry.credentials?.project).toBeUndefined()
 })

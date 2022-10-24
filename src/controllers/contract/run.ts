@@ -6,8 +6,8 @@ import {
     DecodedOutput,
     MessageBodyType,
     Signer,
-} from "@tonclient/core"
-import { Account } from "@tonclient/appkit"
+} from "@eversdk/core"
+import { Account } from "@eversdk/appkit"
 import { ParamParser } from "./param-parser"
 import { SignerRegistry } from "../signer/registry"
 
@@ -53,7 +53,10 @@ function inputLine(terminal: Terminal, prompt: string): Promise<string> {
     return new Promise(resolve => {
         const standard_input = process.stdin
         standard_input.setEncoding("utf-8")
+        // SO: https://stackoverflow.com/questions/54182732/process-never-ends-when-using-process-stdin-once
+        standard_input.resume()
         standard_input.once("data", function (data) {
+            standard_input.pause()
             resolve(`${data}`.trim())
         })
     })

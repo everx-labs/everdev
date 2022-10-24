@@ -8,9 +8,14 @@ import {
     signerKeys,
     signerNone,
     TonClient,
-} from "@tonclient/core"
+} from "@eversdk/core"
 import { NetworkRegistry } from "../network/registry"
-import { isHex, resolvePath, writeJsonFile } from "../../core/utils"
+import {
+    isHex,
+    isWellFormedKey,
+    resolvePath,
+    writeJsonFile,
+} from "../../core/utils"
 
 function signerHome() {
     return path.resolve(everdevHome(), "signer")
@@ -65,7 +70,7 @@ export class SignerRegistry {
                 )
                 this.items = loaded.items ?? []
                 this.default = loaded.default
-            } catch {}
+            } catch {} /* eslint-disable-line no-empty */
         }
     }
 
@@ -96,16 +101,20 @@ export class SignerRegistry {
         } else {
             const keysPath = resolvePath(secret)
             if (fs.existsSync(keysPath)) {
+                let keys: { secret?: string }
                 try {
-                    const keys: { secret?: string } = JSON.parse(
-                        fs.readFileSync(keysPath, "utf8"),
-                    )
-                    await this.addSecretKey(name, "", keys.secret ?? "", force)
+                    keys = JSON.parse(fs.readFileSync(keysPath, "utf8"))
+                    if (!isWellFormedKey(keys.secret)) {
+                        throw Error()
+                    }
                 } catch (error) {
                     throw new Error(
-                        `Invalid keys file.\nExpected JSON file with structure: { "public": "...", "secret": "..." }.`,
+                        `Invalid keys file.\n` +
+                            `Expected JSON file with structure: { "public": "...", "secret": "..." },\n` +
+                            `where each key is a hexadecimal string 64 characters long.`,
                     )
                 }
+                await this.addSecretKey(name, "", keys.secret, force)
             } else {
                 throw new Error(
                     `Invalid secret source: ${secret}. You can specify secret key, seed phrase or file name with the keys.`,

@@ -17,43 +17,47 @@ EverDev is a Node.js package with CLI interface that allows to set up developer 
 
 ## Content table
 
-* [Quick Start](#quick-start)
-  * [Use-cases](#use-cases)
-* [Content table](#content-table)
-* [Installation](#installation)
-  * [Prerequisites](#prerequisites)
-  * [Install](#install)
-  * [Download](#download)
-  * [Update](#update)
-* [Command Line Interface](#command-line-interface)
-  * [General command syntax](#general-command-syntax)
-  * [Solidity Compiler](#solidity-compiler)
-  * [C/C++ Compiler](#cc-compiler)
-  * [Network Tool](#network-tool)
-  * [Signer Tool](#signer-tool)
-  * [Contract Management Tool](#contract-management-tool)
-  * [Evernode Simple Emulator (local blockchain)](#evernode-simple-emulator-local-blockchain)
-  * [Debot Browser](#debot-browser)
-  * [TestSuite4](#testsuite4)
-  * [tonos-cli](#tonos-cli)
-* [Cookbook](#cookbook)
-  * [Quick start](#quick-start-1)
-  * [Work with contracts](#work-with-contracts)
-  * [Work with DevNet](#work-with-devnet)
-  * [Create controller](#create-controller)
-  * [View controller info](#view-controller-info)
-* [Troubleshooting](#troubleshooting)
-* [EverDev Extensibility](#everdev-extensibility)
+- [EverDev](#everdev)
+  - [Quick Start](#quick-start)
+    - [Use-cases](#use-cases)
+  - [Content table](#content-table)
+  - [Installation](#installation)
+    - [Prerequisites](#prerequisites)
+    - [Using NPM](#using-npm)
+    - [Using pre-compiled binaries](#using-pre-compiled-binaries)
+    - [Using docker](#using-docker)
+    - [Update](#update)
+  - [Command Line Interface](#command-line-interface)
+    - [General command syntax](#general-command-syntax)
+    - [Solidity Compiler](#solidity-compiler)
+    - [Solidity Compiler Driver](#solidity-compiler-driver)
+    - [C/C++ Compiler](#cc-compiler)
+    - [Network Tool](#network-tool)
+    - [Signer Tool](#signer-tool)
+    - [Contract Management Tool](#contract-management-tool)
+    - [Evernode Simple Emulator (local blockchain)](#evernode-simple-emulator-local-blockchain)
+    - [Debot Browser](#debot-browser)
+    - [TestSuite4](#testsuite4)
+    - [tonos-cli](#tonos-cli)
+  - [Cookbook](#cookbook)
+    - [Quick Start](#quick-start-1)
+    - [Work with contracts](#work-with-contracts)
+    - [Work with DevNet](#work-with-devnet)
+    - [Create controller](#create-controller)
+    - [View controller info](#view-controller-info)
+  - [Troubleshooting](#troubleshooting)
+  - [EverDev Extensibility](#everdev-extensibility)
 
 ## Installation
 
 ### Prerequisites
 
-* [`Node.js`](https://nodejs.org) >= 14.x installed
+* [`Node.js`](https://nodejs.org) >= 14.x installed. Required only if you are installing Everdev from NPM.
+   We recommend using [Node version manager](https://github.com/nvm-sh/nvm#install--update-script) to install nodejs and NPM.
 * (optional) [`Docker`](https://www.docker.com) >= 19.x installed
 * Solidity compiler requires VC++ Runtime on Windows. You can install it from [the latest supported Visual C++ downloads](https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0).
 
-### Install
+### Using NPM
 
 ```shell
 npm i -g everdev
@@ -61,7 +65,7 @@ npm i -g everdev
 
 If you see an EACCESS error when you try to install a package globally on Mac or Linux, [please see this instruction](https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally)
 
-### Download
+### Using pre-compiled binaries
 
 You can download precompiled binaries for your platform from [the latest release](https://github.com/tonlabs/everdev/releases/). After download you need to create directory if it does not exists.
 
@@ -97,6 +101,17 @@ For windows run PowerShell and execute this line:
 
 _After trying to run `everdev` on macos you can see the error: "everdev" cannot be opened because the developer cannot be verified. Open your computer System Preferences > Security & Privacy > Privacy. Here, you should see an option to click "Allow Anyway" next to the "everdev" application in question._
 
+### Using docker
+
+Select a base image that provides GLIBC ver. 2.29 or higher if you want to use the Evedev Solidity compiler like ubuntu:20.04:
+```
+docker run -it --rm ubuntu:20.04
+# apt update &&  apt upgrade -y && apt install -y curl
+# curl -L https://github.com/tonlabs/everdev/releases/download/1.3.1/everdev-linux.tgz  --output everdev-linux.tgz
+# tar xvf everdev-linux.tgz
+# mv everdev /usr/local/bin/
+```
+
 ### Update
 
 ```shell
@@ -119,6 +134,10 @@ Some tools (network, signer, contract, js) and commands have short aliases. For 
 ### [Solidity Compiler](docs/command-line-interface/solidity.md)
 
 Controller for [Everscale Solidity compiler](https://github.com/tonlabs/TON-Solidity-Compiler).
+
+### [Solidity Compiler Driver](docs/command-line-interface/sold.md)
+
+Controller for [sold - Everscale Solidity compiler driver](https://github.com/tonlabs/TON-Solidity-Compiler/tree/master/sold)
 
 ### [C/C++ Compiler](docs/command-line-interface/c.md)
 

@@ -175,6 +175,52 @@ export const networkGiverCommand: Command = {
     },
 }
 
+export const networkCredsCommand: Command = {
+    name: "credentials",
+    alias: "c",
+    title: "Set credentials for network authentication",
+    args: [
+        nameArg,
+
+        {
+            name: "project",
+            alias: "p",
+            title: "Your project ID",
+            type: "string",
+            defaultValue: "",
+        },
+        {
+            name: "access-key",
+            alias: "k",
+            title: "Your secret or JWT token",
+            type: "string",
+            defaultValue: "",
+        },
+        {
+            name: "clear",
+            title: "Clear saved credentials (mutually exclusive with other options)",
+            type: "boolean",
+            defaultValue: "",
+        },
+    ],
+    async run(
+        _terminal: Terminal,
+        args: {
+            name: string
+            project: string
+            accessKey: string
+            clear: boolean
+        },
+    ) {
+        return new NetworkRegistry().setCredentials(
+            args.name,
+            args.project,
+            args.accessKey,
+            args.clear,
+        )
+    },
+}
+
 export const NetworkTool: ToolController = {
     name: "network",
     alias: "n",
@@ -186,5 +232,6 @@ export const NetworkTool: ToolController = {
         networkInfoCommand,
         networkDefaultCommand,
         networkGiverCommand,
+        networkCredsCommand,
     ],
 }
