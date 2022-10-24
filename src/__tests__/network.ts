@@ -16,7 +16,7 @@ beforeAll(async () => {
 })
 afterAll(doneTests)
 
-test.only("Add network giver by address", async () => {
+test("Add network giver by address", async () => {
     const mock = jest.spyOn(knownContracts, "knownContractFromAddress")
     mock.mockReturnValue(
         Promise.resolve(knownContracts.KnownContracts["GiverV2"]),
