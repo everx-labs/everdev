@@ -2,7 +2,7 @@
 
 **Deploy and call your contracts with EverDev**
 
-In this article, you will learn how to work with a contact in EverDev. This sample covers such functionality as network configuration, deploy (including giver configuration), on-chain execution, read contract data.
+In this article, you will learn how to work with a contract in EverDev. This sample covers such functionality as network configuration, deploy (including giver configuration), on-chain execution, read contract data.
 
 To cover this functionality we will test the following use-case: deploy a multi-signature contract with two custodians, which confirm a transaction to transfer funds from this wallet to another wallet account.
 
