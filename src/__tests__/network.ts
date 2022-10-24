@@ -3,6 +3,8 @@ import { runCommand, consoleTerminal } from ".."
 import { NetworkRegistry } from "../controllers/network/registry"
 import { SignerRegistry } from "../controllers/signer/registry"
 
+import * as knownContracts from "../core/known-contracts"
+
 beforeAll(async () => {
     await initTests()
     await new SignerRegistry().addSecretKey(
@@ -14,16 +16,17 @@ beforeAll(async () => {
 })
 afterAll(doneTests)
 
-// TODO: fix this tests to pass by CI
-test.skip("Add network giver by address", async () => {
-    await runCommand(
-        consoleTerminal,
-        "network giver 0:b5e9240fc2d2f1ff8cbb1d1dee7fb7cae155e5f6320e585fcc685698994a19a5",
-        {
-            name: "se",
-            signer: "alice",
-        },
+test("Add network giver by address", async () => {
+    const mock = jest.spyOn(knownContracts, "knownContractFromAddress")
+    mock.mockReturnValue(
+        Promise.resolve(knownContracts.KnownContracts["GiverV2"]),
     )
+    await runCommand(consoleTerminal, "network giver", {
+        name: "se",
+        address:
+            "0:b5e9240fc2d2f1ff8cbb1d1dee7fb7cae155e5f6320e585fcc685698994a19a5",
+        signer: "alice",
+    })
     expect(new NetworkRegistry().get("se").giver?.name).toEqual("GiverV2")
 })
 

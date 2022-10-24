@@ -91,11 +91,13 @@ export async function printUsage(
         } args [options]`,
     )
     terminal.log(`Options:`)
-    terminal.log(`    --help, -h  Show command usage`)
+    terminal.log(`    --help,    -h  Show command usage`)
     if (controller) {
         terminal.log("Commands:")
         printControllerUsage(terminal, controller)
         return
+    } else {
+        terminal.log(`    --version, -v  Show everdev version`)
     }
     terminal.log("Tools:")
     const rows: string[][] = []
@@ -103,5 +105,6 @@ export async function printUsage(
     controllers.forEach(controller => {
         rows.push(["  ", nameInfo(controller), controller.title ?? ""])
     })
+    rows.push(["  ", "update", "Update everdev utility"])
     terminal.log(formatTable(rows))
 }

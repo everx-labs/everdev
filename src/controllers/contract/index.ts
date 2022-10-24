@@ -232,6 +232,14 @@ export const contractDeployCommand: Command = {
             new NetworkRegistry().get(args.network)
         const topUpValue = parseNanoTokens(args.value)
 
+        // Prepare an informative message in case of insufficient balance for deployment
+        const howtoTopupMesssage = () =>
+            giverInfo?.signer
+                ? `You can use \`everdev contract deploy <file> -v <value>\` command to top it up`
+                : `You have to provide enough balance before deploying in two ways: \n` +
+                  ` - sending some value to this address or\n` +
+                  ` - setting up a giver for the network with \`everdev network giver\` command.`
+
         if (topUpValue) {
             if (giverInfo) {
                 const giver = await NetworkGiver.create(
@@ -245,6 +253,12 @@ export const contractDeployCommand: Command = {
                 throw new Error(
                     `A top-up was requested, but giver is not configured for the network ${networkName}\n` +
                         `You have to set up a giver for this network with \`everdev network giver\` command.`,
+                )
+            }
+        } else {
+            if (info.acc_type === AccountType.nonExist) {
+                throw new Error(
+                    `Account  ${accountAddress}  doesn't exist.\n${howtoTopupMesssage()}`,
                 )
             }
         }
@@ -284,11 +298,7 @@ export const contractDeployCommand: Command = {
                       `Account ${accountAddress} has low balance to deploy.\n` +
                           (topUpValue
                               ? `You sent amount which is too small`
-                              : giverInfo?.signer
-                              ? `You can use \`everdev contract deploy <file> -v <value>\` command to top it up`
-                              : `You have to provide enough balance before deploying in two ways: \n` +
-                                `sending some value to this address\n` +
-                                `or setting up a giver for the network with \`everdev network giver\` command.`),
+                              : howtoTopupMesssage()),
                   )
                 : err
         }
@@ -385,6 +395,12 @@ export const contractRunCommand: Command = {
         },
     ) {
         const account = await getAccount(terminal, args)
+        const info = await account.getAccount()
+        if (info.acc_type !== AccountType.active) {
+            throw new Error(
+                `Account ${await account.getAddress()} not deployed or frozen`,
+            )
+        }
         const { functionName, functionInput, signer } = await getRunParams(
             terminal,
             account,

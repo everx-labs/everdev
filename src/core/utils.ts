@@ -667,6 +667,10 @@ export function isHex(s: string): boolean {
     return /^[0-9a-f]*$/i.test(s)
 }
 
+export function isWellFormedKey(s?: string): boolean {
+    return typeof s === "string" && isHex(s) && s.length === 64
+}
+
 export function resolvePath(s: string): string {
     return s.startsWith("~/")
         ? `${os.homedir()}${s.substr(1)}`
