@@ -6,12 +6,32 @@ You can register several blockchains (networks) under short names and then use t
 
 You can mark one of the networks as a default. It can be used in network commands without providing net name.
 
+## Available commands
+
+See available commands with help command:
+
+```
+$ everdev network --help
+EverDev Version: 1.4.0
+Use: everdev network command args [options]
+Options:
+    --help,    -h  Show command usage
+Commands:
+    add             Add net
+    credentials, c  Set credentials for network authentication
+    delete          Delete network from registry
+    list, l         Prints list of networks
+    info, i         Prints network detailed information
+    default, d      Set default network
+    giver, g        Set giver for network
+```
+
 ## Add a network
 
 This command adds a network to the everdev registry.
 
 ```bash
-everdev network add network_name network_endpoints
+everdev network add network_name network_endpoint(s)
 ```
 
 See other available network addition options with help command:
@@ -28,10 +48,32 @@ Options:
     --force, -f  Overwrite key if already exists
 ```
 
-Example with [mainnet endpoints](https://docs.everos.dev/ever-sdk/reference/ever-os-api/networks):
+Example with [mainnet endpoint](https://docs.everos.dev/ever-sdk/reference/ever-os-api/networks):
 
 ```bash
-everdev network add main eri01.main.everos.dev,gra01.main.everos.dev,gra02.main.everos.dev,lim01.main.everos.dev,rbx01.main.everos.dev
+everdev network add main mainnet.evercloud.dev
+```
+## Set credentials for a network
+```
+$ everdev network credentials --help
+EverDev Version: 1.4.0
+Use: everdev network credentials name [options]
+Args:
+    name  Network name
+Options:
+    --help, -h        Show command usage
+    --project, -p     Your project ID
+    --access-key, -k  Your secret or JWT token
+    --clear           Clear saved credentials (mutually exclusive with other options)
+```
+Access to the devnet and mainnet blockchains requires authorization.\
+Create a project on [dashboard.evercloud.dev](https://dashboard.evercloud.dev) if you don't have one, 
+find your "Project Id" and "Secret" (optional) on the "Security" tab, and pass them as parameters:
+
+Example with "devnet" endpoint:
+
+```bash
+everdev network credentials devnet --project <Project Id> --access-key <Secret>
 ```
 
 ## Set a giver for a network
@@ -77,7 +119,7 @@ $ everdev network list
 Network        Endpoints                                        Giver
 -------------  -----------------------------------------------  ------------------------------------------------------------------
 se             http://localhost                                 0:b5e9240fc2d2f1ff8cbb1d1dee7fb7cae155e5f6320e585fcc685698994a19a5
-dev (Default)  eri01.net.everos.dev, rbx01.net.everos.dev, gra01.net.everos.dev 0:255a3ad9dfa8aa4f3481856aafc7d79f47d50205190bd56147138740e9b177f3
+dev (Default)  https://devnet.evercloud.dev                     0:255a3ad9dfa8aa4f3481856aafc7d79f47d50205190bd56147138740e9b177f3
 ```
 
 ## Set default network
