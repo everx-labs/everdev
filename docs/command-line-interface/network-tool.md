@@ -53,7 +53,9 @@ Example with [mainnet endpoint](https://docs.everos.dev/ever-sdk/reference/ever-
 ```bash
 everdev network add main mainnet.evercloud.dev
 ```
+
 ## Set credentials for a network
+
 ```
 $ everdev network credentials --help
 EverDev Version: 1.4.0
@@ -66,9 +68,9 @@ Options:
     --access-key, -k  Your secret or JWT token
     --clear           Clear saved credentials (mutually exclusive with other options)
 ```
+
 Access to the devnet and mainnet blockchains requires authorization.\
-Create a project on [dashboard.evercloud.dev](https://dashboard.evercloud.dev) if you don't have one, 
-find your "Project Id" and "Secret" (optional) on the "Security" tab, and pass them as parameters:
+Create a project on [dashboard.evercloud.dev](https://dashboard.evercloud.dev) if you don't have one, find your "Project Id" and "Secret" (optional) on the "Security" tab, and pass them as parameters:
 
 Example with "devnet" endpoint:
 
@@ -104,7 +106,7 @@ Options:
 
 Only one giver can be set for a network. Setting another one will overwrite the current giver. To view the current giver settings for all networks, use the `everdev network list` command (for details see the section [below](network-tool.md#list-registered-networks)).
 
-## List registered networks
+## List the registered networks
 
 This command lists all registered networks, their public endpoints, and their giver addresses, if any.
 
@@ -122,7 +124,7 @@ se             http://localhost                                 0:b5e9240fc2d2f1
 dev (Default)  https://devnet.evercloud.dev                     0:255a3ad9dfa8aa4f3481856aafc7d79f47d50205190bd56147138740e9b177f3
 ```
 
-## Set default network
+## Set a default network
 
 This command sets a previously added network as default (initially the mainnet is used by default).
 
