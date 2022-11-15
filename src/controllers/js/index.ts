@@ -36,7 +36,7 @@ export const jsCreateCommand: Command = {
 
 export const jsDemoCommand: Command = {
     name: "demo",
-    title: "Download FreeTON Demo",
+    title: "Download Everscale Demo",
     args: [
         {
             isArg: true,
