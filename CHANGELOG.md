@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 -   Versions of dependency packages have been increased: @eversdk/core and @eversdk/appkit.\
-    The old ones result in erroneous error messages.
+    The old ones caused unclear error messages.
 
 -   Added an error message if the `network/registry.json` configuration file is corrupted.
 
