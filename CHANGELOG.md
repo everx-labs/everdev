@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.1] - 2022-11-16
+
+### Fixed
+
+-   Versions of dependency packages have been increased: @eversdk/core and @eversdk/appkit.\
+    The old ones result in erroneous error messages.
+
+-   Added an error message if the `network/registry.json` configuration file is corrupted.
+
 ## [1.4.0] - 2022-10-19
 
 ### New
