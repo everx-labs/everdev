@@ -64,7 +64,11 @@ export class NetworkRegistry {
                     this.default = data.default
                 }
                 loaded = true
-            } catch {} // eslint-disable-line no-empty
+            } catch {
+                throw new Error(
+                    `${registryPath()} is not a valid JSON file, please delete or fix it`,
+                )
+            }
         }
         if (!loaded) {
             this.items = [

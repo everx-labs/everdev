@@ -1,6 +1,6 @@
 {
     "name": "everdev",
-    "version": "1.4.0",
+    "version": "1.4.1",
     "description": "Everscale Dev Environment",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -45,9 +45,9 @@
         "node": ">=6"
     },
     "dependencies": {
-        "@eversdk/appkit": "^0.3.2",
-        "@eversdk/core": "^1.37.2",
-        "@eversdk/lib-node": "^1.37.2",
+        "@eversdk/appkit": "^0.3.3",
+        "@eversdk/core": "^1.38.1",
+        "@eversdk/lib-node": "^1.38.1",
         "chalk": "^2.4.2",
         "dockerode": "^3.3.1",
         "fs-extra": "^9.1.0",
