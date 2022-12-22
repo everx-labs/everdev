@@ -227,7 +227,7 @@ export const solidityAstCommand: Command = {
     ): Promise<void> {
         for (const file of args.file.split(" ")) {
             const ext = path.extname(file)
-            if (SOLIDITY_FILE.extensions.includes(ext)) {
+            if (SOLIDITY_FILE.extensions.includes(ext) === false) {
                 terminal.log(`Choose solidity source file.`)
                 return
             }
