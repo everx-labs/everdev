@@ -10,6 +10,7 @@ import * as unzip from "unzip-stream"
 import request from "request"
 import { Terminal } from "./index"
 import { ContractPackage } from "@eversdk/appkit"
+import { SOLIDITY_FILE } from "../controllers/solidity"
 
 /*
  * Touches file and returns its previous modification time
@@ -632,7 +633,7 @@ export function resolveContract(filePath: string): ResolvedContractPackage {
     if (
         lowered.endsWith(".tvc") ||
         lowered.endsWith(".abi") ||
-        lowered.endsWith(".sol")
+        SOLIDITY_FILE.nameRegEx.test(lowered)
     ) {
         basePath = filePath.slice(0, -4)
     } else if (lowered.endsWith(".abi.json")) {
@@ -699,4 +700,20 @@ export async function getLatestFromNmp(pkgName: string): Promise<string> {
         new StringTerminal(),
     )
     return latestVer.trim()
+}
+
+export function defineFileType(
+    name: string,
+    nameRegEx: RegExp,
+    extensions: string[],
+) {
+    const resolvedExtensions = extensions.map(x =>
+        x.startsWith(".") ? x : `.${x}`,
+    )
+    return {
+        name,
+        nameRegEx,
+        extensions: resolvedExtensions,
+        defaultExt: resolvedExtensions[0],
+    }
 }

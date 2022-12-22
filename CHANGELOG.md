@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.0] - 2022-11-16
+
+### New
+
+-   Support for `*.tsol` extension in Solidity compiler.
+
 ## [1.4.1] - 2022-11-16
 
 ### Fixed
