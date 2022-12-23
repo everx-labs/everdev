@@ -10,7 +10,7 @@ function dataPath(name: string): string {
 }
 
 test("Contract alone args file", async () => {
-    const file = dataPath("contracts-input.json")
+    const file = dataPath("contracts-input-alone.json")
     const abi = { name: "a", type: "string[]" }
     const args = ParamParser.components(abi, `@${file}`)
     expect(args).toEqual([1, 2, 3])
