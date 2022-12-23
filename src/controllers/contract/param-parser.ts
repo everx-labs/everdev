@@ -1,4 +1,7 @@
 import { AbiParam } from "@eversdk/core"
+import path from "path"
+import process from "process"
+import { loadJSON } from "../../core/utils"
 
 export class ParamParser {
     pos = 0
@@ -108,6 +111,19 @@ export class ParamParser {
     }
 
     parseComponents(param: AbiParam): { [name: string]: any } {
+        const text = this.text.trim()
+        if (text.startsWith("@")) {
+            return loadJSON(path.resolve(process.cwd(), text.substring(1)))
+        }
+
+        if (text.startsWith("{") && text.endsWith("}")) {
+            try {
+                return JSON.parse(text)
+            } catch (err: any) {
+                throw new Error(`Malformed JSON object has been passed`)
+            }
+        }
+
         const isLetter = (x: string) => x.toLowerCase() !== x.toUpperCase()
         const isDigit = (x: string) => x >= "0" && x <= "9"
         const isIdent = (x: string) => isLetter(x) || isDigit(x) || x === "_"

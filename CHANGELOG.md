@@ -2,14 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.0] - 2022-11-16
+
+### New
+
+- Support for `*.tsol` extension in Solidity compiler.
+- Ability to specify contract arguments from json files in form of `@file` or `@file@field`.
+
 ## [1.4.1] - 2022-11-16
 
 ### Fixed
 
--   Versions of dependency packages have been increased: @eversdk/core and @eversdk/appkit.\
-    The old ones caused unclear error messages.
+- Versions of dependency packages have been increased: @eversdk/core and @eversdk/appkit.\
+  The old ones caused unclear error messages.
 
--   Added an error message if the `network/registry.json` configuration file is corrupted.
+- Added an error message if the `network/registry.json` configuration file is corrupted.
 
 ## [1.4.0] - 2022-10-19
 

@@ -2,7 +2,8 @@ import path from "path"
 import { TonClient } from "@eversdk/core"
 import { libNode } from "@eversdk/lib-node"
 
-import { resolveContract, writeTextFile } from "../../core/utils"
+import { writeTextFile } from "../../core/utils"
+import { resolveContract } from "../../core/solFileResolvers"
 import { Command, CommandArgVariant, Terminal } from "../../core"
 
 TonClient.useBinaryLibrary(libNode)

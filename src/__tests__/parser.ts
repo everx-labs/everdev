@@ -9,7 +9,7 @@ import {
 beforeAll(initTests)
 afterAll(doneTests)
 
-test("Shoud throw", async () => {
+test("Should throw", async () => {
     const parser = new CommandLine()
     try {
         await parser.parse(["nono"])
