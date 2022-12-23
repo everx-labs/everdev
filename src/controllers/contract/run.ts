@@ -10,6 +10,7 @@ import {
 import { Account } from "@eversdk/appkit"
 import { ParamParser } from "./param-parser"
 import { SignerRegistry } from "../signer/registry"
+import * as process from "process"
 
 export async function resolveFunction(
     terminal: Terminal,
@@ -117,18 +118,6 @@ export async function resolveParams(
     paramsString: string,
     preventUi: boolean,
 ): Promise<object> {
-    if (paramsString.match(/{.+}/)) {
-        let jsonArgs: any
-        try {
-            jsonArgs = JSON.parse(paramsString)
-        } catch (err: any) {
-            throw new Error(`Malformed JSON object has been passed`)
-        }
-        terminal.log(
-            `Skip ABI validation step because a JSON object has been passed as an argument.`,
-        )
-        return jsonArgs
-    }
     const values: { [name: string]: any } = ParamParser.components(
         {
             name: "params",
