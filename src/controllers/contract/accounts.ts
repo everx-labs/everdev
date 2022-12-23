@@ -6,10 +6,10 @@ import { SignerRegistry } from "../signer/registry"
 import { ParamParser } from "./param-parser"
 import { resolveContract } from "../../core/solFileResolvers"
 
-// Remove sufix graphql if exists and add projectId
+// Remove suffix graphql if exists and add projectId
 // Intentionally do not use URL object or any modules,
 // because url may lack `http://` prefix
-export const transormEndpoint = (project?: string) => (url: string) => {
+export const transformEndpoint = (project?: string) => (url: string) => {
     const result = url
         .trim()
         .replace(/\/graphql\/?$/i, "")
@@ -32,7 +32,7 @@ export async function getAccount(
     const { project, accessKey } = network.credentials || {}
     const client = new TonClient({
         network: {
-            endpoints: network.endpoints.map(transormEndpoint(project)),
+            endpoints: network.endpoints.map(transformEndpoint(project)),
 
             ...(accessKey ? { access_key: accessKey } : {}),
         },

@@ -9,6 +9,7 @@ import * as zlib from "zlib"
 import * as unzip from "unzip-stream"
 import request from "request"
 import { Terminal } from "./index"
+import process from "process"
 
 /*
  * Touches file and returns its previous modification time
@@ -661,4 +662,30 @@ export function defineFileType(
         extensions: resolvedExtensions,
         defaultExt: resolvedExtensions[0],
     }
+}
+
+export function loadJSON(dataPath: string): any {
+    const [filePath, fieldPath] = dataPath.split("@")
+    const resolvedFilePath = path.resolve(process.cwd(), filePath)
+    let json
+    try {
+        json = JSON.parse(fs.readFileSync(resolvedFilePath, "utf-8"))
+    } catch (err: any) {
+        throw new Error(
+            `Failed to load JSON args from file "${resolvedFilePath}": ${err}`,
+        )
+    }
+    const fields = (fieldPath ?? "")
+        .trim()
+        .split(".")
+        .filter(x => x !== "")
+    for (const field of fields) {
+        json = json[field]
+        if (json === undefined) {
+            throw new Error(
+                `Failed to load JSON args from file "${filePath}": missing required field ${fieldPath}`,
+            )
+        }
+    }
+    return json
 }

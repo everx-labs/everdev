@@ -78,14 +78,35 @@ const functionArg: CommandArg = {
     defaultValue: "",
 }
 
+const JSON_ARG_DESCR = `
+Value is resolved to the JSON object. Can be provided in several variants:
+- \`name:value\` pairs.
+  Array values must be specified as [item,...].
+  Spaces are not allowed. If value contains spaces or special symbols "[],:" it must be enclosed in "" or ''.
+  Example: \`'foo:1,bar:"2",baz:[1,2,3]'\`.
+  Result:  \`{ foo: 1, bar: "2", baz: [1, 2, 3] }\`.
+- \`{ name: value, ... }\` – JSON object.
+  Example: \`'{foo:1,bar:"2",baz:[1,2,3]}\`.
+  Result:  \`{ foo: 1, bar: "2", baz: [1, 2, 3] }\`.
+- \`@file\` – JSON object loaded from the specified file.
+  Example: \`@./args.json\`.
+  File args.json: \`{ foo: 1, bar: "2", baz: [1, 2, 3] }\`.
+  Result:  \`{ foo: 1, bar: "2", baz: [1, 2, 3] }\`.
+- \`@file@field\` – specified field of the JSON object loaded from the specified file.
+  \`field\` is a path to nested field separated by \`.\` (e.g. \`foo.bar.baz\`).
+  Example: \`@./args.json@f1\`.
+  File args.json: \`{ f1: { foo: 1, bar: "2", baz: [1, 2, 3] } }\`. 
+  Result:  \`{ foo: 1, bar: "2", baz: [1, 2, 3] }\`.
+  Example: \`@./args.json@f1.baz\`.
+  File args.json: \`{ f1: { foo: 1, bar: "2", baz: [1, 2, 3] } }\`. 
+  Result:  \`[1, 2, 3]\`.
+`
+
 const inputOpt: CommandArg = {
     name: "input",
     alias: "i",
     title: "Function parameters as name:value,...",
-    description:
-        "Array values must be specified as [item,...]. " +
-        'Spaces are not allowed. If value contains spaces or special symbols "[],:" ' +
-        "it must be enclosed in \"\" or ''",
+    description: `Value for function parameters.${JSON_ARG_DESCR}`,
     type: "string",
     defaultValue: "",
 }
@@ -96,9 +117,7 @@ const dataOpt: CommandArg = {
     title: "Deploying initial data as name:value,...",
     description:
         "This data is required to calculate the account address and to deploy contract.\n" +
-        "Array values must be specified as [item,...]. " +
-        'Spaces are not allowed. If value contains spaces or special symbols "[],:" ' +
-        "it must be enclosed in \"\" or ''",
+        JSON_ARG_DESCR,
     type: "string",
     defaultValue: "",
 }
