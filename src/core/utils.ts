@@ -9,7 +9,6 @@ import * as zlib from "zlib"
 import * as unzip from "unzip-stream"
 import request from "request"
 import { Terminal } from "./index"
-import { ContractPackage } from "@eversdk/appkit"
 
 /*
  * Touches file and returns its previous modification time
@@ -606,61 +605,8 @@ export function breakWords(s: string, maxLen = 80): string {
     return result
 }
 
-function findExisting(paths: string[]): string | undefined {
+export function findExisting(paths: string[]): string | undefined {
     return paths.find(x => fs.existsSync(x))
-}
-
-export type ResolvedContractPackage = {
-    package: ContractPackage
-    abiPath: string
-    tvcPath?: string
-}
-
-export function resolveTvcAsBase64(filePath: string): string {
-    const tvcPath = findExisting([filePath, `${filePath}.tvc`])
-    if (tvcPath) {
-        return fs.readFileSync(tvcPath).toString("base64")
-    } else {
-        throw Error(`File ${filePath} not exists`)
-    }
-}
-
-export function resolveContract(filePath: string): ResolvedContractPackage {
-    filePath = filePath.trim()
-    const lowered = filePath.toLowerCase()
-    let basePath
-    if (
-        lowered.endsWith(".tvc") ||
-        lowered.endsWith(".abi") ||
-        lowered.endsWith(".sol")
-    ) {
-        basePath = filePath.slice(0, -4)
-    } else if (lowered.endsWith(".abi.json")) {
-        basePath = filePath.slice(0, -9)
-    } else {
-        basePath = filePath
-    }
-    const tvcPath = findExisting([`${basePath}.tvc`])
-    const abiPath =
-        findExisting([`${basePath}.abi.json`, `${basePath}.abi`]) ?? ""
-    const tvc = tvcPath
-        ? fs.readFileSync(tvcPath).toString("base64")
-        : undefined
-    const abi =
-        abiPath !== ""
-            ? JSON.parse(fs.readFileSync(abiPath, "utf8"))
-            : undefined
-    if (!abi) {
-        throw new Error("ABI file missing.")
-    }
-    return {
-        package: {
-            abi,
-            tvc,
-        },
-        abiPath,
-        tvcPath,
-    }
 }
 
 export function isHex(s: string): boolean {
@@ -699,4 +645,20 @@ export async function getLatestFromNmp(pkgName: string): Promise<string> {
         new StringTerminal(),
     )
     return latestVer.trim()
+}
+
+export function defineFileType(
+    name: string,
+    nameRegEx: RegExp,
+    extensions: string[],
+) {
+    const resolvedExtensions = extensions.map(x =>
+        x.startsWith(".") ? x : `.${x}`,
+    )
+    return {
+        name,
+        nameRegEx,
+        extensions: resolvedExtensions,
+        defaultExt: resolvedExtensions[0],
+    }
 }

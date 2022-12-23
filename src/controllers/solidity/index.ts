@@ -1,10 +1,20 @@
 import { Command, Component, Terminal, ToolController } from "../../core"
 import path from "path"
-import { changeExt, uniqueFilePath, writeTextFile } from "../../core/utils"
+import {
+    changeExt,
+    defineFileType,
+    uniqueFilePath,
+    writeTextFile,
+} from "../../core/utils"
 import fs from "fs"
 import mv from "mv"
 import { BasicContract } from "./snippets"
 import { components } from "./components"
+
+export const SOLIDITY_FILE = defineFileType("Solidity", /\.t?sol$/i, [
+    ".sol",
+    ".tsol",
+])
 
 export const solidityVersionCommand: Command = {
     name: "version",
@@ -32,7 +42,10 @@ export const solidityCreateCommand: Command = {
         },
     ],
     async run(terminal: Terminal, args: { name: string; folder: string }) {
-        const filePath = uniqueFilePath(args.folder, `${args.name}{}.sol`)
+        const filePath = uniqueFilePath(
+            args.folder,
+            `${args.name}{}${SOLIDITY_FILE.defaultExt}`,
+        )
         const text = BasicContract.split("{name}").join(args.name)
         writeTextFile(filePath, text)
         terminal.log(`Solidity contract ${path.basename(filePath)} created.`)
@@ -48,7 +61,7 @@ export const solidityCompileCommand: Command = {
             name: "file",
             type: "file",
             title: "Source file",
-            nameRegExp: /\.sol$/i,
+            nameRegExp: SOLIDITY_FILE.nameRegEx,
             greedy: true,
         },
         {
@@ -178,7 +191,7 @@ export const solidityAstCommand: Command = {
             name: "file",
             type: "file",
             title: "Source file",
-            nameRegExp: /\.sol$/i,
+            nameRegExp: SOLIDITY_FILE.nameRegEx,
             greedy: true,
         },
         {
@@ -214,7 +227,7 @@ export const solidityAstCommand: Command = {
     ): Promise<void> {
         for (const file of args.file.split(" ")) {
             const ext = path.extname(file)
-            if (ext !== ".sol") {
+            if (SOLIDITY_FILE.extensions.includes(ext) === false) {
                 terminal.log(`Choose solidity source file.`)
                 return
             }

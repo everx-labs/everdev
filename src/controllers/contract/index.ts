@@ -1,5 +1,8 @@
 import { Command, CommandArg, Terminal, ToolController } from "../../core"
-import { resolveContract, resolveTvcAsBase64 } from "../../core/utils"
+import {
+    resolveContract,
+    resolveTvcAsBase64,
+} from "../../core/solFileResolvers"
 import { Account, AccountType } from "@eversdk/appkit"
 import { TonClient } from "@eversdk/core"
 import { getAccount } from "./accounts"

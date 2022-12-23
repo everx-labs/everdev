@@ -4,7 +4,7 @@ import { NetworkRegistry } from "../network/registry"
 import { TonClient } from "@eversdk/core"
 import { SignerRegistry } from "../signer/registry"
 import { ParamParser } from "./param-parser"
-import { resolveContract } from "../../core/utils"
+import { resolveContract } from "../../core/solFileResolvers"
 
 // Remove sufix graphql if exists and add projectId
 // Intentionally do not use URL object or any modules,
