@@ -5,7 +5,7 @@ import { everdevHome } from "../../core"
 import { NetworkGiver } from "./giver"
 import { TonClient } from "@eversdk/core"
 import { KnownContracts } from "../../core/known-contracts"
-import { writeJsonFile } from "../../core/utils"
+import { formatTokens, writeJsonFile } from "../../core/utils"
 
 function networkHome() {
     return path.resolve(everdevHome(), "network")
@@ -42,12 +42,46 @@ type NetworkSummary = {
     description: string
 }
 
-export function getGiverSummary(giver?: NetworkGiverInfo): string {
+export async function getGiverSummary(
+    includeAccountInfo: boolean,
+    endpoints: string[],
+    giver?: NetworkGiverInfo,
+): Promise<string> {
     if (!giver) {
         return ""
     }
     const { signer, name, address } = giver
-    return `${address}\n${name}${signer ? ` signed by ${signer}` : ""}`
+    const client = new TonClient({ network: { endpoints } })
+    let accountInfo
+    if (includeAccountInfo) {
+        try {
+            const acc = (
+                await client.net.query_collection({
+                    collection: "accounts",
+                    filter: { id: { eq: address } },
+                    result: "balance",
+                    limit: 1,
+                })
+            ).result[0]
+            if (acc) {
+                if (acc.balance) {
+                    accountInfo = `\n${formatTokens(acc.balance)}`
+                } else {
+                    accountInfo = `\ngiver account has an inactive state`
+                }
+            } else {
+                accountInfo = `\ngiver account does not exists on a network`
+            }
+        } catch {
+            accountInfo = `\ngiver status is not available due to network problems`
+        } finally {
+            await client.close()
+        }
+    } else {
+        accountInfo = ""
+    }
+    const signerInfo = signer ? ` signed by ${signer}` : ""
+    return `${address}\n${name}${signerInfo}${accountInfo}`
 }
 
 export class NetworkRegistry {
@@ -242,13 +276,17 @@ export class NetworkRegistry {
         return endpoints.join(", ")
     }
 
-    getNetworkSummary(network: Network): NetworkSummary {
+    async getNetworkSummary(network: Network): Promise<NetworkSummary> {
         return {
             name: `${network.name}${
                 network.name === this.default ? " (Default)" : ""
             }`,
             endpoints: NetworkRegistry.getEndpointsSummary(network),
-            giver: getGiverSummary(network.giver),
+            giver: await getGiverSummary(
+                false,
+                network.endpoints,
+                network.giver,
+            ),
             description: network.description ?? "",
         }
     }

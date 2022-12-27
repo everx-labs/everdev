@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [1.5.1] - 2022-12-23
 
+### New
+
+- Include network giver account details in `network info <network>` command.
+
 ### Fixed
 
 - Some `contract` commands failed with `Wait for operation failed` message in case 
