@@ -3,6 +3,10 @@ import { TonClient, AbiContract } from "@eversdk/core"
 
 import path from "path"
 import fs from "fs"
+import {
+    getParsedAccount,
+    ParsedAccount,
+} from "../controllers/contract/accounts"
 
 export type KnownContract = {
     name: string
@@ -13,13 +17,15 @@ export async function knownContractFromAddress(
     name: string,
     address: string,
 ): Promise<KnownContract> {
-    const info = await new Account(
-        { abi: {} },
-        {
-            client,
-            address,
-        },
-    ).getAccount()
+    const info = await getParsedAccount(
+        await new Account(
+            { abi: {} },
+            {
+                client,
+                address,
+            },
+        ),
+    )
     const codeHash = info.code_hash
     if (!codeHash) {
         throw new Error(`${name} ${address} has no code deployed.`)
@@ -27,7 +33,7 @@ export async function knownContractFromAddress(
     return knownContractFromCodeHash(codeHash, name, address)
 }
 
-export function knownContractByName(name: string): KnownContract {
+export function knownContractByName(name: KnownContractName): KnownContract {
     if (!(name in KnownContracts)) {
         throw new Error(`Unknown contract type ${name}.`)
     }
@@ -61,7 +67,7 @@ export function loadAbi(name: string): AbiContract {
     )
 }
 
-export const KnownContracts: { [key: string]: KnownContract } = {
+export const KnownContracts: { [name: string]: KnownContract } = {
     GiverV1: {
         name: "GiverV1",
         abi: loadAbi("GiverV1"),
@@ -83,6 +89,8 @@ export const KnownContracts: { [key: string]: KnownContract } = {
         abi: loadAbi("SafeMultisigWallet"),
     },
 }
+
+export type KnownContractName = keyof typeof KnownContracts
 
 const contracts: { [codeHash: string]: KnownContract } = {
     "4e92716de61d456e58f16e4e867e3e93a7548321eace86301b51c8b80ca6239b":

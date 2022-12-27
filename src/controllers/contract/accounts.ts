@@ -93,6 +93,7 @@ export async function getAccount(
 
 export type ParsedAccount = {
     acc_type: AccountType
+    code_hash?: string
     [name: string]: unknown
 }
 

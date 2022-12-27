@@ -6,6 +6,7 @@ import { NetworkGiver } from "./giver"
 import { TonClient } from "@eversdk/core"
 import { KnownContracts } from "../../core/known-contracts"
 import { formatTokens, writeJsonFile } from "../../core/utils"
+import { SE_DEFAULT_GIVER_SIGNER } from "../signer/registry"
 
 function networkHome() {
     return path.resolve(everdevHome(), "network")
@@ -112,8 +113,8 @@ export class NetworkRegistry {
                     giver: {
                         name: KnownContracts.GiverV2.name,
                         address:
-                            "0:b5e9240fc2d2f1ff8cbb1d1dee7fb7cae155e5f6320e585fcc685698994a19a5",
-                        signer: "",
+                            "0:ece57bcc6c530283becbbd8a3b24d3c5987cdddc3c8b7b33be6e4a6312490415",
+                        signer: SE_DEFAULT_GIVER_SIGNER.name,
                     },
                 },
                 {
