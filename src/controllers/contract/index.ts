@@ -5,7 +5,7 @@ import {
 } from "../../core/solFileResolvers"
 import { Account, AccountType } from "@eversdk/appkit"
 import { TonClient } from "@eversdk/core"
-import { getAccount } from "./accounts"
+import { getAccount, getParsedAccount } from "./accounts"
 import { getRunParams, logRunResult, resolveParams } from "./run"
 import { NetworkGiver } from "../network/giver"
 import { NetworkRegistry } from "../network/registry"
@@ -164,7 +164,7 @@ export const contractInfoCommand: Command = {
             throw new Error("File argument or address option must be specified")
         }
         const account = await getAccount(terminal, args)
-        const parsed = await account.getAccount()
+        const parsed = (await getParsedAccount(account)) as any
         const accType = parsed.acc_type as AccountType
         if (account.contract.tvc) {
             const boc = account.client.boc
@@ -225,7 +225,7 @@ export const contractDeployCommand: Command = {
         },
     ) {
         let account = await getAccount(terminal, args)
-        const info = await account.getAccount()
+        const info = await getParsedAccount(account)
         let accountAddress = await account.getAddress()
 
         const dataParams = account.contract.abi.data ?? []
@@ -255,7 +255,7 @@ export const contractDeployCommand: Command = {
         const topUpValue = parseNanoTokens(args.value)
 
         // Prepare an informative message in case of insufficient balance for deployment
-        const howtoTopupMesssage = () =>
+        const howtoTopupMessage = () =>
             giverInfo?.signer
                 ? `You can use \`everdev contract deploy <file> -v <value>\` command to top it up`
                 : `You have to provide enough balance before deploying in two ways: \n` +
@@ -280,7 +280,7 @@ export const contractDeployCommand: Command = {
         } else {
             if (info.acc_type === AccountType.nonExist) {
                 throw new Error(
-                    `Account  ${accountAddress}  doesn't exist.\n${howtoTopupMesssage()}`,
+                    `Account  ${accountAddress}  doesn't exist.\n${howtoTopupMessage()}`,
                 )
             }
         }
@@ -320,7 +320,7 @@ export const contractDeployCommand: Command = {
                       `Account ${accountAddress} has low balance to deploy.\n` +
                           (topUpValue
                               ? `You sent amount which is too small`
-                              : howtoTopupMesssage()),
+                              : howtoTopupMessage()),
                   )
                 : err
         }
@@ -417,7 +417,7 @@ export const contractRunCommand: Command = {
         },
     ) {
         const account = await getAccount(terminal, args)
-        const info = await account.getAccount()
+        const info = await getParsedAccount(account)
         if (info.acc_type !== AccountType.active) {
             throw new Error(
                 `Account ${await account.getAddress()} not deployed or frozen`,

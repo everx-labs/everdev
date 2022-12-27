@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.1] - 2022-12-23
+
+### Fixed
+
+- Some `contract` commands failed with `Wait for operation failed` message in case 
+  when account does not exist.
+
+
 ## [1.5.0] - 2022-12-23
 
 ### New

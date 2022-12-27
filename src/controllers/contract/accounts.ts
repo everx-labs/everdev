@@ -1,5 +1,5 @@
 import { Terminal } from "../../core"
-import { Account, AccountOptions } from "@eversdk/appkit"
+import { Account, AccountOptions, AccountType } from "@eversdk/appkit"
 import { NetworkRegistry } from "../network/registry"
 import { TonClient } from "@eversdk/core"
 import { SignerRegistry } from "../signer/registry"
@@ -89,4 +89,30 @@ export async function getAccount(
         )
     }
     return account
+}
+
+export type ParsedAccount = {
+    acc_type: AccountType
+    [name: string]: unknown
+}
+
+export async function getParsedAccount(
+    account: Account,
+): Promise<ParsedAccount> {
+    try {
+        return await account.getAccount()
+    } catch (err) {
+        const acc = await account.client.net.query_collection({
+            collection: "accounts",
+            filter: { id: { eq: await account.getAddress() } },
+            result: "acc_type",
+            limit: 1,
+        })
+        if (acc.result.length === 0) {
+            return {
+                acc_type: AccountType.nonExist,
+            }
+        }
+        throw err
+    }
 }
