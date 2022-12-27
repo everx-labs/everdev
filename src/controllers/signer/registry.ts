@@ -26,7 +26,7 @@ function registryPath() {
 }
 
 export const SE_DEFAULT_GIVER_SIGNER: SignerRegistryItem = {
-    name: "se-default-giver",
+    name: "seGiver",
     description: "EverNode SE Default Giver Keys",
     keys: {
         public: "2ada2e65ab8eeab09490e3521415f45b6e42df9c760a639bcf53957550b25a16",
@@ -80,11 +80,9 @@ export class SignerRegistry {
                 this.items = loaded.items ?? []
                 this.default = loaded.default
             } catch {} /* eslint-disable-line no-empty */
-            if (
-                !this.items.find(x => x.name === SE_DEFAULT_GIVER_SIGNER.name)
-            ) {
-                this.items.push(SE_DEFAULT_GIVER_SIGNER)
-            }
+        }
+        if (!this.items.find(x => x.name === SE_DEFAULT_GIVER_SIGNER.name)) {
+            this.items.push(SE_DEFAULT_GIVER_SIGNER)
         }
     }
 
