@@ -8,8 +8,10 @@ import {
 } from "@eversdk/core"
 import {
     KnownContract,
+    knownContractAddress,
     knownContractByName,
     knownContractFromAddress,
+    KnownContractName,
     KnownContracts,
 } from "../../core/known-contracts"
 import { NetworkGiverInfo } from "./registry"
@@ -91,10 +93,11 @@ export class NetworkGiver implements AccountGiver {
         const signer = await new SignerRegistry().resolveSigner(signerName, {
             useNoneForEmptyName: true,
         })
+        const knownName = info.name as KnownContractName
         const address =
             info.address !== ""
                 ? info.address
-                : "0:ece57bcc6c530283becbbd8a3b24d3c5987cdddc3c8b7b33be6e4a6312490415"
+                : await knownContractAddress(client, knownName, signer)
         let contract: KnownContract
         let send: (
             giver: Account,
@@ -103,7 +106,7 @@ export class NetworkGiver implements AccountGiver {
         ) => Promise<void>
 
         if (info.name !== undefined && info.name !== "auto") {
-            contract = await knownContractByName(info.name)
+            contract = await knownContractByName(knownName)
         } else {
             contract = await knownContractFromAddress(client, "Giver", address)
         }

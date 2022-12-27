@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file.
 - Include network giver account details in `network info <network>` command.
 - Giver's signer must be specified explicitly (default network signer will not be used).
 - Include EverNode SE Default Giver Keys to signers repository.
+- Solidity compiler accepts file name without extension. 
+- `network giver` parameters `signer` and `type` are mandatory.
 
 ### Fixed
 

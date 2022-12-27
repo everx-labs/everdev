@@ -33,7 +33,8 @@ export function executableName(name: string): string {
 }
 
 export function changeExt(path: string, newExt: string): string {
-    return path.replace(/\.[^/.]+$/, newExt)
+    const changed = path.replace(/\.[^/.]+$/, newExt)
+    return changed === path ? `${path}${newExt}` : changed
 }
 
 export function ellipsisString(xs: string[]): string {
