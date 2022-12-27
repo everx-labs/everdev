@@ -94,15 +94,7 @@ export class NetworkGiver implements AccountGiver {
         const address =
             info.address !== ""
                 ? info.address
-                : (
-                      await client.abi.encode_message({
-                          abi: abiContract(KnownContracts.GiverV2.abi),
-                          deploy_set: {
-                              tvc: seGiverKeysTvc,
-                          },
-                          signer,
-                      })
-                  ).address
+                : "0:ece57bcc6c530283becbbd8a3b24d3c5987cdddc3c8b7b33be6e4a6312490415"
         let contract: KnownContract
         let send: (
             giver: Account,

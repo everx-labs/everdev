@@ -133,7 +133,6 @@ export const networkGiverCommand: Command = {
             name: "address",
             title: "Giver address",
             type: "string",
-            defaultValue: "",
         },
         {
             name: "signer",
