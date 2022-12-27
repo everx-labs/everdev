@@ -140,7 +140,6 @@ export const networkGiverCommand: Command = {
             alias: "s",
             title: "Signer to be used with giver",
             type: "string",
-            defaultValue: "",
         },
         {
             name: "value",
@@ -184,7 +183,6 @@ export const networkCredsCommand: Command = {
     title: "Set credentials for network authentication",
     args: [
         nameArg,
-
         {
             name: "project",
             alias: "p",
