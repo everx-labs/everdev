@@ -52,15 +52,15 @@ export const networkListCommand: Command = {
     async run(terminal: Terminal) {
         const registry = new NetworkRegistry()
         const rows = [["Network", "Endpoints", "Giver", "Description"]]
-        registry.items.forEach(network => {
-            const summary = registry.getNetworkSummary(network)
+        for (const network of registry.items) {
+            const summary = await registry.getNetworkSummary(network)
             rows.push([
                 summary.name,
                 summary.endpoints,
                 summary.giver,
                 summary.description,
             ])
-        })
+        }
         const table = formatTable(rows, { headerSeparator: true })
         if (table.trim() !== "") {
             terminal.log(table)
@@ -88,7 +88,10 @@ export const networkInfoCommand: Command = {
         rows.push(["Endpoints", network.endpoints.join(", ")])
         const giver = network.giver
         if (giver) {
-            rows.push(["Giver", getGiverSummary(giver)])
+            rows.push([
+                "Giver",
+                await getGiverSummary(true, network.endpoints, giver),
+            ])
         }
         if (network.name === registry.default) {
             rows.push(["Default", "true"])
