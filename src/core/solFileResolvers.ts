@@ -40,7 +40,7 @@ export function resolveContract(filePath: string): ResolvedContractPackage {
             : undefined
     if (!abi) {
         throw new Error(
-            `You have specified "${filePath}" as a contract file name. But a corresponding ABI file is missing. ABI file must have an extension ".abi" or ".abi.json".`,
+            `You have specified "${filePath}" as a contract file name, but a corresponding ABI file is missing. ABI file must have an extension ".abi" or ".abi.json".`,
         )
     }
     return {
