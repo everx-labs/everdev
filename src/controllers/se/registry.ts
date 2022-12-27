@@ -10,6 +10,7 @@ import {
 } from "../../core/utils"
 import { ContainerDef, ContainerStatus, DevDocker } from "../../core/docker"
 import Dockerode from "dockerode"
+import { NetworkRegistry } from "../network/registry"
 
 const DEFAULT_INSTANCE_NAME = "default"
 const DEFAULT_INSTANCE_PORT = 80
@@ -120,10 +121,18 @@ function mapContainerName(name: string): string {
     return name.startsWith("/") ? name.substr(1) : name
 }
 
+function getEndpoint(instance: SERegistryItem): string {
+    return (instance.port || 80) === 80
+        ? "http://localhost"
+        : `http://localhost:${instance.port}`
+}
+
 export function updateInstance(
+    networks: NetworkRegistry,
     instance: SERegistryItem,
     updates: Partial<SERegistryItem>,
 ) {
+    const oldEndpoint = getEndpoint(instance)
     if (
         updates.source === undefined &&
         updates.port === undefined &&
@@ -144,6 +153,16 @@ export function updateInstance(
         delete instance.dbPort
     } else if (updates.dbPort !== undefined) {
         instance.dbPort = updates.dbPort
+    }
+    const newEndpoint = getEndpoint(instance)
+    if (newEndpoint !== oldEndpoint) {
+        for (const network of networks.items) {
+            for (let i = 0; i < network.endpoints.length; i += 1) {
+                if (network.endpoints[i] === oldEndpoint) {
+                    network.endpoints[i] = newEndpoint
+                }
+            }
+        }
     }
 }
 
@@ -425,12 +444,13 @@ export class SERegistry {
     }
 
     async update(terminal: Terminal, instance: string) {
+        const networks = new NetworkRegistry()
         await this.updateConfig(
             terminal,
             instance,
             async instance => {
                 if (instance.source.type === SESourceType.TONOS_SE_VERSION) {
-                    updateInstance(instance, {
+                    updateInstance(networks, instance, {
                         source: seSourceVersion(
                             await SERegistry.getLatestVersion(),
                         ),
@@ -500,12 +520,14 @@ export class SERegistry {
                 }
             }
         }
+        const networks = new NetworkRegistry()
         await this.updateConfig(
             terminal,
             args.instance,
-            async x => updateInstance(x, updates),
+            async x => updateInstance(networks, x, updates),
             true,
         )
+        networks.save()
     }
 
     delete(instance: string, force: boolean) {

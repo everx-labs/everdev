@@ -8,7 +8,9 @@ All notable changes to this project will be documented in this file.
 
 - Some `contract` commands failed with `Wait for operation failed` message in case 
   when account does not exist.
-
+- Changing SE GraphQL port did not affect network endpoints related to this SE container.
+- Contract commands that expects contract file name as an arg will report more detailed 
+  error message in case when contract file does not exist.
 
 ## [1.5.0] - 2022-12-23
 
