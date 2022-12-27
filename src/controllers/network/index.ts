@@ -1,6 +1,13 @@
-import { Command, CommandArg, Terminal, ToolController } from "../../core"
+import {
+    Command,
+    CommandArg,
+    CommandArgVariant,
+    Terminal,
+    ToolController,
+} from "../../core"
 import { getGiverSummary, NetworkRegistry } from "./registry"
 import { formatTable, parseNumber } from "../../core/utils"
+import { KnownContractNames } from "../../core/known-contracts"
 
 const forceArg: CommandArg = {
     name: "force",
@@ -52,15 +59,15 @@ export const networkListCommand: Command = {
     async run(terminal: Terminal) {
         const registry = new NetworkRegistry()
         const rows = [["Network", "Endpoints", "Giver", "Description"]]
-        registry.items.forEach(network => {
-            const summary = registry.getNetworkSummary(network)
+        for (const network of registry.items) {
+            const summary = await registry.getNetworkSummary(network)
             rows.push([
                 summary.name,
                 summary.endpoints,
                 summary.giver,
                 summary.description,
             ])
-        })
+        }
         const table = formatTable(rows, { headerSeparator: true })
         if (table.trim() !== "") {
             terminal.log(table)
@@ -88,7 +95,10 @@ export const networkInfoCommand: Command = {
         rows.push(["Endpoints", network.endpoints.join(", ")])
         const giver = network.giver
         if (giver) {
-            rows.push(["Giver", getGiverSummary(giver)])
+            rows.push([
+                "Giver",
+                await getGiverSummary(true, network.endpoints, giver),
+            ])
         }
         if (network.name === registry.default) {
             rows.push(["Default", "true"])
@@ -137,7 +147,6 @@ export const networkGiverCommand: Command = {
             alias: "s",
             title: "Signer to be used with giver",
             type: "string",
-            defaultValue: "",
         },
         {
             name: "value",
@@ -151,7 +160,9 @@ export const networkGiverCommand: Command = {
             alias: "t",
             title: "Type giver contract (GiverV1 | GiverV2 | GiverV3 | SafeMultisigWallet | SetcodeMultisigWallet)",
             type: "string",
-            defaultValue: "auto",
+            getVariants(): CommandArgVariant[] | Promise<CommandArgVariant[]> {
+                return KnownContractNames.map(x => ({ value: x }))
+            },
         },
     ],
     async run(
@@ -181,7 +192,6 @@ export const networkCredsCommand: Command = {
     title: "Set credentials for network authentication",
     args: [
         nameArg,
-
         {
             name: "project",
             alias: "p",

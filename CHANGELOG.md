@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.1] - 2022-12-23
+
+### New
+
+- Include network giver account details in `network info <network>` command.
+- Giver's signer must be specified explicitly (default network signer will not be used).
+- Include EverNode SE Default Giver Keys to signers repository.
+- Solidity compiler accepts file name without extension. 
+- `network giver` parameters `signer` and `type` are mandatory.
+
+### Fixed
+
+- Some `contract` commands failed with `Wait for operation failed` message in case 
+  when account does not exist.
+- Changing SE GraphQL port did not affect network endpoints related to this SE container.
+- Contract commands that expects contract file name as an arg will report more detailed 
+  error message in case when contract file does not exist.
+
 ## [1.5.0] - 2022-12-23
 
 ### New

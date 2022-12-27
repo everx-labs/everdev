@@ -16,6 +16,29 @@ export const SOLIDITY_FILE = defineFileType("Solidity", /\.t?sol$/i, [
     ".tsol",
 ])
 
+function resolveSoliditySource(file: string): {
+    fileDir: string
+    fileName: string
+} {
+    const fileDir = path.dirname(file)
+    let fileName = path.basename(file)
+    const exists = (name: string): boolean => {
+        return fs.existsSync(path.resolve(fileDir, name))
+    }
+    if (!exists(fileName)) {
+        for (const ext of SOLIDITY_FILE.extensions) {
+            fileName = changeExt(fileName, ext)
+            if (exists(fileName)) {
+                break
+            }
+        }
+        if (!exists(fileName)) {
+            throw new Error(`Solidity source file ${file} does not exist.`)
+        }
+    }
+    return { fileDir, fileName }
+}
+
 export const solidityVersionCommand: Command = {
     name: "version",
     title: "Show Solidity Version",
@@ -97,9 +120,7 @@ export const solidityCompileCommand: Command = {
     ): Promise<void> {
         await Component.ensureInstalledAll(terminal, components)
         for (const file of args.file.split(" ")) {
-            const fileDir = path.dirname(file)
-            const fileName = path.basename(file)
-
+            const { fileDir, fileName } = resolveSoliditySource(file)
             const outputDir = path.resolve(args.outputDir ?? ".")
             const includePath = args.includePath
                 ? args.includePath
@@ -226,18 +247,12 @@ export const solidityAstCommand: Command = {
         },
     ): Promise<void> {
         for (const file of args.file.split(" ")) {
-            const ext = path.extname(file)
-            if (SOLIDITY_FILE.extensions.includes(ext) === false) {
-                terminal.log(`Choose solidity source file.`)
-                return
-            }
             if (args.format.match(/^(compact-json|json)$/i) == null) {
                 terminal.log(`Wrong ast format.`)
                 return
             }
             await Component.ensureInstalledAll(terminal, components)
-            const fileDir = path.dirname(file)
-            const fileName = path.basename(file)
+            const { fileDir, fileName } = resolveSoliditySource(file)
             args.outputDir = path.resolve(args.outputDir ?? ".")
             const includePath = args.includePath
                 ? args.includePath

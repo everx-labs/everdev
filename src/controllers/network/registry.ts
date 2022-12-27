@@ -5,7 +5,8 @@ import { everdevHome } from "../../core"
 import { NetworkGiver } from "./giver"
 import { TonClient } from "@eversdk/core"
 import { KnownContracts } from "../../core/known-contracts"
-import { writeJsonFile } from "../../core/utils"
+import { formatTokens, writeJsonFile } from "../../core/utils"
+import { SE_DEFAULT_GIVER_SIGNER } from "../signer/registry"
 
 function networkHome() {
     return path.resolve(everdevHome(), "network")
@@ -22,7 +23,7 @@ export type NetworkGiverInfo = {
     value?: number
 }
 
-export type MetworkCredentials = {
+export type NetworkCredentials = {
     project?: string
     accessKey?: string
 }
@@ -32,7 +33,7 @@ export type Network = {
     description?: string
     endpoints: string[]
     giver?: NetworkGiverInfo
-    credentials?: MetworkCredentials
+    credentials?: NetworkCredentials
 }
 
 type NetworkSummary = {
@@ -42,12 +43,46 @@ type NetworkSummary = {
     description: string
 }
 
-export function getGiverSummary(giver?: NetworkGiverInfo): string {
+export async function getGiverSummary(
+    includeAccountInfo: boolean,
+    endpoints: string[],
+    giver?: NetworkGiverInfo,
+): Promise<string> {
     if (!giver) {
         return ""
     }
     const { signer, name, address } = giver
-    return `${address}\n${name}${signer ? ` signed by ${signer}` : ""}`
+    const client = new TonClient({ network: { endpoints } })
+    let accountInfo
+    if (includeAccountInfo) {
+        try {
+            const acc = (
+                await client.net.query_collection({
+                    collection: "accounts",
+                    filter: { id: { eq: address } },
+                    result: "balance",
+                    limit: 1,
+                })
+            ).result[0]
+            if (acc) {
+                if (acc.balance) {
+                    accountInfo = `\n${formatTokens(acc.balance)}`
+                } else {
+                    accountInfo = `\ngiver account has an inactive state`
+                }
+            } else {
+                accountInfo = `\ngiver account does not exists on a network`
+            }
+        } catch {
+            accountInfo = `\ngiver status is not available due to network problems`
+        } finally {
+            await client.close()
+        }
+    } else {
+        accountInfo = ""
+    }
+    const signerInfo = signer ? ` signed by ${signer}` : ""
+    return `${address}\n${name}${signerInfo}${accountInfo}`
 }
 
 export class NetworkRegistry {
@@ -78,8 +113,8 @@ export class NetworkRegistry {
                     giver: {
                         name: KnownContracts.GiverV2.name,
                         address:
-                            "0:b5e9240fc2d2f1ff8cbb1d1dee7fb7cae155e5f6320e585fcc685698994a19a5",
-                        signer: "",
+                            "0:ece57bcc6c530283becbbd8a3b24d3c5987cdddc3c8b7b33be6e4a6312490415",
+                        signer: SE_DEFAULT_GIVER_SIGNER.name,
                     },
                 },
                 {
@@ -242,13 +277,17 @@ export class NetworkRegistry {
         return endpoints.join(", ")
     }
 
-    getNetworkSummary(network: Network): NetworkSummary {
+    async getNetworkSummary(network: Network): Promise<NetworkSummary> {
         return {
             name: `${network.name}${
                 network.name === this.default ? " (Default)" : ""
             }`,
             endpoints: NetworkRegistry.getEndpointsSummary(network),
-            giver: getGiverSummary(network.giver),
+            giver: await getGiverSummary(
+                false,
+                network.endpoints,
+                network.giver,
+            ),
             description: network.description ?? "",
         }
     }

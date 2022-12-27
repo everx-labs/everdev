@@ -25,6 +25,7 @@ test("Add network giver by address", async () => {
         name: "se",
         address:
             "0:b5e9240fc2d2f1ff8cbb1d1dee7fb7cae155e5f6320e585fcc685698994a19a5",
+        type: "GiverV2",
         signer: "alice",
     })
     expect(new NetworkRegistry().get("se").giver?.name).toEqual("GiverV2")
@@ -33,24 +34,10 @@ test("Add network giver by address", async () => {
 test("Add network giver by type", async () => {
     await runCommand(consoleTerminal, "network giver", {
         name: "se",
-        type: "GiverV1",
-        signer: "alice",
-    })
-    expect(new NetworkRegistry().get("se").giver?.name).toEqual("GiverV1")
-
-    await runCommand(consoleTerminal, "network giver", {
-        name: "se",
         type: "GiverV2",
         signer: "alice",
     })
     expect(new NetworkRegistry().get("se").giver?.name).toEqual("GiverV2")
-
-    await runCommand(consoleTerminal, "network giver", {
-        name: "se",
-        type: "GiverV3",
-        signer: "alice",
-    })
-    expect(new NetworkRegistry().get("se").giver?.name).toEqual("GiverV3")
 
     await runCommand(consoleTerminal, "network giver", {
         name: "se",
@@ -71,7 +58,9 @@ test("Add network giver error", async () => {
         })
         expect(true).toBe(false)
     } catch (error: any) {
-        expect(error.message).toBe("Unknown contract type NotExist.")
+        expect(error.message).toBe(
+            "Can not resolve giver address: unknown giver type NotExist.",
+        )
     }
 })
 
