@@ -22,7 +22,7 @@ export type NetworkGiverInfo = {
     value?: number
 }
 
-export type MetworkCredentials = {
+export type NetworkCredentials = {
     project?: string
     accessKey?: string
 }
@@ -32,7 +32,7 @@ export type Network = {
     description?: string
     endpoints: string[]
     giver?: NetworkGiverInfo
-    credentials?: MetworkCredentials
+    credentials?: NetworkCredentials
 }
 
 type NetworkSummary = {

@@ -2,6 +2,7 @@ import fs from "fs"
 import { ContractPackage } from "@eversdk/appkit"
 import { findExisting } from "./utils"
 import { SOLIDITY_FILE } from "../controllers/solidity"
+import os from "os"
 
 type ResolvedContractPackage = {
     package: ContractPackage
@@ -10,6 +11,9 @@ type ResolvedContractPackage = {
 }
 
 export function resolveContract(filePath: string): ResolvedContractPackage {
+    if (filePath.startsWith("~")) {
+        filePath = `${os.homedir()}${filePath.substring(1)}`
+    }
     filePath = filePath.trim()
     const lowered = filePath.toLowerCase()
     let basePath
