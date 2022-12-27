@@ -1,6 +1,13 @@
-import { Command, CommandArg, Terminal, ToolController } from "../../core"
+import {
+    Command,
+    CommandArg,
+    CommandArgVariant,
+    Terminal,
+    ToolController,
+} from "../../core"
 import { getGiverSummary, NetworkRegistry } from "./registry"
 import { formatTable, parseNumber } from "../../core/utils"
+import { KnownContractNames } from "../../core/known-contracts"
 
 const forceArg: CommandArg = {
     name: "force",
@@ -133,6 +140,7 @@ export const networkGiverCommand: Command = {
             name: "address",
             title: "Giver address",
             type: "string",
+            defaultValue: "",
         },
         {
             name: "signer",
@@ -152,7 +160,9 @@ export const networkGiverCommand: Command = {
             alias: "t",
             title: "Type giver contract (GiverV1 | GiverV2 | GiverV3 | SafeMultisigWallet | SetcodeMultisigWallet)",
             type: "string",
-            defaultValue: "auto",
+            getVariants(): CommandArgVariant[] | Promise<CommandArgVariant[]> {
+                return KnownContractNames.map(x => ({ value: x }))
+            },
         },
     ],
     async run(

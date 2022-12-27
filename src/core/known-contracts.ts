@@ -1,12 +1,9 @@
 import { Account, ContractPackage } from "@eversdk/appkit"
-import { TonClient, AbiContract } from "@eversdk/core"
+import { TonClient, AbiContract, Signer, abiContract } from "@eversdk/core"
 
 import path from "path"
 import fs from "fs"
-import {
-    getParsedAccount,
-    ParsedAccount,
-} from "../controllers/contract/accounts"
+import { getParsedAccount } from "../controllers/contract/accounts"
 
 export type KnownContract = {
     name: string
@@ -33,6 +30,28 @@ export async function knownContractFromAddress(
     return knownContractFromCodeHash(codeHash, name, address)
 }
 
+export async function knownContractAddress(
+    client: TonClient,
+    name: KnownContractName,
+    signer: Signer,
+): Promise<string> {
+    const contract = KnownContracts[name]
+    if (!contract || !contract.tvc) {
+        throw new Error(
+            `Can not resolve giver address: unknown giver type ${name}.`,
+        )
+    }
+    return (
+        await client.abi.encode_message({
+            abi: abiContract(contract.abi),
+            deploy_set: {
+                tvc: contract.tvc,
+            },
+            signer,
+        })
+    ).address
+}
+
 export function knownContractByName(name: KnownContractName): KnownContract {
     if (!(name in KnownContracts)) {
         throw new Error(`Unknown contract type ${name}.`)
@@ -45,7 +64,7 @@ export function knownContractFromCodeHash(
     name: string,
     address?: string,
 ): KnownContract {
-    const contract = contracts[codeHash]
+    const contract = KnownContractsByCodeHash[codeHash]
     if (!contract) {
         if (address) {
             throw new Error(
@@ -67,32 +86,33 @@ export function loadAbi(name: string): AbiContract {
     )
 }
 
-export const KnownContracts: { [name: string]: KnownContract } = {
-    GiverV1: {
-        name: "GiverV1",
-        abi: loadAbi("GiverV1"),
-    },
-    GiverV2: {
-        name: "GiverV2",
-        abi: loadAbi("GiverV2"),
-    },
-    GiverV3: {
-        name: "GiverV3",
-        abi: loadAbi("GiverV3"),
-    },
-    SetcodeMultisigWallet: {
-        name: "SetcodeMultisigWallet",
-        abi: loadAbi("SetcodeMultisigWallet"),
-    },
-    SafeMultisigWallet: {
-        name: "SafeMultisigWallet",
-        abi: loadAbi("SafeMultisigWallet"),
-    },
+export function loadTvc(name: string): string | undefined {
+    const filePath = contractsFile(`${name}.tvc`)
+    return fs.existsSync(filePath)
+        ? fs.readFileSync(filePath, "base64")
+        : undefined
+}
+
+function knownContract(name: string): KnownContract {
+    return {
+        name,
+        abi: loadAbi(name),
+        tvc: loadTvc(name),
+    }
+}
+
+export const KnownContracts = {
+    GiverV1: knownContract("GiverV1"),
+    GiverV2: knownContract("GiverV2"),
+    GiverV3: knownContract("GiverV3"),
+    SetcodeMultisigWallet: knownContract("SetcodeMultisigWallet"),
+    SafeMultisigWallet: knownContract("SafeMultisigWallet"),
 }
 
 export type KnownContractName = keyof typeof KnownContracts
+export const KnownContractNames: string[] = Object.keys(KnownContracts)
 
-const contracts: { [codeHash: string]: KnownContract } = {
+const KnownContractsByCodeHash: { [codeHash: string]: KnownContract } = {
     "4e92716de61d456e58f16e4e867e3e93a7548321eace86301b51c8b80ca6239b":
         KnownContracts.GiverV2,
     ccbfc821853aa641af3813ebd477e26818b51e4ca23e5f6d34509215aa7123d9:
