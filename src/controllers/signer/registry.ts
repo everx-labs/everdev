@@ -80,11 +80,9 @@ export class SignerRegistry {
                 this.items = loaded.items ?? []
                 this.default = loaded.default
             } catch {} /* eslint-disable-line no-empty */
-            if (
-                !this.items.find(x => x.name === SE_DEFAULT_GIVER_SIGNER.name)
-            ) {
-                this.items.push(SE_DEFAULT_GIVER_SIGNER)
-            }
+        }
+        if (!this.items.find(x => x.name === SE_DEFAULT_GIVER_SIGNER.name)) {
+            this.items.push(SE_DEFAULT_GIVER_SIGNER)
         }
     }
 
