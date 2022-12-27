@@ -369,7 +369,7 @@ export const contractTopUpCommand: Command = {
         if (!value) {
             throw new Error(
                 `Missing top-up value.\n` +
-                    `You must specify a value with the option \`-v\` or\n` +
+                    `You must specify a value in nanotokens with the option \`-v\` or\n` +
                     `set the default value for the giver with \`everdev network giver\` command.`,
             )
         }
