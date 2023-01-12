@@ -158,7 +158,7 @@ export const networkGiverCommand: Command = {
         {
             name: "type",
             alias: "t",
-            title: "Type giver contract (GiverV1 | GiverV2 | GiverV3 | SafeMultisigWallet | SetcodeMultisigWallet)",
+            title: "Type giver contract (listed below)",
             type: "string",
             getVariants(): CommandArgVariant[] | Promise<CommandArgVariant[]> {
                 return KnownContractNames.map(x => ({ value: x }))

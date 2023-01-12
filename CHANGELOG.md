@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.2] - 2022-11-12
+
+### New
+
+- Add new GiverV4 type
+
 ## [1.5.1] - 2022-12-23
 
 ### New

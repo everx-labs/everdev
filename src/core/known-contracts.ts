@@ -105,6 +105,7 @@ export const KnownContracts = {
     GiverV1: knownContract("GiverV1"),
     GiverV2: knownContract("GiverV2"),
     GiverV3: knownContract("GiverV3"),
+    GiverV4: knownContract("GiverV4"),
     SetcodeMultisigWallet: knownContract("SetcodeMultisigWallet"),
     SafeMultisigWallet: knownContract("SafeMultisigWallet"),
 }
@@ -123,4 +124,6 @@ const KnownContractsByCodeHash: { [codeHash: string]: KnownContract } = {
         KnownContracts.SetcodeMultisigWallet,
     "80d6c47c4a25543c9b397b71716f3fae1e2c5d247174c52e2c19bd896442b105":
         KnownContracts.SafeMultisigWallet,
+    d34202a6430d78b5abe145a075d4a2854fd59c26612d435076d386bb7fcb0a44:
+        KnownContracts.GiverV4,
 }
