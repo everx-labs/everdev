@@ -7,7 +7,7 @@
   - [Deploying your own Giver](#deploying-your-own-giver)
     - [Get your Devnet credentials](#get-your-devnet-credentials)
     - [Generate Giver keys](#generate-giver-keys)
-    - [Compile Giver code](#compile-giver-code)
+    - [Get giver code](#get-giver-code)
     - [Calculate Giver address](#calculate-giver-address)
     - [Sponsor Giver with public faucet](#sponsor-giver-with-public-faucet)
     - [Deploy Giver contract](#deploy-giver-contract)
@@ -43,18 +43,9 @@ test (Default)     de101cde5c94540926fe862e965cf109b1b803989e7048657cf7c4caaa2a2
 devnet_giver_keys  5a343ccbd62c15e3df1076bc34957ad2717469d84e4d6b3ef26112db80ac8e1b
 ```
 
-### Compile Giver code
+### Get giver code
 
-You can find compiled giver v4 contract with code [here](https://github.com/tonlabs/evernode-se/tree/master/contracts/giver_v4). You need to recompile code only if you want to change its code, so you can use compiled `GiverV4.tvc` file and move to the next step.
-
-**Attention!**
-This giver is recommended to use with solc version above 0.61.2 to deploy it on devnet or mainnet.
-
-After modifying code, compile it:
-```
-$ everdev sol compile GiverV4.sol
-```
-In a case of success, compiler will generate two files: compiled code (`GiverV4.tvc`) and ABI (`GiverV4.abi.json`). You need these files for the next steps.
+You can find the compiled giver v2 contract [here](https://github.com/tonlabs/evernode-se/tree/master/contracts/giver_v2). You will need  `GiverV2.tvc` file.
 
 ### Calculate Giver address
 
@@ -87,7 +78,7 @@ Wait for operation completion. Check address balance in [Blockchain Explorer](ht
 
 ### Deploy Giver contract
 
-For contract deployment you need to have compiled contract files (`GiverV4.tvc` and `GiverV4.abi.json`) and giver keys. To deploy contract execute next command:
+For contract deployment you need to have compiled contract files (`GiverV2.tvc` and `GiverV2.abi.json`) and giver keys. To deploy contract execute next command:
 
 ```
 $ everdev contract deploy -n dev -s devnet_giver_keys GiverV2.tvc
@@ -110,20 +101,20 @@ Done, now you have your own Giver, deployed to the DevNet! Let's configure `ever
 For convenience, you might need to configure `everdev` in order to use your Giver as default. To do it, execute the next command (change address to your Giver's address, obtained on previous steps):
 
 ```
-$ everdev network giver dev 0:93139197f2f58d674bee4ee71a42d8f1e7b6a3c3e041ded7a54d330bcc44f3b3 --signer devnet_giver_keys
+$ everdev n g dev 0:93139197f2f58d674bee4ee71a42d8f1e7b6a3c3e041ded7a54d330bcc44f3b3 --signer devnet_giver_keys --type GiverV2
 ```
 
 Check:
 
 ```
-$ everdev n l
-Network       Endpoints                                        Giver
-------------  -----------------------------------------------  ------------------------------------------------------------------
-se (Default)  http://localhost                                 0:b5e9240fc2d2f1ff8cbb1d1dee7fb7cae155e5f6320e585fcc685698994a19a5
-                                                                 GiverV4
-dev           eri01.net.everos.dev, rbx01.net.everos.dev, gra01.net.everos.dev          0:93139197f2f58d674bee4ee71a42d8f1e7b6a3c3e041ded7a54d330bcc44f3b3
-                                                                 GiverV4 signed by devnet_giver_keys
-main          eri01.main.everos.dev, gra01.main.everos.dev, gra02.main.everos.dev ...
+everdev n l
+Network       Endpoints              Giver
+------------  ---------------------  ------------------------------------------------------------------
+se (Default)  http://localhost       0:ece57bcc6c530283becbbd8a3b24d3c5987cdddc3c8b7b33be6e4a6312490415
+                                       GiverV2 signed by seGiver
+dev           devnet.evercloud.dev   0:93139197f2f58d674bee4ee71a42d8f1e7b6a3c3e041ded7a54d330bcc44f3b3
+                                       GiverV2 signed by devnet_giver_keys
+main          mainnet.evercloud.dev
 ```
 
 If Giver is set, you will see you Giver's address and keypair name for the `dev` network.
