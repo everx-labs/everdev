@@ -116,9 +116,6 @@ export class Component {
             if (runTerminal.stdout !== "") {
                 terminal.write(runTerminal.stdout)
             }
-            if (runTerminal.stderr !== "") {
-                terminal.writeError(runTerminal.stderr)
-            }
             throw error
         }
     }

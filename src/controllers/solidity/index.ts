@@ -105,7 +105,7 @@ export const solidityCompileCommand: Command = {
             name: "include-path",
             alias: "i",
             type: "folder",
-            title: "Additional path(s) for inputs (node_modules is default)",
+            title: "Additional path(s) for inputs (required solc 0.57.0 or higher), node_modules is default",
             defaultValue: "node_modules",
         },
     ],
@@ -169,8 +169,7 @@ export const solidityCompileCommand: Command = {
                 await components.compiler.silentRun(terminal, fileDir, [
                     "-o",
                     outputDir,
-                    "-i",
-                    ...includePath,
+                    ...(await addIncludePathOption(includePath)),
                     fileName,
                 ])
                 linkerOut = await components.linker.silentRun(
@@ -233,7 +232,7 @@ export const solidityAstCommand: Command = {
             name: "include-path",
             alias: "i",
             type: "folder",
-            title: "Additional path(s) for inputs (node_modules is default)",
+            title: "Additional path(s) for inputs (required solc 0.57.0 or higher), node_modules is default",
             defaultValue: "node_modules",
         },
     ],
@@ -266,8 +265,7 @@ export const solidityAstCommand: Command = {
                 `--ast-${args.format}`,
                 "--output-dir",
                 args.outputDir,
-                "--include-path",
-                ...includePath,
+                ...(await addIncludePathOption(includePath)),
                 fileName,
             ])
         }
@@ -353,4 +351,9 @@ export const Solidity: ToolController = {
         soliditySetCommand,
         solidityUpdateCommand,
     ],
+}
+async function addIncludePathOption(paths: string[]) {
+    return (await components.compiler.getCurrentVersion()) >= "0.57.0"
+        ? ["--include-path", ...paths]
+        : []
 }
