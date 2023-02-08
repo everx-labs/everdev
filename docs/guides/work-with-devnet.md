@@ -22,11 +22,11 @@ In order to deploy the Giver, do the following steps, like for an ordinary contr
 
 ### Get your Devnet credentials
 
-First, go to https://www.evercloud.dev/ and register in the dashboard. 
-Follow this instruction: https://docs.evercloud.dev/products/evercloud/get-started
-Save your project ID and secret, if you enabled it.
+First, go to https://www.evercloud.dev/ and register in the dashboard.   
+Follow this instruction: https://docs.evercloud.dev/products/evercloud/get-started. 
+Save your project ID and secret, if you enabled it.  
 
-Now, run this command. Specifying secret is optional - only if you enabled it:
+Now, run this command. Specifying secret is optional - only if you enabled it:  
 ```
 $ everdev network credentials dev --project "Project Id" --access-key "Project secret"
 ```
