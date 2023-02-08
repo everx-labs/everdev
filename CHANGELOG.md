@@ -6,7 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ### New
 
-- Add new GiverV4 type
+- Added new GiverV4 type
+
+- Added new option `--workchain` to specify in which workchain to deploy a contract.
 
 ### Fixed
 

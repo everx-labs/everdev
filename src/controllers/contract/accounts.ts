@@ -25,9 +25,18 @@ export async function getAccount(
         signer: string
         data: string
         address?: string
+        workchain?: string
     },
 ): Promise<Account> {
     const address = args.address ?? ""
+    const abiConfig =
+        address === "" && args.workchain
+            ? {
+                  abi: {
+                      workchain: parseInt(args.workchain) || 0,
+                  },
+              }
+            : {}
     const network = new NetworkRegistry().get(args.network)
     const { project, accessKey } = network.credentials || {}
     const client = new TonClient({
@@ -36,6 +45,7 @@ export async function getAccount(
 
             ...(accessKey ? { access_key: accessKey } : {}),
         },
+        ...abiConfig,
     })
     const contract =
         args.file !== ""
