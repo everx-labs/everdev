@@ -8,6 +8,8 @@ All notable changes to this project will be documented in this file.
 
 - Added new option `--workchain` to specify in which workchain to deploy a contract.
 
+- `everdev contract decode-tvc` command renamed to `everdev contract decode-stateinit`.
+
 - Add a reference to the CHANGELOG compiler repository to the output of the 
   `everdev sold version` and `everdev sol version` commands.
 

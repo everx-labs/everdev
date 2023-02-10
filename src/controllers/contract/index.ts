@@ -614,8 +614,8 @@ export const contractDecodeAccountDataCommand: Command = {
     },
 }
 
-export const contractDecodeTvcCommand: Command = {
-    name: "decode-tvc",
+export const contractDecodeStateinitCommand: Command = {
+    name: "decode-stateinit",
     alias: "dt",
     title: "Decode tvc into code, data, libraries and special options",
     args: [tvcFileArg],
@@ -654,7 +654,7 @@ export const Contract: ToolController = {
     commands: [
         contractInfoCommand,
         contractDecodeAccountDataCommand,
-        contractDecodeTvcCommand,
+        contractDecodeStateinitCommand,
         contractTopUpCommand,
         contractDeployCommand,
         contractRunCommand,
