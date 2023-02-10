@@ -2,11 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.5.2] - 2022-12-12
+## [1.6.0] - 2023-02-10
 
 ### New
 
 - Added new option `--workchain` to specify in which workchain to deploy a contract.
+
+- Add a reference to the CHANGELOG compiler repository to the output of the 
+  `everdev sold version` and `everdev sol version` commands.
 
 ### Fixed
 

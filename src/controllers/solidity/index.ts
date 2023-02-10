@@ -1,3 +1,4 @@
+import chalk from "chalk"
 import { Command, Component, Terminal, ToolController } from "../../core"
 import path from "path"
 import {
@@ -44,6 +45,12 @@ export const solidityVersionCommand: Command = {
     title: "Show Solidity Version",
     async run(terminal: Terminal): Promise<void> {
         terminal.log(await Component.getInfoAll(components))
+        terminal.log(
+            chalk.yellow(
+                "\nYou can find the list of stable solc versions in Solidity Compiler changelog:" +
+                    "\nhttps://github.com/tonlabs/TON-Solidity-Compiler/blob/master/Changelog_TON.md",
+            ),
+        )
     },
 }
 
