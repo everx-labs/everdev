@@ -6,6 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ### New
 
+- Added [support of Signature ID](https://github.com/tonlabs/ever-sdk/blob/master/CHANGELOG.md) on the networks with 
+  CapSignatureWithId capability enabled.
+
 - Added new option `everdev contract deploy --workchain` to specify in which workchain to deploy a contract.
 
 - `everdev contract decode-tvc` command renamed to `everdev contract decode-stateinit`.
