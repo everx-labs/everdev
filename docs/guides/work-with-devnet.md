@@ -45,14 +45,14 @@ devnet_giver_keys  5a343ccbd62c15e3df1076bc34957ad2717469d84e4d6b3ef26112db80ac8
 
 ### Get giver code
 
-You can find the compiled giver v2 contract [here](https://github.com/tonlabs/evernode-se/tree/master/contracts/giver_v2). You will need  `GiverV2.tvc` file.
+You can find the compiled giver v3 contract [here](https://github.com/tonlabs/evernode-se/tree/master/contracts/giver_v3). You will need  `GiverV3.tvc` file.
 
 ### Calculate Giver address
 
 In order to deploy contract, you need to know its address:
 
 ```
-$ everdev contract info -n dev -s devnet_giver_keys GiverV2.tvc
+$ everdev contract info -n dev -s devnet_giver_keys GiverV3.tvc
 
 Configuration
 
@@ -78,10 +78,10 @@ Wait for operation completion. Check address balance in [Blockchain Explorer](ht
 
 ### Deploy Giver contract
 
-For contract deployment you need to have compiled contract files (`GiverV2.tvc` and `GiverV2.abi.json`) and giver keys. To deploy contract execute next command:
+For contract deployment you need to have compiled contract files (`GiverV3.tvc` and `GiverV3.abi.json`) and giver keys. To deploy contract execute next command:
 
 ```
-$ everdev contract deploy -n dev -s devnet_giver_keys GiverV2.tvc
+$ everdev contract deploy -n dev -s devnet_giver_keys GiverV3.tvc
 
 Configuration
 
@@ -101,7 +101,7 @@ Done, now you have your own Giver, deployed to the DevNet! Let's configure `ever
 For convenience, you might need to configure `everdev` in order to use your Giver as default. To do it, execute the next command (change address to your Giver's address, obtained on previous steps):
 
 ```
-$ everdev n g dev 0:93139197f2f58d674bee4ee71a42d8f1e7b6a3c3e041ded7a54d330bcc44f3b3 --signer devnet_giver_keys --type GiverV2
+$ everdev n g dev 0:93139197f2f58d674bee4ee71a42d8f1e7b6a3c3e041ded7a54d330bcc44f3b3 --signer devnet_giver_keys --type GiverV3
 ```
 
 Check:
@@ -111,9 +111,9 @@ everdev n l
 Network       Endpoints              Giver
 ------------  ---------------------  ------------------------------------------------------------------
 se (Default)  http://localhost       0:ece57bcc6c530283becbbd8a3b24d3c5987cdddc3c8b7b33be6e4a6312490415
-                                       GiverV2 signed by seGiver
+                                       GiverV3 signed by seGiver
 dev           devnet.evercloud.dev   0:93139197f2f58d674bee4ee71a42d8f1e7b6a3c3e041ded7a54d330bcc44f3b3
-                                       GiverV2 signed by devnet_giver_keys
+                                       GiverV3 signed by devnet_giver_keys
 main          mainnet.evercloud.dev
 ```
 
