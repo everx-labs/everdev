@@ -2,15 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.6.0] - 2023-02-10
+## [1.6.0] - 2023-02-13
 
 ### New
 
-- Added new option `--workchain` to specify in which workchain to deploy a contract.
+- Added new option `everdev contract deploy --workchain` to specify in which workchain to deploy a contract.
 
 - `everdev contract decode-tvc` command renamed to `everdev contract decode-stateinit`.
 
-- Add a reference to the CHANGELOG compiler repository to the output of the 
+- Add a reference to stable solc and sold versions to the output of the 
   `everdev sold version` and `everdev sol version` commands.
 
 ### Fixed
