@@ -143,11 +143,17 @@ export class CommandLine {
             }
         }
     }
-
     async parse(programArgs: string[]) {
         for (let i = 0; i < programArgs.length; i++) {
             let arg = programArgs[i]
-            if (arg.startsWith("-") && !this.pending) {
+            if (
+                arg.startsWith("-") &&
+                !this.pending &&
+                // exclude positional parameters - addressess in negative workchains.
+                // Don't require 64 digits after ':', thus repeating parser behavior
+                // for addresses in positive working chains
+                /^-[0-9a-f]+:/.test(arg) === false
+            ) {
                 await this.parseOptionName(arg)
             } else {
                 arg = arg.trim()
