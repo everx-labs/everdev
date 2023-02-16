@@ -1,29 +1,20 @@
 {
-  "ABI version": 2,
-  "version": "2.2",
-  "header": [
-    "pubkey",
-    "time",
-    "expire"
-  ],
-  "functions": [
-    {
-      "name": "sendGrams",
-      "inputs": [
+    "ABI version": 1,
+    "functions": [
         {
-          "name": "dest",
-          "type": "address"
+            "name": "constructor",
+            "inputs": [],
+            "outputs": []
         },
         {
-          "name": "amount",
-          "type": "uint64"
+            "name": "sendGrams",
+            "inputs": [
+                { "name": "dest", "type": "address" },
+                { "name": "amount", "type": "uint64" }
+            ],
+            "outputs": []
         }
-      ],
-      "outputs": [
-      ]
-    }
-  ],
-  "data": [],
-  "events": [],
-  "fields": []
+    ],
+    "events": [],
+    "data": []
 }

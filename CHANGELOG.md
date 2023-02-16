@@ -24,6 +24,8 @@ All notable changes to this project will be documented in this file.
 
 - The "constructor" function excluded from the list of callable functions
 
+- Incorrect `GiverV1.abi.json` file has been replaced with the correct one.
+
 ## [1.5.1] - 2022-12-23
 
 ### New
