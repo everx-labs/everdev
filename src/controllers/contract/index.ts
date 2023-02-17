@@ -145,11 +145,26 @@ const preventUiOpt: CommandArg = {
     defaultValue: "false",
 }
 
+const workchainOpt: CommandArg = {
+    name: "workchain",
+    alias: "w",
+    title: "Workchain. Default is 0",
+    type: "string",
+    defaultValue: "0",
+}
+
 export const contractInfoCommand: Command = {
     name: "info",
     alias: "i",
     title: "Prints contract summary",
-    args: [infoFileArg, networkOpt, signerOpt, dataOpt, addressOpt],
+    args: [
+        infoFileArg,
+        networkOpt,
+        workchainOpt,
+        signerOpt,
+        dataOpt,
+        addressOpt,
+    ],
     async run(
         terminal: Terminal,
         args: {
@@ -158,6 +173,7 @@ export const contractInfoCommand: Command = {
             signer: string
             data: string
             address: string
+            workchain: string
         },
     ) {
         if (args.file === "" && args.address === "") {
@@ -204,6 +220,7 @@ export const contractDeployCommand: Command = {
     args: [
         abiFileArg,
         networkOpt,
+        workchainOpt,
         signerOpt,
         functionArg,
         inputOpt,
@@ -222,6 +239,7 @@ export const contractDeployCommand: Command = {
             data: string
             value: string
             preventUi: boolean
+            workchain: string
         },
     ) {
         let account = await getAccount(terminal, args)
@@ -336,7 +354,15 @@ export const contractTopUpCommand: Command = {
     name: "topup",
     alias: "t",
     title: "Top up account from giver",
-    args: [infoFileArg, addressOpt, networkOpt, signerOpt, dataOpt, valueOpt],
+    args: [
+        infoFileArg,
+        addressOpt,
+        networkOpt,
+        workchainOpt,
+        signerOpt,
+        dataOpt,
+        valueOpt,
+    ],
     async run(
         terminal: Terminal,
         args: {
@@ -346,6 +372,7 @@ export const contractTopUpCommand: Command = {
             signer: string
             data: string
             value: string
+            workchain: string
         },
     ) {
         if (args.file === "" && args.address === "") {
@@ -394,6 +421,7 @@ export const contractRunCommand: Command = {
     args: [
         abiFileArg,
         networkOpt,
+        workchainOpt,
         signerOpt,
         runSignerOpt,
         dataOpt,
@@ -414,6 +442,7 @@ export const contractRunCommand: Command = {
             function: string
             input: string
             preventUi: boolean
+            workchain: string
         },
     ) {
         const account = await getAccount(terminal, args)
@@ -446,6 +475,7 @@ export const contractRunLocalCommand: Command = {
     args: [
         abiFileArg,
         networkOpt,
+        workchainOpt,
         signerOpt,
         runSignerOpt,
         dataOpt,
@@ -466,6 +496,7 @@ export const contractRunLocalCommand: Command = {
             function: string
             input: string
             preventUi: boolean
+            workchain: string
         },
     ) {
         const account = await getAccount(terminal, args)
@@ -501,6 +532,7 @@ export const contractRunExecutorCommand: Command = {
     args: [
         abiFileArg,
         networkOpt,
+        workchainOpt,
         signerOpt,
         runSignerOpt,
         dataOpt,
@@ -521,6 +553,7 @@ export const contractRunExecutorCommand: Command = {
             function: string
             input: string
             preventUi: boolean
+            workchain: string
         },
     ) {
         const account = await getAccount(terminal, args)
@@ -543,7 +576,7 @@ export const contractDecodeAccountDataCommand: Command = {
     name: "decode-data",
     alias: "dd",
     title: "Decode data from a contract deployed on the network",
-    args: [abiFileArg, networkOpt, addressOpt],
+    args: [abiFileArg, networkOpt, workchainOpt, addressOpt],
     async run(
         terminal: Terminal,
         args: {
@@ -552,6 +585,7 @@ export const contractDecodeAccountDataCommand: Command = {
             signer: string
             data: string
             address: string
+            workchain: string
         },
     ) {
         if (args.file === "" && args.address === "") {
@@ -580,8 +614,8 @@ export const contractDecodeAccountDataCommand: Command = {
     },
 }
 
-export const contractDecodeTvcCommand: Command = {
-    name: "decode-tvc",
+export const contractDecodeStateinitCommand: Command = {
+    name: "decode-stateinit",
     alias: "dt",
     title: "Decode tvc into code, data, libraries and special options",
     args: [tvcFileArg],
@@ -620,7 +654,7 @@ export const Contract: ToolController = {
     commands: [
         contractInfoCommand,
         contractDecodeAccountDataCommand,
-        contractDecodeTvcCommand,
+        contractDecodeStateinitCommand,
         contractTopUpCommand,
         contractDeployCommand,
         contractRunCommand,

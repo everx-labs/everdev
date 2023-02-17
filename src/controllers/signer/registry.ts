@@ -8,6 +8,7 @@ import {
     signerKeys,
     signerNone,
     TonClient,
+    MnemonicDictionary,
 } from "@eversdk/core"
 import { NetworkRegistry } from "../network/registry"
 import {
@@ -32,18 +33,6 @@ export const SE_DEFAULT_GIVER_SIGNER: SignerRegistryItem = {
         public: "2ada2e65ab8eeab09490e3521415f45b6e42df9c760a639bcf53957550b25a16",
         secret: "172af540e43a524763dd53b26a066d472a97c4de37d5498170564510608250c3",
     },
-}
-
-export enum MnemonicDictionary {
-    ton = 0,
-    english = 1,
-    chineseSimplified = 2,
-    chineseTraditional = 3,
-    french = 4,
-    italian = 5,
-    japanese = 6,
-    korean = 7,
-    spanish = 8,
 }
 
 export type SignerRegistryItem = {

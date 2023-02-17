@@ -117,6 +117,8 @@ const KnownContractsByCodeHash: { [codeHash: string]: KnownContract } = {
         KnownContracts.GiverV2,
     ccbfc821853aa641af3813ebd477e26818b51e4ca23e5f6d34509215aa7123d9:
         KnownContracts.GiverV2,
+    "5534bff04d2d0a14bb2257ec23027947c722159486ceff9e408d6a4d796a0989":
+        KnownContracts.GiverV3,
     e2b60b6b602c10ced7ea8ede4bdf96342c97570a3798066f3fb50a4b2b27a208:
         KnownContracts.SetcodeMultisigWallet,
     "207dc560c5956de1a2c1479356f8f3ee70a59767db2bf4788b1d61ad42cdad82":
