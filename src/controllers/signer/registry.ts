@@ -72,6 +72,10 @@ export class SignerRegistry {
         }
         if (!this.items.find(x => x.name === SE_DEFAULT_GIVER_SIGNER.name)) {
             this.items.push(SE_DEFAULT_GIVER_SIGNER)
+            // If GiverSE is only giver, set it default
+            if (this.items.length == 1) {
+                this.default = SE_DEFAULT_GIVER_SIGNER.name
+            }
         }
     }
 

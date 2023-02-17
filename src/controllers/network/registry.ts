@@ -126,7 +126,7 @@ export class NetworkRegistry {
                     endpoints: ["mainnet.evercloud.dev"],
                 },
             ]
-            this.default = "dev"
+            this.default = "se"
         }
     }
 

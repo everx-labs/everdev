@@ -19,6 +19,8 @@ All notable changes to this project will be documented in this file.
 - Error: `unrecognized option '-i` which occurred when using a solidity compiler version below 0.57.0
 - The "constructor" function excluded from the list of callable functions
 - Incorrect `GiverV1.abi.json` file has been replaced with the correct one.
+- Set the `se` network as the default network if there is no default network.
+- Set the `seGiver` giver as the default signer if there is no default signer.
 
 ## [1.5.1] - 2022-12-23
 
