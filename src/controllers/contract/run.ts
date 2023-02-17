@@ -18,7 +18,9 @@ export async function resolveFunction(
     functionName: string,
     preventUi: boolean,
 ): Promise<AbiFunction> {
-    const functions = account.contract.abi.functions ?? []
+    const functions = (account.contract.abi.functions ?? []).filter(
+        fn => fn.name !== "constructor",
+    )
     functionName = functionName.trim()
     while (functionName === "" && !preventUi) {
         terminal.log("\nAvailable functions:\n")

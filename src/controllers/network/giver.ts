@@ -32,7 +32,6 @@ async function giverV1Send(
     await giver.run("sendGrams", {
         dest: address,
         amount: value,
-        bounce: false,
     })
 }
 

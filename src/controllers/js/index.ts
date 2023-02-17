@@ -9,7 +9,7 @@ import { jsWrapCommand } from "./wrap"
 export const jsCreateCommand: Command = {
     name: "create",
     alias: "c",
-    title: "Create FreeTON JS App",
+    title: "Create Everscale JS App",
     args: [
         {
             isArg: true,
@@ -36,7 +36,7 @@ export const jsCreateCommand: Command = {
 
 export const jsDemoCommand: Command = {
     name: "demo",
-    title: "Download FreeTON Demo",
+    title: "Download Everscale Demo",
     args: [
         {
             isArg: true,

@@ -1,3 +1,4 @@
+import chalk from "chalk"
 import { Command, Component, Terminal, ToolController } from "../../core"
 import { components } from "./components"
 
@@ -6,6 +7,12 @@ export const soldVersionCommand: Command = {
     title: "Show Sold Version",
     async run(terminal: Terminal): Promise<void> {
         terminal.log(await Component.getInfoAll(components))
+        terminal.log(
+            chalk.yellow(
+                "\nYou can find the list of stable sold versions in Solidity Compiler changelog:" +
+                    "\nhttps://github.com/tonlabs/TON-Solidity-Compiler/blob/master/Changelog_TON.md",
+            ),
+        )
     },
 }
 

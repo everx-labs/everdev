@@ -87,7 +87,7 @@ $ everdev s l
 
 Signer                Public Key                                                        Used
 --------------------  ----------------------------------------------------------------  ---------------------------
-giver_keys            2ada2e65ab8eeab09490e3521415f45b6e42df9c760a639bcf53957550b25a16  se network giver signer
+seGiver               2ada2e65ab8eeab09490e3521415f45b6e42df9c760a639bcf53957550b25a16  se network giver signer   EverNode SE Default Giver Keys
 owner_keys (Default)  3826202b129ea8c041b8d49a655512648fc94377d1958a7a4fc9f4b3051ecf7b
 ```
 
