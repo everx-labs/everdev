@@ -8,6 +8,8 @@ Everdev is a Node.js package with CLI interface that allows to set up developer 
 
 
 
+<figure><img src="docs/.gitbook/assets/vf-dev-program.png" alt=""><figcaption></figcaption></figure>
+
 [NPM package](https://www.npmjs.com/package/everdev)
 
 ### Use-cases
@@ -19,43 +21,42 @@ Everdev is a Node.js package with CLI interface that allows to set up developer 
 
 ## Content table
 
-- [EverDev](#everdev)
-  - [Quick Start](#quick-start)
-    - [Use-cases](#use-cases)
-  - [Content table](#content-table)
-  - [Installation](#installation)
-    - [Prerequisites](#prerequisites)
-    - [Using NPM](#using-npm)
-    - [Using pre-compiled binaries](#using-pre-compiled-binaries)
-    - [Using docker](#using-docker)
-    - [Update](#update)
-  - [Command Line Interface](#command-line-interface)
-    - [General command syntax](#general-command-syntax)
-    - [Solidity Compiler](#solidity-compiler)
-    - [Solidity Compiler Driver](#solidity-compiler-driver)
-    - [C/C++ Compiler](#cc-compiler)
-    - [Network Tool](#network-tool)
-    - [Signer Tool](#signer-tool)
-    - [Contract Management Tool](#contract-management-tool)
-    - [Evernode Simple Emulator (local blockchain)](#evernode-simple-emulator-local-blockchain)
-    - [Debot Browser](#debot-browser)
-    - [TestSuite4](#testsuite4)
-    - [tonos-cli](#tonos-cli)
-  - [Cookbook](#cookbook)
-    - [Quick Start](#quick-start-1)
-    - [Work with contracts](#work-with-contracts)
-    - [Work with DevNet](#work-with-devnet)
-    - [Create controller](#create-controller)
-    - [View controller info](#view-controller-info)
-  - [Troubleshooting](#troubleshooting)
-  - [EverDev Extensibility](#everdev-extensibility)
+* [EverDev](./#everdev)
+  * [Quick Start](./#quick-start)
+    * [Use-cases](./#use-cases)
+  * [Content table](./#content-table)
+  * [Installation](./#installation)
+    * [Prerequisites](./#prerequisites)
+    * [Using NPM](./#using-npm)
+    * [Using pre-compiled binaries](./#using-pre-compiled-binaries)
+    * [Using docker](./#using-docker)
+    * [Update](./#update)
+  * [Command Line Interface](./#command-line-interface)
+    * [General command syntax](./#general-command-syntax)
+    * [Solidity Compiler](./#solidity-compiler)
+    * [Solidity Compiler Driver](./#solidity-compiler-driver)
+    * [C/C++ Compiler](./#cc-compiler)
+    * [Network Tool](./#network-tool)
+    * [Signer Tool](./#signer-tool)
+    * [Contract Management Tool](./#contract-management-tool)
+    * [Evernode Simple Emulator (local blockchain)](./#evernode-simple-emulator-local-blockchain)
+    * [Debot Browser](./#debot-browser)
+    * [TestSuite4](./#testsuite4)
+    * [tonos-cli](./#tonos-cli)
+  * [Cookbook](./#cookbook)
+    * [Quick Start](./#quick-start-1)
+    * [Work with contracts](./#work-with-contracts)
+    * [Work with DevNet](./#work-with-devnet)
+    * [Create controller](./#create-controller)
+    * [View controller info](./#view-controller-info)
+  * [Troubleshooting](./#troubleshooting)
+  * [EverDev Extensibility](./#everdev-extensibility)
 
 ## Installation
 
 ### Prerequisites
 
-* [`Node.js`](https://nodejs.org) >= 14.x installed. Required only if you are installing Everdev from NPM.
-   We recommend using [Node version manager](https://github.com/nvm-sh/nvm#install--update-script) to install nodejs and NPM.
+* [`Node.js`](https://nodejs.org) >= 14.x installed. Required only if you are installing Everdev from NPM. We recommend using [Node version manager](https://github.com/nvm-sh/nvm#install--update-script) to install nodejs and NPM.
 * (optional) [`Docker`](https://www.docker.com) >= 19.x installed
 * Solidity compiler requires VC++ Runtime on Windows. You can install it from [the latest supported Visual C++ downloads](https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0).
 
@@ -106,6 +107,7 @@ _After trying to run `everdev` on macos you can see the error: "everdev" cannot 
 ### Using docker
 
 Select a base image that provides GLIBC ver. 2.29 or higher if you want to use the Evedev Solidity compiler like ubuntu:20.04:
+
 ```
 docker run -it --rm ubuntu:20.04
 # apt update &&  apt upgrade -y && apt install -y curl
@@ -173,9 +175,7 @@ Controller for [TestSuite4](https://github.com/tonlabs/TestSuite4) testing frame
 
 Controller for [tonos-cli](https://github.com/tonlabs/tonos-cli) tool management.
 
-
-
-EverDev can be extended with other tools following the [instructions of integration](#everdev-extensibility).
+EverDev can be extended with other tools following the [instructions of integration](./#everdev-extensibility).
 
 ## Cookbook
 
