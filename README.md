@@ -1,4 +1,4 @@
-# Everdev
+# EverDev
 
 Everdev is a Node.js package with CLI interface that allows to set up developer environment and develop on TVM compatible blockchains (Everscale, Venom, TON, Gosh, etc).
 
@@ -6,9 +6,15 @@ Everdev is a Node.js package with CLI interface that allows to set up developer 
 
 **Get quick help in our telegram channel:** [![Channel on Telegram](https://img.shields.io/badge/chat-on%20telegram-9cf.svg)](https://t.me/ever\_sdk)
 
+<div>
 
+<figure><img src="docs/.gitbook/assets/Everscale Logo.png" alt=""><figcaption></figcaption></figure>
+
+ 
 
 <figure><img src="docs/.gitbook/assets/vf-dev-program.png" alt=""><figcaption></figcaption></figure>
+
+</div>
 
 [NPM package](https://www.npmjs.com/package/everdev)
 
