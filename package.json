@@ -1,6 +1,6 @@
 {
     "name": "everdev",
-    "version": "1.6.0",
+    "version": "1.6.1",
     "description": "Everscale Dev Environment",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
