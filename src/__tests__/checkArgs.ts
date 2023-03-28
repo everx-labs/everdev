@@ -2,7 +2,7 @@ import fs from "fs"
 import path from "path"
 
 import { doneTests, initTests, deleteFolderRecursive } from "./init"
-import { StringTerminal, runCommand } from ".."
+import { StringTerminal, consoleTerminal, runCommand } from ".."
 
 const outPath = path.resolve(__dirname, "..", "..", `${Date.now()}-tmp`)
 
@@ -12,6 +12,8 @@ beforeEach(() => deleteFolderRecursive(outPath))
 afterEach(() => deleteFolderRecursive(outPath))
 
 test("Should create HelloWallet.tvc in user defined output directory", async () => {
+    await runCommand(consoleTerminal, "sol update", {})
+
     const solPath = path.resolve(
         __dirname,
         "..",

@@ -1,12 +1,13 @@
 import path from "path"
 
 import { doneTests, initTests, deleteFiles } from "./init"
-import { StringTerminal, runCommand } from ".."
+import { consoleTerminal, StringTerminal, runCommand } from ".."
 
 beforeAll(initTests)
 afterAll(doneTests)
 
 test("Shoud create HelloWallet.abi.json file", async () => {
+    await runCommand(consoleTerminal, "sol update", {})
     const solPath = path.resolve(
         __dirname,
         "..",
