@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.1] - 2023-03-28
+
+### New
+
+- Added new option `--base-path <path>` for `solidity compile` command (required solc 0.67.0 or later).
+ 
+ Use the given path as the root of the source tree instead of the root of the filesystem.
+
+### Updated
+
+- As of solc 0.67.0, the use of the "now" keyword is deprecated. The "block.timestamp" keyword should be used instead.
+- The `contracts/HelloWallet.sol` contract has been updated to require solc 0.67.0 or later to compile.
+- The sample contract created with `everdev sol create` now requires solc 0.67.0 or later to compile.
+
 ## [1.6.0] - 2023-02-13
 
 ### New

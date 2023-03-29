@@ -109,10 +109,17 @@ export const solidityCompileCommand: Command = {
             defaultValue: "",
         },
         {
+            name: "base-path",
+            alias: "b",
+            type: "folder",
+            title: "Set the given path as the root of the source tree (required solc 0.67.0 or later)",
+            defaultValue: ".",
+        },
+        {
             name: "include-path",
             alias: "i",
             type: "folder",
-            title: "Additional path(s) for inputs (required solc 0.57.0 or higher), node_modules is default",
+            title: "Additional path(s) for inputs (required solc 0.57.0 or later), node_modules is default",
             defaultValue: "node_modules",
         },
     ],
@@ -121,6 +128,7 @@ export const solidityCompileCommand: Command = {
         args: {
             file: string
             outputDir: string
+            basePath: string
             includePath: string
             code: boolean
         },
@@ -129,6 +137,7 @@ export const solidityCompileCommand: Command = {
         for (const file of args.file.split(" ")) {
             const { fileDir, fileName } = resolveSoliditySource(file)
             const outputDir = path.resolve(args.outputDir ?? ".")
+            const basePath = path.resolve(args.basePath ?? ".")
             const includePath = args.includePath
                 ? args.includePath
                       .split(",")
@@ -176,9 +185,11 @@ export const solidityCompileCommand: Command = {
                 await components.compiler.silentRun(terminal, fileDir, [
                     "-o",
                     outputDir,
+                    ...(await addBasePathOption(basePath)),
                     ...(await addIncludePathOption(includePath)),
                     fileName,
                 ])
+
                 linkerOut = await components.linker.silentRun(
                     terminal,
                     fileDir,
@@ -236,10 +247,17 @@ export const solidityAstCommand: Command = {
             defaultValue: "",
         },
         {
+            name: "base-path",
+            alias: "b",
+            type: "folder",
+            title: "Set the given path as the root of the source tree (required solc 0.67.0 or later)",
+            defaultValue: ".",
+        },
+        {
             name: "include-path",
             alias: "i",
             type: "folder",
-            title: "Additional path(s) for inputs (required solc 0.57.0 or higher), node_modules is default",
+            title: "Additional path(s) for inputs (required solc 0.57.0 or later), node_modules is default",
             defaultValue: "node_modules",
         },
     ],
@@ -248,6 +266,7 @@ export const solidityAstCommand: Command = {
         args: {
             file: string
             format: string
+            basePath: string
             includePath: string
             outputDir?: string
         },
@@ -260,6 +279,7 @@ export const solidityAstCommand: Command = {
             await Component.ensureInstalledAll(terminal, components)
             const { fileDir, fileName } = resolveSoliditySource(file)
             args.outputDir = path.resolve(args.outputDir ?? ".")
+            const basePath = path.resolve(args.basePath ?? ".")
             const includePath = args.includePath
                 ? args.includePath
                       .split(",")
@@ -272,6 +292,7 @@ export const solidityAstCommand: Command = {
                 `--ast-${args.format}`,
                 "--output-dir",
                 args.outputDir,
+                ...(await addBasePathOption(basePath)),
                 ...(await addIncludePathOption(includePath)),
                 fileName,
             ])
@@ -362,5 +383,10 @@ export const Solidity: ToolController = {
 async function addIncludePathOption(paths: string[]) {
     return (await components.compiler.getCurrentVersion()) >= "0.57.0"
         ? ["--include-path", ...paths]
+        : []
+}
+async function addBasePathOption(path: string) {
+    return (await components.compiler.getCurrentVersion()) >= "0.67.0"
+        ? ["--base-path", path]
         : []
 }

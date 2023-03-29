@@ -28,7 +28,17 @@ test("AST of all source files in a JSON", async () => {
         "contracts",
         "HelloWallet.sol",
     )
-    const astPath = path.resolve(__dirname, "..", "..", "HelloWallet.ast.json")
+    const astPath = path.resolve(
+        __dirname,
+        "..",
+        "..",
+        "HelloWallet.sol_json.ast",
+    )
+    // Remove output file if exists
+    try {
+        fs.unlinkSync(astPath)
+    } catch (_) {}
+
     await runCommand(terminal, "sol ast --format json", {
         file: solPath,
     })
