@@ -16,6 +16,10 @@ All notable changes to this project will be documented in this file.
 - The `contracts/HelloWallet.sol` contract has been updated to require solc 0.67.0 or later to compile.
 - The sample contract created with `everdev sol create` now requires solc 0.67.0 or later to compile.
 
+### Fixed
+
+- The `sold install` command did not list the installed version in the registry.
+
 ## [1.6.0] - 2023-02-13
 
 ### New

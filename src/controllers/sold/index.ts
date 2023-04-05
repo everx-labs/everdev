@@ -39,6 +39,11 @@ export const soldInstallCommand: Command = {
     args: [],
     async run(terminal: Terminal) {
         await Component.ensureInstalledAll(terminal, components)
+        terminal.log(
+            chalk.yellow(
+                "Do not forget to add `$HOME/.everdev/sold` to your PATH environment variable",
+            ),
+        )
     },
 }
 
