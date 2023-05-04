@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### New
 
-- Added new type of giver - SetcodeMultisigWalletV2
+- Added new type of giver - MsigV2
  
 ## [1.6.1] - 2023-03-28
 
