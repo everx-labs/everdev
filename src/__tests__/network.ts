@@ -49,12 +49,10 @@ test("Add network giver by type", async () => {
     )
     await runCommand(consoleTerminal, "network giver", {
         name: "se",
-        type: "SetcodeMultisigWalletV2",
+        type: "MsigV2",
         signer: "alice",
     })
-    expect(new NetworkRegistry().get("se").giver?.name).toEqual(
-        "SetcodeMultisigWalletV2",
-    )
+    expect(new NetworkRegistry().get("se").giver?.name).toEqual("MsigV2")
 })
 
 test("Add network giver error", async () => {
