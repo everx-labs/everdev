@@ -33,7 +33,7 @@ Additionally, make sure [permissions are alright](https://docs.npmjs.com/resolvi
 1. Run \Users\UserName\everdev\solidity\solc.exe and review error messages.
 2. Update Visual Studio components and make sure [vc\_redist is installed](https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0).
 
-## TON OS SE: Couldn’t connect to Docker daemon
+## Evernode SE: Couldn’t connect to Docker daemon
 
 This error occurs in two cases. Either the docker daemon isn't running, or current user doesn't have rights to access docker.
 
@@ -45,8 +45,16 @@ sudo usermod -a -G docker $USER
 
 Make sure to restart the system or log out and back in, for the new group settings to take effect.
 
+## Evernode SE Error: connect ENOENT /var/run/docker.sock
+
+Getting this error means docker service is not running or missing due to incorrect Docker installation, partiularly in the case of Docker Desktop. Try reinstalling Docker and making sure the [daemon](https://docs.docker.com/config/daemon/start/) is running.
+
+## Evernode SE: Ever.live at localhost isn't available
+
+If you use certain adblockers, after you have started Evernode SE the Ever Live explorer at [http://127.0.0.1/landing](http://127.0.0.1/landing) might fail to load (you get a rotating icon and various warnings and errors in the console).
+
 ## After everdev is installed on Ubuntu WSL on Windows 10 old version is there
 
 This issue can occur if npm was installed without correct permissions for Linux/Ubuntu. Refer to [this article](https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally) for ways to resolve it.
 
-After it is done, reload terminal and install everdev via \`npm i everdev -g' again.
+After it is done, reload terminal and install everdev via `npm i everdev -g` again.

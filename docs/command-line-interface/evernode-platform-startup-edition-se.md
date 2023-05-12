@@ -70,3 +70,7 @@ Instance  State    Version  GraphQL Port  ArangoDB Port  Docker Container       
 --------  -------  -------  ------------  -------------  --------------------------  --------------------------
 default   running  0.24.12  2020                         tonlabs-tonos-se-ekaterina  tonlabs/local-node:0.24.12
 ```
+
+## Troubleshooting
+
+View solutions to some frequently encountered problems with Evernode SE [here](../troubleshooting.md).

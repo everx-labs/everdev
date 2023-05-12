@@ -2,13 +2,14 @@
 
 ## Guide overview
 
-This guide will help you get started with such essensial Everscale tools as:
+This guide will help you get started with such essential Everscale tools as:
 
 * [Everdev CLI](https://github.com/tonlabs/everdev)
 * [Solidity Compiler](https://github.com/tonlabs/TON-Solidity-Compiler)
 * [Local Blockchain](https://github.com/tonlabs/evernode-se)
 * [Everscale Blockchain Explorer](https://ever.live)
-* [GraphQL API](https://docs.everos.dev/ever-sdk/reference/ever-os-api)
+* [GraphQL API](https://docs.evercloud.dev/reference/graphql-api)
+* [Evercloud dashboard](https://dashboard.evercloud.dev)
 
 You will learn how to:
 
@@ -19,6 +20,9 @@ You will learn how to:
 * Run a getter-function
 * Make a transfer
 * Explore contract data in Explorer and GraphQL playground
+* Switch to the developer network
+* Configure Evercloud access
+* Configure devnet giver
 
 ## Table of Contents
 
@@ -39,44 +43,68 @@ You will learn how to:
     * [Run on-chain](quick-start.md#run-on-chain)
     * [Run a getter function](quick-start.md#run-a-getter-function)
     * [Transfer some tokens](quick-start.md#transfer-some-tokens)
+    * [Switch to Development Network](quick-start.md#switch-to-development-network)
+    * [Set a giver contract on your network](quick-start.md#set-a-giver-contract-on-your-network)
   * [What's next?](quick-start.md#whats-next)
 
 ### Install everdev - single interface to access all the developer tools
 
-`$ npm install -g everdev`
+```bash
+$ npm install -g everdev
+```
 
 If you experience any problems with installation, check out our [troubleshooting section](../troubleshooting.md).
 
 ### Create helloWorld contract
 
-`$ everdev sol create helloWorld`
+```bash
+$ everdev sol create helloWorld
+```
 
 ### Compile it
 
-`$ everdev sol compile helloWorld.sol`
+Using Solidity compiler:
+
+```bash
+$ everdev sol compile helloWorld.sol
+```
+
+You can also use the [Solidity compiler driver](../command-line-interface/solidity-compiler-driver.md):
+
+```bash
+$ everdev sold install
+$ export PATH="/home/<username>/.everdev/sold:$PATH"
+$ sold helloWorld.sol
+```
 
 ### Run Local Blockchain
 
-**Attention** Docker should be running.
+**Attention:** Docker should be running.
 
-`$ everdev se start`
+```bash
+$ everdev se start
+```
 
 ### Configure default network
 
 Set Local Blockchain [SE (Simple Emulator)](https://github.com/tonlabs/evernode-se) as the default network:
 
-`$ everdev network default se`
+```bash
+$ everdev network default se
+```
 
 ### Configure Giver wallet that will sponsor deploy operation
 
-Here we use address and private key of [SE High Load Giver](https://github.com/tonlabs/evernode-se/tree/master/contracts/giver\_v2).
+Here we use address and private key of [SE High Load Giver](https://github.com/tonlabs/evernode-se/tree/master/contracts/giver\_v3).&#x20;
 
-**Attention! This giver is available only in SE. If you work in DevNet or MainNet, you need to deploy your own giver.** [**Check how to do it in this guide**](work-with-devnet.md)**.**
+Note: it may be already configured if you make a clean install of the latest Everdev. Then you can skip this step. If you are updating from some old version, it is necessary.
 
 ```
-$ everdev signer add giver_keys 172af540e43a524763dd53b26a066d472a97c4de37d5498170564510608250c3
-$ everdev network giver se 0:b5e9240fc2d2f1ff8cbb1d1dee7fb7cae155e5f6320e585fcc685698994a19a5 --signer giver_keys
+$ everdev signer add seGiver 172af540e43a524763dd53b26a066d472a97c4de37d5498170564510608250c3
+$ everdev network giver se 0:ece57bcc6c530283becbbd8a3b24d3c5987cdddc3c8b7b33be6e4a6312490415 --signer seGiver
 ```
+
+**Attention! This giver is available only in SE. If you work in mainnet or devnet, you need to deploy your own giver - more details below.**
 
 ### Generate the keys for contract ownership
 
@@ -93,7 +121,7 @@ owner_keys (Default)  3826202b129ea8c041b8d49a655512648fc94377d1958a7a4fc9f4b305
 
 \*Note that there are shortcuts for all the commands: s l = signer list :)
 
-\*\*Don't forget to make the owner key default otherwize giver keys will be used as default.
+\*\*Don't forget to make the owner key default otherwise giver keys will be used as default.
 
 ### Calculate the contract address
 
@@ -188,19 +216,19 @@ $ everdev c run helloWorld
 Configuration
 
   Network: se (http://localhost)
-  Signer:  owner_key (public 3826202b129ea8c041b8d49a655512648fc94377d1958a7a4fc9f4b3051ecf7b)
+  Signer:  owner_keys (public 83cb989d99bce34dd7c04dd05a8a155f2a268d241ef8ec41c4c431cce0827f2d)
 
-Address:   0:e74c4258496e79e62e014ca96911acbf5cb0e286fd55dd6f4e3da54e4197ddf5 (calculated from TVC and signer public)
+Address:   0:25d101f07d7ef18260619c5d1cf2bc46173cb70c86129d6eed9ec46ed777e966 (calculated from TVC and signer public)
 
 Available functions:
 
-  1) constructor
-  2) renderHelloWorld
-  3) touch
-  4) sendValue
-  5) timestamp
+  1) renderHelloWorld
+  2) touch
+  3) sendValue
+  4) timestamp
 
   Select function (number): 
+
 ```
 
 Let's enter 3. You will see the transaction ID of the operation.
@@ -267,16 +295,73 @@ Execution has finished with result: {
 
 **Attention!**
 
-* Contracts take value in nanotokens, so in this step we transfered 1 token.
+* Contracts take value in nanotokens, so in this step we transferred 1 token.
 * Bounce = true means that if the recipient does not exist, money will be returned back. **If you plan to transfer money for deploy, specify Bounce = false!**
 
 Again, now you can find this transaction in Explorer or GraphQL API.
 
+### Switch to Development Network
+
+The Development Network, aka devnet is the Everscale test network with free test tokens that has an identical configuration to mainnet. You can test your contracts in a live environment on it.
+
+To access devnet, you need to create an account and a project on [https://dashboard.evercloud.dev/](https://dashboard.evercloud.dev/). Follow [this guide](https://docs.evercloud.dev/products/evercloud/get-started) to do it.
+
+You will get your personal project ID, optional secret key and an endpoint of the following format:\
+[https://devnet.evercloud.dev/\<projectID>/graphql](https://devnet.evercloud.dev/%3CprojectID%3E/graphql)
+
+To set devnet up as the default network in everdev, do the following:
+
+```
+everdev network default dev
+```
+
+Go to your Evercloud [dashboard](https://dashboard.evercloud.dev/), find your "Project Id" and "Secret" (optional) on the "Security" tab, and pass them as parameters:
+
+```sh
+everdev network credentials network_name --project <Project Id> --access-key <Secret>
+```
+
+Example:
+
+```
+everdev network credentials dev --project 01234567890123456789012345678901 --access-key 98765432109876543210987654321098
+```
+
+### Set a giver contract on your network
+
+While working with SE network, you already have a preset giver. In Devnet you need to configure your own.
+
+This contract can be some multisig wallet, for example your [Surf](https://ever.surf/) account (don't forget to [switch it to devnet too](https://help.ever.surf/en/support/solutions/articles/77000397828-how-to-select-surf-test-network-)!).
+
+To get test tokens to your future giver, go to your Evercloud [dashboard](https://dashboard.evercloud.dev/), open the **Endpoints** tab of your project, and click the faucet button next to **Development Network**. Specify the address and you will get some free test tokens.
+
+To set the giver up in everdev, first get your giver keys ready. In Surf it is your [seed phrase](https://help.ever.surf/en/support/solutions/articles/77000236693-how-to-get-your-seed-phrase-in-surf-).
+
+Save the keys of your giver account into a signer that will be used to sign giver transactions:
+
+```sh
+everdev signer add giver_sign signer_secret_key_or_seed_phrase_in_quotes
+```
+
+Then add the giver address specifying the signer to be used with it.
+
+```sh
+everdev network giver dev giver_address --signer giver_sign --type giver_type
+```
+
+Where
+
+`giver_type` is the type of the giver contract you selected (GiverV1 | GiverV2 | GiverV3 | SafeMultisigWallet | SetcodeMultisigWallet) - for Surf use `SetcodeMultisigWallet`.
+
+
+
+**Now you can do all the steps of this guide on devnet and see your transactions on your GraphQL playground at** [**https://devnet.evercloud.dev/\<projectID>/graphql**](https://devnet.evercloud.dev/%3CprojectID%3E/graphql) **and**  [**ever.live**](https://net.ever.live/landing)**!**
+
 ## What's next?
 
-1. If you want to migrate to Dev Network, read [Working with DevNet guide](work-with-devnet.md).
-2. Also take a look at our [blockchain basics page](https://everos.dev/faq/blockchain-basic) that will help you understand the core concepts of Everscale:)
-3. If you want to integrate your application with Everscale - dive into our [SDK Quick Start](https://docs.everos.dev/ever-sdk/quick\_start)!
-4. If you are an exchange - check out our [exchange guide](https://docs.ton.dev/86757ecb2/p/10aec9-add-ton-crystal-to-your-exchange)!
+1. Also take a look at our [blockchain basics page](https://docs.everscale.network/arch/basics) that will help you understand the core concepts of Everscale:)
+2. If you want to integrate your application with Everscale - dive into our [SDK Quick Start](https://docs.everos.dev/ever-sdk/quick\_start)!
+3. If you want to explore the GraphQL API more, [here is the documentation](https://docs.evercloud.dev/reference/graphql-api)!
+4. If you are an exchange - check out our [exchange guide](https://docs.everos.dev/ever-sdk/add\_to\_exchange)!
 
 We hope this guide was helpful to you! If you have any difficulties/questions/suggestions/etc. please write to out [telegram channel](https://t.me/ever\_sdk).
