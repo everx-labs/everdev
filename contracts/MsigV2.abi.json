@@ -1,0 +1,155 @@
+{
+	"ABI version": 2,
+	"version": "2.3",
+	"header": ["pubkey", "time", "expire"],
+	"functions": [
+		{
+			"name": "constructor",
+			"inputs": [
+				{"name":"owners","type":"uint256[]"},
+				{"name":"reqConfirms","type":"uint8"},
+				{"name":"lifetime","type":"uint32"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "sendTransaction",
+			"inputs": [
+				{"name":"dest","type":"address"},
+				{"name":"value","type":"uint128"},
+				{"name":"bounce","type":"bool"},
+				{"name":"flags","type":"uint8"},
+				{"name":"payload","type":"cell"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "submitTransaction",
+			"inputs": [
+				{"name":"dest","type":"address"},
+				{"name":"value","type":"uint128"},
+				{"name":"bounce","type":"bool"},
+				{"name":"allBalance","type":"bool"},
+				{"name":"payload","type":"cell"},
+				{"name":"stateInit","type":"optional(cell)"}
+			],
+			"outputs": [
+				{"name":"transId","type":"uint64"}
+			]
+		},
+		{
+			"name": "confirmTransaction",
+			"inputs": [
+				{"name":"transactionId","type":"uint64"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "isConfirmed",
+			"inputs": [
+				{"name":"mask","type":"uint32"},
+				{"name":"index","type":"uint8"}
+			],
+			"outputs": [
+				{"name":"confirmed","type":"bool"}
+			]
+		},
+		{
+			"name": "getParameters",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"maxQueuedTransactions","type":"uint8"},
+				{"name":"maxCustodianCount","type":"uint8"},
+				{"name":"expirationTime","type":"uint64"},
+				{"name":"minValue","type":"uint128"},
+				{"name":"requiredTxnConfirms","type":"uint8"},
+				{"name":"requiredUpdConfirms","type":"uint8"}
+			]
+		},
+		{
+			"name": "getTransaction",
+			"inputs": [
+				{"name":"transactionId","type":"uint64"}
+			],
+			"outputs": [
+				{"components":[{"name":"id","type":"uint64"},{"name":"confirmationsMask","type":"uint32"},{"name":"signsRequired","type":"uint8"},{"name":"signsReceived","type":"uint8"},{"name":"creator","type":"uint256"},{"name":"index","type":"uint8"},{"name":"dest","type":"address"},{"name":"value","type":"uint128"},{"name":"sendFlags","type":"uint16"},{"name":"payload","type":"cell"},{"name":"bounce","type":"bool"},{"name":"stateInit","type":"optional(cell)"}],"name":"trans","type":"tuple"}
+			]
+		},
+		{
+			"name": "getTransactions",
+			"inputs": [
+			],
+			"outputs": [
+				{"components":[{"name":"id","type":"uint64"},{"name":"confirmationsMask","type":"uint32"},{"name":"signsRequired","type":"uint8"},{"name":"signsReceived","type":"uint8"},{"name":"creator","type":"uint256"},{"name":"index","type":"uint8"},{"name":"dest","type":"address"},{"name":"value","type":"uint128"},{"name":"sendFlags","type":"uint16"},{"name":"payload","type":"cell"},{"name":"bounce","type":"bool"},{"name":"stateInit","type":"optional(cell)"}],"name":"transactions","type":"tuple[]"}
+			]
+		},
+		{
+			"name": "getCustodians",
+			"inputs": [
+			],
+			"outputs": [
+				{"components":[{"name":"index","type":"uint8"},{"name":"pubkey","type":"uint256"}],"name":"custodians","type":"tuple[]"}
+			]
+		},
+		{
+			"name": "submitUpdate",
+			"inputs": [
+				{"name":"codeHash","type":"optional(uint256)"},
+				{"name":"owners","type":"optional(uint256[])"},
+				{"name":"reqConfirms","type":"optional(uint8)"},
+				{"name":"lifetime","type":"optional(uint32)"}
+			],
+			"outputs": [
+				{"name":"updateId","type":"uint64"}
+			]
+		},
+		{
+			"name": "confirmUpdate",
+			"inputs": [
+				{"name":"updateId","type":"uint64"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "executeUpdate",
+			"inputs": [
+				{"name":"updateId","type":"uint64"},
+				{"name":"code","type":"optional(cell)"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "getUpdateRequests",
+			"inputs": [
+			],
+			"outputs": [
+				{"components":[{"name":"id","type":"uint64"},{"name":"index","type":"uint8"},{"name":"signs","type":"uint8"},{"name":"confirmationsMask","type":"uint32"},{"name":"creator","type":"uint256"},{"name":"codeHash","type":"optional(uint256)"},{"name":"custodians","type":"optional(uint256[])"},{"name":"reqConfirms","type":"optional(uint8)"},{"name":"lifetime","type":"optional(uint32)"}],"name":"updates","type":"tuple[]"}
+			]
+		}
+	],
+	"data": [
+	],
+	"events": [
+	],
+	"fields": [
+		{"name":"_pubkey","type":"uint256"},
+		{"name":"_timestamp","type":"uint64"},
+		{"name":"_constructorFlag","type":"bool"},
+		{"name":"m_ownerKey","type":"uint256"},
+		{"name":"m_requestsMask","type":"uint256"},
+		{"components":[{"name":"id","type":"uint64"},{"name":"confirmationsMask","type":"uint32"},{"name":"signsRequired","type":"uint8"},{"name":"signsReceived","type":"uint8"},{"name":"creator","type":"uint256"},{"name":"index","type":"uint8"},{"name":"dest","type":"address"},{"name":"value","type":"uint128"},{"name":"sendFlags","type":"uint16"},{"name":"payload","type":"cell"},{"name":"bounce","type":"bool"},{"name":"stateInit","type":"optional(cell)"}],"name":"m_transactions","type":"map(uint64,tuple)"},
+		{"name":"m_custodians","type":"map(uint256,uint8)"},
+		{"name":"m_custodianCount","type":"uint8"},
+		{"components":[{"name":"id","type":"uint64"},{"name":"index","type":"uint8"},{"name":"signs","type":"uint8"},{"name":"confirmationsMask","type":"uint32"},{"name":"creator","type":"uint256"},{"name":"codeHash","type":"optional(uint256)"},{"name":"custodians","type":"optional(uint256[])"},{"name":"reqConfirms","type":"optional(uint8)"},{"name":"lifetime","type":"optional(uint32)"}],"name":"m_updateRequests","type":"map(uint64,tuple)"},
+		{"name":"m_updateRequestsMask","type":"uint32"},
+		{"name":"m_requiredVotes","type":"uint8"},
+		{"name":"m_defaultRequiredConfirmations","type":"uint8"},
+		{"name":"m_lifetime","type":"uint32"}
+	]
+}

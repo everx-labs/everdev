@@ -109,6 +109,8 @@ export class NetworkGiver implements AccountGiver {
             send = giverV2Send
         } else if (contract === KnownContracts.SetcodeMultisigWallet) {
             send = multisigSend
+        } else if (contract === KnownContracts.MsigV2) {
+            send = multisigSend
         } else if (contract === KnownContracts.SafeMultisigWallet) {
             send = multisigSend
         } else {

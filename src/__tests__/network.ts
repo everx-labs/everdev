@@ -47,6 +47,12 @@ test("Add network giver by type", async () => {
     expect(new NetworkRegistry().get("se").giver?.name).toEqual(
         "SafeMultisigWallet",
     )
+    await runCommand(consoleTerminal, "network giver", {
+        name: "se",
+        type: "MsigV2",
+        signer: "alice",
+    })
+    expect(new NetworkRegistry().get("se").giver?.name).toEqual("MsigV2")
 })
 
 test("Add network giver error", async () => {
