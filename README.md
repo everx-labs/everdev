@@ -145,7 +145,7 @@ Some tools (network, signer, contract, js) and commands have short aliases. For 
 
 Controller for [Everscale Solidity compiler](https://github.com/tonlabs/TON-Solidity-Compiler).
 
-### [Solidity Compiler Driver](docs/command-line-interface/sold.md)
+### [Solidity Compiler Driver](docs/command-line-interface/solidity-compiler-driver.md)
 
 Controller for [sold - Everscale Solidity compiler driver](https://github.com/tonlabs/TON-Solidity-Compiler/tree/master/sold)
 
@@ -189,14 +189,6 @@ EverDev can be extended with other tools following the [instructions of integrat
 
 Get started with essential Everscale Development Tools with [Quick Start guide](docs/guides/quick-start.md).
 
-### Work with contracts
-
-Learn how to deploy and call your smart contracts with EverDev: [Work with contracts](docs/guides/work-with-contracts.md).
-
-### Work with DevNet
-
-Read how to deploy and configure your own Giver in DevNet in a separated guide: [Working with DevNet](docs/guides/work-with-devnet.md).
-
 ### Create controller
 
 Find out how to create your own controller for EverDev: [Create controller](docs/guides/creating-controller.md).
@@ -211,7 +203,7 @@ If you encountered any problem try to seek the solution in [Troubleshooting Note
 
 ## EverDev Extensibility
 
-TON Dev Environment is an integration point for development tools related to Everscale Blockchain.
+EverDev Environment is an integration point for development tools related to Everscale Blockchain.
 
 There are two kind of software connected to EverDev:
 

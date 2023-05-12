@@ -7,6 +7,7 @@
 ## Command line interface
 
 * [Solidity](command-line-interface/solidity.md)
+* [Solidity Compiler Driver](command-line-interface/solidity-compiler-driver.md)
 * [C++](command-line-interface/c.md)
 * [Evernode SE](command-line-interface/evernode-platform-startup-edition-se.md)
 * [Network Tool](command-line-interface/network-tool.md)
@@ -19,8 +20,6 @@
 ## Guides
 
 * [Quick Start](guides/quick-start.md)
-* [Work with contracts](guides/work-with-contracts.md)
-* [Work with Devnet](guides/work-with-devnet.md)
 * [Create controller](guides/creating-controller.md)
 * [View controller info](view-controller-info.md)
 
