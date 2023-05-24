@@ -7,7 +7,7 @@ It is a combined binary that includes Solidity compiler, TVM linker and required
 To use Solidity Compiler Driver globally after installation via Everdev, add it to the system environment:
 
 ```shell
-export PATH="/home/<username>/.everdev/sold:$PATH"
+export PATH="$HOME/.everdev/sold:$PATH"
 ```
 
 Then use with the following command:
@@ -49,7 +49,7 @@ Options:
 ```
 
 {% hint style="info" %}
-Note: The current version has some dependency issues on earlier Linux versions. This will be resolved in the following releases.
+**Note**: Version 0.68.0 and earlier versions have some dependency issues on older Linux systems. If you encounter any such issues, update to 0.69.0 or later.
 {% endhint %}
 
 ## Install
@@ -63,7 +63,7 @@ everdev sold install
 To use Solidity Compiler Driver globally after installation via Everdev, add it to the system environment:
 
 ```shell
-export PATH="/home/<username>/.everdev/sold:$PATH"
+export PATH="$HOME/.everdev/sold:$PATH"
 ```
 
 ## Version
@@ -73,8 +73,8 @@ This command shows the used Solidity Compiler Driver version and list of availab
 ```shell
 everdev sold version
 Component  Version  Available
----------  -------  ------------------------------------------------------
-driver     0.68.0   0.68.0, 0.67.0, 0.66.0, 0.66.0, 0.65.0, 0.65.0, 0.64.0
+---------  -------  --------------------------------------------------------------
+driver     0.69.0   0.69.0, 0.68.0, 0.67.0, 0.66.0, 0.66.0, 0.65.0, 0.65.0, 0.64.0
 
 File path: /home/<username>/.everdev/sold/sold
 ```
@@ -84,7 +84,7 @@ File path: /home/<username>/.everdev/sold/sold
 This command specifies Solidity Compiler Driver version to use and downloads it if needed.
 
 ```shell
-everdev sold set --version 0.67.0
+everdev sold set --version 0.69.0
 ```
 
 ## Update
