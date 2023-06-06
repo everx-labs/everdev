@@ -83,7 +83,7 @@ everdev network credentials devnet --project <Project Id> --access-key <Secret>
 This command sets a giver account for a network. Giver will be used to top up your account balances on the network, including during deployment.
 
 ```bash
-everdev network giver network_name giver_address
+everdev network giver network_name giver_address --type giver_type
 ```
 
 See other available network addition options with help command:
