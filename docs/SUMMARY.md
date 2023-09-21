@@ -13,7 +13,6 @@
 * [Network Tool](command-line-interface/network-tool.md)
 * [Signer Tool](command-line-interface/signer-tool.md)
 * [Contract management](command-line-interface/contract-management.md)
-* [tonos-cli](command-line-interface/tonos-cli.md)
 * [TestSuite4](command-line-interface/testsuite4.md)
 * [DeBrowser](command-line-interface/debrowser.md)
 

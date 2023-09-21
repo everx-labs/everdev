@@ -177,11 +177,7 @@ Controller for DeBot browser.
 
 Controller for [TestSuite4](https://github.com/tonlabs/TestSuite4) testing framework.
 
-### [tonos-cli](https://github.com/tonlabs/tonos-cli)
 
-Controller for [tonos-cli](https://github.com/tonlabs/tonos-cli) tool management.
-
-EverDev can be extended with other tools following the [instructions of integration](./#everdev-extensibility).
 
 ## Cookbook
 
