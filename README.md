@@ -20,7 +20,7 @@ Everdev is a Node.js package with CLI interface that allows to set up developer 
 
 ### Use-cases
 
-* Easily manage(install, update) all the core tools, such as Solidity/C++ Compilers, Evernode-SE, tonos-cli
+* Easily manage(install, update) all the core tools, such as Solidity/C++ Compilers, Evernode-SE
 * Configure networks (including Local Blockchain, Developer Network, Everscale (main) network): add, configure giver contract;
 * Manage keys: add, remove
 * Work with blockchain from CLI
@@ -48,7 +48,6 @@ Everdev is a Node.js package with CLI interface that allows to set up developer 
     * [Evernode Simple Emulator (local blockchain)](./#evernode-simple-emulator-local-blockchain)
     * [Debot Browser](./#debot-browser)
     * [TestSuite4](./#testsuite4)
-    * [tonos-cli](./#tonos-cli)
   * [Cookbook](./#cookbook)
     * [Quick Start](./#quick-start-1)
     * [Work with contracts](./#work-with-contracts)
