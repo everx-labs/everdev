@@ -8,7 +8,7 @@ This guide will help you get started with such essential Everscale tools as:
 * [Solidity Compiler](https://github.com/tonlabs/TON-Solidity-Compiler)
 * [Local Blockchain](https://github.com/tonlabs/evernode-se)
 * [Everscale Blockchain Explorer](https://ever.live)
-* [GraphQL API](https://docs.evercloud.dev/reference/graphql-api)
+* [GraphQL API](https://docs.everplatform.dev/reference/graphql-api)
 * [Evercloud dashboard](https://dashboard.evercloud.dev)
 
 You will learn how to:
@@ -304,7 +304,7 @@ Again, now you can find this transaction in Explorer or GraphQL API.
 
 The Development Network, aka devnet is the Everscale test network with free test tokens that has an identical configuration to mainnet. You can test your contracts in a live environment on it.
 
-To access devnet, you need to create an account and a project on [https://dashboard.evercloud.dev/](https://dashboard.evercloud.dev/). Follow [this guide](https://docs.evercloud.dev/products/evercloud/get-started) to do it.
+To access devnet, you need to create an account and a project on [https://dashboard.evercloud.dev/](https://dashboard.evercloud.dev/). Follow [this guide](https://docs.everplatform.dev/products/evercloud/get-started) to do it.
 
 You will get your personal project ID, optional secret key and an endpoint of the following format:\
 [https://devnet.evercloud.dev/\<projectID>/graphql](https://devnet.evercloud.dev/%3CprojectID%3E/graphql)
@@ -361,7 +361,7 @@ Where
 
 1. Also take a look at our [blockchain basics page](https://docs.everscale.network/arch/basics) that will help you understand the core concepts of Everscale:)
 2. If you want to integrate your application with Everscale - dive into our [SDK Quick Start](https://docs.everos.dev/ever-sdk/quick\_start)!
-3. If you want to explore the GraphQL API more, [here is the documentation](https://docs.evercloud.dev/reference/graphql-api)!
+3. If you want to explore the GraphQL API more, [here is the documentation](https://docs.everplatform.dev/reference/graphql-api)!
 4. If you are an exchange - check out our [exchange guide](https://docs.everos.dev/ever-sdk/add\_to\_exchange)!
 
 We hope this guide was helpful to you! If you have any difficulties/questions/suggestions/etc. please write to out [telegram channel](https://t.me/ever\_sdk).
