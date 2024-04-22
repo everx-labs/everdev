@@ -4,9 +4,9 @@
 
 This guide will help you get started with such essential Everscale tools as:
 
-* [Everdev CLI](https://github.com/tonlabs/everdev)
-* [Solidity Compiler](https://github.com/tonlabs/TON-Solidity-Compiler)
-* [Local Blockchain](https://github.com/tonlabs/evernode-se)
+* [Everdev CLI](https://github.com/everx-labs/everdev)
+* [Solidity Compiler](https://github.com/everx-labs/TVM-Solidity-Compiler)
+* [Local Blockchain](https://github.com/everx-labs/evernode-se)
 * [Everscale Blockchain Explorer](https://ever.live)
 * [GraphQL API](https://docs.everplatform.dev/reference/graphql-api)
 * [Evercloud dashboard](https://dashboard.evercloud.dev)
@@ -87,7 +87,7 @@ $ everdev se start
 
 ### Configure default network
 
-Set Local Blockchain [SE (Simple Emulator)](https://github.com/tonlabs/evernode-se) as the default network:
+Set Local Blockchain [SE (Simple Emulator)](https://github.com/everx-labs/evernode-se) as the default network:
 
 ```bash
 $ everdev network default se
@@ -95,7 +95,7 @@ $ everdev network default se
 
 ### Configure Giver wallet that will sponsor deploy operation
 
-Here we use address and private key of [SE High Load Giver](https://github.com/tonlabs/evernode-se/tree/master/contracts/giver\_v3).&#x20;
+Here we use address and private key of [SE High Load Giver](https://github.com/everx-labs/evernode-se/tree/master/contracts/giver\_v3).&#x20;
 
 Note: it may be already configured if you make a clean install of the latest Everdev. Then you can skip this step. If you are updating from some old version, it is necessary.
 

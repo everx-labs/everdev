@@ -48,7 +48,7 @@ export const solidityVersionCommand: Command = {
         terminal.log(
             chalk.yellow(
                 "\nYou can find the list of stable solc versions in Solidity Compiler changelog:" +
-                    "\nhttps://github.com/tonlabs/TON-Solidity-Compiler/blob/master/Changelog_TON.md",
+                    "\nhttps://github.com/everx-labs/TVM-Solidity-Compiler/blob/master/Changelog_TON.md",
             ),
         )
     },

@@ -3,7 +3,7 @@ import { components } from "./components"
 
 export const tonosInstallCommand: Command = {
     name: "install",
-    title: "Install latest stable TON OS CLI",
+    title: "Install latest stable EVER OS CLI",
     args: [],
     async run(terminal: Terminal) {
         await Component.ensureInstalledAll(terminal, components)
@@ -44,9 +44,9 @@ export const tonosVersionCommand: Command = {
     },
 }
 
-export const TONOS: ToolController = {
-    name: "tonos-cli",
-    title: "TON OS CLI",
+export const EVEROS: ToolController = {
+    name: "ever-cli",
+    title: "EVER OS CLI",
     commands: [
         tonosInstallCommand,
         tonosSetCommand,

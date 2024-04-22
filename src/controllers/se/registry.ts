@@ -27,14 +27,14 @@ function seHome() {
 export class RegistryError extends Error {}
 
 export enum SESourceType {
-    TONOS_SE_VERSION = "tonos-se-version",
+    EVEROS_SE_VERSION = "tonos-se-version",
     DOCKER_IMAGE = "docker-image",
     DOCKER_CONTAINER = "docker-container",
 }
 
 export type SESource =
     | {
-          type: SESourceType.TONOS_SE_VERSION
+          type: SESourceType.EVEROS_SE_VERSION
           version: string
       }
     | {
@@ -49,7 +49,7 @@ export type SESource =
 
 export function seSourceVersion(version: string): SESource {
     return {
-        type: SESourceType.TONOS_SE_VERSION,
+        type: SESourceType.EVEROS_SE_VERSION,
         version,
     }
 }
@@ -259,7 +259,7 @@ export class SERegistry {
     }
 
     async resolveItemSourceVersion(item: SERegistryItem): Promise<string> {
-        if (item.source.type === SESourceType.TONOS_SE_VERSION) {
+        if (item.source.type === SESourceType.EVEROS_SE_VERSION) {
             if (
                 item.source.version === "" ||
                 item.source.version === "latest"
@@ -277,7 +277,7 @@ export class SERegistry {
         let containerName: string
         const source = item.source
         switch (source.type) {
-            case SESourceType.TONOS_SE_VERSION:
+            case SESourceType.EVEROS_SE_VERSION:
                 {
                     requiredImage = `${DOCKER_IMAGE_NAME}:${await this.resolveItemSourceVersion(
                         item,
@@ -341,7 +341,7 @@ export class SERegistry {
 
     async getSourceInfo(item: SERegistryItem): Promise<string> {
         switch (item.source.type) {
-            case SESourceType.TONOS_SE_VERSION:
+            case SESourceType.EVEROS_SE_VERSION:
                 return await this.resolveItemSourceVersion(item)
             case SESourceType.DOCKER_IMAGE:
                 return `${item.source.image} image`
@@ -449,7 +449,7 @@ export class SERegistry {
             terminal,
             instance,
             async instance => {
-                if (instance.source.type === SESourceType.TONOS_SE_VERSION) {
+                if (instance.source.type === SESourceType.EVEROS_SE_VERSION) {
                     updateInstance(networks, instance, {
                         source: seSourceVersion(
                             await SERegistry.getLatestVersion(),

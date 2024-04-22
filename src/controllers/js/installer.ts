@@ -4,8 +4,8 @@ import { Terminal, everdevHome } from "../../core"
 import { downloadFromGithub, httpsGetJson } from "../../core/utils"
 
 const demoBranch = "master"
-const demoInfoURL = `https://raw.githubusercontent.com/tonlabs/sdk-samples/${demoBranch}/demo.json`
-const demoArchiveURL = `https://github.com/tonlabs/sdk-samples/archive/${demoBranch}.zip`
+const demoInfoURL = `https://raw.githubusercontent.com/everx-labs/sdk-samples/${demoBranch}/demo.json`
+const demoArchiveURL = `https://github.com/everx-labs/sdk-samples/archive/${demoBranch}.zip`
 const demoFolder = `sdk-samples-${demoBranch}`
 
 function jsHome() {

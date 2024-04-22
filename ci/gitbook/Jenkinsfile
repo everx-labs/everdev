@@ -13,7 +13,7 @@ pipeline {
                     sshagent([G_gitcred]) {
                         def tmpFolder = UUID.randomUUID().toString()
                         sh """
-                            git clone -b gitbook git@github.com:tonlabs/everdev ${tmpFolder}
+                            git clone -b gitbook git@github.com:everx-labs/everdev ${tmpFolder}
                         """
                         dir(tmpFolder) {
                             try {

@@ -1,12 +1,12 @@
 {
     "name": "everdev",
-    "version": "1.7.0",
+    "version": "1.7.1",
     "description": "Everscale Dev Environment",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "repository": {
         "type": "git",
-        "url": "https://github.com/tonlabs/everdev.git"
+        "url": "https://github.com/everx-labs/everdev.git"
     },
     "scripts": {
         "prepublishOnly": "npm i && tsc",
@@ -29,10 +29,10 @@
         "Freeton",
         "Dev",
         "Development",
-        "TONOS",
+        "EVER OS",
         "EVEROS"
     ],
-    "author": "TON DEV SOLUTIONS LTD.",
+    "author": "EverX Labs Ltd",
     "license": "Apache-2.0",
     "licenses": [
         {

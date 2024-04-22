@@ -30,7 +30,7 @@ All notable changes to this project will be documented in this file.
 
 ### New
 
-- Added [support of Signature ID](https://github.com/tonlabs/ever-sdk/blob/master/CHANGELOG.md) on the networks with 
+- Added [support of Signature ID](https://github.com/everx-labs/ever-sdk/blob/master/CHANGELOG.md) on the networks with 
   `CapSignatureWithId` capability enabled.
 - Added new option `everdev contract deploy --workchain` to specify in which workchain to deploy a contract.
 - `everdev contract decode-tvc` command renamed to `everdev contract decode-stateinit`.
@@ -84,7 +84,7 @@ All notable changes to this project will be documented in this file.
 
 ### New
 
-- `sold` - [Solidity Compiler Driver](https://github.com/tonlabs/TON-Solidity-Compiler/tree/master/sold) - version management added. Try it with `everdev sold install`. 
+- `sold` - [Solidity Compiler Driver](https://github.com/everx-labs/TVM-Solidity-Compiler/tree/master/sold) - version management added. Try it with `everdev sold install`. 
 
 - Added a new `everdev sol compile` option `-i [ --include-path ] path/to/dir` to make an additional source directory available 
   to the default import callback.\
@@ -195,7 +195,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.1.1] - 2022-02-11
 ### Fixed
- - An error "TON Client binary bridge is not set"  that occurred when using `js wrap` command as a module
+ - An error "EVER Client binary bridge is not set"  that occurred when using `js wrap` command as a module
 
 ### Improved
  -  Command parameter parsing when using tondev as a module. 
@@ -251,7 +251,7 @@ Now its version is always equal to the compiler's version.
 
 ## [0.10.5] - 2021-11-11
 ### NEW
-- Added the ability to compile [SafeMultisigWallet](https://github.com/tonlabs/ton-labs-contracts/tree/master/solidity/safemultisig) for Linux platform. The size of the compiled contract will be different from the original due to a different linker, but the compiler is the same
+- Added the ability to compile [SafeMultisigWallet](https://github.com/everx-labs/ton-labs-contracts/tree/master/solidity/safemultisig) for Linux platform. The size of the compiled contract will be different from the original due to a different linker, but the compiler is the same
 
 Install the appropriate compiler, linker, and stdlib versions:
 ```
@@ -333,7 +333,7 @@ ls -l SafeMultisigWallet.tvc
 - `--version` or `-v` or `-V` global option prints current tondev version.
 
 ### Fixed
-- "tondev clang set --compiler" didn't change installed compiler version https://github.com/tonlabs/tondev/issues/42
+- "tondev clang set --compiler" didn't change installed compiler version https://github.com/everx-labs/tondev/issues/42
 - `tondev` did not not fill the command args with default values when user ran commands programmatically.  
 - `tondev info` stopped if one of the tools failed.
 
@@ -389,7 +389,7 @@ ls -l SafeMultisigWallet.tvc
 ## [0.5.0] - 2021-04-23
 
 ### New
-- `clang` controller for [C++ compiler](https://github.com/tonlabs/TON-Compiler):   
+- `clang` controller for [C++ compiler](https://github.com/everx-labs/TON-Compiler):   
   install, compile with 1 command, manage versions, etc.   
 - `signer` controller for signer registry management:   
   generate keys, import keys and mnemonics, specify default signer, etc.   
@@ -433,7 +433,7 @@ ls -l SafeMultisigWallet.tvc
 - SDK functionality added
   - [See the list of available demo projects](README.md#see-the-list-of-available-demo-projects)
   - [Install demo project](README.md#install-demo-project)
-- [tonos-cli](README.md#tonos-cli)
+- [ever-cli](README.md#ever-cli)
   - Install
   - Version
   - Set
@@ -442,7 +442,7 @@ ls -l SafeMultisigWallet.tvc
 ## [0.2.0] - 2021-02-26
 
 ### New
-- [TON OS Startup Edition(SE) functionality](https://github.com/tonlabs/tondev#ton-os-startup-editionse):
+- [EVER OS Startup Edition(SE) functionality](https://github.com/everx-labs/tondev#ton-os-startup-editionse):
   - Start
   - Version
   - Set

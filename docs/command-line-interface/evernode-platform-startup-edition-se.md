@@ -23,7 +23,7 @@ Available Versions: 0, 0.24, 0.24.5, 0.24.6, 0.24.8, 0.24.9, 0.24.10, 0.24.11, 0
 
 ## Set
 
-This command switches Evernode SE to the specified version and port and downloads it, if it is missing. **Attention! This command does not start TON OS SE, you need to run `start` command separately.**
+This command switches Evernode SE to the specified version and port and downloads it, if it is missing. **Attention! This command does not start EVER OS SE, you need to run `start` command separately.**
 
 ```shell
 everdev se set --version 0.24.11 --port 2020
