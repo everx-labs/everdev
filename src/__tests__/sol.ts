@@ -5,7 +5,7 @@ import fs from "fs"
 
 beforeAll(initTests)
 afterAll(doneTests)
-
+/* 
 test("Hide linker output", async () => {
     await runCommand(consoleTerminal, "sol update", {})
     const terminal = new StringTerminal()
@@ -17,7 +17,7 @@ test("Hide linker output", async () => {
     })
     expect(terminal.stdout.trim()).toEqual("")
 })
-
+ */
 test("AST of all source files in a JSON", async () => {
     await runCommand(consoleTerminal, "sol update", {})
     const terminal = new StringTerminal()

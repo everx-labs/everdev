@@ -42,7 +42,7 @@ export function ellipsisString(xs: string[]): string {
 }
 
 export async function loadBinaryVersions(name: string): Promise<string[]> {
-    const info = await httpsGetJson(`https://binaries.tonlabs.io/${name}.json`)
+    const info = await httpsGetJson(`https://binaries.everx.dev/${name}.json`)
     const versions = info[name].sort(compareVersions).reverse()
     return versions
 }
@@ -78,7 +78,7 @@ async function installGlobally(
     const [name, ext] = path.basename(dstPath).split(".")
     try {
         writeJsonFile(`${binDir}/package.json`, {
-            name: name, // ex: tonos-cli
+            name: name, // ex: ever-cli
             version,
             bin: `./${name}${ext ? "." + ext : ""}`,
         })
@@ -201,7 +201,7 @@ export async function downloadFromBinaries(
     try {
         src = src.replace("{p}", os.platform())
         const srcExt = path.extname(src).toLowerCase()
-        const srcUrl = `https://binaries.tonlabs.io/${src}`
+        const srcUrl = `https://binaries.everx.dev/${src}`
         terminal.write(`Downloading from ${srcUrl}`)
         const dstDir = path.dirname(dstPath)
         if (!fs.existsSync(dstDir)) {

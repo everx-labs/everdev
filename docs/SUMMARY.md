@@ -24,5 +24,5 @@
 
 ## Links
 
-* [everdev repository](https://github.com/tonlabs/everdev)
-* [ever-sdk repository](https://github.com/tonlabs/ever-sdk)
+* [everdev repository](https://github.com/everx-labs/everdev)
+* [ever-sdk repository](https://github.com/everx-labs/ever-sdk)

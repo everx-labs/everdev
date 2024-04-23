@@ -24,7 +24,7 @@ compiler   0.42.0, 0.41.0, 0.40.0, 0.39.0, 0.38.2, 0.38.1
 linker     0.3.0, 0.1.0
 stdlib     0.42.0, 0.41.0, 0.40.0, 0.39.0, 0.38.2, 0.38.1
 
-TON OS SE
+EVER OS SE
 
 Instance  State          Version  GraphQL Port  Docker Container      Docker Image
 --------  -------------  -------  ------------  --------------------  -----------------------
@@ -46,7 +46,7 @@ surf            8534c46f7a135058773fa1298cb3a299a5ddd40dafe41cb06c64f274da360bfb
 test (Default)  ad4bf7bd8da244932c52127a943bfa9217b6e215c1b3307272283c4d64f34486
 test2           5c2e348c5caeb420a863dc5e972f897ebe5ee899a6ef2a8299aac352eca4380a
 
-TON OS CLI
+EVER OS CLI
 
 Component  Version  Available
 ---------  -------  --------------------------------------------------------------------------------

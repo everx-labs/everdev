@@ -4,7 +4,7 @@ import { Sold } from "./sold"
 // import {TestSuite} from "./ts";
 import { JsApps } from "./js"
 import { SE } from "./se"
-import { TONOS } from "./tonos-cli"
+import { EVEROS } from "./ever-cli"
 import { TestSuite4 } from "./ts4"
 import { DeBrowser } from "./debrowser"
 import { Command, matchName, Terminal, ToolController } from "../core"
@@ -22,7 +22,7 @@ export const controllers = [
     SignerTool,
     Contract,
     JsApps,
-    TONOS,
+    EVEROS,
     TestSuite4,
     DeBrowser,
 ]

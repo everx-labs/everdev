@@ -12,7 +12,7 @@ import {
 
 export const SE: ToolController = {
     name: "se",
-    title: "TON OS SE",
+    title: "EVER OS SE",
     commands: [
         seInfoCommand,
         seVersionCommand,

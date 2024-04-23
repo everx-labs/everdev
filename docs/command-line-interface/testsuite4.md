@@ -2,7 +2,7 @@
 
 TestSuite4 is a framework designed to simplify development and testing of TON Contracts. It contains lightweight blockchain emulator making it easy to develop contracts in a TDD-friendly style.
 
-For more information, visit [TestSuite4's documentation](https://tonlabs.github.io/TestSuite4/).
+For more information, visit [TestSuite4's documentation](https://everx-labs.github.io/TestSuite4/).
 
 :information_source: `Python 3.6 - 3.9` and `pip` required.
 

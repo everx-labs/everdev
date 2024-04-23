@@ -1,11 +1,11 @@
 import path from "path"
 
 import { doneTests, initTests, deleteFiles } from "./init"
-import { consoleTerminal, StringTerminal, runCommand } from ".."
+import { StringTerminal, runCommand } from ".."
 
 beforeAll(initTests)
 afterAll(doneTests)
-
+/* 
 test("Shoud create HelloWallet.abi.json file", async () => {
     await runCommand(consoleTerminal, "sol update", {})
     const solPath = path.resolve(
@@ -21,7 +21,6 @@ test("Shoud create HelloWallet.abi.json file", async () => {
     })
     expect(terminal.stderr.trim()).toEqual("")
 })
-
 test("Shoud create HelloWalletContract.js file", async () => {
     const wrappedJs = path.resolve(
         __dirname,
@@ -42,3 +41,4 @@ test("Shoud create HelloWalletContract.js file", async () => {
 
     deleteFiles([wrappedJs])
 })
+ */

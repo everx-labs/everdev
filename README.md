@@ -27,35 +27,33 @@ Everdev is a Node.js package with CLI interface that allows to set up developer 
 
 ## Content table
 
-* [EverDev](./#everdev)
-  * [Quick Start](./#quick-start)
-    * [Use-cases](./#use-cases)
-  * [Content table](./#content-table)
-  * [Installation](./#installation)
-    * [Prerequisites](./#prerequisites)
-    * [Using NPM](./#using-npm)
-    * [Using pre-compiled binaries](./#using-pre-compiled-binaries)
-    * [Using docker](./#using-docker)
-    * [Update](./#update)
-  * [Command Line Interface](./#command-line-interface)
-    * [General command syntax](./#general-command-syntax)
-    * [Solidity Compiler](./#solidity-compiler)
-    * [Solidity Compiler Driver](./#solidity-compiler-driver)
-    * [C/C++ Compiler](./#cc-compiler)
-    * [Network Tool](./#network-tool)
-    * [Signer Tool](./#signer-tool)
-    * [Contract Management Tool](./#contract-management-tool)
-    * [Evernode Simple Emulator (local blockchain)](./#evernode-simple-emulator-local-blockchain)
-    * [Debot Browser](./#debot-browser)
-    * [TestSuite4](./#testsuite4)
-  * [Cookbook](./#cookbook)
-    * [Quick Start](./#quick-start-1)
-    * [Work with contracts](./#work-with-contracts)
-    * [Work with DevNet](./#work-with-devnet)
-    * [Create controller](./#create-controller)
-    * [View controller info](./#view-controller-info)
-  * [Troubleshooting](./#troubleshooting)
-  * [EverDev Extensibility](./#everdev-extensibility)
+* [EverDev](#everdev)
+  * [Quick Start](#quick-start)
+    * [Use-cases](#use-cases)
+  * [Content table](#content-table)
+  * [Installation](#installation)
+    * [Prerequisites](#prerequisites)
+    * [Using NPM](#using-npm)
+    * [Using pre-compiled binaries](#using-pre-compiled-binaries)
+    * [Using docker](#using-docker)
+    * [Update](#update)
+  * [Command Line Interface](#command-line-interface)
+    * [General command syntax](#general-command-syntax)
+    * [Solidity Compiler](#solidity-compiler)
+    * [Solidity Compiler Driver](#solidity-compiler-driver)
+    * [C/C++ Compiler](#cc-compiler)
+    * [Network Tool](#network-tool)
+    * [Signer Tool](#signer-tool)
+    * [Contract Management Tool](#contract-management-tool)
+    * [Evernode Simple Emulator (local blockchain)](#evernode-simple-emulator--local-blockchain-)
+    * [Debot Browser](#debot-browser)
+    * [TestSuite4](#testsuite4)
+  * [Cookbook](#cookbook)
+    * [Quick Start](#quick-start-1)
+    * [Create controller](#create-controller)
+    * [View controller info](#view-controller-info)
+  * [Troubleshooting](#troubleshooting)
+  * [EverDev Extensibility](#everdev-extensibility)
 
 ## Installation
 
@@ -75,7 +73,7 @@ If you see an EACCESS error when you try to install a package globally on Mac or
 
 ### Using pre-compiled binaries
 
-You can download precompiled binaries for your platform from [the latest release](https://github.com/tonlabs/everdev/releases/). After download you need to create directory if it does not exists.
+You can download precompiled binaries for your platform from [the latest release](https://github.com/everx-labs/everdev/releases/). After download you need to create directory if it does not exists.
 
 For linux/macos:
 
@@ -116,7 +114,7 @@ Select a base image that provides GLIBC ver. 2.29 or higher if you want to use t
 ```
 docker run -it --rm ubuntu:20.04
 # apt update &&  apt upgrade -y && apt install -y curl
-# curl -L https://github.com/tonlabs/everdev/releases/download/1.3.1/everdev-linux.tgz  --output everdev-linux.tgz
+# curl -L https://github.com/everx-labs/everdev/releases/download/1.3.1/everdev-linux.tgz  --output everdev-linux.tgz
 # tar xvf everdev-linux.tgz
 # mv everdev /usr/local/bin/
 ```
@@ -142,15 +140,15 @@ Some tools (network, signer, contract, js) and commands have short aliases. For 
 
 ### [Solidity Compiler](docs/command-line-interface/solidity.md)
 
-Controller for [Everscale Solidity compiler](https://github.com/tonlabs/TON-Solidity-Compiler).
+Controller for [Everscale Solidity compiler](https://github.com/everx-labs/TVM-Solidity-Compiler).
 
 ### [Solidity Compiler Driver](docs/command-line-interface/solidity-compiler-driver.md)
 
-Controller for [sold - Everscale Solidity compiler driver](https://github.com/tonlabs/TON-Solidity-Compiler/tree/master/sold)
+Controller for [sold - Everscale Solidity compiler driver](https://github.com/everx-labs/TVM-Solidity-Compiler/tree/master/sold)
 
 ### [C/C++ Compiler](docs/command-line-interface/c.md)
 
-Controller for [Everscale Clang Compiler](https://github.com/tonlabs/TON-Compiler).
+Controller for [Everscale Clang Compiler](https://github.com/everx-labs/TON-Compiler).
 
 ### [Network Tool](docs/command-line-interface/network-tool.md)
 
@@ -166,7 +164,7 @@ Controller for working with smart contracts.
 
 ### [Evernode Simple Emulator (local blockchain)](docs/command-line-interface/evernode-platform-startup-edition-se.md)
 
-Controller for [Local Node emulator](https://github.com/tonlabs/evernode-se).
+Controller for [Local Node emulator](https://github.com/everx-labs/evernode-se).
 
 ### [Debot Browser](docs/command-line-interface/debrowser.md)
 
@@ -174,7 +172,7 @@ Controller for DeBot browser.
 
 ### [TestSuite4](docs/command-line-interface/testsuite4.md)
 
-Controller for [TestSuite4](https://github.com/tonlabs/TestSuite4) testing framework.
+Controller for [TestSuite4](https://github.com/everx-labs/TestSuite4) testing framework.
 
 
 

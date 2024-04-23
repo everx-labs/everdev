@@ -12,7 +12,7 @@ Currently all the controllers must be implemented inside of the `everdev` packag
 
 To create a new controller:
 
-- Clone `git@github.com:tonlabs/everdev.git`.
+- Clone `git@github.com:everx-labs/everdev.git`.
 - Create and checkout branch for the new controller.
 - Create a folder under `src/controllers`.
 - Implement the controller code.

@@ -8,7 +8,7 @@ def gitbook(project_name = null) {
     sshagent([G_gitcred]) {
         def tmpFolder = UUID.randomUUID().toString()
         sh """
-            git clone -b gitbook git@github.com:tonlabs/${project_name} ${tmpFolder}
+            git clone -b gitbook git@github.com:everx-labs/${project_name} ${tmpFolder}
         """
         dir(tmpFolder) {
             try {

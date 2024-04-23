@@ -121,7 +121,7 @@ export class NetworkGiver implements AccountGiver {
         return new NetworkGiver(contract, client, address, signer, info, send)
     }
 
-    async sendTo(address: string, value: number): Promise<void> {
+    async sendTo(address: string, value: number): Promise<any> {
         const valueToSend = this.value ?? value
         try {
             await this.send(this.account, address, valueToSend)
