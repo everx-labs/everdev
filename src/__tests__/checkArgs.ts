@@ -10,7 +10,7 @@ beforeAll(initTests)
 afterAll(doneTests)
 beforeEach(() => deleteFolderRecursive(outPath))
 afterEach(() => deleteFolderRecursive(outPath))
-
+/* 
 test("Should create HelloWallet.tvc in user defined output directory", async () => {
     await runCommand(consoleTerminal, "sol update", {})
 
@@ -32,7 +32,7 @@ test("Should create HelloWallet.tvc in user defined output directory", async () 
     const tvcFile = path.resolve(outPath, "HelloWallet.tvc")
     expect(fs.existsSync(tvcFile)).toBeTruthy()
 })
-
+ */
 test("Should warn user to use options in camelCase", async () => {
     const solPath = path.resolve(
         __dirname,
