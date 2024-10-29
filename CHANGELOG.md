@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.1] - 2023-05-04
+
+### New
+
+- Use the last SDK version
+
 ## [1.7.0] - 2023-05-04
 
 ### New
